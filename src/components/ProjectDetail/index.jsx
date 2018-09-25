@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
-
+import { URL } from '@/constants';
 const nameFormSubscribeEmail = 'subscribeEmail';
 const FormSubscribeEmail = createForm({
   propsReduxForm: {
@@ -51,9 +51,15 @@ class Index extends React.PureComponent {
   openTelegram = () => {
     window.open('https://t.me/ninja_org', '_blank');
   }
-  // renderDisclaim() {
 
-  // }
+  becomeAtm = () => {
+    const { name } = this.props;
+    if (name === 'cash') {
+      window.location = URL.ATM_FOR_BUSINESS;
+    } else if (name === 'cash-for-business') {
+      window.location = URL.LANDING_BECOME_ATM;
+    }
+  }
 
   render() {
     const { messages, locale } = this.props.intl;
@@ -72,6 +78,7 @@ class Index extends React.PureComponent {
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     const faq = messages[`landing_page.${name}.faq`];
     const disclaim = messages[`landing_page.${name}.disclaim`];
+    const alternativeAction = messages[`landing_page.${name}.alternativeAction`];
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
@@ -145,11 +152,21 @@ class Index extends React.PureComponent {
                           </div>
                           </div>
 
-                          <button className="btnTelegram"
-                          onClick={()=> {
-                            this.openTelegram();
-                          }}
-                          >Join the dojo on Telegram</button>
+                          {
+                            alternativeAction ? (
+                              <button className="btnTelegram" type="button"
+                                      onClick={()=> {
+                                        this.becomeAtm();
+                                      }}
+                              ><FormattedHTMLMessage id={`landing_page.${name}.alternativeAction`} /></button>
+                            ) : (
+                              <button className="btnTelegram"
+                                      onClick={()=> {
+                                        this.openTelegram();
+                                      }}
+                              >Join the dojo on Telegram</button>
+                            )
+                          }
 
                         </div>
                         <div className="mt-4 text-email">
