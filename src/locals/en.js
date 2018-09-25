@@ -608,7 +608,7 @@ export default {
   'landing_page.become_atm.email.placeholder': 'Enter your email address',
   'landing_page.become_atm.email.submitBtnLabel': 'Earn!',
   'landing_page.become_atm.email.peopleRegistered': 'people have registered',
-  'landing_page.become_atm.youtubeId': '9L1IltkvU9g',
+  'landing_page.become_atm.youtubeId': 'bNRK6HMTmzA',
   'landing_page.become_atm.footer': `You know It All! Let's start making some Money`,
   'landing_page.become_atm.modal.title': 'Im making passive income with Ninja ATM. Try now!',
   'landing_page.become_atm.modal.content': 'SHARE with your friends NOW to win 25 USD!',
