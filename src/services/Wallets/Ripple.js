@@ -107,7 +107,7 @@ export class Ripple extends Wallet {
         }
       }
       catch (e){
-        console.log(e);
+        //console.log(e);
       }
       return 0;
       
