@@ -116,6 +116,7 @@
   }
 }
 .wrapperIntroduce {
+  display: flex;
   .emailField {
     position: relative;
     width: rem-calc(300px);
@@ -139,7 +140,7 @@
     font-size: rem-calc(16px);
     letter-spacing: 0;
     border: 1px solid #F5D516;
-    height: rem-calc(44px);
+    height: rem-calc(48px);
     width: rem-calc(250px);
     margin-left: rem-calc(10px);
   }

@@ -73,9 +73,11 @@ class ContentForPrediction extends React.Component {
   renderThanksSubcribe() {
     return (
       <h5>
-        <strong className="text-success">
-          <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
-        </strong>
+        <p>
+          <strong className="text-success">
+            <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
+          </strong>
+        </p>
       </h5>
     );
   }
@@ -120,16 +122,20 @@ class ContentForPrediction extends React.Component {
   renderIntroduce() {
     const { hasSubscribed } = this.state;
     return (
-      <div className="wrapperIntroduce wrapperBlock">
-        <div className="column">
-          <p className="pexSmallTitle">Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.</p>
-          <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
-          {!hasSubscribed ? this.renderEmail() : this.renderThanksSubcribe()}
+      <section className="section">
+        <div className="wrapperIntroduce">
+          <div className="column">
+            <p className="pexSmallTitle"><strong>Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.</strong></p>
+            <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
+            {this.renderEmail()}
+            {hasSubscribed && this.renderThanksSubcribe()}
+            <p className="pexContent">To play, please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser.</p>
+          </div>
+          <div className="column">
+            <img className="" src={imgIntroduce} alt="imgHowToPlay" width="850" />
+          </div>
         </div>
-        <div className="column">
-          <img className="" src={imgIntroduce} alt="imgHowToPlay" width="350" />
-        </div>
-      </div>
+      </section>
 
     );
   }
@@ -138,6 +144,7 @@ class ContentForPrediction extends React.Component {
   renderRoadMap() {
     return (
       <PexRoadMap className="wrapperBlock" />
+
     );
   }
   renderHowToPlay() {
@@ -276,6 +283,15 @@ class ContentForPrediction extends React.Component {
     return (
       <div className="wrapperVerticalBlock">
         <img src={imgFeature} alt="imgFeature" width="100%" />
+      </div>
+    );
+  }
+  renderDisclaim() {
+    return (
+      <div className="wrapperVerticalBlock">
+        <div className="pexHeadLine" >Disclaimer</div>
+        <div className="pexContent">Ninja is open-source, decentralized software that never holds user data, or user funds. As such, Ninja does not have the power to alter or restrict any actions made on the platform and so cannot be responsible for policing it. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never stake more than you are willing to lose. Play safe!.</div>
+        <div className="pexContent">Need more information? Check out our FAQ and instructions on how to play.</div>
       </div>
     );
   }
