@@ -109,7 +109,41 @@
 //   z-index: 0;
 //   position: absolute;
 // }
-
+.wrapperTransparent {
+  .wrapperContent {
+    padding-top: 3.25rem;
+    padding-right: 5.25rem;
+  }
+}
+.wrapperIntroduce {
+  .emailField {
+    position: relative;
+    width: rem-calc(300px);
+  }
+  .wrapperEmail{
+    display: flex;
+    justify-content: space-between;
+  }
+  .btnEmail {
+    padding: 0px;
+    border: none;
+  }
+  .emailSubmit {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+  .btnTelegram {
+    background: #FFF988;
+    border-radius: rem-calc(5px);
+    font-size: rem-calc(16px);
+    letter-spacing: 0;
+    border: 1px solid #F5D516;
+    height: rem-calc(44px);
+    width: rem-calc(250px);
+    margin-left: rem-calc(10px);
+  }
+}
 .column {
   width: 50%;
   z-index: 1;
@@ -224,7 +258,12 @@
 .anonymous_shape3 {
   position: absolute;
   left: 0px;
-  bottom: 186px;
+  bottom: 136px;
+}
+.anonymous_shape4 {
+  position: absolute;
+  right: 32px;
+  bottom: 160px;
 }
 
 

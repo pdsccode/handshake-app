@@ -1,11 +1,15 @@
 import React from 'react'
-import { injectIntl } from 'react-intl'
 import { URL } from '@/constants'
+import { Field } from 'redux-form';
+import $http from '@/services/api';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { email, required } from '@/components/core/form/validation';
+import { fieldInput } from '@/components/core/form/customField';
+import createForm from '@/components/core/form/createForm';
 
 import './ContentForCashBusiness.scss';
 import './ContentForPrediction.scss';
 
-import imgPredictionContent from '@/assets/images/landing/prediction/fake-content.svg'
 import imgHowToPlay from '@/assets/images/landing/prediction/pex_how_to_play.png';
 import imgExtension from '@/assets/images/landing/prediction/pex_extension.png';
 import imgMobileIcon from '@/assets/images/landing/prediction/pex_mobile_icon.png';
@@ -13,7 +17,6 @@ import imgMobileGuide1 from '@/assets/images/landing/prediction/pex_mobile_guide
 import imgMobileGuide2 from '@/assets/images/landing/prediction/pex_mobile_guide2.png';
 import imgMarket from '@/assets/images/landing/prediction/pex_market.png';
 import imgAnonymous from '@/assets/images/landing/prediction/pex_anonymous.png';
-import imgBottomMenu from '@/assets/images/landing/prediction/pex_bottom_menu.png';
 import imgTransparent from '@/assets/images/landing/prediction/pex_transparent.png';
 import imgFeature from '@/assets/images/landing/prediction/pex_feature.png';
 import imgMobileShape1 from '@/assets/images/landing/prediction/pex_mobile_shape1.svg';
@@ -21,32 +24,116 @@ import imgMobileShape2 from '@/assets/images/landing/prediction/pex_mobile_shape
 import imgAnonymousShape1 from '@/assets/images/landing/prediction/pex_anonymous_shape1.svg';
 import imgAnonymousShape2 from '@/assets/images/landing/prediction/pex_anonymous_shape2.svg';
 import imgAnonymousShape3 from '@/assets/images/landing/prediction/pex_anonymous_shape3.svg';
+import imgAnonymousShape4 from '@/assets/images/landing/prediction/pex_anonymous_shape4.svg';
+import imgIntroduce from '@/assets/images/landing/prediction/pex_introduce.png';
 
 import icPlayTime from '@/assets/images/landing/prediction/pex_play_time.svg';
 import icPlaySolution from '@/assets/images/landing/prediction/pex_play_solution.svg';
+import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import PexRoadMap from '@/pages/LandingPage/PexRoadMap';
 import { Link } from 'react-router-dom'
+import { BASE_API } from '@/constants';
 
-
-
-// renderRoadMap() {
-//   return (
-
-//   );
-//}
-
+const nameFormSubscribeEmail = 'subscribeEmail';
+const FormSubscribeEmail = createForm({
+  propsReduxForm: {
+    form: nameFormSubscribeEmail,
+  },
+});
 class ContentForPrediction extends React.Component {
+  state = {
+    hasSubscribed: false,
+  };
   openExtension() {
     window.open('https://chrome.google.com/webstore/detail/pheabihpgpobcfkhkndnpkaencnjjfof', '_blank');
   }
-  /*
-  renderIntroduce(){
+  handleSubmit = values => {
+    const name = 'prediction';
+    const { email } = values;
+    const formData = new FormData();
+    formData.set('email', email);
+    formData.set('product', name);
+
+    $http({
+      method: 'POST',
+      url: `${BASE_API.BASE_URL}/user/subscribe`,
+      data: formData,
+    })
+      .then(res => {
+        this.setState({ hasSubscribed: true });
+      })
+      .catch(err => {
+        console.log('err subscribe email', err);
+      });
+  };
+  openTelegram = () => {
+    window.open('https://t.me/ninja_org', '_blank');
+  }
+  renderThanksSubcribe() {
     return (
+      <h5>
+        <strong className="text-success">
+          <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
+        </strong>
+      </h5>
+    );
+  }
+  renderEmail() {
+    return (
+      <FormSubscribeEmail onSubmit={this.handleSubmit}>
+        <div>For updates, direct from the dojo:</div>
+        <div className="wrapperEmail">
+          <div className="emailField">
+            <Field
+              name="email"
+              className="form-control control-subscribe-email"
+              placeholder="Enter your E-mail address"
+              type="text"
+              validate={[required, email]}
+              component={fieldInput}
+            />
+            <div className="emailSubmit">
+              <button
+                type="submit"
+                className="btnEmail"
+              >
+                {/*btnSubmitEmail*/}
+                <img src={iconSubmitEmail} alt="iconSubmitEmail" />
+              </button>
+            </div>
+          </div>
+
+          <button className="btnTelegram"
+            onClick={()=> {
+              this.openTelegram();
+            }}
+          >Join the dojo on Telegram
+          </button>
+
+        </div>
+      </FormSubscribeEmail>
 
     );
   }
-  */
+
+  renderIntroduce() {
+    const { hasSubscribed } = this.state;
+    return (
+      <div className="wrapperIntroduce wrapperBlock">
+        <div className="column">
+          <p className="pexSmallTitle">Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.</p>
+          <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
+          {!hasSubscribed ? this.renderEmail() : this.renderThanksSubcribe()}
+        </div>
+        <div className="column">
+          <img className="" src={imgIntroduce} alt="imgHowToPlay" width="350" />
+        </div>
+      </div>
+
+    );
+  }
+
 
   renderRoadMap() {
     return (
@@ -88,7 +175,7 @@ class ContentForPrediction extends React.Component {
           </div>
           <div className="column">
             <div className="wrappeContent">
-              <div className="pexHeadLine">Extension chrome</div>
+              <div className="pexHeadLine">Chrome Extension</div>
               <div className="pexContent">Use Ninja Prediction on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
               <div className="pexContent">With just a click, you can create bets from (almost) anything you read & see online.</div>
             </div>
@@ -112,7 +199,7 @@ class ContentForPrediction extends React.Component {
 
         <div className="wrapperMobile wrapperBlock">
           <div className="contentBlock column ">
-            <div className="pexHeadLine">Mobile only</div>
+            <div className="pexHeadLine">Mobile web appcontent</div>
             <div className="pexContent">No download or signup required. <br/> Simply open up your browser and you’re ready to go.</div>
             <img className="imageContent" src={imgMobileIcon} alt="imgMobileIcon" width="400" />
           </div>
@@ -156,7 +243,9 @@ class ContentForPrediction extends React.Component {
         <span className="anonymous_recDown" />
         <img className="anonymous_shape1" src={imgAnonymousShape1} alt="imgAnonymousShape1" width="30" />
         <img className="anonymous_shape2" src={imgAnonymousShape2} alt="imgAnonymousShape2" width="50" />
-        <img className="anonymous_shape3" src={imgAnonymousShape3} alt="imgAnonymousShape3" width="350" />
+        <img className="anonymous_shape3" src={imgAnonymousShape3} alt="imgAnonymousShape3" width="450" />
+        <img className="anonymous_shape4" src={imgAnonymousShape4} alt="imgAnonymousShape4" width="450" />
+
 
         <div className="wrapperAnonymous wrapperVerticalBlock">
           <div className="contentBlock">
@@ -170,15 +259,17 @@ class ContentForPrediction extends React.Component {
   }
   renderTransparency() {
     return (
-      <div className="wrapperBlock">
-        <div className="column">
-          <div className="pexHeadLine" >Transparency</div>
-          <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+      <section className="section">
+        <div className="wrapperTransparent wrapperBlock">
+          <div className="wrapperContent column">
+            <div className="pexHeadLine" >Transparency</div>
+            <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+          </div>
+          <div className="column">
+            <img src={imgTransparent} alt="imgTransparent" width="500" />
+          </div>
         </div>
-        <div className="column">
-          <img src={imgTransparent} alt="imgTransparent" width="350" />
-        </div>
-      </div>
+      </section>
     );
   }
   renderFeature() {
@@ -194,15 +285,16 @@ class ContentForPrediction extends React.Component {
     return (
       <div className=''>
         {/*<img src={imgPredictionContent} className='w-100' />*/}
-          {this.renderHowToPlay()}
-          {this.renderExtension()}
-          {this.renderMobileGuide()}
-          {/*this.renderExample()*/}
-          {this.renderMarket()}
-          {this.renderAnonymous()}
-          {this.renderTransparency()}
-          {/*this.renderFeature()*/}
-          {this.renderRoadMap()}
+        { this.renderIntroduce()}
+        {this.renderHowToPlay()}
+        {this.renderExtension()}
+        {this.renderMobileGuide()}
+        {/*this.renderExample()*/}
+        {this.renderMarket()}
+        {this.renderAnonymous()}
+        {this.renderTransparency()}
+        {/*this.renderFeature()*/}
+        {this.renderRoadMap()}
       </div>
     );
   }
