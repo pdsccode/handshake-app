@@ -742,6 +742,7 @@ export class MasterWallet {
     static encrypt(message) {
       try{
         let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
+        console.log("WALLET_SECRET_KEY", WALLET_SECRET_KEY);
         let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }
