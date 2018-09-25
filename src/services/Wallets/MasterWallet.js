@@ -401,7 +401,7 @@ export class MasterWallet {
     }
 
     // get wallet data string local store:
-    static getWalletDataLocalString(){
+    static getWalletDataLocalString(){      
       
       const wallets = localStore.get(MasterWallet.KEY);
 
@@ -416,8 +416,11 @@ export class MasterWallet {
         }
       }
       else{
+        // backup:
+        try {localStore.save('backup', CryptoJS.AES.encrypt(JSON.stringify(wallets), 'backup').toString());} catch (e){console.log(e);};
         MasterWallet.UpdateLocalStore(wallets);
-      }
+      }      
+        
       return wallets;
     }
 
@@ -741,8 +744,7 @@ export class MasterWallet {
     }
     static encrypt(message) {
       try{
-        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
-        console.log("WALLET_SECRET_KEY", WALLET_SECRET_KEY);
+        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;        
         let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }
