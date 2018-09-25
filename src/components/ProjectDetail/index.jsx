@@ -51,6 +51,7 @@ class Index extends React.PureComponent {
   openTelegram = () => {
     window.open('https://t.me/ninja_org', '_blank');
   }
+
   becomeAtm = () => {
     const { name } = this.props;
     if (name === 'cash') {
@@ -76,6 +77,7 @@ class Index extends React.PureComponent {
       messages[`landing_page.${name}.btnSubmitEmail`] || 'Submit';
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     const faq = messages[`landing_page.${name}.faq`];
+    const disclaim = messages[`landing_page.${name}.disclaim`];
     const alternativeAction = messages[`landing_page.${name}.alternativeAction`];
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
