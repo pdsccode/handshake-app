@@ -60,6 +60,19 @@ class Index extends React.PureComponent {
       window.location = URL.LANDING_BECOME_ATM;
     }
   }
+  renderDisclaim(name) {
+    return (
+      <div className="row">
+        <div className="col">
+          <div className="pd-faq">Disclaimer</div>
+          <div className="pd-content">
+            <FormattedMessage id={`landing_page.${name}.disclaim`} />
+          </div>
+          <p className="pd-content">Need more information? Check out our FAQ and instructions on how to play.</p>
+        </div>
+      </div>
+    );
+  }
 
   render() {
     const { messages, locale } = this.props.intl;
@@ -228,7 +241,7 @@ class Index extends React.PureComponent {
           }
           {
             faq && (
-              <div className="row">
+              <div className="row mt-5">
                 <div className="col">
                   <div className="pd-faq">
                     {messages.COIN_EXCHANGE_LP_FAQ_TITLE}
@@ -249,6 +262,7 @@ class Index extends React.PureComponent {
               </div>
             )
           }
+          {disclaim && this.renderDisclaim(name)}
         </div>
       </LandingWrapper>
     );

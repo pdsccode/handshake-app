@@ -556,6 +556,7 @@ export default {
   'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   'landing_page.prediction.whitepaper': `Read our <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">whitepaper</a> | Find us on <a href="https://github.com/ninjadotorg" class="landing-link">Github</a>`,
   //'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
+  'landing_page.prediction.disclaim':`Ninja is open-source, decentralized software that never holds user data, or user funds. As such, Ninja does not have the power to alter or restrict any actions made on the platform and so cannot be responsible for policing it. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never stake more than you are willing to lose. Play safe!.`,
 
   'landing_page.wallet.breadcrumb': 'Wallet',
   'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
