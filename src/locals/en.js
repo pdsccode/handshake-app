@@ -544,7 +544,7 @@ export default {
   // 'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
   'landing_page.cash-for-business.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash-for-business.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
-  'landing_page.cash-for-business.youtubeVideoId': '9L1IltkvU9g',
+  'landing_page.cash-for-business.youtubeVideoId': 'bNRK6HMTmzA',
   'landing_page.cash-for-business.alternativeAction': `Become a Ninja ATM`,
 
   'landing_page.prediction.breadcrumb': 'Prediction',
