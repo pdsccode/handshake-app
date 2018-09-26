@@ -3,8 +3,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from '@/components/core/controls/Button';
 import './CreateStoreATM.scss';
 import createForm from '@/components/core/form/createForm';
-import { fieldInput, fieldPhoneInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required, requiredPhone } from '@/components/core/form/validation';
+import { fieldInput, fieldPhoneInput, fieldRadioButton, fieldDaySelector } from '@/components/core/form/customField';
+import { required, requiredPhone, requiredDaySelector } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -53,6 +53,7 @@ const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
     initialValues: {
+      selectedDay: {},
     },
   },
 });
@@ -368,7 +369,6 @@ class Component extends React.Component {
                     </div>
                   </div>
                 </div>
-
                 <div className="input-group">
                   <div className="d-table w-100">
                     <div className="d-table-cell w-50">
@@ -380,6 +380,12 @@ class Component extends React.Component {
                   </div>
                 </div>
                 <div className="input-group">
+                  <Field
+                    component={fieldDaySelector}
+                    intl={this.props.intl}
+                    name="selectedDay"
+                    validate={[requiredDaySelector]}
+                  />
                   <div className="d-table w-100 atm-time">
                     <div className="d-table-cell w-50">
                       <label className="form-control-title">{messages.create.atm.text.open.toUpperCase()}</label>
