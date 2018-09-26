@@ -300,6 +300,10 @@ class Wallet extends React.Component {
 
   async componentDidMount() {
     console.log (MasterWallet.getQRCodeFunction("bitcoin:2342342342342342?amount=234"));
+    console.log (MasterWallet.getQRCodeFunction("ninja-redem:2342342342342342?value=234"));
+    console.log (MasterWallet.getQRCodeFunction("17h4HQEiJRkYNBk1XJK3YpDYZQ1rXkfQJi"));
+    console.log (MasterWallet.getQRCodeFunction("https://ga.com"));
+    console.log (MasterWallet.getQRCodeFunction("esfeswrewre"));
     
     this.getSetting();
     this.attachScrollListener();

@@ -802,22 +802,20 @@ export class MasterWallet {
         if (text.includes(keyRedem)){
           let dataSplit = text.split('?');
           let code = dataSplit[0].split(':')[1];
-          let param = Helper.getQueryStrings(dataSplit[1]);
+          let param = Helper.getQueryStrings("?"+dataSplit[1]);
           return {"code": code, "value" : param['value']};
         }               
         return false; 
       }
       function transfer(text){         
-        let dataSplit = text.split('?');
-        alert(dataSplit[1]);
+        let dataSplit = text.split('?');        
         for (const i in MasterWallet.ListDefaultCoin){
           let wallet = new MasterWallet.ListDefaultCoin[i]();
           if (dataSplit[0].toLowerCase().includes(wallet.title.toLowerCase())){
             let listData = dataSplit[0].split(':');
             if(listData.length > 0){
               let address = listData[1];
-              let param = Helper.getQueryStrings("?"+ataSplit[1]);
-              console.log(param);
+              let param = Helper.getQueryStrings("?"+dataSplit[1]);              
               return {"address": address, "amount" : param['amount']};  
             }
             else{
