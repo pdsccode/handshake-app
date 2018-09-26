@@ -1,5 +1,15 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
+import { BitcoinCash } from '@/services/Wallets/BitcoinCash';
+
+// for reusable
+const sampleCrypto = {
+  ETH: new Ethereum(),
+  BTC: new Bitcoin(),
+  BCH: new BitcoinCash(),
+};
 
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
@@ -103,3 +113,17 @@ export const getErrorMessageFromCode = (error) => {
   return result;
 };
 
+/**
+ * Get coin type from its wallet address
+ * @param {String} walletAddress
+ */
+export const getCryptoFromAddress = (walletAddress) => {
+  let rs;
+  Object.keys(sampleCrypto)?.forEach(crypto => {
+    if (sampleCrypto[crypto]?.checkAddressValid(walletAddress) === true) {
+      rs = crypto;
+    }
+  });
+
+  return rs;
+};

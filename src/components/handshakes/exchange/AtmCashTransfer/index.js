@@ -21,12 +21,11 @@ import { Field, change } from 'redux-form';
 import { debounce, compact } from 'lodash';
 import { getCashFromCrypto, sendAtmCashTransfer } from '@/reducers/exchange/action';
 import { showAlert, showScanQRCode } from '@/reducers/app/action';
-import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import { getErrorMessageFromCode, getCryptoFromAddress } from '@/components/handshakes/exchange/utils';
 import { validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { BitcoinCash } from '@/services/Wallets/BitcoinCash';
-import QrCodeScanner from './components/QrCodeScanner';
 import './style.scss';
 
 export const CRYPTO_ICONS = {
@@ -204,14 +203,12 @@ class AtmCashTransfer extends Component {
 
   detectCryptoCurrency() {
     const { walletAddress } = this.state;
-    Object.keys(this.sampleCrypto)?.forEach(crypto => {
-      if (this.sampleCrypto[crypto]?.checkAddressValid(walletAddress) === true) {
-        const currency = listCurrency?.find(item => item?.id === crypto);
+    const crypto = getCryptoFromAddress(walletAddress);
 
-        // update this currency to redux form
-        this.props.change(nameFormNewTransaction, 'currency', currency);
-      }
-    });
+    const currency = listCurrency?.find(item => item?.id === crypto);
+
+    // update this currency to redux form
+    this.props.change(nameFormNewTransaction, 'currency', currency);
   }
 
   validateWallet(walletAddress = '') {
@@ -266,7 +263,6 @@ class AtmCashTransfer extends Component {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <div className="new-transaction-container">
-          <QrCodeScanner ref={qrcode => { this.qrCodeScanner = qrcode?.getWrappedInstance(); }} onData={this.onQrCodeData} />
           <FormNewTransaction className="form-new-transaction" onSubmit={this.onTransfer} validate={this.handleValidate}>
             <div className="group-el">
               <div className="form-el">
