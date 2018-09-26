@@ -36,7 +36,7 @@ import { UnicornGO } from '@/services/Wallets/Collectibles/UnicornGO';
 import { WarToken } from '@/services/Wallets/Collectibles/WarToken';
 
 import { APP, BASE_API } from '@/constants';
-import { StringHelper } from '@/services/helper';
+import Helper, { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
 import axios from 'axios';
 import { merge, trimEnd } from 'lodash';
@@ -765,6 +765,105 @@ export class MasterWallet {
         return false;
       }
     }
+    /**
+    * Get coin type from its wallet address
+    * @param {String} address
+    */
+    static getCoinSymbolFromAddress(address){            
+      for (const i in MasterWallet.ListDefaultCoin){
+        let wallet = new MasterWallet.ListDefaultCoin[i]();
+        if (wallet.checkAddressValid(address) === true){
+          return wallet.name;
+        }
+      }
+      return false;       
+    }
+
+    static getQRCodeFunction(text){
+      // 0: any data ...
+      // 1: website:
+      // 2: ninja-redeem:code?value=25
+      // 3: <coin-title>:<address>?amount=<number>
+      // 4: <address-only>
+      
+      let keyRedem = "ninja-redeem";
+
+      function url(text) {        
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        if(!urlRegex.test(text)) {          
+          return false;
+        } else {
+          return text.replace(urlRegex, function(url) {            
+            return url;
+          });        
+        }        
+      }
+      function redeem(text){
+        if (text.includes(keyRedem)){
+          let dataSplit = text.split('?');
+          let code = dataSplit[0].split(':')[1];
+          let param = Helper.getQueryStrings(dataSplit[1]);
+          return {"code": code, "value" : param['value']};
+        }               
+        return false; 
+      }
+      function transfer(text){         
+        let dataSplit = text.split('?');
+        alert(dataSplit[1]);
+        for (const i in MasterWallet.ListDefaultCoin){
+          let wallet = new MasterWallet.ListDefaultCoin[i]();
+          if (dataSplit[0].toLowerCase().includes(wallet.title.toLowerCase())){
+            let listData = dataSplit[0].split(':');
+            if(listData.length > 0){
+              let address = listData[1];
+              let param = Helper.getQueryStrings("?"+ataSplit[1]);
+              console.log(param);
+              return {"address": address, "amount" : param['amount']};  
+            }
+            else{
+              return false;
+            }            
+          }
+        }          
+        return false;
+      }
+      function address(text){
+        return MasterWallet.getCoinSymbolFromAddress(text);
+      }
+      // let check:
+      // web:      
+      let result = {"type": 0, "data": {}, text: text};
+      
+      let tmpResult = url(text);      
+      if (tmpResult != false){
+        result.type = 1;
+        result.data = tmpResult;
+        return result;
+      }
+            
+      tmpResult = redeem(text);
+      
+      if (tmpResult != false){
+        result.type = 2;
+        result.data = tmpResult;
+        return result;
+      }
+
+      tmpResult = transfer(text);
+      if (tmpResult != false){
+        result.type = 3;
+        result.data = tmpResult;
+        return result;
+      }
+      tmpResult = address(text);
+      if (tmpResult != false){
+        result.type = 4;
+        result.data = tmpResult;
+        return result;
+      }      
+      return result;
+    }
+
 }
 
 export default { MasterWallet };

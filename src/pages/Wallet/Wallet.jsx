@@ -84,7 +84,7 @@ import customRightIcon from '@/assets/images/wallet/icons/icon-options.svg';
 import floatButtonScanQRCode from '@/assets/images/wallet/icons/float-button-scan.svg';
 
 import WalletPreferences from '@/components/Wallet/WalletPreferences';
-import { requestWalletPasscode  } from '@/reducers/app/action';
+import { requestWalletPasscode, showScanQRCode  } from '@/reducers/app/action';
 
 const QRCode = require('qrcode.react');
 
@@ -299,6 +299,8 @@ class Wallet extends React.Component {
   }
 
   async componentDidMount() {
+    console.log (MasterWallet.getQRCodeFunction("bitcoin:2342342342342342?amount=234"));
+    
     this.getSetting();
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
@@ -938,7 +940,12 @@ class Wallet extends React.Component {
     return (
       <div className="wallet-page">
 
-        {/* <img onClick={()=> {alert('ga');}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} /> */}
+        <img onClick={()=> {this.props.showScanQRCode({      
+              onFinish: (data) => {
+                alert(data);
+              }
+            });
+          }} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
 
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
           {modalHistory}
@@ -1183,7 +1190,8 @@ const mapDispatch = ({
   change,
   clearFields,
   hideHeader,
-  requestWalletPasscode
+  requestWalletPasscode,
+  showScanQRCode
 });
 
 
