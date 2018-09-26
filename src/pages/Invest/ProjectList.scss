@@ -1,0 +1,55 @@
+.projectItem{
+  background-color: #fff;
+  padding:28px 20px 5px 20px;
+  margin-bottom:3px;
+  max-height: 454px;
+  clear:'both';
+}
+.progressbar{
+  height: 4px;
+}
+.progressCount{
+  position: absolute;
+  font-size: 14px;
+  top:-14px;
+  right:0;
+  color:#000;
+}
+.progressBlock{
+  position: relative;
+  padding:0.5em 0 ;
+}
+.fundBlock{
+  margin:0.7em 0;
+  width:400px;
+  padding:0.9em 0;
+  padding-bottom:5px;
+}
+.fund-label,.fund-item-value{
+  text-transform: uppercase;
+  font-size: 13px;
+  text-align: left;
+  display:block;
+}
+.fund-label{
+  font-weight: bold;
+  color :#868DAD;
+}
+.fund-item{
+  margin-right: 1em;
+  display:inline-block;
+}
+.userImage{
+  width:30px;
+  height:30px;
+  border-radius: 50%;
+}
+.userInfoBlock{
+  clear:both;
+}
+.userItem{
+  float:left;
+}
+.star-ratings{
+  float:right;
+}
