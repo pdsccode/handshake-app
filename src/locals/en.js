@@ -1103,6 +1103,8 @@ export default {
         statusTitle: 'Status',
         personalAtm: 'Personal ATM',
         storeAtm: 'Store ATM',
+        confirmCreateAtm: 'Create your ATM?',
+        confirmUpdateAtm: 'Update your ATM?',
       },
       button: {
         create: 'Create my ATM',

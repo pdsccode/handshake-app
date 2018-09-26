@@ -45,8 +45,8 @@ export const fieldAtmStatus = ({ input, texts }) => {
 export const fieldTimePicker = ({ input, defaultTime }) => {
   const { onChange, value } = input;
   const now = moment().hour(0).minute(0);
-  const TIME_FORMAT = 'hh:mm a';
-  const timeValue = value || defaultTime || moment('08:00 AM', TIME_FORMAT);
+  const TIME_FORMAT = 'HH:mm';
+  const timeValue = value || defaultTime || moment('08:00', TIME_FORMAT);
   return (
     <div>
       <TimePicker
@@ -56,8 +56,8 @@ export const fieldTimePicker = ({ input, defaultTime }) => {
         value={timeValue}
         onChange={onChange}
         format={TIME_FORMAT}
-        use12Hours
         inputReadOnly
+        showMinute={false}
       />
     </div>
   );

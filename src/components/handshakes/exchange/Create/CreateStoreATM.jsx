@@ -23,6 +23,7 @@ import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker } from './reduxFormFields';
 import 'rc-time-picker/assets/index.css';
+import Feed from '@/components/core/presentation/Feed/Feed';
 
 const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -38,6 +39,8 @@ const ATM_STATUS = {
   OPEN: 'open',
   CLOSE: 'close',
 };
+
+const TIME_FORMAT = 'HH:mm';
 
 const nameFormFilterFeeds = 'formFilterFeeds';
 const FormFilterFeeds = createForm({
@@ -56,14 +59,15 @@ const FormExchangeCreate = createForm({
     initialValues: {
       selectedDay: {},
       atmType: ATM_TYPE.PERSONAL,
+      atmStatus: false,
+      startTime: moment('08:00', TIME_FORMAT),
+      endTime: moment('17:00', TIME_FORMAT),
     },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const textColor = '#000000';
-
-const TIME_FORMAT = 'hh:mm a';
 
 class Component extends React.Component {
   static propTypes = {
@@ -73,18 +77,11 @@ class Component extends React.Component {
   constructor(props) {
     super(props);
 
-    const isUpdate = false;
-
     this.state = {
       modalContent: '',
       lat: 0,
       lng: 0,
-      isUpdate,
       cashTab: CASH_ATM_TAB.INFO,
-      atmType: true,
-      atmStatus: false,
-      startTime: moment('08:00 AM', TIME_FORMAT),
-      endTime: moment('05:00 PM', TIME_FORMAT),
 
       cashStore: this.props.cashStore,
     };
@@ -106,23 +103,24 @@ class Component extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {rfChange} = nextProps;
+    const { rfChange } = nextProps;
     if (JSON.stringify(nextProps.cashStore) !== JSON.stringify(prevState.cashStore)) {
-      const {name, address, phone, status, business_type, } = nextProps.cashStore;
+      const { name, address, phone, status, business_type, information } = nextProps.cashStore;
 
       rfChange(nameFormExchangeCreate, 'username', name);
-      rfChange(nameFormExchangeCreate, 'phone', address);
-      rfChange(nameFormExchangeCreate, 'address', phone);
-      return { cashStore: nextProps.cashStore,
-        atmType: business_type === ATM_TYPE.PERSONAL,
-        atmStatus: status === ATM_STATUS.OPEN,
-      };
+      rfChange(nameFormExchangeCreate, 'phone', phone);
+      rfChange(nameFormExchangeCreate, 'address', address);
+      rfChange(nameFormExchangeCreate, 'atmType', business_type);
+      rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN);
+      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour, TIME_FORMAT));
+      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
+      return { cashStore: nextProps.cashStore };
     }
   }
 
   componentDidMount() {
     const {
-      ipInfo, rfChange, authProfile, freeStartInfo, isChooseFreeStart, getUserLocation,
+      ipInfo,
     } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude, ipInfo?.addressDefault);
 
@@ -164,35 +162,64 @@ class Component extends React.Component {
 
   onSubmit = (values) => {
     console.log('onSubmit', values);
-    console.log('state', this.state);
 
     const { messages } = this.props.intl;
     const { cashStore } = this.props;
-    const { lat, lng, atmType, atmStatus, startTime, endTime } = this.state;
-    const { username, phone, address } = values;
+    const { lat, lng } = this.state;
+    const { username, phone, address, atmType, atmStatus, startTime, endTime } = values;
 
-    const data = {
+    let data = {
       name: username,
-      address: address,
-      phone: phone,
-      business_type: atmType ? ATM_TYPE.PERSONAL : ATM_TYPE.STORE,
-      status: atmStatus ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE,
-      center: 'abcdef',
-      information: { open_hour: startTime.format(TIME_FORMAT), close_hour: endTime.format(TIME_FORMAT) },
+      address,
+      phone,
+      business_type: atmType,
       longitude: lng,
       latitude: lat,
     };
 
-    this.showLoading();
-
-    if (cashStore) {
-      this.updateOffer(data);
-    } else {
-      this.createOffer(data);
+    if (atmType === ATM_TYPE.PERSONAL) {
+      data.status = atmStatus ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE;
+    } else if (atmType === ATM_TYPE.STORE) {
+      data.information = { open_hour: startTime.format(TIME_FORMAT), close_hour: endTime.format(TIME_FORMAT) };
     }
+
+    let message = '';
+    if (cashStore) {
+      message = messages.create.atm.text.confirmUpdateAtm;
+    } else {
+      message = messages.create.atm.text.confirmCreateAtm;
+    }
+
+    this.setState({
+      modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                <div>{message}</div>
+              </div>
+            </Feed>
+            {
+              cashStore ? (
+                <Button className="mt-2" block onClick={() => this.updateOffer(data)}><FormattedMessage id="ex.btn.confirm" /></Button>
+              ) : (
+                <Button className="mt-2" block onClick={() => this.createOffer(data)}><FormattedMessage id="ex.btn.confirm" /></Button>
+              )
+            }
+            <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}><FormattedMessage id="ex.btn.notNow" /></Button>
+          </div>
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  cancelCreateOffer = () => {
+    this.modalRef.close();
   }
 
   createOffer = (offer) => {
+    this.showLoading();
     this.modalRef.close();
     console.log('createOffer', offer);
 
@@ -206,6 +233,7 @@ class Component extends React.Component {
   }
 
   updateOffer = (offer) => {
+    this.showLoading();
     this.modalRef.close();
     console.log('createOffer', offer);
 
@@ -248,43 +276,20 @@ class Component extends React.Component {
     });
   }
 
-  handleValidate = values => {
-    const { isUpdate } = this.state;
-    return validate(values, isUpdate);
-  }
-
   onCashTabChange = (e, newValue) => {
     console.log('onTypeChange', newValue);
     this.setState({ cashTab: newValue }, () => {
     });
   }
 
-  onChangeTypeAtm = () => {
-    this.setState({ atmType: !this.state.atmType });
-  }
-
-  changeAtmStatus = (isChecked) => {
-    this.setState({ atmStatus: isChecked });
-  }
-
-  onStartTimeChange = (value) => {
-    // const format = 'h:mm a';
-    // console.log(value && value.format(format));
-    this.setState({ startTime: value });
-  }
-
-  onEndTimeChange = (value) => {
-    // const format = 'h:mm a';
-    // console.log(value && value.format(format));
-    this.setState({ endTime: value });
-  }
-
   render() {
     const { messages } = this.props.intl;
     const {
-      modalContent, cashTab, atmType,
-      startTime, endTime,
+      modalContent, cashTab,
     } = this.state;
+
+    const { atmType } = this.props;
+
 
     return (
       <div>
@@ -310,7 +315,7 @@ class Component extends React.Component {
 
         {
           cashTab === CASH_ATM_TAB.INFO ? (
-            <FormExchangeCreate onSubmit={this.onSubmit} validate={this.handleValidate}>
+            <FormExchangeCreate onSubmit={this.onSubmit}>
               <div className="create-store-atm">
                 <div>
                   <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
@@ -355,11 +360,6 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                <Field
-                  component={fieldAtmStatus}
-                  texts={messages.create.atm.text}
-                  name="atmStatus"
-                />
                 <div className="input-group">
                   <div className="d-table w-100">
                     <Field
@@ -370,31 +370,34 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="input-group">
-                  <Field
-                    component={fieldDaySelector}
-                    intl={this.props.intl}
-                    name="selectedDay"
-                    validate={[requiredDaySelector]}
-                  />
-                  <div className="d-table w-100 atm-time">
-                    <div className="d-table-cell w-50">
-                      <Field
-                        component={fieldTimePicker}
-                        texts={messages.create.atm.text}
-                        name="startTime"
-                      />
+                {
+                  atmType === ATM_TYPE.PERSONAL ? (
+                    <Field
+                      component={fieldAtmStatus}
+                      texts={messages.create.atm.text}
+                      name="atmStatus"
+                    />
+                  ) : (
+                    <div className="input-group">
+                      <div className="d-table w-100 atm-time">
+                        <div className="d-table-cell w-50">
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            name="startTime"
+                          />
+                        </div>
+                        <div className="d-table-cell w-50">
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            name="endTime"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className="d-table-cell w-50">
-                      <Field
-                        component={fieldTimePicker}
-                        texts={messages.create.atm.text}
-                        name="endTime"
-                      />
-                    </div>
-                  </div>
-                </div>
-
+                  )
+                }
                 <Button block type="submit" className="mt-3 open-button"> {
                   messages.create.atm.button.save
                 }
@@ -414,14 +417,9 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const phone = selectorFormExchangeCreate(state, 'phone');
-  const address = selectorFormExchangeCreate(state, 'address');
-  const username = selectorFormExchangeCreate(state, 'username');
-
+  const atmType = selectorFormExchangeCreate(state, 'atmType');
   return {
-    phone,
-    address,
-    username,
+    atmType,
     ipInfo: state.app.ipInfo,
     cashStore: state.exchange.cashStore,
   };
