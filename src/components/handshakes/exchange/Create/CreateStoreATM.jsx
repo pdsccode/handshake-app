@@ -28,6 +28,16 @@ const CASH_ATM_TAB = {
   TRANSACTION: 'TRANSACTION',
 };
 
+const ATM_TYPE = {
+  PERSONAL: 'personal',
+  STORE: 'store',
+};
+
+const ATM_STATUS = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};
+
 const nameFormFilterFeeds = 'formFilterFeeds';
 const FormFilterFeeds = createForm({
   propsReduxForm: {
@@ -50,7 +60,7 @@ const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const textColor = '#000000';
 
-const languages = ["English", "German", "French", "Spanish", "Mandarin", "Tamil"];
+const TIME_FORMAT = 'hh:mm a';
 
 class Component extends React.Component {
   static propTypes = {
@@ -70,8 +80,10 @@ class Component extends React.Component {
       cashTab: CASH_ATM_TAB.INFO,
       atmType: true,
       atmStatus: false,
-      startTime: '08:00 am',
-      endTime: '17:00 pm',
+      startTime: moment('08:00 AM', TIME_FORMAT),
+      endTime: moment('05:00 PM', TIME_FORMAT),
+
+      cashStore: this.props.cashStore,
     };
   }
 
@@ -87,6 +99,21 @@ class Component extends React.Component {
         const address = response.data.results[0] && response.data.results[0].formatted_address;
         rfChange(nameFormExchangeCreate, 'address', address);
       });
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {rfChange} = nextProps;
+    if (JSON.stringify(nextProps.cashStore) !== JSON.stringify(prevState.cashStore)) {
+      const {name, address, phone, status, business_type, } = nextProps.cashStore;
+
+      rfChange(nameFormExchangeCreate, 'username', name);
+      rfChange(nameFormExchangeCreate, 'phone', address);
+      rfChange(nameFormExchangeCreate, 'address', phone);
+      return { cashStore: nextProps.cashStore,
+        atmType: business_type === ATM_TYPE.PERSONAL,
+        atmStatus: status === ATM_STATUS.OPEN,
+      };
     }
   }
 
@@ -137,21 +164,29 @@ class Component extends React.Component {
     console.log('state', this.state);
 
     const { messages } = this.props.intl;
+    const { cashStore } = this.props;
+    const { lat, lng, atmType, atmStatus, startTime, endTime } = this.state;
+    const { username, phone, address } = values;
 
     const data = {
-      name: 'Hey hey',
-      address: '123 Abc street',
-      phone: '1234567890',
-      business_type: 'personal',
-      status: 'open',
+      name: username,
+      address: address,
+      phone: phone,
+      business_type: atmType ? ATM_TYPE.PERSONAL : ATM_TYPE.STORE,
+      status: atmStatus ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE,
       center: 'abcdef',
-      information: { open_hour: '7 AM', close_hour: '8 PM' },
-      longitude: 1,
-      latitude: 2,
+      information: { open_hour: startTime.format(TIME_FORMAT), close_hour: endTime.format(TIME_FORMAT) },
+      longitude: lat,
+      latitude: lng,
     };
 
-    // this.createOffer(data);
-    this.updateOffer(data);
+    this.showLoading();
+
+    if (cashStore) {
+      this.updateOffer(data);
+    } else {
+      this.createOffer(data);
+    }
   }
 
   createOffer = (offer) => {
@@ -195,7 +230,7 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        // this.gotoUserDashBoard();
+        this.getStoreATM();
       },
     });
   }
@@ -229,21 +264,29 @@ class Component extends React.Component {
     this.setState({ atmStatus: isChecked });
   }
 
-  onChange = (value) => {
-    const format = 'h:mm a';
-    console.log(value && value.format(format));
+  onStartTimeChange = (value) => {
+    // const format = 'h:mm a';
+    // console.log(value && value.format(format));
+    this.setState({ startTime: value });
+  }
+
+  onEndTimeChange = (value) => {
+    // const format = 'h:mm a';
+    // console.log(value && value.format(format));
+    this.setState({ endTime: value });
   }
 
   render() {
     const { messages } = this.props.intl;
     const {
       modalContent, cashTab, atmType,
+      startTime, endTime,
     } = this.state;
 
-    const format = 'h:mm a';
+    // const format = 'hh:mm a';
+    // const format = 'HH:mm';
 
     const now = moment().hour(0).minute(0);
-
 
     return (
       <div>
@@ -344,9 +387,9 @@ class Component extends React.Component {
                         name="startTime"
                         showSecond={false}
                         defaultValue={now}
-                        className="xxx"
-                        onChange={this.onChange}
-                        format={format}
+                        value={startTime}
+                        onChange={this.onStartTimeChange}
+                        format={TIME_FORMAT}
                         use12Hours
                         inputReadOnly
                       />
@@ -357,9 +400,9 @@ class Component extends React.Component {
                         name="endTime"
                         showSecond={false}
                         defaultValue={now}
-                        className="xxx"
-                        onChange={this.onChange}
-                        format={format}
+                        value={endTime}
+                        onChange={this.onEndTimeChange}
+                        format={TIME_FORMAT}
                         use12Hours
                         inputReadOnly
                       />
@@ -395,7 +438,7 @@ const mapStateToProps = (state) => {
     address,
     username,
     ipInfo: state.app.ipInfo,
-
+    cashStore: state.exchange.cashStore,
   };
 };
 
