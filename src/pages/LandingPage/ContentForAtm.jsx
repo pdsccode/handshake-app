@@ -58,7 +58,7 @@ class ContentForAtm extends React.Component {
             features.map((feature, index) => {
               const { name, title, icon, caption } = feature;
               return (
-                <div key={name} className="col-12 col-md-3 mt-4">
+                <div key={name} className="col-12 col-md-4 mt-4">
                   <div><img src={icon} /></div>
                   <div className="feature-title">{title}</div>
                   <div><img src={iconLine} /></div>
