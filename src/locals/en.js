@@ -1092,6 +1092,8 @@ export default {
         statusTitle: 'Status',
         personalAtm: 'Personal ATM',
         storeAtm: 'Store ATM',
+        open: 'Open',
+        closed: 'Closed',
       },
       button: {
         create: 'Create my ATM',

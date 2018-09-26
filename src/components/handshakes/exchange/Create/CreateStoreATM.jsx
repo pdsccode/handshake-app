@@ -50,6 +50,8 @@ const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const textColor = '#000000';
 
+const languages = ["English", "German", "French", "Spanish", "Mandarin", "Tamil"];
+
 class Component extends React.Component {
   static propTypes = {
     // setLoading: PropTypes.func.isRequired,
@@ -68,6 +70,8 @@ class Component extends React.Component {
       cashTab: CASH_ATM_TAB.INFO,
       atmType: true,
       atmStatus: false,
+      startTime: '08:00 am',
+      endTime: '17:00 pm',
     };
   }
 
@@ -333,9 +337,9 @@ class Component extends React.Component {
                   </div>
                 </div>
                 <div className="input-group">
-                  <div className="d-table w-100">
+                  <div className="d-table w-100 atm-time">
                     <div className="d-table-cell w-50">
-                      <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
+                      <label className="form-control-title">{messages.create.atm.text.open.toUpperCase()}</label>
                       <TimePicker
                         name="startTime"
                         showSecond={false}
@@ -348,7 +352,7 @@ class Component extends React.Component {
                       />
                     </div>
                     <div className="d-table-cell w-50">
-                      <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
+                      <label className="form-control-title">{messages.create.atm.text.closed.toUpperCase()}</label>
                       <TimePicker
                         name="endTime"
                         showSecond={false}
@@ -362,6 +366,7 @@ class Component extends React.Component {
                     </div>
                   </div>
                 </div>
+
                 <Button block type="submit" className="mt-3 open-button"> {
                   messages.create.atm.button.save
                 }
