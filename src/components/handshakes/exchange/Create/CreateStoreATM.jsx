@@ -21,6 +21,7 @@ import Switch from '@/components/core/controls/Switch/Switch';
 import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
 import TimePicker from 'rc-time-picker';
 import moment from 'moment';
+import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker } from './reduxFormFields';
 import 'rc-time-picker/assets/index.css';
 
 const CASH_ATM_TAB = {
@@ -54,6 +55,7 @@ const FormExchangeCreate = createForm({
     form: nameFormExchangeCreate,
     initialValues: {
       selectedDay: {},
+      atmType: ATM_TYPE.PERSONAL,
     },
   },
 });
@@ -284,11 +286,6 @@ class Component extends React.Component {
       startTime, endTime,
     } = this.state;
 
-    // const format = 'hh:mm a';
-    // const format = 'HH:mm';
-
-    const now = moment().hour(0).minute(0);
-
     return (
       <div>
         <div className="mt-2 mb-1">
@@ -301,10 +298,9 @@ class Component extends React.Component {
                   component={fieldRadioButton}
                   type="tab-6"
                   list={[
-                    { value: CASH_ATM_TAB.INFO, text: messages.create.atm.tab.storeInfo, icon: <span className="icon-dashboard align-middle" /> },
-                    { value: CASH_ATM_TAB.TRANSACTION, text: messages.create.atm.tab.transaction, icon: <span className="icon-transactions align-middle" /> },
+                    { value: CASH_ATM_TAB.INFO, text: messages.create.atm.tab.storeInfo, icon: null },
+                    { value: CASH_ATM_TAB.TRANSACTION, text: messages.create.atm.tab.transaction, icon: null },
                   ]}
-                  // validate={[required]}
                   onChange={this.onCashTabChange}
                 />
               </div>
@@ -359,24 +355,19 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="atm-status">
-                  <div className="d-table w-100">
-                    <div className="d-table-cell title">
-                      {messages.create.atm.text.statusTitle}
-                    </div>
-                    <div className="d-table-cell text-right value">
-                      <Switch isChecked={false} onChange={(isChecked) => { this.changeAtmStatus(isChecked); }} />
-                    </div>
-                  </div>
-                </div>
+                <Field
+                  component={fieldAtmStatus}
+                  texts={messages.create.atm.text}
+                  name="atmStatus"
+                />
                 <div className="input-group">
                   <div className="d-table w-100">
-                    <div className="d-table-cell w-50">
-                      <Checkbox name="personalAtm" checked={atmType} label={messages.create.atm.text.personalAtm} onClick={this.onChangeTypeAtm} />
-                    </div>
-                    <div className="d-table-cell w-50">
-                      <Checkbox name="storeAtm" checked={!atmType} label={messages.create.atm.text.storeAtm} onClick={this.onChangeTypeAtm} />
-                    </div>
+                    <Field
+                      component={fieldTypeAtm}
+                      texts={messages.create.atm.text}
+                      name="atmType"
+                      atmType={ATM_TYPE}
+                    />
                   </div>
                 </div>
                 <div className="input-group">
@@ -388,29 +379,17 @@ class Component extends React.Component {
                   />
                   <div className="d-table w-100 atm-time">
                     <div className="d-table-cell w-50">
-                      <label className="form-control-title">{messages.create.atm.text.open.toUpperCase()}</label>
-                      <TimePicker
+                      <Field
+                        component={fieldTimePicker}
+                        texts={messages.create.atm.text}
                         name="startTime"
-                        showSecond={false}
-                        defaultValue={now}
-                        value={startTime}
-                        onChange={this.onStartTimeChange}
-                        format={TIME_FORMAT}
-                        use12Hours
-                        inputReadOnly
                       />
                     </div>
                     <div className="d-table-cell w-50">
-                      <label className="form-control-title">{messages.create.atm.text.closed.toUpperCase()}</label>
-                      <TimePicker
+                      <Field
+                        component={fieldTimePicker}
+                        texts={messages.create.atm.text}
                         name="endTime"
-                        showSecond={false}
-                        defaultValue={now}
-                        value={endTime}
-                        onChange={this.onEndTimeChange}
-                        format={TIME_FORMAT}
-                        use12Hours
-                        inputReadOnly
                       />
                     </div>
                   </div>
