@@ -830,11 +830,11 @@ export class MasterWallet {
       }
       // let check:
       // web:      
-      let result = {"type": 0, "data": {}, text: text};
+      let result = {"type": "text", "data": {}, text: text};
       
       let tmpResult = url(text);      
       if (tmpResult != false){
-        result.type = 1;
+        result.type = "url";
         result.data = tmpResult;
         return result;
       }
@@ -842,20 +842,20 @@ export class MasterWallet {
       tmpResult = redeem(text);
       
       if (tmpResult != false){
-        result.type = 2;
+        result.type = "redeem";
         result.data = tmpResult;
         return result;
       }
 
       tmpResult = transfer(text);
       if (tmpResult != false){
-        result.type = 3;
+        result.type = "transfer";
         result.data = tmpResult;
         return result;
       }
       tmpResult = address(text);
       if (tmpResult != false){
-        result.type = 4;
+        result.type = "crypto-address";
         result.data = tmpResult;
         return result;
       }      
