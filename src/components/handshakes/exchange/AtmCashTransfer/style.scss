@@ -1,5 +1,9 @@
 $blur_color: #868DAD;
 
+.modal.modal-custom-show {
+  display: block !important;
+}
+
 div.new-transaction-container {
   height: 100%;
   padding: 28px 18px;
@@ -17,6 +21,9 @@ div.new-transaction-container {
     }
 
     .input-group {
+      > input::placeholder {
+        font-size: 14px;
+      }
       &label {
         display: block;
       }
@@ -77,6 +84,7 @@ div.new-transaction-container {
       }
       .prepend-qrcode {
         top: 63px;
+        right: 110px;
       }
       input {
         padding-right: 50px;
