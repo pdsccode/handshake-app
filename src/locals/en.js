@@ -1618,5 +1618,6 @@ export default {
     scan_qr_code: 'Scan QR code',
     invalid_address_valid: 'Invalid wallet address',
     success_msg: 'Success!',
+    title: 'New Transaction',
   },
 };

@@ -38,7 +38,9 @@ import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
 import local from '@/services/localStore';
+import Modal from "@/components/core/controls/Modal/Modal";
 // import _debounce from 'lodash/debounce';
+import AtmCashTransfer from '@/components/handshakes/exchange/AtmCashTransfer';
 
 const defaultZoomLevel = 13;
 
@@ -56,6 +58,7 @@ class DiscoverPage extends React.Component {
       isLoading: true,
       exchange: this.props.exchange,
       discover: this.props.discover,
+      modalTitle: '',
       modalContent: <div />, // type is node
       propsModal: {
         // className: "discover-popup",
@@ -352,6 +355,20 @@ class DiscoverPage extends React.Component {
     this.setState({ zoomLevel: this.mapRef.getZoom() });
   }
 
+  openNewTransaction = () => {
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalTitle: messages.atm_cash_transfer.title,
+      modalContent:
+        (
+          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} />
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
   render() {
     const {
       propsModal,
@@ -368,6 +385,7 @@ class DiscoverPage extends React.Component {
       curLocation,
       mapCenterLat,
       mapCenterLng,
+      modalTitle,
     } = this.state;
     const { list: stations, offers } = this.props.discover;
     const { history } = this.props;
@@ -405,6 +423,7 @@ class DiscoverPage extends React.Component {
           onMapMounted={(e) => (this.mapRef = e)}
           onZoomChanged={this.handleOnZoomChanged}
           onCenterChanged={this.handleOnCenterChanged}
+          openNewTransaction={this.openNewTransaction}
         />
 
         {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
@@ -415,9 +434,12 @@ class DiscoverPage extends React.Component {
             {/*)*/}
             {/*: this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null*/}
         {/*}*/}
-        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
+        {/*<ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>*/}
+          {/*{modalContent}*/}
+        {/*</ModalDialog>*/}
+        <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
           {modalContent}
-        </ModalDialog>
+        </Modal>
         {/* <Footer /> */}
       </React.Fragment>
     );
