@@ -176,8 +176,8 @@ class Component extends React.Component {
       status: atmStatus ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE,
       center: 'abcdef',
       information: { open_hour: startTime.format(TIME_FORMAT), close_hour: endTime.format(TIME_FORMAT) },
-      longitude: lat,
-      latitude: lng,
+      longitude: lng,
+      latitude: lat,
     };
 
     this.showLoading();
