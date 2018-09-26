@@ -1,29 +1,26 @@
+/* eslint react/prop-types:0 */
+
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from '@/components/core/controls/Button';
-import './CreateStoreATM.scss';
 import createForm from '@/components/core/form/createForm';
-import { fieldInput, fieldPhoneInput, fieldRadioButton, fieldDaySelector } from '@/components/core/form/customField';
-import { required, requiredPhone, requiredDaySelector } from '@/components/core/form/validation';
+import { fieldInput, fieldRadioButton, fieldPhoneInput } from '@/components/core/form/customField';
+import { required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
-
-import { validate } from './validation';
-import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import axios from 'axios';
-import Switch from '@/components/core/controls/Switch/Switch';
-import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
-import TimePicker from 'rc-time-picker';
 import moment from 'moment';
-import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker } from './reduxFormFields';
-import 'rc-time-picker/assets/index.css';
 import Feed from '@/components/core/presentation/Feed/Feed';
+import 'rc-time-picker/assets/index.css';
+import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker } from './reduxFormFields';
+import './CreateStoreATM.scss';
+import '../styles.scss';
 
 const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -59,9 +56,9 @@ const FormExchangeCreate = createForm({
     initialValues: {
       selectedDay: {},
       atmType: ATM_TYPE.PERSONAL,
-      atmStatus: false,
       startTime: moment('08:00', TIME_FORMAT),
       endTime: moment('17:00', TIME_FORMAT),
+      atmStatus: ATM_STATUS.OPEN,
     },
   },
 });
@@ -87,22 +84,8 @@ class Component extends React.Component {
     };
   }
 
-  setAddressFromLatLng = (lat, lng, addressDefault) => {
-    this.setState({ lat, lng });
-    const { rfChange } = this.props;
-    if (addressDefault) {
-      setTimeout(() => {
-        rfChange(nameFormExchangeCreate, 'address', addressDefault);
-      }, 0);
-    } else {
-      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
-        const address = response.data.results[0] && response.data.results[0].formatted_address;
-        rfChange(nameFormExchangeCreate, 'address', address);
-      });
-    }
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
+    /* eslint camelcase:0 */
     const { rfChange } = nextProps;
     if (JSON.stringify(nextProps.cashStore) !== JSON.stringify(prevState.cashStore)) {
       const { name, address, phone, status, business_type, information } = nextProps.cashStore;
@@ -116,6 +99,7 @@ class Component extends React.Component {
       rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
       return { cashStore: nextProps.cashStore };
     }
+    return null;
   }
 
   componentDidMount() {
@@ -130,36 +114,6 @@ class Component extends React.Component {
     this.getStoreATM();
   }
 
-  getStoreATM() {
-    this.props.getStoreATM({
-      PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
-      successFn: this.handleGetOfferStoresSuccess,
-      errorFn: this.handleGetOfferStoresFailed,
-    });
-  }
-
-  showLoading = () => {
-    // this.props.setLoading(true);
-    this.props.showLoading();
-  }
-
-  hideLoading = () => {
-    // this.props.setLoading(false);
-    this.props.hideLoading();
-  }
-
-  showAlert = (message) => {
-    this.props.showAlert({
-      message: <div className="text-center">
-        {message}
-      </div>,
-      timeOut: 5000,
-      type: 'danger',
-      callBack: () => {
-      },
-    });
-  }
-
   onSubmit = (values) => {
     console.log('onSubmit', values);
 
@@ -168,7 +122,7 @@ class Component extends React.Component {
     const { lat, lng } = this.state;
     const { username, phone, address, atmType, atmStatus, startTime, endTime } = values;
 
-    let data = {
+    const data = {
       name: username,
       address,
       phone,
@@ -214,6 +168,59 @@ class Component extends React.Component {
     });
   }
 
+  onCashTabChange = (e, newValue) => {
+    console.log('onTypeChange', newValue);
+    this.setState({ cashTab: newValue }, () => {
+    });
+  }
+
+  setAddressFromLatLng = (lat, lng, addressDefault) => {
+    this.setState({ lat, lng });
+    const { rfChange } = this.props;
+    if (addressDefault) {
+      setTimeout(() => {
+        rfChange(nameFormExchangeCreate, 'address', addressDefault);
+      }, 0);
+    } else {
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+        const address = response.data.results[0] && response.data.results[0].formatted_address;
+        rfChange(nameFormExchangeCreate, 'address', address);
+      });
+    }
+  }
+
+  getStoreATM() {
+    this.props.getStoreATM({
+      PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
+      successFn: this.handleGetOfferStoresSuccess,
+      errorFn: this.handleGetOfferStoresFailed,
+    });
+  }
+
+  showLoading = () => {
+    // this.props.setLoading(true);
+    this.props.showLoading();
+  }
+
+  hideLoading = () => {
+    // this.props.setLoading(false);
+    this.props.hideLoading();
+  }
+
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: (
+        <div className="text-center">
+          {message}
+        </div>
+      ),
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      },
+    });
+  }
+
   cancelCreateOffer = () => {
     this.modalRef.close();
   }
@@ -248,7 +255,6 @@ class Component extends React.Component {
 
   handleCreateOfferSuccess = async (responseData) => {
     console.log('handleCreateOfferSuccess', responseData);
-    const { rfChange, currency, amountSell } = this.props;
     // const offer = OfferShop.offerShop(responseData.data);
     // this.offer = offer;
 
@@ -276,12 +282,6 @@ class Component extends React.Component {
     });
   }
 
-  onCashTabChange = (e, newValue) => {
-    console.log('onTypeChange', newValue);
-    this.setState({ cashTab: newValue }, () => {
-    });
-  }
-
   render() {
     const { messages } = this.props.intl;
     const {
@@ -293,10 +293,9 @@ class Component extends React.Component {
 
     return (
       <div>
-        <div className="mt-2 mb-1">
+        <div className="atm-tab-container">
           <FormFilterFeeds>
             <div>
-              <hr style={{ margin: '10px 0 5px' }} />
               <div>
                 <Field
                   name="cash-show-type"
@@ -317,7 +316,7 @@ class Component extends React.Component {
           cashTab === CASH_ATM_TAB.INFO ? (
             <FormExchangeCreate onSubmit={this.onSubmit}>
               <div className="create-store-atm">
-                <div>
+                <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
                   <div >
                     <Field
@@ -331,23 +330,20 @@ class Component extends React.Component {
                   </div>
                 </div>
 
-                <div>
+                <div className="phone-field item-info">
                   <label className="form-control-title">{messages.create.atm.text.phone.toUpperCase()}</label>
-                  <div className="input-group w-100">
-                    <Field
-                      name="phone"
-                      className="form-control-custom w-100"
-                      component={fieldPhoneInput}
-                      color={textColor}
-                      type="tel"
-                      placeholder="4995926433"
-                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                      validate={[requiredPhone]}
-                    />
-                  </div>
+                  <Field
+                    name="phone"
+                    className="form-control-custom"
+                    component={fieldPhoneInput}
+                    color={textColor}
+                    type="tel"
+                    placeholder="4995926433"
+                    validate={[requiredPhone]}
+                  />
                 </div>
 
-                <div>
+                <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
                   <div >
                     <Field
@@ -360,7 +356,7 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                <div className="input-group">
+                <div className="input-group item-info">
                   <div className="d-table w-100">
                     <Field
                       component={fieldTypeAtm}
@@ -372,18 +368,22 @@ class Component extends React.Component {
                 </div>
                 {
                   atmType === ATM_TYPE.PERSONAL ? (
-                    <Field
-                      component={fieldAtmStatus}
-                      texts={messages.create.atm.text}
-                      name="atmStatus"
-                    />
+                    <div className="item-info">
+                      <Field
+                        component={fieldAtmStatus}
+                        texts={messages.create.atm.text}
+                        atmStatus={ATM_STATUS}
+                        name="atmStatus"
+                      />
+                    </div>
                   ) : (
-                    <div className="input-group">
+                    <div className="input-group item-info">
                       <div className="d-table w-100 atm-time">
                         <div className="d-table-cell w-50">
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
+                            defaultTime={moment('05:00 AM', TIME_FORMAT)}
                             name="startTime"
                           />
                         </div>
@@ -391,6 +391,7 @@ class Component extends React.Component {
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
+                            defaultTime={moment('08:00 PM', TIME_FORMAT)}
                             name="endTime"
                           />
                         </div>
@@ -398,8 +399,8 @@ class Component extends React.Component {
                     </div>
                   )
                 }
-                <Button block type="submit" className="mt-3 open-button"> {
-                  messages.create.atm.button.save
+                <Button block type="submit" className="mt-3 open-button item-info"> {
+                  messages.create.atm.button.create
                 }
                 </Button>
               </div>
@@ -408,7 +409,7 @@ class Component extends React.Component {
             <div>Transaction</div>
           )
         }
-        <ModalDialog onRef={modal => this.modalRef = modal}>
+        <ModalDialog onRef={modal => { this.modalRef = modal; }} >
           {modalContent}
         </ModalDialog>
       </div>
