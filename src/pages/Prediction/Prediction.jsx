@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import qs from 'querystring';
 import BetMode from '@/components/handshakes/betting/Feed/OrderPlace/BetMode';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
@@ -70,6 +71,7 @@ class Prediction extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     this.props.dispatch(loadMatches());
+    this.receiverMessage(this.props); // @TODO: Extensions
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
@@ -79,11 +81,25 @@ class Prediction extends React.Component {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-
   onCountdownComplete = (eventId) => {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
+  }
+
+  // @TODO: Extensions
+  /* eslint no-useless-escape: 0 */
+  receiverMessage = (props) => {
+    window.addEventListener('message', (e) => {
+      if (e.origin === 'chrome-extension://gcdjccmhjppknfldgfiihhnccfndchaf') {
+        const urlPattern = /^https?\:\/\/(?:www\.)([^\/?#]+)(?:[\/?#]|$)/i;
+        const { data } = e;
+        const { url } = JSON.parse(data);
+        const matches = url.match(urlPattern);
+        const source = matches && matches[1];
+        props.dispatch(loadMatches({ source }));
+      }
+    });
   }
 
   handleScroll = () => {
