@@ -1,12 +1,61 @@
 $highlight-button-color: #546FF7;
 $title-color: #868DAD;
 $input-hint-color: #BAC0DB;
+$height-el: 54px;
 
 
+.atm-tab-container {
+  border: 1px solid #E5EAF8;
+    border-left: none;
+    border-right: none;
+}
 
 .create-store-atm {
   padding: 0 15px;
+  font-size: initial;
 
+  .item-info {
+    margin: 10px 0px 20px 0px;
+  }
+
+  input[type=text], button[type=submit] {
+    height: $height-el;
+  }
+  .phone-field {
+    display: flex;
+    flex-direction: column;
+
+    .select-list-country-code-wrapper {
+      left: initial;
+      bottom: initial;
+    }
+
+    >span span.phone-input-country, >span span.phone-input-number {
+      background: #FFFFFF;
+      border: 1px solid #E5EAF8;
+      border-radius: 4px;
+      padding: 0.375rem 0.75rem;
+      letter-spacing: 0;
+      height: $height-el;
+      vertical-align: middle;
+      width: 100px;
+    }
+
+    >span span.phone-input-country {
+      border-right: none;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+
+    >span span.phone-input-number  {
+      width: 100%;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+      input {
+        color: #495057;
+      }
+    }
+  }
   .form-control-title {
     font-size: 14px;
     color: $title-color;
@@ -18,7 +67,6 @@ $input-hint-color: #BAC0DB;
     background: #FFFFFF;
     border: 1px solid #E5EAF8;
     border-radius: 4px;
-    font-size: 18px;
     letter-spacing: 0;
     &::placeholder {
       color: $input-hint-color;

@@ -216,10 +216,10 @@ export const fieldPhoneInput = customField(({
   }
   return (
     <span>
-      <span style={{ display: 'table-cell' }}>
+      <span className="phone-input-country" style={{ display: 'table-cell' }}>
         <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} color={color} />
       </span>
-      <span style={{ display: 'table-cell' }} className="pl-2"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span style={{ display: 'table-cell' }} className="pl-2 phone-input-number"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 });

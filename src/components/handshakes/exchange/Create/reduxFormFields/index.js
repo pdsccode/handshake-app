@@ -3,22 +3,24 @@ import React from 'react';
 import Switch from '@/components/core/controls/Switch/Switch';
 import TimePicker from 'rc-time-picker';
 import moment from 'moment';
+import './styles.scss';
 
 export const fieldTypeAtm = ({ input, texts, atmType }) => {
   const { onChange, value } = input;
   return (
-    <div onChange={({ target }) => onChange(target.value)}>
+    <div className="rf-type-atm-container" onChange={({ target }) => onChange(target.value)}>
       {Object.entries(atmType).map(([key, name]) => {
         const label = name === atmType.PERSONAL ? texts.personalAtm : texts.storeAtm;
         return (
-          <label key={key} className="radio-inline">
+          <label key={key} className="radio-inline rf-type-atm-radio-container">
             <input
               value={name}
               type="radio"
               name="typeAtm"
               checked={value === name}
             />
-            {label}
+            <span className="checkmark" />
+            <span>{label}</span>
           </label>
         );
       })}
@@ -26,17 +28,20 @@ export const fieldTypeAtm = ({ input, texts, atmType }) => {
   );
 };
 
-export const fieldAtmStatus = ({ input, texts }) => {
+export const fieldAtmStatus = ({ input, texts, atmStatus }) => {
   const { onChange, value } = input;
   return (
-    <div>
+    <div className="rf-status-atm">
+      <div className="rf-status-atm-title">
+        <span>{texts.statusTitle}</span>
+      </div>
       <div>
-        <div>
-          {texts.statusTitle}
-        </div>
-        <div>
-          <Switch isChecked={!!value} onChange={onChange} />
-        </div>
+        <Switch
+          isChecked={value === atmStatus.OPEN}
+          onChange={_value => {
+          return onChange(_value ? atmStatus.OPEN : atmStatus.CLOSE);
+          }}
+        />
       </div>
     </div>
   );
