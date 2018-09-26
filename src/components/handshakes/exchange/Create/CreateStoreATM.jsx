@@ -88,14 +88,12 @@ class Component extends React.Component {
     /* eslint camelcase:0 */
     const { rfChange } = nextProps;
     if (JSON.stringify(nextProps.cashStore) !== JSON.stringify(prevState.cashStore)) {
-      const { name, address, phone, status, business_type, information } = nextProps.cashStore;
-      console.log('cashStore', nextProps.cashStore);
-
+      const { name, address, phone, status, businessType, information } = nextProps.cashStore;
       rfChange(nameFormExchangeCreate, 'username', name);
       rfChange(nameFormExchangeCreate, 'phone', phone);
       rfChange(nameFormExchangeCreate, 'address', address);
-      rfChange(nameFormExchangeCreate, 'atmType', business_type);
-      rfChange(nameFormExchangeCreate, 'atmStatus', status);
+      rfChange(nameFormExchangeCreate, 'atmType', businessType);
+      rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE);
       rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour, TIME_FORMAT));
       rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
       return { cashStore: nextProps.cashStore };
@@ -122,7 +120,6 @@ class Component extends React.Component {
     const { cashStore } = this.props;
     const { lat, lng } = this.state;
     const { username, phone, address, atmType, atmStatus, startTime, endTime } = values;
-
     const data = {
       name: username,
       address,
