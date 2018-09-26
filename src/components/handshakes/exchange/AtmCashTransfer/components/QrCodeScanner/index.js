@@ -41,7 +41,7 @@ class QrCodeScanner extends Component {
   }
 
   open() {
-    this.setState({ visible: true }, this.modalScanQrCodeRef?.open);
+    this.setState({ visible: true }, () => this.modalScanQrCodeRef?.open());
   }
 
   openImageDialog = () => {
