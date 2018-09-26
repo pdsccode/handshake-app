@@ -67,6 +67,7 @@ const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Es
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
+const RouterInvest = createDynamicImport(() => import('@/components/Router/Invest'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -99,6 +100,8 @@ const configRoutesUsingMobileLayout = [
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
+  { path: URL.INVEST_PROJECT_LIST, component: RouterInvest },
+
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
