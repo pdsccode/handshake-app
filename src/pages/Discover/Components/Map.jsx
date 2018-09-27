@@ -12,6 +12,7 @@ import iconManageAtm from '@/assets/images/cash/ic-manage-atm.svg';
 import iconManageDashboard from '@/assets/images/cash/ic-dashboard.svg';
 import { HANDSHAKE_ID, URL } from '@/constants';
 import cx from 'classnames';
+import iconMyATM from './icons8-location_off.svg';
 
 class Map extends React.Component {
   goToDashboard = () => {
@@ -92,7 +93,7 @@ class Map extends React.Component {
           className="btn-current-location"
           onClick={onGoToCurrentLocation}
         >
-          <img src={iconCurLocationButton} width={30} />
+          <img src={iconMyATM} width={30} />
         </button>
         <Marker
           defaultIcon={{
