@@ -52,7 +52,6 @@ const SHA256 = require('crypto-js/sha256');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-
       Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, Ripple, BitcoinCashTestnet
     };
 
@@ -71,6 +70,8 @@ export class MasterWallet {
     static neutronTestNet = new Neuron(4);
 
     static KEY = 'wallets';
+
+    static QRCODE_TYPE = {"UNKNOW": 0, "URL": 1, "REDEEM": 2, "TRANSFER": 3, "CRYPTO_ADDRESS": 4};
 
     // Create an autonomous wallet:
 
@@ -773,13 +774,13 @@ export class MasterWallet {
       for (const i in MasterWallet.ListDefaultCoin){
         let wallet = new MasterWallet.ListDefaultCoin[i]();
         if (wallet.checkAddressValid(address) === true){
-          return wallet.name;
+          return {"symbol": wallet.name, "name": wallet.title, "address": address};
         }
       }
       return false;       
     }
 
-    static getQRCodeFunction(text){
+    static getQRCodeDetail(text){
       // 0: any data ...
       // 1: website:
       // 2: ninja-redeem:code?value=25
@@ -793,9 +794,8 @@ export class MasterWallet {
         if(!urlRegex.test(text)) {          
           return false;
         } else {
-          return text.replace(urlRegex, function(url) {            
-            return url;
-          });        
+          let match = text.match(urlRegex);
+          return match[0];
         }        
       }
       function redeem(text){
@@ -830,11 +830,11 @@ export class MasterWallet {
       }
       // let check:
       // web:      
-      let result = {"type": "text", "data": {}, text: text};
+      let result = {"type": MasterWallet.QRCODE_TYPE.UNKNOW, "data": {}, text: text};
       
       let tmpResult = url(text);      
       if (tmpResult != false){
-        result.type = "url";
+        result.type = MasterWallet.QRCODE_TYPE.URL;
         result.data = tmpResult;
         return result;
       }
@@ -842,20 +842,20 @@ export class MasterWallet {
       tmpResult = redeem(text);
       
       if (tmpResult != false){
-        result.type = "redeem";
+        result.type = MasterWallet.QRCODE_TYPE.REDEEM;
         result.data = tmpResult;
         return result;
       }
 
       tmpResult = transfer(text);
       if (tmpResult != false){
-        result.type = "transfer";
+        result.type = MasterWallet.QRCODE_TYPE.TRANSFER;
         result.data = tmpResult;
         return result;
       }
       tmpResult = address(text);
       if (tmpResult != false){
-        result.type = "crypto-address";
+        result.type = MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS;
         result.data = tmpResult;
         return result;
       }      

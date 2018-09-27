@@ -84,7 +84,9 @@ import customRightIcon from '@/assets/images/wallet/icons/icon-options.svg';
 import floatButtonScanQRCode from '@/assets/images/wallet/icons/float-button-scan.svg';
 
 import WalletPreferences from '@/components/Wallet/WalletPreferences';
-import { requestWalletPasscode, showScanQRCode  } from '@/reducers/app/action';
+import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
+import QRCodeContent from '@/components/Wallet/QRCodeContent';
+
 
 const QRCode = require('qrcode.react');
 
@@ -298,12 +300,7 @@ class Wallet extends React.Component {
     this.detachScrollListener();
   }
 
-  async componentDidMount() {
-    console.log (MasterWallet.getQRCodeFunction("bitcoin:2342342342342342?amount=234"));
-    console.log (MasterWallet.getQRCodeFunction("ninja-redeem:2342342342342342?value=234"));
-    console.log (MasterWallet.getQRCodeFunction("17h4HQEiJRkYNBk1XJK3YpDYZQ1rXkfQJi"));
-    console.log (MasterWallet.getQRCodeFunction("https://ga.com"));
-    console.log (MasterWallet.getQRCodeFunction("esfeswrewre"));
+  async componentDidMount() {    
     
     this.getSetting();
     this.attachScrollListener();
@@ -899,43 +896,18 @@ class Wallet extends React.Component {
     window.open('https://www.rinkeby.io/#faucet', '_blank');
   }
 
-  // For Qrcode:
-  handleScan=(data) =>{
-
-    if(data){
-      let value = data.split(',');
-      this.setState({
-        inputAddressAmountValue: value[0],
-      });
-      this.props.change(nameFormSendWallet, 'to_address', value[0]);
-
-      if (value.length == 2){
-        this.setState({
-          inputSendAmountValue: value[1],
-        });
-        this.props.change(nameFormSendWallet, 'amount', value[1]);
+  onQRCodeScaned=(data)=>{
+    let result = MasterWallet.getQRCodeDetail("1DA6v4axc4e78Ce2y3ePiGkVjkPtnG7TUK");    
+    console.log("result==>", result);
+    this.props.showQRCodeContent({   
+      data: result,   
+      onTranfer: (data) => {
+        
       }
-      this.modalScanQrCodeRef.close();
-    }
+    });
+    
   }
-  handleError(err) {
-    console.log('error wc', err);
-  }
-
-  renderScanQRCode = () => {
-    const { messages } = this.props.intl;
-    <Modal onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
-      {this.state.qrCodeOpen ?
-        <QrReader
-          delay={this.state.delay}
-          onScan={(data) => { this.handleScan(data); }}
-          onError={this.handleError}
-          style={{ width: '100%', height: '100%' }}
-        />
-        : ''}
-    </Modal>
-  }
-
+  
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
@@ -946,7 +918,7 @@ class Wallet extends React.Component {
 
         <img onClick={()=> {this.props.showScanQRCode({      
               onFinish: (data) => {
-                alert(data);
+                this.onQRCodeScaned(data);
               }
             });
           }} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
@@ -958,6 +930,8 @@ class Wallet extends React.Component {
         <Modal title="Preferences" onRef={modal => this.modalWalletReferencesRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closePreferences}>
           {modalWalletPreferences}
         </Modal>
+
+        <QRCodeContent onTransferClick={(address)=> {console.log(address)}} />
 
         <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
             <AddToken formAddTokenIsActive={formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
@@ -1062,20 +1036,7 @@ class Wallet extends React.Component {
               {messages.wallet.action.create.button.create}
             </Button>
             <Header />
-          </Modal>
-
-          {/* QR code dialog */}
-          {/* {this.renderScanQRCode()} */}
-          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
-            {this.state.qrCodeOpen &&
-              <QrReader
-                delay={this.state.delay}
-                onScan={(data) => { this.handleScan(data); }}
-                onError={this.handleError}
-                style={{ width: '100%', height: '100%' }}
-              />
-            }
-          </Modal>
+          </Modal>          
 
           <Grid>
 
@@ -1195,7 +1156,8 @@ const mapDispatch = ({
   clearFields,
   hideHeader,
   requestWalletPasscode,
-  showScanQRCode
+  showScanQRCode,
+  showQRCodeContent
 });
 
 
