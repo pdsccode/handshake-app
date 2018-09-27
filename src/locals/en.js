@@ -804,7 +804,7 @@ export default {
     },
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
-      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
+      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/instruction</Link></span>,
     }
   ],
   'landing_page.wallet.faq': [
