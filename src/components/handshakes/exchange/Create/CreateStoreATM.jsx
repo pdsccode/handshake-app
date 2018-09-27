@@ -1,4 +1,5 @@
 /* eslint react/prop-types:0 */
+/* eslint react/sort-comp:0 */
 
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -10,15 +11,15 @@ import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { API_URL, ATM_STATUS, ATM_TYPE, URL } from '@/constants';
+import COUNTRIES from '@/data/country-dial-codes.js';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
-import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
-import axios from 'axios';
+import { getErrorMessageFromCode, getAddressFromLatLng } from '@/components/handshakes/exchange/utils';
 import moment from 'moment';
 import Feed from '@/components/core/presentation/Feed/Feed';
 import 'rc-time-picker/assets/index.css';
-import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker } from './reduxFormFields';
+import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker, mapField } from './reduxFormFields';
 import './CreateStoreATM.scss';
 import '../styles.scss';
 
@@ -49,6 +50,7 @@ const FormExchangeCreate = createForm({
       startTime: moment('08:00', TIME_FORMAT),
       endTime: moment('17:00', TIME_FORMAT),
       atmStatus: ATM_STATUS.OPEN,
+      position: { lat: 10.8086145, lng: 106.67679439999999 },
     },
   },
 });
@@ -69,24 +71,24 @@ class Component extends React.Component {
       lat: 0,
       lng: 0,
       cashTab: CASH_ATM_TAB.INFO,
-
       cashStore: this.props.cashStore,
+      showMap: false,
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps) {
     /* eslint camelcase:0 */
-    const { rfChange } = nextProps;
-    if (JSON.stringify(nextProps.cashStore) !== JSON.stringify(prevState.cashStore)) {
-      const { name, address, phone, status, businessType, information } = nextProps.cashStore;
-      rfChange(nameFormExchangeCreate, 'username', name);
-      rfChange(nameFormExchangeCreate, 'phone', phone);
-      rfChange(nameFormExchangeCreate, 'address', address);
-      rfChange(nameFormExchangeCreate, 'atmType', businessType);
-      rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE);
-      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour, TIME_FORMAT));
-      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
-      return { cashStore: nextProps.cashStore };
+    const { rfChange, position } = nextProps;
+    if (position?.address && position.lat && position.lng) {
+      rfChange(nameFormExchangeCreate, 'address', position?.address);
+      return {
+        cashStore: {
+          ...nextProps.cashStore,
+          address: position?.address,
+        },
+        lat: position?.lat,
+        lng: position?.lng,
+      };
     }
     return null;
   }
@@ -103,9 +105,24 @@ class Component extends React.Component {
     this.getStoreATM();
   }
 
-  onSubmit = (values) => {
-    console.log('onSubmit', values);
+  detectPhonePrefix = () => {
+    const { rfChange, ipInfo } = this.props;
+    const { cashStore } = this.state;
+    // auto fill phone number from user profile
+    let detectedCountryCode = '';
+    const foundCountryPhone = COUNTRIES.find(
+      i => i.code.toUpperCase() === ipInfo?.country?.toUpperCase());
+    if (foundCountryPhone) {
+      detectedCountryCode = foundCountryPhone.dialCode;
+    }
+    rfChange(
+      nameFormExchangeCreate,
+      'phone',
+      cashStore.phone || `${detectedCountryCode}-`,
+    );
+  }
 
+  onSubmit = (values) => {
     const { messages } = this.props.intl;
     const { cashStore } = this.props;
     const { lat, lng } = this.state;
@@ -170,8 +187,7 @@ class Component extends React.Component {
         rfChange(nameFormExchangeCreate, 'address', addressDefault);
       }, 0);
     } else {
-      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
-        const address = response.data.results[0] && response.data.results[0].formatted_address;
+      getAddressFromLatLng({ lat, lng }).then(address => {
         rfChange(nameFormExchangeCreate, 'address', address);
       });
     }
@@ -180,8 +196,8 @@ class Component extends React.Component {
   getStoreATM() {
     this.props.getStoreATM({
       PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
-      successFn: this.handleGetOfferStoresSuccess,
-      errorFn: this.handleGetOfferStoresFailed,
+      successFn: this.handleGetStoresSuccess,
+      errorFn: console.warn,
     });
   }
 
@@ -270,6 +286,57 @@ class Component extends React.Component {
     });
   }
 
+  setAddress = (address) => {
+    if (address) {
+      const { rfChange } = this.props;
+      rfChange(nameFormExchangeCreate, 'address', address);
+    }
+  }
+
+  handleGetStoresSuccess = ({ data }) => {
+    if (data) {
+      /* eslint camelcase:0 */
+      const { rfChange } = this.props;
+      const { name, address, phone, status, business_type, information, latitude, longitude } = data;
+      rfChange(nameFormExchangeCreate, 'username', name);
+      rfChange(nameFormExchangeCreate, 'phone', phone);
+      rfChange(nameFormExchangeCreate, 'address', address);
+      rfChange(nameFormExchangeCreate, 'atmType', business_type);
+      rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE);
+      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour, TIME_FORMAT));
+      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
+
+      if (latitude && longitude) {
+        rfChange(nameFormExchangeCreate, 'position', {
+          lat: latitude,
+          lng: longitude,
+        });
+      }
+      const cashStore = {
+        name, phone, address, businessType: business_type, information,
+      };
+      this.setState({ cashStore });
+      this.detectPhonePrefix();
+    }
+  }
+
+  toggleGoogleMap = () => {
+    this.setState(({ showMap }) => ({ showMap: !showMap }));
+  }
+
+  renderMap = () => {
+    const { showMap } = this.state;
+    if (!showMap) return null;
+    return (
+      <div className="item-info">
+        <Field
+          component={mapField}
+          name="position"
+        />
+      </div>
+    );
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
@@ -277,7 +344,6 @@ class Component extends React.Component {
     } = this.state;
 
     const { atmType } = this.props;
-
 
     return (
       <div>
@@ -343,15 +409,21 @@ class Component extends React.Component {
 
                 <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
-                  <div >
-                    <Field
-                      name="address"
-                      type="text"
-                      className="form-control form-control-input"
-                      placeholder={messages.create.atm.text.addressHint}
-                      component={fieldInput}
-                      validate={[required]}
-                    />
+                  <div>
+                    <div className="address-container">
+                      <Field
+                        name="address"
+                        type="text"
+                        className="form-control form-control-input"
+                        placeholder={messages.create.atm.text.addressHint}
+                        component={fieldInput}
+                        validate={[required]}
+                      />
+                      <div className={`address-update-btn ${this.state.showMap && 'close-map'}`} onClick={this.toggleGoogleMap}>
+                        <span>{ this.state.showMap ? 'Close Maps' : 'Open Maps' }</span>
+                      </div>
+                    </div>
+                    {this.renderMap()}
                   </div>
                 </div>
                 {
@@ -407,7 +479,9 @@ class Component extends React.Component {
 
 const mapStateToProps = (state) => {
   const atmType = selectorFormExchangeCreate(state, 'atmType');
+  const position = selectorFormExchangeCreate(state, 'position');
   return {
+    position,
     atmType,
     ipInfo: state.app.ipInfo,
     cashStore: state.exchange.cashStore,

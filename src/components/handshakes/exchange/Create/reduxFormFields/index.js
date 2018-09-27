@@ -3,6 +3,7 @@ import React from 'react';
 import Switch from '@/components/core/controls/Switch/Switch';
 import TimePicker from 'rc-time-picker';
 import moment from 'moment';
+import RelocationMap from '../components/RelocationMap';
 import './styles.scss';
 
 export const fieldTypeAtm = ({ input, texts, atmType }) => {
@@ -65,5 +66,16 @@ export const fieldTimePicker = ({ input, defaultTime }) => {
         showMinute={false}
       />
     </div>
+  );
+};
+
+export const mapField = ({ input }) => {
+  const { value, onChange } = input;
+  const position = { lat: value.lat, lng: value.lng };
+  return (
+    <RelocationMap
+      position={position}
+      onAddressResolved={onChange}
+    />
   );
 };
