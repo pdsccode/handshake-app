@@ -378,6 +378,39 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
+                {
+                  atmType === ATM_TYPE.PERSONAL ? (
+                    <div className="item-info">
+                      <Field
+                        component={fieldAtmStatus}
+                        texts={messages.create.atm.text}
+                        atmStatus={ATM_STATUS}
+                        name="atmStatus"
+                      />
+                    </div>
+                  ) : (
+                    <div className="input-group item-info">
+                      <div className="d-table w-100 atm-time">
+                        <div className="d-table-cell w-50">
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            defaultTime={moment('05:00 AM', TIME_FORMAT)}
+                            name="startTime"
+                          />
+                        </div>
+                        <div className="d-table-cell w-50">
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            defaultTime={moment('08:00 PM', TIME_FORMAT)}
+                            name="endTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
                 <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
                   <div >
@@ -424,39 +457,6 @@ class Component extends React.Component {
                     {this.renderMap()}
                   </div>
                 </div>
-                {
-                  atmType === ATM_TYPE.PERSONAL ? (
-                    <div className="item-info">
-                      <Field
-                        component={fieldAtmStatus}
-                        texts={messages.create.atm.text}
-                        atmStatus={ATM_STATUS}
-                        name="atmStatus"
-                      />
-                    </div>
-                  ) : (
-                    <div className="input-group item-info">
-                      <div className="d-table w-100 atm-time">
-                        <div className="d-table-cell w-50">
-                          <Field
-                            component={fieldTimePicker}
-                            texts={messages.create.atm.text}
-                            defaultTime={moment('05:00 AM', TIME_FORMAT)}
-                            name="startTime"
-                          />
-                        </div>
-                        <div className="d-table-cell w-50">
-                          <Field
-                            component={fieldTimePicker}
-                            texts={messages.create.atm.text}
-                            defaultTime={moment('08:00 PM', TIME_FORMAT)}
-                            name="endTime"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
                 <Button block type="submit" className="mt-3 open-button item-info"> {
                   messages.create.atm.button.create
                 }
