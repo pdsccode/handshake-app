@@ -111,6 +111,43 @@
   font-size: $light;
 }
 
+.popup-all-station-details {
+  background: #FFFFFF;
+  padding: 0 10px;
+  position: fixed;
+  bottom: 60px;
+  height: 160px;
+  width: 100%;
+  .line {
+    display: inline-block;
+    width: 100px;
+    height: 8px;
+    border-radius: 8px;
+    background: #E5EAF8;
+    cursor: pointer;
+  }
+  .primary-text {
+    color: #000000;
+    font-weight: 500;
+  }
+  .secondary-text {
+    font-size: 14px;
+    color: #868DAD;
+  }
+  .success-text {
+    font-weight: 500;
+    color: #34CF81;
+  }
+
+  .button-buy-coin-now {
+    background: #546FF7;
+    box-shadow: 0 2px 5px 0 rgba(84,111,247,0.41);
+    border-radius: 4px;
+    color: white;
+  }
+
+}
+
 //.discover-overlay {
 //  width: 100vw;
 //  height: 100vh;

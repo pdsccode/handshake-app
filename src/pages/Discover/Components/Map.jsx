@@ -14,20 +14,6 @@ import { HANDSHAKE_ID, URL } from '@/constants';
 import cx from 'classnames';
 
 class Map extends React.Component {
-  constructor(props) {
-    super(props);
-
-    // const { lat, lng } = this.props;
-
-    this.state = {
-      curStationIdShowAllDetails: null,
-    };
-  }
-
-  handleOnChangeShowAllDetails = (id, newValue) => {
-    this.setState({ curStationIdShowAllDetails: newValue ? id : null });
-  }
-
   goToDashboard = () => {
     this.props.openNewTransaction();
   }
@@ -58,8 +44,9 @@ class Map extends React.Component {
       mapCenterLat,
       mapCenterLng,
       offerStores,
+      curStationIdShowAllDetails,
+      onChangeShowAllDetails
     } = this.props;
-    const { curStationIdShowAllDetails } = this.state;
 
     let markers = [];
     if (stations && stations.length > 0) {
@@ -79,7 +66,7 @@ class Map extends React.Component {
             modalRef={modalRef}
             setLoading={setLoading}
             showAllDetails={curStationIdShowAllDetails === id}
-            onChangeShowAllDetails={(newValue) => this.handleOnChangeShowAllDetails(id, newValue)}
+            onChangeShowAllDetails={(newValue) => onChangeShowAllDetails(id, newValue)}
           />
         );
       });
@@ -92,7 +79,13 @@ class Map extends React.Component {
         onZoomChanged={onZoomChanged}
         ref={onMapMounted}
         onCenterChanged={onCenterChanged}
-        options={{ gestureHandling: 'greedy' }}
+        options={{
+          gestureHandling: 'greedy',
+          zoomControl: false,
+          fullscreenControl: false,
+          mapTypeControl: false,
+          streetViewControl: false,
+        }}
       >
         {markers}
         <button

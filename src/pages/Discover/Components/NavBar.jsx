@@ -14,17 +14,6 @@ import {
   EXCHANGE_ACTION_NAME,
 } from '@/constants';
 
-const nameFormFilterStation = 'formFilterStation';
-const FormFilterStation = createForm({
-  propsReduxForm: {
-    form: nameFormFilterStation,
-    initialValues: {
-      type: EXCHANGE_ACTION.BUY,
-      coin: { id: CRYPTO_CURRENCY.ETH, text: <span><img src={CRYPTO_CURRENCY_COLORS[CRYPTO_CURRENCY.ETH].icon} width={25} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span> },
-    },
-  },
-});
-
 const listAction = Object.values(EXCHANGE_ACTION).map((item) => {
   return { value: item, text: EXCHANGE_ACTION_NAME[item], bgColorActive: EXCHANGE_ACTION_COLORS[item].color };
 });
@@ -33,39 +22,54 @@ const listCoin = Object.values(CRYPTO_CURRENCY).map((item) => {
   return { id: item, text: <span><img src={CRYPTO_CURRENCY_COLORS[item].icon} width={25} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
 });
 
+import iconMyATM from './icons8-location_off.svg';
+
+import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
+import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
+
+const iconMap = {
+  ETH: iconEthereum,
+  BTC: iconBitcoin,
+  BCH: iconBitcoinCash,
+}
 class NavBar extends React.Component {
   render() {
     const { messages } = this.props.intl;
-    const { onActionChange, onCurrencyChange } = this.props;
+    const coins = [
+      {
+        name: 'ETH',
+        price: '200'
+      },
+      {
+        name: 'BTC',
+        price: '7,000'
+      },
+    ]
     return (
       <div className="cash-nav-bar">
-        <FormFilterStation>
-          {/*<button type="button" className="btn bg-transparent mr-2" onClick={() => console.log('clickmenu')}>☰</button>*/}
-          <span className="mx-2">{messages.discover.feed.cash.menu.actionDescription}</span>
-          <div className="d-inline-block mr-1">
-            <Field
-              name="type"
-              component={fieldRadioButton}
-              type="tab-7"
-              list={listAction}
-              // validate={[required]}
-              onChange={onActionChange}
-            />
-          </div>
-          <div className="d-inline-block">
-            <Field
-              name="coin"
-              component={fieldDropdown}
-              classNameWrapper=""
-              defaultText="Coin"
-              classNameDropdownToggle="bg-white border-0"
-              // classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
-              list={listCoin}
-              onChange={onCurrencyChange}
-            />
-          </div>
+        {/*<button type="button" className="btn bg-transparent mr-2" onClick={() => console.log('clickmenu')}>☰</button>*/}
+        <button className="ml-2">
+          <img src={iconMyATM} width={24} />
+          <span className="mx-2">My ATM</span>
+        </button>
+        <div className="d-inline-block">
+          {
+            coins.map(coin => {
+              const { name, price } = coin;
+              return (
+                <span key={name} className="d-inline-block mr-3">
+                  <img src={iconMap[name]} width={24} />
+                  {' '}
+                  <span><strong>{price}</strong> USD</span>
+                </span>
+              )
+            })
+          }
+          <span>
 
-        </FormFilterStation>
+          </span>
+        </div>
       </div>
     );
   }
