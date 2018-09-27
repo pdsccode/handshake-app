@@ -7,7 +7,7 @@ import GasAlert from '@/pages/CreateMarket/GasAlert';
 import { isValidEmailCode } from '@/pages/CreateMarket/selector';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
-import { reportSelector, categorySelector, shareEventSelector, isLoading, hasEmail, insufficientGas } from './selector';
+import { reportSelector, categorySelector, shareEventSelector, isLoading, hasEmail, insufficientGas, uId } from './selector';
 import { createEventFormName } from './constants';
 
 import './CreateMarket.scss';
@@ -21,6 +21,7 @@ class CreateMarket extends React.Component {
     categoryList: PropTypes.array,
     match: PropTypes.object,
     hasEmail: PropTypes.any,
+    uId: PropTypes.any,
     insufficientGas: PropTypes.any,
     isValidEmailCode: PropTypes.bool,
   };
@@ -80,6 +81,7 @@ class CreateMarket extends React.Component {
         onSelect={this.onSelectEvent}
         formAction={props.formAction}
         hasEmail={props.hasEmail}
+        uid={props.uId}
         insufficientGas={props.insufficientGas}
         isValidEmailCode={props.isValidEmailCode}
       />
@@ -113,6 +115,7 @@ export default connect(
       categoryList: categorySelector(state),
       shareEvent: shareEventSelector(state),
       hasEmail: hasEmail(state),
+      uId: uId(state),
       insufficientGas: insufficientGas(state),
     };
   },

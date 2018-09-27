@@ -9,7 +9,8 @@ const EVENT_CATEGORY = {
   PREDICTION: 'Prediction',
   ORDER_BOOK: 'OrderBook',
   ME: 'Me/Prediction',
-  FREEBET: 'Freebet'
+  FREEBET: 'Freebet',
+  CREATE_OWN_MARKET: 'CreateOwnMarket',
 };
 const EVENT_ACTION = {
   //PREDICTION
@@ -59,6 +60,10 @@ const EVENT_ACTION = {
   CLICK_GOT_IT_WINNER: 'Click Got it on winner popup',
   CLICK_GOT_IT_LOSER: 'Click Got it on loser popup',
   CLICK_NOTIFY_ME: 'Click notify me',
+
+  //Create Own Market
+  CLICK_CREATE_NEW_EVENT: 'Click create a new event',
+  CLICK_CREATE_NEW_OUTCOME: 'Click create a new outcome',
 
   CLICK_GO_BUTTON: 'Click go button',
   CLICK_COMMENTS_BOX: 'Click comments box',
@@ -809,6 +814,36 @@ class GoogleAnalyticsService {
     }
   }
 
+  //Create your own market
+
+  clickCreateNewEvent(eventName, email = '', marketFee, uid='') {
+    const params = {
+      category: EVENT_CATEGORY.CREATE_OWN_MARKET,
+      action: EVENT_ACTION.CLICK_CREATE_NEW_EVENT,
+      label: `${eventName}-${email}-${marketFee}-${uid}`,
+    };
+    console.log(TAG, 'clickCreateNewEvent', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  clickCreateNewOutcome(email = '', marketFee, uid='') {
+    const params = {
+      category: EVENT_CATEGORY.CREATE_OWN_MARKET,
+      action: EVENT_ACTION.CLICK_CREATE_NEW_OUTCOME,
+      label: `${email}-${marketFee}-${uid}`,
+    };
+    console.log(TAG, 'clickCreateNewOutcome', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
 
 }

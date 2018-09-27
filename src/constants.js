@@ -574,11 +574,13 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   PRODUCT_ATM_URL: '/atm',
   CASH_FOR_BUSINESS: '/cash-for-business',
+  ATM_FOR_BUSINESS: '/atm-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
   PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
-  PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
-  PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
+  PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
+  PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
+  PRODUCT_PAYFORDEVS_GETSTARTED_URL: '/pay-for-devs-get-started',
   RESEARCH_INTERNET_CASH_URL: '/internet-cash',
   PRODUCT_DAD_URL: '/dad',
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
@@ -602,6 +604,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  LANDING_BECOME_ATM: '/become-atm',
 };
 
 export const LANDING_PAGE_TYPE = {
@@ -944,6 +947,8 @@ export const AUTONOMOUS_END_POINT = {
   CHECKOUT: '/order-api/order/cart/checkout',
   PRODUCTS: '/product-api/v2/products',
   PRODUCT: '/product-api/product',
+  CURRENT_COUNTRY: '/common-api/current-country',
+  CHANGE_COUNTRY: '/common-api/change-country',
 };
 export const COUNTRY_LIST = {
   "AD": "AD - Andorra",

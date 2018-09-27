@@ -16,7 +16,6 @@
   background: #FFFFFF;
   // box-shadow: 0 15px 11px -8px #F1F1F1;
   border-radius: 4px;
-  width: 97%;
   margin: auto;
   margin-bottom: 25px;
 }
@@ -104,6 +103,13 @@
   background-repeat: no-repeat;
   background-size: contain;
   background-color: #f4f4fb;
+  padding-bottom: 60px;
+
+  .float-button-scan-qrcode{
+    position: fixed;
+    bottom: 45px;
+    right: 1px;
+  }
 
   .modal-custom-header{
     img:first-child {
@@ -314,8 +320,11 @@
   }
 
   .div-amount {
+    position: relative;
     .prepend{
-      padding-top: 15px;}
+      padding-top: 15px;
+      right: 10px;
+    }
   }
 }
 
@@ -529,8 +538,8 @@
     overflow: hidden;
     .logo-detail{
       width: 47px;
-      border: #586ad2 2px solid;
-      border-radius: 45px;
+      border: #c1c1c1 1px solid;
+      border-radius: 50%;
       margin-top: 15px;
     }
     .balance{
@@ -699,6 +708,45 @@
   margin: 10px;
 }
 
+.wallet-listcoin{
+  border: 1px solid #ececec;
+  padding: 0.6rem 2rem 0.6rem 0.6rem;
+  border-radius: 5px;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+  -moz-box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+  background: url('../../assets/images/icon/pay/arrow-select.svg') no-repeat 99% center;
+  .name{
+    float:left;
+    width: 50%;
+  }
+
+  .value{
+    float:right;
+    font-weight: 400;
+  }
+
+  .name{
+    float:left;
+    width: 50%;
+  }
+
+  .name2{
+    float:left;
+    width: 30%;
+  }
+
+  .value{
+    float:right;
+    font-weight: 400;
+  }
+
+  .clearfix{
+    padding: 0.3rem 0;
+    clear: both;
+  }
+}
 
 .transaction-detail-wrapper{
   margin-top: 20px;
