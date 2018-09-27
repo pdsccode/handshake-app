@@ -44,7 +44,7 @@ class Map extends React.Component {
       curLocation,
       mapCenterLat,
       mapCenterLng,
-      offerStores,
+      cashStore,
       curStationIdShowAllDetails,
       onChangeShowAllDetails
     } = this.props;
@@ -105,7 +105,7 @@ class Map extends React.Component {
         />
         <div className="container-button">
           {
-            offerStores && (
+            cashStore && (
               <div className="d-inline-block w-50 pr-1">
                 <button className="btn bg-white btn-block btn-dashboard" onClick={this.goToDashboard}>
                   <img src={iconManageDashboard} width={16} className="mr-2" />
@@ -115,11 +115,11 @@ class Map extends React.Component {
             )
           }
 
-          <div className={cx('d-inline-block pl-1', offerStores ? 'w-50' : 'w-100')}>
+          <div className={cx('d-inline-block pl-1', cashStore ? 'w-50' : 'w-100')}>
             <button className="btn btn-block btn-manage-atm" onClick={this.goToManageAtm}>
               <img src={iconManageAtm} width={16} className="mr-2" />
               {
-                offerStores ? <FormattedMessage id="ex.discover.label.manage.atm" /> : <FormattedMessage id="ex.discover.label.open.atm" />
+                cashStore ? <FormattedMessage id="ex.discover.label.manage.atm" /> : <FormattedMessage id="ex.discover.label.open.atm" />
               }
 
             </button>
@@ -132,7 +132,7 @@ class Map extends React.Component {
 
 const mapState = state => ({
   ipInfo: state.app.ipInfo,
-  offerStores: state.exchange.offerStores,
+  cashStore: state.exchange.cashStore,
 });
 
 const mapDispatch = dispatch => ({

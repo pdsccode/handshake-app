@@ -9,7 +9,7 @@ import { required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
@@ -265,7 +265,7 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.getStoreATM();
+        this.props.history.push(`${URL.HANDSHAKE_ATM}`);
       },
     });
   }

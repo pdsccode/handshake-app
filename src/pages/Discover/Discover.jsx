@@ -22,23 +22,19 @@ import Helper from '@/services/helper';
 // import FeedBetting from '@/components/handshakes/betting/Feed';
 // import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchangeLocal';
 // import FeedSeed from '@/components/handshakes/seed/Feed';
-import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { change } from 'redux-form';
 import Map from './Components/Map';
 import NavBar from './Components/NavBar';
-import {getFreeStartInfo, getListOfferPrice, getOfferStores, setFreeStart} from '@/reducers/exchange/action';
+import { getFreeStartInfo, getListOfferPrice, getStoreATM, setFreeStart } from '@/reducers/exchange/action';
 import { loadDiscoverList } from '@/reducers/discover/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
-import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
-import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCountry';
-import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
 import local from '@/services/localStore';
-import Modal from "@/components/core/controls/Modal/Modal";
+import Modal from '@/components/core/controls/Modal/Modal';
 // import _debounce from 'lodash/debounce';
 import AtmCashTransfer from '@/components/handshakes/exchange/AtmCashTransfer';
 
@@ -135,7 +131,7 @@ class DiscoverPage extends React.Component {
     // this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
 
     this.delayedShowMarker();
-    this.getOfferStore();
+    this.getStoreATM();
   }
 
   handleGoToCurrentLocation = () => {
@@ -213,10 +209,9 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
-  getOfferStore = () => {
-    const { authProfile } = this.props;
-    this.props.getOfferStores({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+  getStoreATM() {
+    this.props.getStoreATM({
+      PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
     });
   }
 
@@ -378,7 +373,7 @@ class DiscoverPage extends React.Component {
     const {
       propsModal,
       modalContent,
-      browserHeight
+      browserHeight,
     } = this.state;
     const { messages } = this.props.intl;
     const {
@@ -434,17 +429,17 @@ class DiscoverPage extends React.Component {
           onChangeShowAllDetails={this.handleOnChangeShowAllDetails}
         />
 
-        {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
-        {/*{*/}
-          {/*this.state.isBannedCash*/}
-            {/*? (*/}
-              {/*<BlockCountry />*/}
-            {/*)*/}
-            {/*: this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null*/}
-        {/*}*/}
-        {/*<ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>*/}
-          {/*{modalContent}*/}
-        {/*</ModalDialog>*/}
+        {/* {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()} */}
+        {/* { */}
+        {/* this.state.isBannedCash */}
+        {/* ? ( */}
+        {/* <BlockCountry /> */}
+        {/* ) */}
+        {/* : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null */}
+        {/* } */}
+        {/* <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}> */}
+        {/* {modalContent} */}
+        {/* </ModalDialog> */}
         {
           curStationIdShowAllDetails && (
             <div className="popup-all-station-details">
@@ -453,7 +448,7 @@ class DiscoverPage extends React.Component {
               </div>
               <div className="mt-2">
                 <div className="media">
-                  <img className="mr-3" src={'https://www.gadgetguy.com.au/cms/wp-content/uploads/panasonic-lumix-lx7-sample-04-square.jpg'} width={50} />
+                  <img className="mr-3" src="https://www.gadgetguy.com.au/cms/wp-content/uploads/panasonic-lumix-lx7-sample-04-square.jpg" width={50} />
                   <div className="media-body">
                     <div className="primary-text">The coin shop</div>
                     <div className="secondary-text">About 1.4 km away</div>
@@ -501,7 +496,7 @@ const mapDispatch = dispatch => ({
   setFreeStart: bindActionCreators(setFreeStart, dispatch),
   getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
   showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
-  getOfferStores: bindActionCreators(getOfferStores, dispatch),
+  getStoreATM: bindActionCreators(getStoreATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));
