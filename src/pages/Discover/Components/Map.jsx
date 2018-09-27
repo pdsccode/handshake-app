@@ -89,12 +89,15 @@ class Map extends React.Component {
         }}
       >
         {markers}
-        <button
-          className="btn-current-location"
-          onClick={onGoToCurrentLocation}
-        >
-          <img src={iconMyATM} width={30} />
-        </button>
+        {
+          cashStore && (<button
+            className="btn-current-location"
+            onClick={() => onGoToCurrentLocation()}
+          >
+            <img src={iconMyATM} width={30} />
+          </button>)
+        }
+
         <Marker
           defaultIcon={{
             url: currentLocationIndicator,

@@ -10,8 +10,8 @@ class CashStore {
       center: data.center || '',
       information: data.information || {},
       profit: data.profit || '',
-      longitude: data.longitude || '',
-      latitude: data.latitude || '',
+      longitude: data.longitude || 0,
+      latitude: data.latitude || 0,
       chainId: data.chain_id || '',
       createdAt: data.created_at || '',
     };

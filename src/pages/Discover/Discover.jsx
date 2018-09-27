@@ -135,14 +135,22 @@ class DiscoverPage extends React.Component {
   }
 
   handleGoToCurrentLocation = () => {
-    const { ipInfo } = this.props;
+    const { ipInfo, cashStore } = this.props;
+    let latitude = ipInfo?.latitude;
+    let longitude = ipInfo?.longitude;
+
+    if (cashStore) {
+      latitude = cashStore.latitude;
+      longitude = cashStore.longitude;
+    }
+
     this.setState({
-      curLocation: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
+      curLocation: { lat: latitude, lng: longitude },
       // mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
-      lat: ipInfo?.latitude,
-      lng: ipInfo?.longitude,
-      mapCenterLat: ipInfo?.latitude,
-      mapCenterLng: ipInfo?.longitude,
+      lat: latitude,
+      lng: longitude,
+      mapCenterLat: latitude,
+      mapCenterLng: longitude,
       zoomLevel: defaultZoomLevel,
     });
   };
@@ -486,6 +494,7 @@ const mapState = state => {
     firebaseApp: state.firebase.data,
     freeStartInfo: state.exchange.freeStartInfo,
     authProfile: state.auth.profile,
+    cashStore: state.exchange.cashStore,
   };
 };
 
