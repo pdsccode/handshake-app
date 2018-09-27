@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { BitcoinCash } from '@/services/Wallets/BitcoinCash';
+import axios from 'axios';
 
 // for reusable
 const sampleCrypto = {
@@ -126,4 +127,14 @@ export const getCryptoFromAddress = (walletAddress) => {
   });
 
   return rs;
+};
+
+export const getAddressFromLatLng = ({ lat, lng }) => {
+  if (lat && lng) {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true&key=${process.env.GOOGLE_API_KEY}`).then((response) => {
+      const address = response.data.results[0] && response.data.results[0].formatted_address;
+      return address;
+    });
+  }
+  return Promise.reject(new Error('Missing latlng'));
 };

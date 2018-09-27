@@ -6,8 +6,25 @@ $height-el: 54px;
 
 .atm-tab-container {
   border: 1px solid #E5EAF8;
-    border-left: none;
-    border-right: none;
+  border-left: none;
+  border-right: none;
+  height: 39px;
+  .radio-container {
+    input:checked ~ button {
+      color: black;
+      font-weight: 500;
+    }
+    button[type=button] {
+      color: #868DAD;
+      font-size: 16px;
+      font-weight: normal;
+      text-align: left;
+      letter-spacing: 0;
+      span.align-middle {
+        display: none;
+      }
+    }
+  }
 }
 
 .create-store-atm {
@@ -20,6 +37,28 @@ $height-el: 54px;
 
   input[type=text], button[type=submit] {
     height: $height-el;
+  }
+  .address-container {
+    position: relative;
+    input {
+      padding-right: 80px;
+    }
+    .address-update-btn {
+      position: absolute;
+      transform: translate(0, -50%);
+      top: 50%;
+      right: 10px;
+      background-color: #2196F3;
+      padding: 5px;
+      border-radius: 3px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 10px;
+      &.close-map {
+        background-color: firebrick;
+      }
+    }
   }
   .phone-field {
     display: flex;
