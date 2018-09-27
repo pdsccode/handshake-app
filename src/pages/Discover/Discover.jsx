@@ -6,12 +6,12 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 // import { loadDiscoverList } from '@/reducers/discover/action';
 import {
   API_URL,
-  APP,
+  APP, ATM_TYPE,
   CRYPTO_CURRENCY,
   DISCOVER_GET_HANDSHAKE_RADIUS,
   EXCHANGE_ACTION,
   HANDSHAKE_ID,
-  SORT_ORDER,
+  SORT_ORDER, TIME_FORMAT, TIME_FORMAT_AM_PM,
   URL,
 } from '@/constants';
 // import Cookies from 'js-cookie';
@@ -37,6 +37,7 @@ import local from '@/services/localStore';
 import Modal from '@/components/core/controls/Modal/Modal';
 // import _debounce from 'lodash/debounce';
 import AtmCashTransfer from '@/components/handshakes/exchange/AtmCashTransfer';
+import moment from "moment/moment";
 
 const defaultZoomLevel = 13;
 
@@ -76,6 +77,7 @@ class DiscoverPage extends React.Component {
       zoomLevel: defaultZoomLevel,
       browserHeight: window.innerHeight - 108,
       curStationIdShowAllDetails: null,
+      curStation: null,
     };
 
     local.save(APP.EXCHANGE_ACTION, EXCHANGE_ACTION.BUY);
@@ -360,7 +362,14 @@ class DiscoverPage extends React.Component {
   }
 
   handleOnChangeShowAllDetails = (id, newValue) => {
-    this.setState({ curStationIdShowAllDetails: newValue ? id : null });
+    console.log('handleOnChangeShowAllDetails', id, newValue);
+    let offer = null;
+    if (newValue) {
+      const { list: stations, offers } = this.props.discover;
+      const index = stations.findIndex(station => station.id === id);
+      offer = offers[index];
+    }
+    this.setState({ curStationIdShowAllDetails: newValue ? id : null, curStation: offer });
   }
 
   openNewTransaction = () => {
@@ -377,11 +386,18 @@ class DiscoverPage extends React.Component {
     });
   }
 
+  getWorkingHour(station) {
+    const startTime = moment(station.information.open_hour, TIME_FORMAT).format(TIME_FORMAT_AM_PM);
+    const endTime = moment(station.information.close_hour, TIME_FORMAT).format(TIME_FORMAT_AM_PM);
+    return `${startTime.toUpperCase()} - ${endTime.toUpperCase()}`;
+  }
+
   render() {
     const {
       propsModal,
       modalContent,
       browserHeight,
+      curStation,
     } = this.state;
     const { messages } = this.props.intl;
     const {
@@ -398,6 +414,8 @@ class DiscoverPage extends React.Component {
     } = this.state;
     const { list: stations, offers } = this.props.discover;
     const { history } = this.props;
+
+    console.log('curStation',curStation);
 
     return (
       <React.Fragment>
@@ -456,20 +474,49 @@ class DiscoverPage extends React.Component {
               </div>
               <div className="mt-2">
                 <div className="media">
-                  <img className="mr-3" src="https://www.gadgetguy.com.au/cms/wp-content/uploads/panasonic-lumix-lx7-sample-04-square.jpg" width={50} />
+                  {/*<img className="mr-3" src="https://www.gadgetguy.com.au/cms/wp-content/uploads/panasonic-lumix-lx7-sample-04-square.jpg" width={50} />*/}
                   <div className="media-body">
-                    <div className="primary-text">The coin shop</div>
-                    <div className="secondary-text">About 1.4 km away</div>
+                    <div className="primary-text">{curStation?.name}</div>
+                    {/*<div className="secondary-text">About 1.4 km away</div>*/}
                   </div>
                 </div>
                 <div className="mt-3">
-                  <div className="d-inline-block w-50 pr-2 align-middle">
-                    <button className="btn button-buy-coin-now btn-block">Buy coin now</button>
-                  </div>
-                  <div className="d-inline-block w-50 pl-2 align-middle">
-                    <div className="success-text">Fast & secured</div>
-                    <div className="secondary-text">100% anonymous</div>
-                  </div>
+                  {
+                    curStation?.phone && (
+                      <div>
+                        <div className="d-inline-block w-25 pr-2 align-middle">
+                          <div className="secondary-text">{messages.discover.feed.cash.marker.label.tel}</div>
+                        </div>
+                        <div className="d-inline-block w-75 pl-2 align-middle">
+                          <div className="information-text">{curStation?.phone}</div>
+                        </div>
+                      </div>
+                    )
+                  }
+                  {
+                    curStation.businessType === ATM_TYPE.STORE && (
+                      <div>
+                        <div className="d-inline-block w-25 pr-2 align-middle">
+                          <div className="secondary-text">{messages.discover.feed.cash.marker.label.workingHours}</div>
+                        </div>
+                        <div className="d-inline-block w-75 pl-2 align-middle">
+                          <div className="information-text">{this.getWorkingHour(curStation)}</div>
+                        </div>
+                      </div>
+                    )
+                  }
+                  {
+                    curStation?.address && (
+                      <div>
+                        <div className="d-inline-block w-25 pr-2 align-middle">
+                          <div className="secondary-text">{messages.discover.feed.cash.marker.label.address}</div>
+                        </div>
+                        <div className="d-inline-block w-75 pl-2 align-middle">
+                          <div className="information-text">{curStation?.address}</div>
+                        </div>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
             </div>

@@ -513,6 +513,9 @@ export const ATM_STATUS = {
   CLOSE: 'close',
 };
 
+export const TIME_FORMAT = 'HH:mm';
+export const TIME_FORMAT_AM_PM = 'hh:mm a';
+
 // API
 export const BASE_API = {
   BASE_URL: process.env.BASE_API_URL,

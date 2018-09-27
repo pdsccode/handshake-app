@@ -1073,6 +1073,9 @@ export default {
             price: 'Price',
             maxVolume: 'Max volume',
             tradeNow: 'Now',
+            tel: 'Tel',
+            workingHours: 'Working hours',
+            address: 'Address',
           },
         },
 

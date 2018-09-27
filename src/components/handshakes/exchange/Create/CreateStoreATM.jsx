@@ -10,8 +10,8 @@ import { required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { API_URL, ATM_STATUS, ATM_TYPE, URL } from '@/constants';
 import COUNTRIES from '@/data/country-dial-codes.js';
+import { API_URL, ATM_STATUS, ATM_TYPE, TIME_FORMAT, URL } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
@@ -27,8 +27,6 @@ const CASH_ATM_TAB = {
   INFO: 'INFO',
   TRANSACTION: 'TRANSACTION',
 };
-
-const TIME_FORMAT = 'HH:mm';
 
 const nameFormFilterFeeds = 'formFilterFeeds';
 const FormFilterFeeds = createForm({
