@@ -5,7 +5,7 @@ import { API_URL } from '@/constants';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail } from './action';
 import { eventSelector } from './selector';
 
-export function* handleLoadMatches({ cache = true }) {
+export function* handleLoadMatches({ cache = true, source }) {
   try {
     if (cache) {
       const events = yield select(eventSelector);
@@ -13,9 +13,9 @@ export function* handleLoadMatches({ cache = true }) {
         return events;
       }
     }
-
+    const PATH_URL = source ? `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?source=${source}` : API_URL.CRYPTOSIGN.LOAD_MATCHES;
     return yield call(apiGet, {
-      PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
+      PATH_URL,
       type: 'LOAD_MATCHES',
       _key: 'events',
       _path: 'prediction',
@@ -30,7 +30,6 @@ export function* handleRemoveEvent({ eventId }) {
     const events = yield select(eventSelector);
     if (events && events.length) {
       const index = events.findIndex((item) => item.id === eventId);
-      console.log('blahblah', index);
       if (index >= 0) {
         yield put(REMOVE_DATA({
           _path: 'prediction.events',
