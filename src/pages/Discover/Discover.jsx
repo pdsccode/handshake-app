@@ -379,7 +379,7 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.atm_cash_transfer.title,
       modalContent:
         (
-          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} />
+          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} onReceiptSaved={this.modalRef.close} />
         ),
     }, () => {
       this.modalRef.open();

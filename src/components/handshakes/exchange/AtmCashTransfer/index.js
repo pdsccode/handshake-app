@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import qrCodeIcon from '@/assets/images/icon/qrcode-icon.png';
+import arrowIcon from '@/assets/images/icon/right-arrow-white.svg';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import Image from '@/components/core/presentation/Image';
 import PropTypes from 'prop-types';
@@ -26,6 +27,7 @@ import { validateSpecificAmount } from '@/components/handshakes/exchange/validat
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { BitcoinCash } from '@/services/Wallets/BitcoinCash';
+import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import './style.scss';
 
 export const CRYPTO_ICONS = {
@@ -63,6 +65,8 @@ class AtmCashTransfer extends Component {
       fiatCurrencyUnit: FIAT_CURRENCY.USD,
       isTransferable: false,
       walletAddress: '',
+      isDone: false,
+      receipt: {},
     };
 
     this.qrCodeScanner = null;
@@ -156,13 +160,19 @@ class AtmCashTransfer extends Component {
       PATH_URL: API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER,
       METHOD: 'POST',
       data,
-      successFn: () => {
+      successFn: (res) => {
         this.showLoading(false);
         this.props.showAlert({
           message: <div className="text-center">{atm_cash_transfer?.success_msg}</div>,
           timeOut: 3000,
           type: 'success',
         });
+        const receipt = {
+          amount: parseFloat(res?.data?.fiat_amount - res?.data?.store_fee) || 0,
+          fiatCurrency: res?.data?.fiat_currency,
+          referenceCode: res?.data?.id,
+        };
+        this.setState({ isDone: true, receipt });
       },
       errorFn: () => {
         this.showLoading(false);
@@ -255,8 +265,12 @@ class AtmCashTransfer extends Component {
   }
 
   render() {
-    const { fiatCurrencyUnit, fiatAmount, isTransferable, shouldLockWalletChange } = this.state;
+    const { fiatCurrencyUnit, fiatAmount, isTransferable, shouldLockWalletChange, isDone, receipt } = this.state;
     const { messages: { atm_cash_transfer } } = this.props.intl;
+
+    if (isDone) {
+      return <AtmCashTransferInfo receipt={receipt} onDone={this.props.onReceiptSaved} />;
+    }
     return (
       <React.Fragment>
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
@@ -289,6 +303,9 @@ class AtmCashTransfer extends Component {
                   </div>
                   <img onClick={this.openQrScanner} className="prepend prepend-qrcode" src={qrCodeIcon} alt="" />
                 </div>
+                <div>
+                  <span>{atm_cash_transfer.we_will_send_coin_to_this_address_desc}</span>
+                </div>
               </div>
               <div className="form-el">
                 <label className="labelText">{atm_cash_transfer.amount}</label>
@@ -315,6 +332,7 @@ class AtmCashTransfer extends Component {
             <div className="form-el">
               <button disabled={!isTransferable} type="submit" className="btn submit-btn">
                 <span>{atm_cash_transfer.transfer}</span>
+                <img src={arrowIcon} alt="submit" />
               </button>
             </div>
           </FormNewTransaction>
@@ -338,6 +356,7 @@ AtmCashTransfer.propTypes = {
   sendAtmCashTransfer: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
   showScanQRCode: PropTypes.func.isRequired,
+  onReceiptSaved: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapState, ({ getCashFromCrypto, showAlert, change, sendAtmCashTransfer, showScanQRCode }))(AtmCashTransfer));

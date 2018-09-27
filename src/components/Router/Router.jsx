@@ -65,12 +65,10 @@ const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Es
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
-const RouterAtmCashTransfer = createDynamicImport(() => import('@/components/Router/AtmCashTransfer'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
-  { path: URL.ATM_CASH_TRANSFER, component: RouterAtmCashTransfer },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.HANDSHAKE_PEX_UPDATER, component: CreateOwnMarket },

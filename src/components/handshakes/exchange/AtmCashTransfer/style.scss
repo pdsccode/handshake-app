@@ -10,6 +10,14 @@ div.new-transaction-container {
   display: flex;
   flex-direction: column;
 
+  span, label {
+    color: #868DAD;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+
   form.form-new-transaction {
     height: 100%;
     display: flex;
@@ -68,11 +76,23 @@ div.new-transaction-container {
       }
     }
     .submit-btn {
+      border-radius: 4px 4px 4px 4px;
       width: 100%;
-      background-color: #546FF7;
       color: white;
       height: 53px;
       border-radius: 4px;
+      background: #546FF7;
+      &:disabled {
+        background: #BAC0DB;
+      }
+      > span {
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+      }
+      > img {
+        margin: 0px 10px;
+      }
     }
     .input-with-trailing {
       position: relative;
@@ -83,7 +103,7 @@ div.new-transaction-container {
         color: $blur_color;
       }
       .prepend-qrcode {
-        top: 63px;
+        top: 60px;
         right: 110px;
       }
       input {
