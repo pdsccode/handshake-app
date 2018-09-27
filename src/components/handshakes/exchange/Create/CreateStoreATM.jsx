@@ -314,6 +314,16 @@ class Component extends React.Component {
           cashTab === CASH_ATM_TAB.INFO ? (
             <FormExchangeCreate onSubmit={this.onSubmit}>
               <div className="create-store-atm">
+                <div className="input-group item-info">
+                  <div className="d-table w-100">
+                    <Field
+                      component={fieldTypeAtm}
+                      texts={messages.create.atm.text}
+                      name="atmType"
+                      atmType={ATM_TYPE}
+                    />
+                  </div>
+                </div>
                 <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
                   <div >
@@ -351,16 +361,6 @@ class Component extends React.Component {
                       placeholder={messages.create.atm.text.addressHint}
                       component={fieldInput}
                       validate={[required]}
-                    />
-                  </div>
-                </div>
-                <div className="input-group item-info">
-                  <div className="d-table w-100">
-                    <Field
-                      component={fieldTypeAtm}
-                      texts={messages.create.atm.text}
-                      name="atmType"
-                      atmType={ATM_TYPE}
                     />
                   </div>
                 </div>

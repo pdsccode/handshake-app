@@ -16,7 +16,7 @@
 .rf-type-atm-container {
   display: flex;
   justify-content: space-around;
-  padding: 20px;
+  padding: 10px;
   .rf-type-atm-radio-container {
     display: block;
     position: relative;
@@ -74,8 +74,18 @@
 
 .rf-status-atm {
   display: flex;
-  justify-content: center;
-  .rf-status-atm-title {
-    margin: 0px 20px;
+  width: 374px;
+  height: 56px;
+  background: #EDF0FA;
+  border-radius: 4px 4px 4px 4px;
+  padding: 0px 20px;
+  justify-content: space-between;
+  align-items: center;
+  .rf-status-atm-title > span {
+    color: #060E2E;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
   }
 }

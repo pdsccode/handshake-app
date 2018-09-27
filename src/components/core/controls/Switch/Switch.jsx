@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 // component
@@ -11,11 +13,8 @@ class Switch extends React.PureComponent {
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.isChecked !== prevState.isChecked) {
-      return { isChecked: nextProps.isChecked };
-    }
-    return null;
+  UNSAFE_componentWillReceiveProps({ isChecked }) {
+    typeof isChecked === 'boolean' && this.setState({ isChecked });
   }
 
   onChange = () =>{
