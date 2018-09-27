@@ -392,6 +392,10 @@ class DiscoverPage extends React.Component {
     return `${startTime.toUpperCase()} - ${endTime.toUpperCase()}`;
   }
 
+  closeModal = () => {
+    this.setState({ modalContent: '' });
+  }
+
   render() {
     const {
       propsModal,
