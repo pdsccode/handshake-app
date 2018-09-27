@@ -503,6 +503,16 @@ export const LOCATION_METHODS = {
   IP: 'I',
 };
 
+export const ATM_TYPE = {
+  PERSONAL: 'personal',
+  STORE: 'store',
+};
+
+export const ATM_STATUS = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};
+
 // API
 export const BASE_API = {
   BASE_URL: process.env.BASE_API_URL,

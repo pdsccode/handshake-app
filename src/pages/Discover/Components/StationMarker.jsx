@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID, URL } from '@/constants';
+import {
+  API_URL, ATM_STATUS, ATM_TYPE, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID,
+  URL
+} from '@/constants';
 import { Marker, InfoWindow } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 
@@ -24,14 +27,26 @@ import AllStationDetails from './AllStationDetails';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
+import icPersonalClosed from '@/assets/images/cash/atm/ic-personal-closed-small.svg';
+import icPersonalOpen from '@/assets/images/cash/atm/ic-personal-open-small.svg';
+import icStoreClosed from '@/assets/images/cash/atm/ic-store-closed-small.svg';
+import icStoreOpen from '@/assets/images/cash/atm/ic-store-open-small.svg';
+
+
+
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
   [CRYPTO_CURRENCY.BTC]: iconBitcoin,
 };
 
 const atmIconMapping = {
-  typeA: iconBitcoin,
-  typeB: iconEthereum,
+  [ATM_TYPE.PERSONAL]: {
+    [ATM_STATUS.OPEN]: icPersonalOpen,
+    [ATM_STATUS.CLOSE]: icPersonalClosed,
+  },
+  [ATM_TYPE.STORE]: {
+    '': icStoreOpen,
+  },
 }
 
 class StationMarker extends React.Component {
@@ -268,21 +283,15 @@ class StationMarker extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const {
-      actionActive, currencyActive, location, initUserId, authProfile, showAllDetails, onChangeShowAllDetails, review,
+      location, showAllDetails, onChangeShowAllDetails,
     } = this.props;
-    const { fiatCurrency } = this.offer;
-    const username = this.getDisplayName();
+    const { businessType, status } = this.offer;
+    const icon = atmIconMapping[businessType][status];
     const locationArr = location.split(',');
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
-    const price = this.getPrice();
-    const maxVolume = this.getVolume();
-    // const boxStyle = showAllDetails ? {} : {
-    //   width: '152px',
-    // };
-    const type = 'typeB';
     return (
       <Marker
-        icon={{ url: atmIconMapping[type], scaledSize: { width: showAllDetails ? 45 : 30, height: showAllDetails ? 45 : 30 } }}
+        icon={{ url: icon, scaledSize: { width: showAllDetails ? 48 : 30, height: showAllDetails ? 48 : 30 } }}
         position={coordinate}
         onClick={() => onChangeShowAllDetails(!showAllDetails)}
       >
@@ -302,7 +311,7 @@ class StationMarker extends React.Component {
           }}
         >
           <div>
-            <img src={iconEthereum} width={18} />
+            {/*<img src={iconEthereum} width={18} />*/}
           </div>
         </InfoBox>
           {/*<div className="stationInfo">
