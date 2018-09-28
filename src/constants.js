@@ -257,6 +257,7 @@ export const API_URL = {
     CASH_STORE_ATM: 'exchange/cash/store',
     CRYPTO_TO_CASH: 'exchange/cash/price', // GET /cash/price?amount=1&currency=ETH
     SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
+    GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
   },
   SEED: {
     BASE: 'seed',
@@ -1212,10 +1213,3 @@ export const COUNTRY_LIST = {
   "ZR": "ZR - Zaire",
   "ZW": "ZW - Zimbabwe"
 }
-
-export const BANK_INFO = {
-  ACCOUNT_NAME: 'Ninja.org',
-  ACCOUNT_NUMBER: '11235813213455',
-  BANK_NAME: 'HSBC',
-  BANK_ID: '3901219822301'
-};

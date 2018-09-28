@@ -1,9 +1,11 @@
+/* eslint camelcase:0 */
+
 import React, { Component } from 'react';
-import { BANK_INFO, API_URL } from '@/constants';
+import { API_URL } from '@/constants';
 import PropTypes from 'prop-types';
 import ImageUploader from '@/components/handshakes/exchange/components/ImageUploader';
 import { connect } from 'react-redux';
-import { uploadReceipAtmCashTransfer } from '@/reducers/exchange/action';
+import { uploadReceipAtmCashTransfer, getCashCenterBankInfo } from '@/reducers/exchange/action';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import Image from '@/components/core/presentation/Image';
 import { showAlert } from '@/reducers/app/action';
@@ -15,10 +17,10 @@ import './styles.scss';
 
 const DATA_TEMPLATE = {
   AMOUNT: { intlKey: 'amount', text: '--- USD', className: 'money' },
-  'ACCOUNT NAME': { intlKey: 'account_name', text: BANK_INFO.ACCOUNT_NAME },
-  'ACCOUNT NUMBER': { intlKey: 'account_number', text: BANK_INFO.ACCOUNT_NUMBER, copyable: true },
-  'BANK NAME': { intlKey: 'bank_name', text: BANK_INFO.BANK_NAME, copyable: true },
-  'BANK ID': { intlKey: 'bank_id', text: BANK_INFO.BANK_ID, copyable: true },
+  'ACCOUNT NAME': { intlKey: 'account_name', text: '---' },
+  'ACCOUNT NUMBER': { intlKey: 'account_number', text: '---', copyable: true },
+  'BANK NAME': { intlKey: 'bank_name', text: '---', copyable: true },
+  'BANK ID': { intlKey: 'bank_id', text: '---', copyable: true },
   'REFERENCE CODE': { intlKey: 'reference_code', text: '---', className: 'reference-code', copyable: true },
 };
 
@@ -41,6 +43,7 @@ class AtmCashTransferInfo extends Component {
     this.onDone = :: this.onDone;
     this.saveReceipt = :: this.saveReceipt;
     this.copied = :: this.copied;
+    this.getBankInfo = :: this.getBankInfo;
   }
 
   static getDerivedStateFromProps({ receipt }, prevState) {
@@ -49,6 +52,10 @@ class AtmCashTransferInfo extends Component {
     amount && fiatCurrency && (newData.AMOUNT.text = `${amount} ${fiatCurrency}`);
     referenceCode && (newData['REFERENCE CODE'].text = referenceCode);
     return { data: newData };
+  }
+
+  componentDidMount() {
+    this.getBankInfo();
   }
 
   onUpload() {
@@ -67,6 +74,33 @@ class AtmCashTransferInfo extends Component {
   onDone() {
     if (typeof this.props.onDone === 'function') {
       typeof this.props.onDone();
+    }
+  }
+
+  getBankInfo() {
+    try {
+      const { country } = this.props.ipInfo;
+      const { data } = this.state;
+      this.props.getCashCenterBankInfo({
+        PATH_URL: `${API_URL.EXCHANGE.GET_CASH_CENTER_BANK}/${country}`,
+        METHOD: 'GET',
+        successFn: (res) => {
+          const info = res?.data[0]?.information || {};
+          const newData = { ...data };
+          newData['ACCOUNT NAME'].text = info.account_name;
+          newData['ACCOUNT NUMBER'].text = info.account_number;
+          newData['BANK ID'].text = info.bank_id;
+          newData['BANK NAME'].text = info.bank_name;
+          this.setState({ data: newData });
+
+          this.showLoading(false);
+        },
+        errorFn: () => {
+          this.showLoading(false);
+        },
+      });
+    } catch (e) {
+      console.warn(e);
     }
   }
 
@@ -97,9 +131,9 @@ class AtmCashTransferInfo extends Component {
   }
 
   copied() {
-    const { messages: { atm_cash_transfer } } = this.props.intl;
+    const { messages: { atm_cash_transfer_info } } = this.props.intl;
     this.props.showAlert({
-      message: atm_cash_transfer.copied,
+      message: atm_cash_transfer_info.copied,
       timeOut: 3000,
       isShowClose: true,
       type: 'success',
@@ -196,5 +230,14 @@ AtmCashTransferInfo.propTypes = {
   onDone: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
+  getCashCenterBankInfo: PropTypes.object.isRequired,
+  ipInfo: PropTypes.object.isRequired,
 };
-export default injectIntl(connect(null, { uploadReceipAtmCashTransfer, showAlert })(AtmCashTransferInfo));
+
+const mapState = (state) => {
+  return {
+    ipInfo: state.app.ipInfo,
+  };
+};
+
+export default injectIntl(connect(mapState, { uploadReceipAtmCashTransfer, showAlert, getCashCenterBankInfo })(AtmCashTransferInfo));
