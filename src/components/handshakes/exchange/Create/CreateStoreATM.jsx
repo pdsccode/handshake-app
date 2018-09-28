@@ -411,6 +411,7 @@ class Component extends React.Component {
                     <div className="input-group item-info">
                       <div className="d-table w-100 atm-time">
                         <div className="d-table-cell w-50">
+                          <div className="from-time">From</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
@@ -419,6 +420,7 @@ class Component extends React.Component {
                           />
                         </div>
                         <div className="d-table-cell w-50">
+                          <div className="to-time">To</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}

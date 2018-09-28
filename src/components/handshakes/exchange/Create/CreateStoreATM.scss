@@ -129,6 +129,12 @@ $height-el: 54px;
     background: #EDF0FA;
     border-radius: 4px;
     padding: 15px;
+    .from-time, .to-time {
+      display: block;
+      margin: auto;
+      width: 100px;
+      font-weight: 300;
+    }
   }
 
   .open-button {

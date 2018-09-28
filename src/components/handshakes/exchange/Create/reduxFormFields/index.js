@@ -1,7 +1,6 @@
 /* eslint  react/prop-types:0 */
 import React from 'react';
 import Switch from '@/components/core/controls/Switch/Switch';
-import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import RelocationMap from '../components/RelocationMap';
 import './styles.scss';
@@ -51,21 +50,32 @@ export const fieldAtmStatus = ({ input, texts, atmStatus }) => {
 
 export const fieldTimePicker = ({ input, defaultTime }) => {
   const { onChange, value } = input;
-  const now = moment().hour(0).minute(0);
   const TIME_FORMAT = 'HH:mm';
-  const timeValue = value || defaultTime || moment('08:00', TIME_FORMAT);
+  let timeValue = value || defaultTime || moment('08:00', TIME_FORMAT);
+  const [MIN_HOUR, MAX_HOUR] = [0, 23];
+  const hoursItem = [];
+
+  if (timeValue.constructor.name !== 'Moment') {
+    timeValue = moment();
+  }
+  for (let i = MIN_HOUR; i <= MAX_HOUR; i += 1) {
+    const hour = i < 10 ? `0${i}` : i;
+    hoursItem.push(
+      <option value={hour} key={hour}>{hour}:00</option>,
+    );
+  }
   return (
-    <div>
-      <TimePicker
-        name="startTime"
-        showSecond={false}
-        defaultValue={now}
-        value={timeValue}
-        onChange={onChange}
-        format={TIME_FORMAT}
-        inputReadOnly
-        showMinute={false}
-      />
+    <div className="form-group hour-selector-container">
+      <select
+        value={timeValue.format('HH')}
+        className="form-control"
+        onChange={({ target }) => {
+          const time = moment(`${target.value}:00`, TIME_FORMAT);
+          onChange(time);
+        }}
+      >
+        {hoursItem}
+      </select>
     </div>
   );
 };
