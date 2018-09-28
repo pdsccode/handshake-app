@@ -83,6 +83,7 @@ class TransactionItem extends React.Component {
               {status === CASH_ORDER_STATUS.PROCESSING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
+                  <span className="transfer-now" onClick={() => console.log('hello')}>{messages.create.atm.transactions.transferNow}</span>
                 </div>
               )
               }

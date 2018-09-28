@@ -1134,8 +1134,9 @@ export default {
           success: 'Success',
           transferring: 'Sending coins...',
         },
-        messageTransfer: 'You haven\'t transferred yet. Transfer now',
-      }
+        messageTransfer: 'You haven\'t transferred yet.',
+        transferNow: ' Transfer now',
+      },
     },
   },
 
