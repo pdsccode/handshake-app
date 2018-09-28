@@ -28,6 +28,11 @@ const CASH_ATM_TAB = {
   TRANSACTION: 'TRANSACTION',
 };
 
+const DEFAULT_TIME = {
+  OPEN: '08:00',
+  CLOSE: '17:00',
+};
+
 const nameFormFilterFeeds = 'formFilterFeeds';
 const FormFilterFeeds = createForm({
   propsReduxForm: {
@@ -45,8 +50,8 @@ const FormExchangeCreate = createForm({
     initialValues: {
       selectedDay: {},
       atmType: ATM_TYPE.PERSONAL,
-      startTime: moment('08:00', TIME_FORMAT),
-      endTime: moment('17:00', TIME_FORMAT),
+      startTime: moment(DEFAULT_TIME.OPEN, TIME_FORMAT),
+      endTime: moment(DEFAULT_TIME.CLOSE, TIME_FORMAT),
       atmStatus: ATM_STATUS.OPEN,
       position: { lat: 10.8086145, lng: 106.67679439999999 },
     },
@@ -301,8 +306,8 @@ class Component extends React.Component {
       rfChange(nameFormExchangeCreate, 'address', address);
       rfChange(nameFormExchangeCreate, 'atmType', business_type);
       rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE);
-      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour, TIME_FORMAT));
-      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour, TIME_FORMAT));
+      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour ? information.open_hour : DEFAULT_TIME.OPEN, TIME_FORMAT));
+      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour ? information.close_hour : DEFAULT_TIME.CLOSE, TIME_FORMAT));
 
       if (latitude && longitude) {
         rfChange(nameFormExchangeCreate, 'position', {
