@@ -341,7 +341,7 @@ class Component extends React.Component {
       modalContent, cashTab,
     } = this.state;
 
-    const { atmType } = this.props;
+    const { atmType, cashStore } = this.props;
 
     return (
       <div>
@@ -458,7 +458,7 @@ class Component extends React.Component {
                   </div>
                 </div>
                 <Button block type="submit" className="mt-3 open-button item-info"> {
-                  messages.create.atm.button.create
+                  cashStore ? messages.create.atm.button.update : messages.create.atm.button.create
                 }
                 </Button>
               </div>
