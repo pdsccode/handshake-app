@@ -83,16 +83,13 @@ class Component extends React.Component {
   static getDerivedStateFromProps(nextProps) {
     /* eslint camelcase:0 */
     const { rfChange, position } = nextProps;
-    if (position?.address && position.lat && position.lng) {
+    if (position) {
       rfChange(nameFormExchangeCreate, 'address', position?.address);
-      return {
-        cashStore: {
-          ...nextProps.cashStore,
-          address: position?.address,
-        },
-        lat: position?.lat,
-        lng: position?.lng,
-      };
+      const state = { cashStore: { ...nextProps?.cashStore } };
+      position?.address && (state.cashStore.address = position.address);
+      position?.lat && (state.lat = position.lat);
+      position?.lng && (state.lng = position.lng);
+      return state;
     }
     return null;
   }
