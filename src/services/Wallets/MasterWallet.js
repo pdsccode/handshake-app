@@ -774,7 +774,7 @@ export class MasterWallet {
       for (const i in MasterWallet.ListDefaultCoin){
         let wallet = new MasterWallet.ListDefaultCoin[i]();
         if (wallet.checkAddressValid(address) === true){
-          return {"symbol": wallet.name, "name": wallet.title, "address": address};
+          return {"symbol": wallet.name, "name": wallet.title, "address": address, "amount": ""};
         }
       }
       return false;       
@@ -816,7 +816,7 @@ export class MasterWallet {
             if(listData.length > 0){
               let address = listData[1];
               let param = Helper.getQueryStrings("?"+dataSplit[1]);              
-              return {"address": address, "amount" : param['amount']};  
+              return {"symbol": wallet.name, "address": address, "amount" : param['amount']};  
             }
             else{
               return false;

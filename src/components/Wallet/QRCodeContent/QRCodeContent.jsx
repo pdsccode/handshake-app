@@ -62,8 +62,7 @@ class QRCodeContent extends React.Component {
 
   componentWillReceiveProps(nextProps) { 
 
-    let props = nextProps.app.qRCodeContentData || {};    
-    console.log("props", props);    
+    let props = nextProps.app.qRCodeContentData || {};        
     
     if (props.isShow){   
       let data = props.data;
@@ -77,6 +76,8 @@ class QRCodeContent extends React.Component {
               
               break;
           case MasterWallet.QRCODE_TYPE.TRANSFER:
+              this.callBackTransfer(data.data);
+              this.props.hideQRCodeContent();
               break;
           
           case MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS:
@@ -148,8 +149,7 @@ class QRCodeContent extends React.Component {
     this.props.onTransferClick(dataAddress);
     this.modalScanQrCodeContentRef.close();
   }
-  setAddressContent(result){
-    console.log("dmmm");
+  setAddressContent(result){    
     const dataAddress = result.data;
    
     let title = dataAddress.name + " Address";

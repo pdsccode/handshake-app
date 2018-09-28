@@ -592,8 +592,7 @@ class Wallet extends React.Component {
       }
     });    
   }
-  showTransferFromQRCode=(dataAddress)=>{    
-    console.log("cai cccccc", dataAddress);
+  showTransferFromQRCode=(dataAddress)=>{        
     this.props.requestWalletPasscode({      
       onSuccess: () => {        
           this.setState({
@@ -607,6 +606,7 @@ class Wallet extends React.Component {
                   currency={this.state.alternateCurrency}
                   coinName={dataAddress.symbol}
                   toAddress={dataAddress.address}
+                  amount={dataAddress.amount}
                 />
               ),
             }, ()=>{
@@ -920,13 +920,9 @@ class Wallet extends React.Component {
   }
 
   onQRCodeScaned=(data)=>{
-    let result = MasterWallet.getQRCodeDetail("1DA6v4axc4e78Ce2y3ePiGkVjkPtnG7TUK");    
-    console.log("result==>", result);
+    let result = MasterWallet.getQRCodeDetail(data);        
     this.props.showQRCodeContent({   
-      data: result,   
-      onTranfer: (data) => {
-        
-      }
+      data: result      
     });
     
   }
