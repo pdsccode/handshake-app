@@ -17,6 +17,8 @@ import './TransactionItem.scss';
 import CashStoreTransaction from "@/models/CashStoreTransaction";
 import cx from 'classnames';
 
+import icWarning from '@/assets/images/cash/ic-transaction-warning.svg';
+
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
   [CRYPTO_CURRENCY.BTC]: iconBitcoin,
@@ -78,7 +80,7 @@ class TransactionItem extends React.Component {
                 }
               </div>*/}
 
-              {status === CASH_ORDER_STATUS.TRANSFERRING && (
+              {status === CASH_ORDER_STATUS.PROCESSING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
                 </div>
@@ -106,6 +108,8 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.needToTransfer}
               </div>
               <div className="d-table-cell text-right">
+                <img src={icWarning} width="16px" style={{ marginBottom: '4px' }}/>
+                &nbsp;&nbsp;
                 <span className="font-weight-bold">{fiatAmount}</span>
                 &nbsp;
                 <span className="text-normal">{FIAT_CURRENCY.USD}</span>
