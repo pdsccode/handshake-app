@@ -19,6 +19,7 @@ export const fieldTypeAtm = ({ input, texts, atmType }) => {
               type="radio"
               name="typeAtm"
               checked={value === name}
+              onChange={() => null}
             />
             <span className="checkmark" />
             <span>{label}</span>
