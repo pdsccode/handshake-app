@@ -1088,6 +1088,9 @@ export default {
         title: 'Buy coins',
       },
     },
+    transfer: {
+
+    },
     atm: {
       tab: {
         storeInfo: 'ATM Info',
@@ -1634,13 +1637,29 @@ export default {
 
   // ATM cash transfer page
   atm_cash_transfer: {
-    to_wallet_address: 'To walllet address',
+    to_wallet_address: 'YOUR WALLET ADDRESS',
     copy_address_or_scan_qr: 'Copy address or scan QR code',
-    amount: 'Amount',
-    transfer: 'Transfer',
+    we_will_send_coin_to_this_address_desc: 'We will send coin to this address after receiving your bank receipt.',
+    amount: 'WANTED AMOUNT',
+    transfer: 'Next',
     scan_qr_code: 'Scan QR code',
     invalid_address_valid: 'Invalid wallet address',
     success_msg: 'Success!',
     title: 'New Transaction',
+  },
+  atm_cash_transfer_info: {
+    payment_detail: 'Payment detail',
+    order_will_expire_in: 'This order will expire in ',
+    amount: 'AMOUNT',
+    account_name: 'ACCOUNT NAME',
+    account_number: 'ACCOUNT NUMBER',
+    bank_name: 'BANK NAME',
+    bank_id: 'BANK ID',
+    reference_code: 'REFERENCE CODE',
+    important: 'IMPORTANT: ',
+    notice_desc: 'You must send the exact amount & reference code as instructed and upload the payment proof below so we can proceed sending coins to your customer.',
+    upload_btn: 'Upload your bank receipt',
+    done_btn: 'Done',
+    copied: 'Copied to clipboard!',
   },
 };

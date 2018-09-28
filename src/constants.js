@@ -619,7 +619,6 @@ export const URL = {
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
-  ATM_CASH_TRANSFER: '/atm/cash/transfer',
 };
 
 export const LANDING_PAGE_TYPE = {
@@ -1213,3 +1212,10 @@ export const COUNTRY_LIST = {
   "ZR": "ZR - Zaire",
   "ZW": "ZW - Zimbabwe"
 }
+
+export const BANK_INFO = {
+  ACCOUNT_NAME: 'Ninja.org',
+  ACCOUNT_NUMBER: '11235813213455',
+  BANK_NAME: 'HSBC',
+  BANK_ID: '3901219822301'
+};
