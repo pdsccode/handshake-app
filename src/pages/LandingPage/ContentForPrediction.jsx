@@ -129,7 +129,8 @@ class ContentForPrediction extends React.Component {
             <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
             {/*this.renderEmail()*/}
             {/*hasSubscribed && this.renderThanksSubcribe()*/}
-            <p className="pexContent">To play, please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser.</p>
+            <p className="pexContent btnMobileOpen">To play, please open <u>ninja.org/prediction</u> on your mobile browser.</p>
+            <p><a href="https://t.me/ninja_org"><u>Join the dojo on Telegram</u></a></p>
           </div>
           <div className="column">
             <img className="" src={imgIntroduce} alt="imgHowToPlay" width="850" />
