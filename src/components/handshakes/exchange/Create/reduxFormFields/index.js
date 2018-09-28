@@ -34,7 +34,7 @@ export const fieldAtmStatus = ({ input, texts, atmStatus }) => {
   return (
     <div className="rf-status-atm">
       <div className="rf-status-atm-title">
-        <span>{texts.statusTitle}</span>
+        <span>{value === atmStatus.OPEN ? texts.open : texts.closed}</span>
       </div>
       <div>
         <Switch
