@@ -55,7 +55,7 @@ export const fieldTimePicker = ({ input, defaultTime, minHour }) => {
   const [MIN_HOUR, MAX_HOUR] = [parseInt(minHour, 10) || 0, 23];
   const hoursItem = [];
 
-  if (timeValue.constructor.name !== 'Moment') {
+  if (!timeValue?._isAMomentObject) {
     timeValue = moment();
   }
   for (let i = MIN_HOUR; i <= MAX_HOUR; i += 1) {
