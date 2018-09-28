@@ -40,9 +40,13 @@ class Transaction extends React.Component {
     this.modalRef.close();
   }
 
-  openNewTransaction = () => {
+  openNewTransaction = (transaction) => {
     const { messages } = this.props.intl;
-    const receipt = {};
+    const receipt = {
+      amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
+      fiatCurrency: transaction.fiatCurrency,
+      referenceCode: transaction.id
+    };
 
     this.setState({
       modalTitle: messages.atm_cash_transfer.title,
