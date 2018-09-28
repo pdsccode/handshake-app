@@ -590,8 +590,30 @@ class Wallet extends React.Component {
             this.modalSendRef.open();
           });
       }
-    });
-    
+    });    
+  }
+  showTransferFromQRCode=(dataAddress)=>{    
+    console.log("cai cccccc", dataAddress);
+    this.props.requestWalletPasscode({      
+      onSuccess: () => {        
+          this.setState({
+            modalTransferCoin:
+              (
+                <TransferCoin                  
+                  onFinish={(result) => { 
+                    this.modalSendRef.close();
+                    // this.autoCheckBalance(dataAddress.address, amount);
+                   }}
+                  currency={this.state.alternateCurrency}
+                  coinName={dataAddress.symbol}
+                  toAddress={dataAddress.address}
+                />
+              ),
+            }, ()=>{
+            this.modalSendRef.open();
+          });
+      }
+    });    
   }
 
   showReceive(wallet){
@@ -831,6 +853,7 @@ class Wallet extends React.Component {
 
   closeTransfer = () => {
     this.setState({ modalTransferCoin: '' });
+    console.log("closeTransfer");
   }
 
   closeBuyCoin = () => {
@@ -916,27 +939,28 @@ class Wallet extends React.Component {
     return (
       <div className="wallet-page">
 
-        <img onClick={()=> {this.props.showScanQRCode({      
-              onFinish: (data) => {
-                this.onQRCodeScaned(data);
-              }
-            });
-          }} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
+        {/* float button qrcode */}
+        <img onClick={()=> {this.props.showScanQRCode({onFinish: (data) => {this.onQRCodeScaned(data);}});}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
 
+        {/* history modal */}
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
           {modalHistory}
         </Modal>
 
+        {/* wallet preferences  */}
         <Modal title="Preferences" onRef={modal => this.modalWalletReferencesRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closePreferences}>
           {modalWalletPreferences}
         </Modal>
 
-        <QRCodeContent onTransferClick={(address)=> {console.log(address)}} />
+        {/* qrcode result detected modal popup*/}
+        <QRCodeContent onTransferClick={(data)=> {this.showTransferFromQRCode(data);}} />
 
+        {/* add new token modal */}
         <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
             <AddToken formAddTokenIsActive={formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
         </Modal>
 
+        {/* add collectible modal */}
         <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
             <AddCollectible formAddCollectibleIsActive={formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
         </Modal>

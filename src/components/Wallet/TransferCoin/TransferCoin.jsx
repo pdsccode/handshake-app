@@ -94,22 +94,22 @@ class Transfer extends React.Component {
 
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
     //this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
 
-    if (this.props.amount){
-      this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
-    }
+    let amount = this.props.amount || "";
+    let toAddress = this.props.toAddress || "";
+    
+    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);    
+    this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);    
 
-    if (this.props.toAddress){
-      this.setState({inputAddressAmountValue: this.props.toAddress});
-      this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
-    }
-
-    await this.getWalletDefault();
+    this.setState({inputAddressAmountValue: toAddress, inputSendAmountValue: amount});
+    
+    this.getWalletDefault();
+    
     this.setRate();
   }
 
@@ -249,7 +249,7 @@ class Transfer extends React.Component {
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach(async (wal) => {
+      wallets.forEach(wal => {
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
@@ -257,7 +257,7 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          wal.balance = wal.formatNumber(await wal.getBalance());
+          // wal.balance = wal.formatNumber(await wal.getBalance());
           listWalletCoin.push(wal);
         }
       });
@@ -581,6 +581,11 @@ render() {
 Transfer.propTypes = {
   wallet: PropTypes.any,
   currency: PropTypes.string,
+  toAddress: PropTypes.string,
+  fromAddress: PropTypes.string,
+  coinName: PropTypes.string,
+  amount: PropTypes.any,
+  onFinish: PropTypes.func,
 };
 
 

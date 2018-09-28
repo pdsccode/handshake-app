@@ -60,8 +60,11 @@ class QRCodeContent extends React.Component {
   //   console.log (MasterWallet.getQRCodeDetail("https://ga.com"));
   //   console.log (MasterWallet.getQRCodeDetail("esfeswrewre"));
 
-  componentWillReceiveProps(nextProps) {     
+  componentWillReceiveProps(nextProps) { 
+
     let props = nextProps.app.qRCodeContentData || {};    
+    console.log("props", props);    
+    
     if (props.isShow){   
       let data = props.data;
       if (data){
@@ -141,12 +144,20 @@ class QRCodeContent extends React.Component {
     })
   }
 
+  callBackTransfer=(dataAddress)=>{    
+    this.props.onTransferClick(dataAddress);
+    this.modalScanQrCodeContentRef.close();
+  }
   setAddressContent(result){
-    let title = result.data.name + " Address";
-    let address = result.data.address;
+    console.log("dmmm");
+    const dataAddress = result.data;
+   
+    let title = dataAddress.name + " Address";
+    let address = dataAddress.address;
     const { messages } = this.props.intl;
+    
     let icon = require("@/assets/images/wallet/icons/coins/eth.svg");
-    try{ icon = require("@/assets/images/wallet/icons/coins/" + result.data.symbol.toLowerCase() + ".svg" );} catch (e){};
+    try{ icon = require("@/assets/images/wallet/icons/coins/" + dataAddress.symbol.toLowerCase() + ".svg" );} catch (e){};
 
     let content = (
       <div className={"box-qrcode-content"}>
@@ -155,12 +166,12 @@ class QRCodeContent extends React.Component {
           <div className="name short">{address}</div>
         </div>          
         
-        <div className="item" onClick={(address)=>{this.props.onTransferClick(address)}}>
+        <div className="item" onClick={()=>{this.callBackTransfer(dataAddress);}}>
           <img className="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGySURBVEhL7dVJLwNhHMfxWoOIfScO7iKxhMS+XBBnB2uIJQhnXoAgHOxxcHIUYgsRy8nyDhy9Ft9fHyOjnYmWmZ58k0/67yTNtM88Mw3852NZn68xqRQLeMKBDvhZCeZxj1MMYAtd8LxizOEOZxhEBmpQjWckwpOKMItbnGMYmbBqh369TvznZS7EDHSyC4zAadO0QV8iDsvoRNQVYBo62SVGkQ23aqFNpZOqFySY8efyMYUbXGEMOfipMui6WmmZ983oXh4moJNdYxy5iLQ09JjxqxV0mNG9brxD1/A3aSeHpt0c0TLrW69Cy1uhAxGkzwyZ8Vu61ntmjLxK6AGwhGQdcEnXtNeMYekH6JaKunhMQsvVrAMhWQ8Ht6LazU7p3j3CIazNZj0c3KrDrhn/np61+hXaRCmw7lOn1tBqRm9KxQmagu+c0xd6hS6Vp2npdd2Tgu/C0zJvm9H79AhdNGNY62gxo/dpGR8Req/7tsz2qqA/DXv12DSjv2n39psx2Aac7nnPS4eW1vrv1e3m6zLb68MOGhCTZbZ3jAc0Bt/FMP1ZvCFmy2yv/PP1P4cCgQ9v3zlbObfqVgAAAABJRU5ErkJggg=="/>
           <div className="name"><label>Send payment to this address</label></div>          
         </div>
         
-        <div className="item" onClick={()=> {Clipboard.copy(text);this.showToast(messages.wallet.action.copy.message);}}>
+        <div className="item" onClick={()=> {Clipboard.copy(address);this.showToast(messages.wallet.action.copy.message);}}>
           <img className="icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACuSURBVEhL7c0xCoNAEAXQPXaKnMAUqYMp0okewBN4IkkIpIjycYRFdnRmd4qE3Q+/+zPP/UVOl/uk6fn6GOg0LXg2fiZRsa3q9muCa+Hn622Da2FkF8dI01vTBzG/2K1hcX90FGyrujvEtz+DuBZenuzj2HElVg8jEjzUZBiJwU1gRIsnwVxD0LbYEauDuRSYa4HpPD4F5lpgOo9PnrC0xNrB9E6ePGGL0rtfjnMzL6TZzGCR4V8AAAAASUVORK5CYII=" />
           <div className="name"><label>Copy to clipboard</label></div>          
         </div>
@@ -174,6 +185,7 @@ class QRCodeContent extends React.Component {
       this.modalScanQrCodeContentRef.open();
     })
   }
+
 
   componentDidMount() {    
     
