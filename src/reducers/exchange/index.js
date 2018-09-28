@@ -131,10 +131,12 @@ function exchangeReducter(state = {
     }
     case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CASH_STORE}_SUCCESS`: {
       const list = handleListPayload(action.payload.data.handshakes);
-      console.log('GET_TRANSACTION_CASH_STORE', list);
+      list.filter(handshake => handshake.offerFeedType === 'cash_order');
+
+      console.log('GET_TRANSACTION_CASH_STORE', list.filter(handshake => handshake.offerFeedType === 'cash_order'));
       return {
         ...state,
-        cashStoreTransaction: list,
+        cashStoreTransaction: list.filter(handshake => handshake.offerFeedType === 'cash_order'),
       };
     }
     default:

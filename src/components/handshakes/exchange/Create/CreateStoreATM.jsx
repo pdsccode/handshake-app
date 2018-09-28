@@ -349,7 +349,7 @@ class Component extends React.Component {
   getTransactionCreditATM = () => {
     const qs = {};
 
-    qs.type = HANDSHAKE_ID.CREDIT;
+    qs.type = HANDSHAKE_ID.EXCHANGE;
 
     this.props.getTransactionCashStore({ PATH_URL: API_URL.ME.BASE, qs });
   }
