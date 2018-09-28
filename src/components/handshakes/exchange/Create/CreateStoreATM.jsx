@@ -5,25 +5,24 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from '@/components/core/controls/Button';
 import createForm from '@/components/core/form/createForm';
-import { fieldInput, fieldRadioButton, fieldPhoneInput } from '@/components/core/form/customField';
+import { fieldInput, fieldPhoneInput, fieldRadioButton } from '@/components/core/form/customField';
 import { required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import COUNTRIES from '@/data/country-dial-codes.js';
-import {API_URL, ATM_STATUS, ATM_TYPE, HANDSHAKE_ID, TIME_FORMAT, URL} from '@/constants';
+import { API_URL, ATM_STATUS, ATM_TYPE, HANDSHAKE_ID, TIME_FORMAT, URL } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
-import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
-import { getErrorMessageFromCode, getAddressFromLatLng } from '@/components/handshakes/exchange/utils';
+import { createStoreATM, getStoreATM, getTransactionCashStore, updateStoreATM } from '@/reducers/exchange/action';
+import { getAddressFromLatLng, getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import moment from 'moment';
 import Feed from '@/components/core/presentation/Feed/Feed';
 import 'rc-time-picker/assets/index.css';
-import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker, mapField } from './reduxFormFields';
+import { fieldAtmStatus, fieldTimePicker, fieldTypeAtm, mapField } from './reduxFormFields';
 import './CreateStoreATM.scss';
 import '../styles.scss';
-import {loadMyHandshakeList} from "@/reducers/me/action";
-import Transaction from "./components/Transaction";
+import Transaction from './components/Transaction';
 
 const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -183,7 +182,7 @@ class Component extends React.Component {
     if (this.state.cashTab !== newValue) {
       this.setState({ cashTab: newValue }, () => {
         if (newValue === CASH_ATM_TAB.TRANSACTION) {
-          this.loadMyHandshakeList();
+          this.getTransactionCreditATM();
         }
       });
     }
@@ -347,12 +346,12 @@ class Component extends React.Component {
     );
   }
 
-  loadMyHandshakeList = () => {
-    const qs = { };
+  getTransactionCreditATM = () => {
+    const qs = {};
 
-    qs.type = HANDSHAKE_ID.EXCHANGE;
+    qs.type = HANDSHAKE_ID.CREDIT;
 
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
+    this.props.getTransactionCashStore({ PATH_URL: API_URL.ME.BASE, qs });
   }
 
   render() {
@@ -484,7 +483,7 @@ class Component extends React.Component {
               </div>
             </FormExchangeCreate>
           ) : (
-            <Transaction/>
+            <Transaction />
           )
         }
         <ModalDialog onRef={modal => { this.modalRef = modal; }} >
@@ -517,7 +516,7 @@ const mapDispatchToProps = dispatch => ({
   getStoreATM: bindActionCreators(getStoreATM, dispatch),
   updateStoreATM: bindActionCreators(updateStoreATM, dispatch),
   showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
-  loadMyHandshakeList: bindActionCreators(loadMyHandshakeList, dispatch),
+  getTransactionCashStore: bindActionCreators(getTransactionCashStore, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));

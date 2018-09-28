@@ -129,6 +129,14 @@ function exchangeReducter(state = {
         ...state, cashStore,
       };
     }
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CASH_STORE}_SUCCESS`: {
+      const list = handleListPayload(action.payload.data.handshakes);
+      console.log('GET_TRANSACTION_CASH_STORE', list);
+      return {
+        ...state,
+        cashStoreTransaction: list,
+      };
+    }
     default:
       return state;
   }
