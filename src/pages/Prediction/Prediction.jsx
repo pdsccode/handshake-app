@@ -317,9 +317,11 @@ class Prediction extends React.Component {
 
   renderLuckyReal = () => (
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-      <LuckyReal onButtonClick={() => {
-        this.modalLuckyReal.close();
-      }}
+      <LuckyReal
+        isExistEmail={this.props.isExistEmail}
+        onButtonClick={() => {
+          this.modalLuckyReal.close();
+        }}
       />
     </ModalDialog>
   )

@@ -31,4 +31,30 @@
   .luckyImage {
     margin-right: rem-calc(20px);
   }
+  .wrapperFieldEmail {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    .emailPopupButton {
+      background: #2456FB;
+      border-radius: rem-calc(5px);
+      font-size: rem-calc(16px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      border: none;
+      height: rem-calc(50px);
+      font-weight: 400;
+    }
+    .emailPopupInput {
+      background: white;
+      color: #828AA8;
+      border: 1px solid #828AA8;
+      height: rem-calc(50px);
+      border-radius: rem-calc(5px);
+      font-size: rem-calc(16px);
+      text-align: center;
+      margin-right: 10px;
+    }
+  }
+
 }
