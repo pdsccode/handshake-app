@@ -54,7 +54,7 @@ const FormExchangeCreate = createForm({
       startTime: moment(DEFAULT_TIME.OPEN, TIME_FORMAT),
       endTime: moment(DEFAULT_TIME.CLOSE, TIME_FORMAT),
       atmStatus: ATM_STATUS.OPEN,
-      position: { lat: 10.8086145, lng: 106.67679439999999 },
+      position: {},
     },
   },
 });
@@ -122,7 +122,7 @@ class Component extends React.Component {
     rfChange(
       nameFormExchangeCreate,
       'phone',
-      cashStore.phone || `${detectedCountryCode}-`,
+      cashStore?.phone || `${detectedCountryCode}-`,
     );
   }
 
@@ -191,6 +191,10 @@ class Component extends React.Component {
   setAddressFromLatLng = (lat, lng, addressDefault) => {
     this.setState({ lat, lng });
     const { rfChange } = this.props;
+    rfChange(nameFormExchangeCreate, 'position', {
+      lat,
+      lng,
+    });
     if (addressDefault) {
       setTimeout(() => {
         rfChange(nameFormExchangeCreate, 'address', addressDefault);
@@ -202,11 +206,16 @@ class Component extends React.Component {
     }
   }
 
+  handleGetStoreFailed = (e) => {
+    console.warn(e);
+    this.detectPhonePrefix();
+  }
+
   getStoreATM() {
     this.props.getStoreATM({
       PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
       successFn: this.handleGetStoresSuccess,
-      errorFn: console.warn,
+      errorFn: this.handleGetStoreFailed,
     });
   }
 
@@ -312,9 +321,10 @@ class Component extends React.Component {
       rfChange(nameFormExchangeCreate, 'address', address);
       rfChange(nameFormExchangeCreate, 'atmType', business_type);
       rfChange(nameFormExchangeCreate, 'atmStatus', status === ATM_STATUS.OPEN ? ATM_STATUS.OPEN : ATM_STATUS.CLOSE);
-      rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour ? information.open_hour : DEFAULT_TIME.OPEN, TIME_FORMAT));
-      rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour ? information.close_hour : DEFAULT_TIME.CLOSE, TIME_FORMAT));
-
+      if (business_type === ATM_TYPE.STORE) {
+        rfChange(nameFormExchangeCreate, 'startTime', moment(information.open_hour ? information.open_hour : DEFAULT_TIME.OPEN, TIME_FORMAT));
+        rfChange(nameFormExchangeCreate, 'endTime', moment(information.close_hour ? information.close_hour : DEFAULT_TIME.CLOSE, TIME_FORMAT));
+      }
       if (latitude && longitude) {
         rfChange(nameFormExchangeCreate, 'position', {
           lat: latitude,
@@ -324,8 +334,7 @@ class Component extends React.Component {
       const cashStore = {
         name, phone, address, businessType: business_type, information,
       };
-      this.setState({ cashStore });
-      this.detectPhonePrefix();
+      this.setState({ cashStore }, this.detectPhonePrefix);
     }
   }
 

@@ -52,7 +52,7 @@ export const fieldTimePicker = ({ input, defaultTime, minHour }) => {
   const { onChange, value } = input;
   const TIME_FORMAT = 'HH:mm';
   let timeValue = value || defaultTime || moment('08:00', TIME_FORMAT);
-  const [MIN_HOUR, MAX_HOUR] = [parseInt(minHour) || 0, 23];
+  const [MIN_HOUR, MAX_HOUR] = [parseInt(minHour, 10) || 0, 23];
   const hoursItem = [];
 
   if (timeValue.constructor.name !== 'Moment') {
