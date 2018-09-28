@@ -100,7 +100,7 @@ const configRoutesUsingMobileLayout = [
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
-  { path: URL.INVEST_PROJECT_LIST, component: RouterInvest },
+  { path: URL.INVEST_URL, component: RouterInvest },
 
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
