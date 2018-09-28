@@ -48,7 +48,7 @@ class TransactionItem extends React.Component {
 
     return (
       <div className="transaction">
-        <div className="text-normal" style={{ padding: '0 15px' }}>
+        <div className="text-normal" style={{ padding: '0 15px', marginBottom: '7px' }}>
           <FormattedDate
             value={new Date(initAt * 1000)}
             year="numeric"
@@ -83,7 +83,7 @@ class TransactionItem extends React.Component {
               {status === CASH_ORDER_STATUS.PROCESSING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
-                  <span className="transfer-now" onClick={() => console.log('hello')}>{messages.create.atm.transactions.transferNow}</span>
+                  <span className="transfer-now" onClick={() => this.props.onShowTransferInfo()}>{messages.create.atm.transactions.transferNow}</span>
                 </div>
               )
               }
