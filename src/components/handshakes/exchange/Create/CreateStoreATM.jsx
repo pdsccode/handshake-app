@@ -360,7 +360,7 @@ class Component extends React.Component {
       modalContent, cashTab,
     } = this.state;
 
-    const { atmType, cashStore } = this.props;
+    const { atmType, cashStore, startTime } = this.props;
 
     return (
       <div>
@@ -425,6 +425,7 @@ class Component extends React.Component {
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
                             defaultTime={moment('08:00 PM', TIME_FORMAT)}
+                            minHour={moment(startTime).format('HH')}
                             name="endTime"
                           />
                         </div>
@@ -499,9 +500,11 @@ class Component extends React.Component {
 const mapStateToProps = (state) => {
   const atmType = selectorFormExchangeCreate(state, 'atmType');
   const position = selectorFormExchangeCreate(state, 'position');
+  const startTime = selectorFormExchangeCreate(state, 'startTime');
   return {
     position,
     atmType,
+    startTime,
     ipInfo: state.app.ipInfo,
     cashStore: state.exchange.cashStore,
   };
