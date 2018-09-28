@@ -42,10 +42,8 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatAmount } = this.transaction;
-    console.log('this.transaction', this.transaction);
+    const { amount, currency, fiatAmount, status } = this.transaction;
 
-    const status = 'processing';
     return (
       <div className="transaction">
         <div className="text-normal" style={{ padding: '0 15px' }}>
