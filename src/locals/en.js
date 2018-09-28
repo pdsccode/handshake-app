@@ -1122,6 +1122,17 @@ export default {
         saturday: 'Saturday',
         sunday: 'Sunday',
       },
+      transactions: {
+        amount: 'Amount',
+        needToTransfer: 'Need to transfer',
+        status: 'Status',
+        statusValues: {
+          processing: 'Pending',
+          success: 'Success',
+          transferring: 'Sending coins...',
+        },
+        messageTransfer: 'You haven\'t transferred yet. Transfer now',
+      }
     },
   },
 

@@ -11,7 +11,7 @@ import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import COUNTRIES from '@/data/country-dial-codes.js';
-import { API_URL, ATM_STATUS, ATM_TYPE, TIME_FORMAT, URL } from '@/constants';
+import {API_URL, ATM_STATUS, ATM_TYPE, HANDSHAKE_ID, TIME_FORMAT, URL} from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
@@ -22,6 +22,8 @@ import 'rc-time-picker/assets/index.css';
 import { fieldTypeAtm, fieldAtmStatus, fieldTimePicker, mapField } from './reduxFormFields';
 import './CreateStoreATM.scss';
 import '../styles.scss';
+import {loadMyHandshakeList} from "@/reducers/me/action";
+import Transaction from "./components/Transaction";
 
 const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -178,8 +180,13 @@ class Component extends React.Component {
 
   onCashTabChange = (e, newValue) => {
     console.log('onTypeChange', newValue);
-    this.setState({ cashTab: newValue }, () => {
-    });
+    if (this.state.cashTab !== newValue) {
+      this.setState({ cashTab: newValue }, () => {
+        if (newValue === CASH_ATM_TAB.TRANSACTION) {
+          this.loadMyHandshakeList();
+        }
+      });
+    }
   }
 
   setAddressFromLatLng = (lat, lng, addressDefault) => {
@@ -340,6 +347,14 @@ class Component extends React.Component {
     );
   }
 
+  loadMyHandshakeList = () => {
+    const qs = { };
+
+    qs.type = HANDSHAKE_ID.EXCHANGE;
+
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
@@ -469,7 +484,7 @@ class Component extends React.Component {
               </div>
             </FormExchangeCreate>
           ) : (
-            <div>Transaction</div>
+            <Transaction/>
           )
         }
         <ModalDialog onRef={modal => { this.modalRef = modal; }} >
@@ -502,6 +517,7 @@ const mapDispatchToProps = dispatch => ({
   getStoreATM: bindActionCreators(getStoreATM, dispatch),
   updateStoreATM: bindActionCreators(updateStoreATM, dispatch),
   showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
+  loadMyHandshakeList: bindActionCreators(loadMyHandshakeList, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
