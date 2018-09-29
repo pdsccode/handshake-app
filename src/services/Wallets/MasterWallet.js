@@ -811,7 +811,7 @@ export class MasterWallet {
         let dataSplit = text.split('?');        
         for (const i in MasterWallet.ListDefaultCoin){
           let wallet = new MasterWallet.ListDefaultCoin[i]();
-          if (dataSplit[0].toLowerCase().includes(wallet.title.toLowerCase())){
+          if (dataSplit[0].toLowerCase().includes((wallet.title.replace(/\s/g,'')).toLowerCase())){
             let listData = dataSplit[0].split(':');
             if(listData.length > 0){
               let address = listData[1];
