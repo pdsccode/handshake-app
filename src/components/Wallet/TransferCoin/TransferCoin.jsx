@@ -96,6 +96,7 @@ class Transfer extends React.Component {
   }
 
   async componentDidMount() {
+    this.showLoading();
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
@@ -112,6 +113,7 @@ class Transfer extends React.Component {
 
     await this.getWalletDefault();
     this.setRate();
+    this.hideLoading();
   }
 
   resetForm(){
@@ -135,7 +137,7 @@ class Transfer extends React.Component {
 
       try{
         if(data && data.hash){
-          let transactions = this.getSessionStore(this.state.walletSelected, TAB.Transaction);
+          let transactions = this.getSessionStore(this.state.walletSelected, TAgetb.Transaction);
           if(!transactions)
             transactions = [];
 
@@ -234,7 +236,7 @@ class Transfer extends React.Component {
     });
   }
 
-  getWalletDefault = () =>{
+  getWalletDefault = async () =>{
     const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
@@ -255,7 +257,7 @@ class Transfer extends React.Component {
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach(async (wal) => {
+      for(let wal of wallets){
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
@@ -263,10 +265,10 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          wal.balance = wal.formatNumber(await wal.getBalance());
+          wal.balance = await wal.getBalance(true);
           listWalletCoin.push(wal);
         }
-      });
+      }
     }
 
     if (!walletDefault && listWalletCoin.length > 0){
@@ -478,7 +480,6 @@ get showWallet(){
     if(walletSelected)
       icon = require("@/assets/images/icon/wallet/coins/" + walletSelected.name.toLowerCase() + '.svg');
   } catch (ex){console.log(ex)};
-
   return (
     <div className="walletSelected" onClick={() => {this.openListCoin() }}>
       <div className="row">
