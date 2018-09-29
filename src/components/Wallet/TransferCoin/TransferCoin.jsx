@@ -95,7 +95,8 @@ class Transfer extends React.Component {
 
   }
 
-  componentDidMount() {
+   async componentDidMount() {
+    this.showLoading();
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
@@ -112,6 +113,7 @@ class Transfer extends React.Component {
     this.getWalletDefault();
     
     this.setRate();
+    this.hideLoading();
   }
 
   resetForm(){
@@ -135,7 +137,7 @@ class Transfer extends React.Component {
 
       try{
         if(data && data.hash){
-          let transactions = this.getSessionStore(this.state.walletSelected, TAB.Transaction);
+          let transactions = this.getSessionStore(this.state.walletSelected, TAgetb.Transaction);
           if(!transactions)
             transactions = [];
 
@@ -234,7 +236,7 @@ class Transfer extends React.Component {
     });
   }
 
-  getWalletDefault = () =>{
+  getWalletDefault = async () =>{
     const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
@@ -255,7 +257,7 @@ class Transfer extends React.Component {
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach(wal => {
+      for(let wal of wallets){
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
@@ -263,10 +265,10 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          // wal.balance = wal.formatNumber(await wal.getBalance());
+          wal.balance = await wal.getBalance(true);
           listWalletCoin.push(wal);
         }
-      });
+      }
     }
 
     if (!walletDefault && listWalletCoin.length > 0){
@@ -376,7 +378,6 @@ class Transfer extends React.Component {
     }
   }
 
-
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value,
@@ -408,19 +409,37 @@ submitSendCoin=()=>{
 handleScan=(data) =>{
   const { rfChange } = this.props
   if(data){
-    let value = data.split(',');
-    this.setState({
-      inputAddressAmountValue: value[0],
-    });
-    rfChange(nameFormSendWallet, 'to_address', value[0]);
-    if (value.length == 2){
-      this.setState({
-        inputSendAmountValue: value[1],
-      });
-
-      //rfChange(nameFormSendWallet, 'amountCoin', value[1]);
-      this.updateAddressAmountValue(null, value[1]);
+    let qrCodeResult = MasterWallet.getQRCodeDetail(data);
+    if (qrCodeResult){
+      let dataType = qrCodeResult['type'];
+      if (dataType == MasterWallet.QRCODE_TYPE.TRANSFER){                    
+          this.setState({
+            inputAddressAmountValue: qrCodeResult.data.address, inputSendAmountValue: qrCodeResult.data.amount
+          });
+          this.updateAddressAmountValue(null, qrCodeResult.data.amount);
+          rfChange(nameFormSendWallet, 'to_address', qrCodeResult.data.address);
+      }
+      else if (dataType == MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS){
+        rfChange(nameFormSendWallet, 'to_address', qrCodeResult.data.address);          
+      }
+      else{
+        this.showAlert("Address not found");
+      }    
     }
+    
+    // let value = data.split(',');
+    // this.setState({
+    //   inputAddressAmountValue: value[0],
+    // });
+    // rfChange(nameFormSendWallet, 'to_address', value[0]);
+    // if (value.length == 2){
+    //   this.setState({
+    //     inputSendAmountValue: value[1],
+    //   });
+
+    //   //rfChange(nameFormSendWallet, 'amountCoin', value[1]);
+    //   this.updateAddressAmountValue(null, value[1]);
+    // }
     this.modalScanQrCodeRef.close();
   }
 }
@@ -478,7 +497,6 @@ get showWallet(){
     if(walletSelected)
       icon = require("@/assets/images/icon/wallet/coins/" + walletSelected.name.toLowerCase() + '.svg');
   } catch (ex){console.log(ex)};
-
   return (
     <div className="walletSelected" onClick={() => {this.openListCoin() }}>
       <div className="row">
