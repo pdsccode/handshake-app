@@ -60,7 +60,8 @@ class Transfer extends React.Component {
       inputSendAmountValue: 0,
       inputSendMoneyValue: 0,
       legacyMode: false,
-      modalListCoin: ''
+      modalListCoin: '',
+      walletNotFound: ''
     }
   }
 
@@ -293,8 +294,7 @@ class Transfer extends React.Component {
 
   getBalanceWallets = async () => {
     let { wallets, walletSelected, walletDefault } = this.state;
-
-    if(wallets){
+    if(wallets && wallets.length){
       for(let i in wallets){
         wallets[i].balance = await wallets[i].getBalance(true);
         if(walletSelected.name == wallets[i].name && walletSelected.address == wallets[i].address && walletSelected.network == wallets[i].network){
@@ -308,8 +308,20 @@ class Transfer extends React.Component {
 
       this.setState({wallets, walletSelected, walletDefault});
     }
-  }
+    else{
+      const { coinName } = this.props;
 
+      if(coinName){
+        this.setState({walletNotFound:
+          <div className="walletNotFound">
+            {coinName} wallet is not found to transfer
+          </div>
+        }, ()=> {
+
+        });
+      }
+    }
+  }
 
   sendCoin = () => {
       this.modalConfirmTranferRef.open();
@@ -529,7 +541,7 @@ render() {
   if(!currency) currency = "USD";
   const { messages } = this.props.intl;
   let showDivAmount = this.state.walletSelected && this.state.rate;
-  const { modalListCoin } = this.state;
+  const { modalListCoin, walletNotFound } = this.state;
 
   return (
     <div>
@@ -557,7 +569,7 @@ render() {
             : ''}
         </Modal>
 
-        <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
+        <SendWalletForm className={walletNotFound ? "d-none" : "sendwallet-wrapper"} onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
         {/* Box: */}
         <div className="bgBox">
@@ -626,6 +638,8 @@ render() {
 
 
         </SendWalletForm>
+
+        {walletNotFound}
       </div>
     )
   }
