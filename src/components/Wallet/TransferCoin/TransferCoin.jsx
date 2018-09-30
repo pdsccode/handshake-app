@@ -104,16 +104,15 @@ class Transfer extends React.Component {
 
     let amount = this.props.amount || "";
     let toAddress = this.props.toAddress || "";
-    
-    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);    
-    this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);    
 
-    this.setState({inputAddressAmountValue: toAddress, inputSendAmountValue: amount});
-    
-    this.getWalletDefault();
-    
-    this.setRate();
+    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+    this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);
+
+    await this.getWalletDefault();
     this.hideLoading();
+
+    this.setRate();
+    this.getBalanceWallets();
   }
 
   resetForm(){
@@ -236,7 +235,7 @@ class Transfer extends React.Component {
     });
   }
 
-  getWalletDefault = async () =>{
+  getWalletDefault = () =>{
     const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
@@ -265,7 +264,6 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          wal.balance = await wal.getBalance(true);
           listWalletCoin.push(wal);
         }
       }
@@ -286,19 +284,32 @@ class Transfer extends React.Component {
         walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;
-
-      // get balance for first item + update to local store:
-      walletDefault.getBalance().then(result => {
-        walletDefault.balance = walletDefault.formatNumber(result);
-        this.setState({walletSelected: walletDefault});
-        MasterWallet.UpdateBalanceItem(walletDefault);
-      });
     }
 
     this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
   }
+
+  getBalanceWallets = async () => {
+    let { wallets, walletSelected, walletDefault } = this.state;
+
+    if(wallets){
+      for(let i in wallets){
+        wallets[i].balance = await wallets[i].getBalance(true);
+        if(walletSelected.name == wallets[i].name && walletSelected.address == wallets[i].address && walletSelected.network == wallets[i].network){
+          walletSelected.balance = wallets[i].balance;
+
+          // get balance for first item + update to local store:
+          walletDefault.balance = wallets[i].balance;
+          MasterWallet.UpdateBalanceItem(walletDefault);
+        }
+      }
+
+      this.setState({wallets, walletSelected, walletDefault});
+    }
+  }
+
 
   sendCoin = () => {
       this.modalConfirmTranferRef.open();
@@ -412,7 +423,7 @@ handleScan=(data) =>{
     let qrCodeResult = MasterWallet.getQRCodeDetail(data);
     if (qrCodeResult){
       let dataType = qrCodeResult['type'];
-      if (dataType == MasterWallet.QRCODE_TYPE.TRANSFER){                    
+      if (dataType == MasterWallet.QRCODE_TYPE.TRANSFER){
           this.setState({
             inputAddressAmountValue: qrCodeResult.data.address, inputSendAmountValue: qrCodeResult.data.amount
           });
@@ -420,13 +431,13 @@ handleScan=(data) =>{
           rfChange(nameFormSendWallet, 'to_address', qrCodeResult.data.address);
       }
       else if (dataType == MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS){
-        rfChange(nameFormSendWallet, 'to_address', qrCodeResult.data.address);          
+        rfChange(nameFormSendWallet, 'to_address', qrCodeResult.data.address);
       }
       else{
         this.showAlert("Address not found");
-      }    
+      }
     }
-    
+
     // let value = data.split(',');
     // this.setState({
     //   inputAddressAmountValue: value[0],
