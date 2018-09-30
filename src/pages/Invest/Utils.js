@@ -1,4 +1,4 @@
-export default  {
+export default {
   duration: function (timeInSecond) {
     var interval = Math.floor(timeInSecond / 31536000)
     if (interval > 1) {
@@ -21,5 +21,23 @@ export default  {
       return interval + ' minutes'
     }
     return Math.floor(timeInSecond) + ' timeInSecond'
+  },
+  hasMetamask: function () {
+    if (typeof web3 !== 'undefined') return true
+    else return false
+  },
+  isMainnet: function isMainnet (web3) {
+    return new Promise(async function (resolve) {
+      if (!web3) return false
+      setTimeout(() => {
+        try {
+          if (web3.version.network == '1') resolve(true)
+          else resolve(false)
+        } catch (err) {
+          console.log(err)
+          resolve(false)
+        }
+      }, 1)
+    })
   }
 }

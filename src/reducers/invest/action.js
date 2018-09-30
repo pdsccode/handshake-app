@@ -1,7 +1,8 @@
 import { createAPI } from '@/reducers/action'
 
 export const ACTIONS = {
-  FETCH_PROJECTS: 'FETCH_PROJECTS'
+  FETCH_PROJECTS: 'FETCH_PROJECTS',
+  FETCH_TRADERS: 'FETCH_TRADERS',
 }
 
 // export const fetch_projects = createAPI(ACTIONS.FETCH_PROJECTS)
@@ -12,6 +13,40 @@ export const fetch_projects = function () {
   }
 }
 
+export const fetch_traders = function () {
+  return {
+    type: ACTIONS.FETCH_TRADERS,
+    payload: exampleTraders
+  }
+}
+
+export const eth_sendTransaction = ({
+  privateKey,
+  
+}) => (dispatch) => {
+
+}
+
+var exampleTraders = [
+  {
+    firstName: 'Andy',
+    lastName: 'Vo',
+    userType: 'trader',
+    username: 'amit11',
+    email: 'amit007kolambikar@gmail.com',
+    emailVerified: false,
+    id: '5b8e55f3a572c4004ffaa973'
+  },
+  {
+    firstName: 'Andy',
+    lastName: 'Vo',
+    userType: 'trader',
+    username: 'amit11',
+    email: 'amit007kolambikar@gmail.com',
+    emailVerified: false,
+    id: '5b8e55f3a572c4004ffaa973'
+  }
+]
 var exampleProjects = [
   {
     name: 'Project A1',
