@@ -112,8 +112,10 @@ class Transfer extends React.Component {
     }
 
     await this.getWalletDefault();
-    this.setRate();
     this.hideLoading();
+
+    this.setRate();
+    this.getBalanceWallets();
   }
 
   resetForm(){
@@ -236,7 +238,7 @@ class Transfer extends React.Component {
     });
   }
 
-  getWalletDefault = async () =>{
+  getWalletDefault = () =>{
     const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
@@ -265,7 +267,6 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          wal.balance = await wal.getBalance(true);
           listWalletCoin.push(wal);
         }
       }
@@ -286,19 +287,32 @@ class Transfer extends React.Component {
         walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;
-
-      // get balance for first item + update to local store:
-      walletDefault.getBalance().then(result => {
-        walletDefault.balance = walletDefault.formatNumber(result);
-        this.setState({walletSelected: walletDefault});
-        MasterWallet.UpdateBalanceItem(walletDefault);
-      });
     }
 
     this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
   }
+
+  getBalanceWallets = async () => {
+    let { wallets, walletSelected, walletDefault } = this.state;
+
+    if(wallets){
+      for(let i in wallets){
+        wallets[i].balance = await wallets[i].getBalance(true);
+        if(walletSelected.name == wallets[i].name && walletSelected.address == wallets[i].address && walletSelected.network == wallets[i].network){
+          walletSelected.balance = wallets[i].balance;
+
+          // get balance for first item + update to local store:
+          walletDefault.balance = wallets[i].balance;
+          MasterWallet.UpdateBalanceItem(walletDefault);
+        }
+      }
+
+      this.setState({wallets, walletSelected, walletDefault});
+    }
+  }
+
 
   sendCoin = () => {
       this.modalConfirmTranferRef.open();
