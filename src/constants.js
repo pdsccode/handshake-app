@@ -545,11 +545,11 @@ export const URL = {
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
 
-  HANDSHAKE_WALLET_TRANSFER: '/wallet-transfer',
-  HANDSHAKE_WALLET_TRANSFER_INDEX: '/wallet-transfer',
-
   HANDSHAKE_PAYMENT: '/payment',
   HANDSHAKE_PAYMENT_INDEX: '/payment',
+
+  HANDSHAKE_PAYMENT_TRANSFER: '/payment-transfer',
+  HANDSHAKE_PAYMENT_TRANSFER_INDEX: '/payment-transfer',
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',

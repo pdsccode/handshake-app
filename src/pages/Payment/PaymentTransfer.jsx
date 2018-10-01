@@ -29,40 +29,17 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 import Dropdown from '@/components/core/controls/Dropdown';
 import createForm from '@/components/core/form/createForm';
-
-import Header from './Header';
-import HeaderMore from './HeaderMore';
-import WalletItem from './WalletItem';
-import WalletProtect from './WalletProtect';
-import WalletHistory from './WalletHistory';
-import TransferCoin from '@/components/Wallet/TransferCoin';
-import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
-import ReactBottomsheet from 'react-bottomsheet';
+import TransferToken from '@/components/Wallet/TransferToken';
 import { setHeaderRight } from '@/reducers/app/action';
-import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
 import _ from 'lodash';
 import qs from 'querystring';
-import axios from 'axios';
-
-import AddToken from '@/components/Wallet/AddToken/AddToken';
-import AddCollectible from '@/components/Wallet/AddCollectible/AddCollectible';
-
-// style
-import './Wallet.scss';
-import './BottomSheet.scss';
-import { hideHeader } from '@/reducers/app/action';
-import { requestWalletPasscode  } from '@/reducers/app/action';
 
 
-const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
-const nameFormSendWallet = 'sendWallet';
-
-class WalletTransfer extends React.Component {
+class PaymentTransfer extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
   }
@@ -70,44 +47,80 @@ class WalletTransfer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.hideHeader();
-    this.modalHeaderStyle = {color: "#fff", background: "#546FF7"};
-    this.modalBodyStyle = {padding: 0};
-
     this.state = {
+      msgError: '',
+      modalTransfer: ''
     };
+  }
 
+  componentDidMount() {
+    this.getTokenData();
+  }
+
+  async getTokenData() {
+    const querystring = window.location.search.replace('?', '');
+    this.querystringParsed = qs.parse(querystring);
+    let { to:toAddress, amount, gas_limit:gasLimit , data, confirm_url } = this.querystringParsed;
+
+    if (!toAddress && !amount && !data) {
+      this.showModalError("Missing parameters");
+      return;
+    }
+
+    console.log(toAddress, amount);
+    this.setState({
+      modalTransfer: <TransferToken
+        toAddress={toAddress}
+        amount={amount}
+        gasLimit={gasLimit}
+      />
+      }, () => {
+        this.modalTransferRef.open();
+      }
+    );
+  }
+
+  showModalError = (msg) => {
+    this.setState({msgError: msg}, ()=> {
+      this.modalErrorRef.open();
+    });
   }
 
 
   render = () => {
     const { messages } = this.props.intl;
-    const {  } = this.state;
+    const { modalTransfer } = this.state;
 
     return (
-      <div className="wallet-page">
-        hello the world
+      <div className="wallet-transfer">
+
+        <Modal title="Transfer Token" onRef={modal => this.modalTransferRef = modal}  onClose={() => this.closeTransfer()}>
+          {modalTransfer}
+        </Modal>
+
+        <Modal title="Error" onRef={modal => this.modalErrorRef = modal}>
+          <div className="msg-error">{this.state.msgError}</div>
+        </Modal>
+
+        <div style={{width: "100%"}}>
+          Test
+        </div>
       </div>
     );
   }
 }
 
 const mapState = (state) => ({
-  cryptoPrice: state.exchange.cryptoPrice,
-  userCcLimit: state.exchange.userCcLimit,
-  ccLimits: state.exchange.ccLimits,
+
 });
 
 const mapDispatch = ({
-  setHeaderRight,
   showAlert,
   showLoading,
   hideLoading,
   change,
   clearFields,
-  hideHeader,
-  requestWalletPasscode
 });
 
 
-export default injectIntl(connect(mapState, mapDispatch)(WalletTransfer));
+export default injectIntl(connect(mapState, mapDispatch)(PaymentTransfer));

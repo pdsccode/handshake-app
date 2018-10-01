@@ -6,15 +6,16 @@ import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
 import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, showHeader } from '@/reducers/app/action';
+import PaymentTransfer from '@/pages/Payment/PaymentTransfer';
 
-const WalletTransfer = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/WalletTransfer')}>{Component => <Component {...props} />}</DynamicImport>);
+const Payment = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Payment/PaymentTransfer')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_WALLET_TRANSFER_INDEX, component: WalletTransfer },
+  { path: URL.HANDSHAKE_PAYMENT_TRANSFER_INDEX, component: PaymentTransfer },
 ];
 
-class WalletTransferRouter extends React.Component {
+class PaymentTransferRouter extends React.Component {
   static propTypes = {
     setHeaderTitle: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
@@ -25,7 +26,7 @@ class WalletTransferRouter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('My Transfer');
+    this.props.setHeaderTitle('Ninja Payment');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
     this.props.showHeader();
@@ -43,4 +44,4 @@ class WalletTransferRouter extends React.Component {
 
 export default connect(null, ({
   setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader,
-}))(WalletTransferRouter);
+}))(PaymentTransferRouter);
