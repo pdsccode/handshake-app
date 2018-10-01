@@ -14,6 +14,14 @@ class InvestBlock extends Component {
     };
   }
 
+  static getDerivedStateFromProps(props) {
+    const activeTab = sessionStorage.getItem('activeTab');
+    console.log(activeTab);
+    return {
+      activeTab,
+    };
+  }
+
   navigateToSettings=() => {
 
   }
@@ -56,6 +64,7 @@ class InvestBlock extends Component {
               this.setState({
                 activeTab: 'trader',
               });
+              sessionStorage.setItem('activeTab','trader');
             }}
             >
           Trader
@@ -67,6 +76,7 @@ class InvestBlock extends Component {
               this.setState({
                 activeTab: 'projects',
               });
+              sessionStorage.setItem('activeTab','projects');
             }}
           >
             <h6 style={{
