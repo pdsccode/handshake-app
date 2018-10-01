@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { API_URL } from '@/constants';
 import PropTypes from 'prop-types';
 import ImageUploader from '@/components/handshakes/exchange/components/ImageUploader';
@@ -13,6 +13,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { injectIntl } from 'react-intl';
 import iconCopy from '@/assets/images/icon/icon-copy-white.svg';
 import iconUpload from '@/assets/images/icon/icon-upload-white.svg';
+import ClockCount from './components/ClockCount';
 import './styles.scss';
 
 const DATA_TEMPLATE = {
@@ -24,7 +25,7 @@ const DATA_TEMPLATE = {
   'REFERENCE CODE': { intlKey: 'reference_code', text: '---', className: 'reference-code', copyable: true },
 };
 
-class AtmCashTransferInfo extends Component {
+class AtmCashTransferInfo extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -171,7 +172,7 @@ class AtmCashTransferInfo extends Component {
 
   render() {
     const { showUploader, uploaded } = this.state;
-    const { messages: { atm_cash_transfer_info } } = this.props.intl;
+    const { intl: { messages: { atm_cash_transfer_info } }, receipt: { createdAt } } = this.props;
     return (
       <div className="transaction-info-container">
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
@@ -183,7 +184,10 @@ class AtmCashTransferInfo extends Component {
               <span className="title">{atm_cash_transfer_info.payment_detail}</span>
             </div>
             <div>
-              <span className="text">{atm_cash_transfer_info.order_will_expire_in}<span className="time">30:00</span></span>
+              <span className="text">
+                {atm_cash_transfer_info.order_will_expire_in}
+                <ClockCount startAt={createdAt} expiredText="Expired" />
+              </span>
             </div>
           </div>
         </div>
@@ -230,7 +234,7 @@ AtmCashTransferInfo.propTypes = {
   onDone: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
-  getCashCenterBankInfo: PropTypes.object.isRequired,
+  getCashCenterBankInfo: PropTypes.func.isRequired,
   ipInfo: PropTypes.object.isRequired,
 };
 

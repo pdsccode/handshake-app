@@ -43,6 +43,7 @@ class Transaction extends React.Component {
   openNewTransaction = (transaction) => {
     const { messages } = this.props.intl;
     const receipt = {
+      createdAt: transaction.createdAt,
       amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
       fiatCurrency: transaction.fiatCurrency,
       referenceCode: transaction.refCode,

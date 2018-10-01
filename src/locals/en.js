@@ -1094,7 +1094,7 @@ export default {
     atm: {
       tab: {
         storeInfo: 'ATM Info',
-        transaction: 'Transactions',
+        transaction: 'History',
       },
       text: {
         nameTitle: 'Name',
@@ -1640,7 +1640,7 @@ export default {
   atm_cash_transfer: {
     to_wallet_address: 'YOUR WALLET ADDRESS',
     copy_address_or_scan_qr: 'Copy address or scan QR code',
-    we_will_send_coin_to_this_address_desc: 'We will send coin to this address after receiving your bank receipt.',
+    we_will_send_coin_to_this_address_desc: 'We will send coins to this address after receiving your bank receipt.',
     amount: 'WANTED AMOUNT',
     transfer: 'Next',
     scan_qr_code: 'Scan QR code',
@@ -1651,6 +1651,7 @@ export default {
   atm_cash_transfer_info: {
     payment_detail: 'Payment detail',
     order_will_expire_in: 'This order will expire in ',
+    expired: 'Expired',
     amount: 'AMOUNT',
     account_name: 'ACCOUNT NAME',
     account_number: 'ACCOUNT NUMBER',
