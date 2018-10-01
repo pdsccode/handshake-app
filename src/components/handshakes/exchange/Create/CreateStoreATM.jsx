@@ -7,7 +7,7 @@ import Button from '@/components/core/controls/Button';
 import createForm from '@/components/core/form/createForm';
 import { fieldInput, fieldPhoneInput, fieldRadioButton } from '@/components/core/form/customField';
 import { required, requiredPhone } from '@/components/core/form/validation';
-import { change, clearFields, Field, formValueSelector } from 'redux-form';
+import { change, clearFields, Field, formValueSelector, reset } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import COUNTRIES from '@/data/country-dial-codes.js';
@@ -47,10 +47,11 @@ const FormFilterFeeds = createForm({
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
+    destroyOnUnmount: false,
     form: nameFormExchangeCreate,
     initialValues: {
       selectedDay: {},
-      atmType: ATM_TYPE.PERSONAL,
+      atmType: ATM_TYPE.STORE,
       startTime: moment(DEFAULT_TIME.OPEN, TIME_FORMAT),
       endTime: moment(DEFAULT_TIME.CLOSE, TIME_FORMAT),
       atmStatus: ATM_STATUS.OPEN,
@@ -104,6 +105,11 @@ class Component extends React.Component {
     this.props.showPopupGetGPSPermission();
 
     this.getStoreATM();
+  }
+
+  componentWillUnmount() {
+    // reset form
+    this.props.rfReset();
   }
 
   detectPhonePrefix = () => {
@@ -369,7 +375,7 @@ class Component extends React.Component {
     const { atmType, cashStore, startTime } = this.props;
 
     return (
-      <div>
+      <div className="create-store-atm-container">
         <div className="atm-tab-container">
           <FormFilterFeeds>
             <div>
@@ -393,52 +399,6 @@ class Component extends React.Component {
           cashTab === CASH_ATM_TAB.INFO ? (
             <FormExchangeCreate onSubmit={this.onSubmit}>
               <div className="create-store-atm">
-                <div className="input-group item-info">
-                  <div className="d-table w-100">
-                    <Field
-                      component={fieldTypeAtm}
-                      texts={messages.create.atm.text}
-                      name="atmType"
-                      atmType={ATM_TYPE}
-                    />
-                  </div>
-                </div>
-                {
-                  atmType === ATM_TYPE.PERSONAL ? (
-                    <div className="item-info">
-                      <Field
-                        component={fieldAtmStatus}
-                        texts={messages.create.atm.text}
-                        atmStatus={ATM_STATUS}
-                        name="atmStatus"
-                      />
-                    </div>
-                  ) : (
-                    <div className="input-group item-info">
-                      <div className="d-table w-100 atm-time">
-                        <div className="d-table-cell w-50">
-                          <div className="from-time">From</div>
-                          <Field
-                            component={fieldTimePicker}
-                            texts={messages.create.atm.text}
-                            defaultTime={moment('05:00 AM', TIME_FORMAT)}
-                            name="startTime"
-                          />
-                        </div>
-                        <div className="d-table-cell w-50">
-                          <div className="to-time">To</div>
-                          <Field
-                            component={fieldTimePicker}
-                            texts={messages.create.atm.text}
-                            defaultTime={moment('08:00 PM', TIME_FORMAT)}
-                            minHour={moment(startTime).format('HH')}
-                            name="endTime"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
                 <div className="item-info">
                   <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
                   <div >
@@ -452,7 +412,50 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-
+                <div className="input-group item-info">
+                  <Field
+                    component={fieldTypeAtm}
+                    texts={messages.create.atm.text}
+                    name="atmType"
+                    atmType={ATM_TYPE}
+                  />
+                </div>
+                {
+                  atmType === ATM_TYPE.PERSONAL ? (
+                    <div className="item-info">
+                      <Field
+                        component={fieldAtmStatus}
+                        texts={messages.create.atm.text}
+                        atmStatus={ATM_STATUS}
+                        name="atmStatus"
+                      />
+                    </div>
+                  ) : (
+                    <div className="input-group item-info">
+                      <div className="w-100 atm-time">
+                        <div className="atm-time-item">
+                          <div className="from-time">From</div>
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            defaultTime={moment('05:00 AM', TIME_FORMAT)}
+                            name="startTime"
+                          />
+                        </div>
+                        <div className="atm-time-item">
+                          <div className="to-time">To</div>
+                          <Field
+                            component={fieldTimePicker}
+                            texts={messages.create.atm.text}
+                            defaultTime={moment('08:00 PM', TIME_FORMAT)}
+                            minHour={moment(startTime).format('HH')}
+                            name="endTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
                 <div className="phone-field item-info">
                   <label className="form-control-title">{messages.create.atm.text.phone.toUpperCase()}</label>
                   <Field
@@ -463,6 +466,7 @@ class Component extends React.Component {
                     type="tel"
                     placeholder="4995926433"
                     validate={[requiredPhone]}
+                    showFlag
                   />
                 </div>
 
@@ -519,6 +523,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch),
+  rfReset: bindActionCreators(reset, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),

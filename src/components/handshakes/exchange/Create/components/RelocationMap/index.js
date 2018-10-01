@@ -63,12 +63,13 @@ class RelocationMap extends PureComponent {
         center={position}
         ref={this.map}
         onCenterChanged={this.onCenterChanged}
-        options={{ gestureHandling: 'greedy' }}
-        defaultOptions={{
+        options={{
+          gestureHandling: 'greedy',
           mapTypeControl: false,
           panControl: false,
           zoomControl: false,
-        }}
+          streetViewControl: false,
+       }}
       >
         <Marker
           defaultIcon={{
