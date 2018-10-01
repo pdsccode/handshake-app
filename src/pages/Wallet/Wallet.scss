@@ -936,3 +936,15 @@
     }
   }
 }
+
+@media (max-width: 320px) {
+  .sendwallet-wrapper{
+    padding: 0 !important;
+    margin: 0 !important;
+    border:none !important;
+
+    .bgBox{
+      padding: 0 !important;
+    }
+  }
+}

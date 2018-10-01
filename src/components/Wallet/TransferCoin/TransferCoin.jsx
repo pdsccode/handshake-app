@@ -22,6 +22,7 @@ import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
+import iconArrowDown from '@/assets/images/icon/expand-arrow.svg';
 import BrowserDetect from '@/services/browser-detect';
 import ListCoin from '@/components/Wallet/ListCoin';
 
@@ -95,6 +96,7 @@ class Transfer extends React.Component {
   }
 
   async componentDidMount() {
+    this.showLoading();
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
@@ -110,7 +112,10 @@ class Transfer extends React.Component {
     }
 
     await this.getWalletDefault();
+    this.hideLoading();
+
     this.setRate();
+    this.getBalanceWallets();
   }
 
   resetForm(){
@@ -134,7 +139,7 @@ class Transfer extends React.Component {
 
       try{
         if(data && data.hash){
-          let transactions = this.getSessionStore(this.state.walletSelected, TAB.Transaction);
+          let transactions = this.getSessionStore(this.state.walletSelected, TAgetb.Transaction);
           if(!transactions)
             transactions = [];
 
@@ -239,7 +244,12 @@ class Transfer extends React.Component {
     let wallets = listWallet;
     let walletDefault = null;
     if (!wallets){
-      wallets = MasterWallet.getMasterWallet();
+      if (coinName){
+        wallets = MasterWallet.getWallets(coinName);
+      }
+      else{
+        wallets = MasterWallet.getMasterWallet();
+      }
     }
 
     if (coinName){
@@ -249,7 +259,7 @@ class Transfer extends React.Component {
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach(async (wal) => {
+      for(let wal of wallets){
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
@@ -257,10 +267,9 @@ class Transfer extends React.Component {
           }
 
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
-          wal.balance = wal.formatNumber(await wal.getBalance());
           listWalletCoin.push(wal);
         }
-      });
+      }
     }
 
     if (!walletDefault && listWalletCoin.length > 0){
@@ -278,19 +287,32 @@ class Transfer extends React.Component {
         walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;
-
-      // get balance for first item + update to local store:
-      walletDefault.getBalance().then(result => {
-        walletDefault.balance = walletDefault.formatNumber(result);
-        this.setState({walletSelected: walletDefault});
-        MasterWallet.UpdateBalanceItem(walletDefault);
-      });
     }
 
     this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
   }
+
+  getBalanceWallets = async () => {
+    let { wallets, walletSelected, walletDefault } = this.state;
+
+    if(wallets){
+      for(let i in wallets){
+        wallets[i].balance = await wallets[i].getBalance(true);
+        if(walletSelected.name == wallets[i].name && walletSelected.address == wallets[i].address && walletSelected.network == wallets[i].network){
+          walletSelected.balance = wallets[i].balance;
+
+          // get balance for first item + update to local store:
+          walletDefault.balance = wallets[i].balance;
+          MasterWallet.UpdateBalanceItem(walletDefault);
+        }
+      }
+
+      this.setState({wallets, walletSelected, walletDefault});
+    }
+  }
+
 
   sendCoin = () => {
       this.modalConfirmTranferRef.open();
@@ -465,6 +487,29 @@ selectWallet = async (walletSelected) => {
   }
 }
 
+get showWallet(){
+  const walletSelected = this.state.walletSelected;
+  let icon = '';
+  try{
+    if(walletSelected)
+      icon = require("@/assets/images/icon/wallet/coins/" + walletSelected.name.toLowerCase() + '.svg');
+  } catch (ex){console.log(ex)};
+  return (
+    <div className="walletSelected" onClick={() => {this.openListCoin() }}>
+      <div className="row">
+        <div className="col-2 icon"><img src={icon} /></div>
+        <div className="col-5">
+          <div className="name">{walletSelected && walletSelected.title}</div>
+          <div className="address">{walletSelected && walletSelected.getShortAddress()}</div>
+        </div>
+        <div className="col-5 lastCol">
+          <div className="balance">{walletSelected && walletSelected.balance + " " + walletSelected.name}</div>
+          <div className="arrow"><img src={iconArrowDown} /></div>
+        </div>
+      </div>
+    </div>);
+}
+
 render() {
   let { currency } = this.props;
   if(!currency) currency = "USD";
@@ -551,13 +596,7 @@ render() {
 
             <div className ="dropdown-wallet-tranfer ">
               <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
-              <div className="wallet-listcoin" onClick={() => {this.openListCoin() }}>
-                <div className="name">{this.state.walletSelected && this.state.walletSelected.title}</div>
-                <div className="value">{this.state.walletSelected && this.state.walletSelected.getShortAddress()}</div>
-                <div className="clearfix"></div>
-                <div className="name2">Balance</div>
-                <div className="value">{this.state.walletSelected && this.state.walletSelected.balance + " " + this.state.walletSelected.name}</div>
-              </div>
+              {this.showWallet}
 
               <div className="wallets-wrapper">
                 <Modal title="Select wallets" onRef={modal => this.modalListCoinRef = modal}>
