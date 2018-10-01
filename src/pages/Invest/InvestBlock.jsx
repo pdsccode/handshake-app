@@ -1,47 +1,59 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import _ from "lodash";
-import "./ProjectList.scss";
-import ProjectList from "@/pages/Invest/ProjectList";
-import TraderList from "@/pages/Invest/TraderList";
-import ExpandArrowSVG from "./settings.svg";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+import './ProjectList.scss';
+import ProjectList from '@/pages/Invest/ProjectList';
+import LinkWallet from '@/pages/Invest/LinkWallet';
+import TraderList from '@/pages/Invest/TraderList';
+import ExpandArrowSVG from './settings.svg';
 
 class InvestBlock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: "trader",
+      activeTab: 'trader',
     };
   }
 
   static getDerivedStateFromProps(props) {
-    const activeTab = sessionStorage.getItem("activeTab");
+    const activeTab = sessionStorage.getItem('activeTab');
     console.log(activeTab);
     return {
       activeTab,
     };
   }
-
+  switchTabs=() => {
+    switch (this.state.activeTab) {
+      case 'trader':
+        return <TraderList {...this.props} />;
+      case 'projects':
+        return <ProjectList {...this.props} />;
+      case 'linkwallet':
+        return <LinkWallet {...this.props} />;
+      default:
+        return <div />;
+    }
+  }
   navigateToSettings = () => {};
   render() {
     return (
-      <div style={{ backgroundColor: "#fafbff", minHeight: "100vh" }}>
+      <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
         <div
           style={{
-            backgroundColor: "#fff",
-            height: "43px",
-            padding: "13px 1em",
-            marginBottom: "2px"
+            backgroundColor: '#fff',
+            height: '43px',
+            padding: '13px 1em',
+            marginBottom: '2px',
           }}
           className="clearfix"
         >
           <button
             style={{
-              float: "right",
-              width: "25px",
-              position: "relative",
+              float: 'right',
+              width: '25px',
+              position: 'relative',
               padding: 0,
-              top: "-4px"
+              top: '-4px',
             }}
             className="btn-transparent"
             onClick={this.navigateToSettings}
@@ -50,21 +62,21 @@ class InvestBlock extends Component {
           </button>
           <button
             style={{ paddingLeft: 0 }}
+            onClick={() => {
+              this.setState({
+                activeTab: 'trader',
+              });
+              sessionStorage.setItem('activeTab', 'trader');
+            }}
             className={
-              this.state.activeTab === "projects"
-                ? "active-tab btn-transparent"
-                : "inactive-tab btn-transparent"
+              this.state.activeTab === 'trader'
+                ? 'active-tab btn-transparent'
+                : 'inactive-tab btn-transparent'
             }
           >
             <h6
               style={{
-                textAlign: "left"
-              }}
-              onClick={() => {
-                this.setState({
-                  activeTab: "trader"
-                });
-                sessionStorage.setItem("activeTab", "trader");
+                textAlign: 'left',
               }}
             >
               Trader
@@ -72,29 +84,47 @@ class InvestBlock extends Component {
           </button>
           <button
             className={
-              this.state.activeTab === "trader" ? "active-tab btn-transparent" : "inactive-tab btn-transparent"
+              this.state.activeTab === 'projects' ? 'active-tab btn-transparent' : 'inactive-tab btn-transparent'
             }
             onClick={() => {
               this.setState({
-                activeTab: "projects"
+                activeTab: 'projects',
               });
-              sessionStorage.setItem("activeTab", "projects");
+              sessionStorage.setItem('activeTab', 'projects');
             }}
           >
             <h6
               style={{
-                textAlign: "left"
+                textAlign: 'left',
               }}
             >
               Projects
             </h6>
           </button>
+          <button
+            style={{ paddingLeft: 0, marginLeft: 7 }}
+            onClick={() => {
+              this.setState({
+                activeTab: 'linkwallet',
+              });
+              sessionStorage.setItem('activeTab', 'linkwallet');
+            }}
+            className={
+              this.state.activeTab === 'linkwallet'
+                ? 'active-tab btn-transparent'
+                : 'inactive-tab btn-transparent'
+            }
+          >
+            <h6
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              Link Wallet
+            </h6>
+          </button>
         </div>
-        {this.state.activeTab === "trader" ? (
-          <TraderList {...this.props} />
-        ) : (
-          <ProjectList {...this.props} />
-        )}
+        <this.switchTabs />
       </div>
     );
   }
