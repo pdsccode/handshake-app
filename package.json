@@ -167,5 +167,9 @@
   },
   "engines": {
     "node": ">=8.10.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "babel-plugin-transform-decorators": "^6.24.1"
   }
 }
