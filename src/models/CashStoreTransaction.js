@@ -12,6 +12,7 @@ class CashStoreTransaction {
       center: data.center || '',
       address: data.address || '',
       status: data.status || '',
+      refCode: data.ref_code || '',
     };
   }
 }

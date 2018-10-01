@@ -45,7 +45,7 @@ class Transaction extends React.Component {
     const receipt = {
       amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
       fiatCurrency: transaction.fiatCurrency,
-      referenceCode: transaction.id
+      referenceCode: transaction.refCode,
     };
 
     this.setState({
