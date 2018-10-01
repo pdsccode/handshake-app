@@ -47,7 +47,7 @@ class InvestBlock extends Component {
           }}
           className="clearfix"
         >
-          <button
+          {/* <button
             style={{
               float: 'right',
               width: '25px',
@@ -59,7 +59,7 @@ class InvestBlock extends Component {
             onClick={this.navigateToSettings}
           >
             <img src={ExpandArrowSVG} alt="arrow" />
-          </button>
+          </button> */}
           <button
             style={{ paddingLeft: 0 }}
             onClick={() => {
@@ -120,7 +120,7 @@ class InvestBlock extends Component {
                 textAlign: 'left',
               }}
             >
-              Link Wallet
+              Sync Wallet
             </h6>
           </button>
         </div>
