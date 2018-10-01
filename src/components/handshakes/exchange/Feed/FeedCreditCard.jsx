@@ -25,7 +25,7 @@ import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/comp
 import { email, required } from '@/components/core/form/validation';
 import {
   createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
-  getUserCcLimit
+  getUserCcLimit, initPaymentInstantBuy,
 } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -48,6 +48,10 @@ import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
+
+const moment = require('moment');
+
+const adyenEncrypt = require('adyen-cse-web');
 
 const nameFormShowAddressWallet = 'showAddressWallet';
 const ShowAddressWalletForm = createForm({ propsReduxForm: { form: nameFormShowAddressWallet } });
@@ -195,15 +199,15 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceForPackageSuccess = (responseData) => {
     const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
-    console.log('handleGetCryptoPriceForPackageSuccess',cryptoPrice);
+    console.log('handleGetCryptoPriceForPackageSuccess', cryptoPrice);
 
     Object.entries(listPackages).forEach(([currency, items]) => {
-      for (let item of items) {
+      for (const item of items) {
         const { amount } = item;
         console.log('cryptoPrice.currency  cryptoPrice.amount ', cryptoPrice.currency, cryptoPrice.amount);
         console.log('currency  amount ', currency, amount);
         if (cryptoPrice.currency === currency && +cryptoPrice.amount === amount) {
-          console.log('hello',);
+          console.log('hello');
           item.show = true;
           item.fiatAmount = cryptoPrice.fiatAmount;
           break;
@@ -357,80 +361,144 @@ class FeedCreditCard extends React.Component {
         params.append('key', process.env.stripeKey);
         params.append('type', 'card');
 
-        axios.post(
-          'https://api.stripe.com/v1/sources',
-          params,
-          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-          .then((payload) => {
-            console.log('payload', payload);
-            const stripe = Stripe(process.env.stripeKey);
-            stripe.createSource({
-              type: 'three_d_secure',
-              amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
-              currency: FIAT_CURRENCY.USD,
-              three_d_secure: {
-                card: payload.data.id,
-              },
-              redirect: {
-                return_url: `${window.origin}${URL.CC_PAYMENT_URL}`,
-              },
-            }).then((result) => {
-              console.log('submit result', result);
-              if (result.source.three_d_secure.three_d_secure === 'not_supported') {
-                this.hideLoading();
+        const postData = {};
 
-                const message = <FormattedMessage id="threeDSecureNotSupported" />;
-                this.props.showAlert({
-                  message: <div className="text-center">{message}</div>,
-                  timeOut: 3000,
-                  type: 'danger',
-                  // callBack: this.handleBuySuccess
-                });
-              } else {
-                local.save(APP.CC_SOURCE, result.source);
-                local.save(APP.CC_PRICE, cryptoPrice);
-                local.save(APP.CC_TOKEN, payload.data.id);
-                local.save(APP.CC_EMAIL, cc_email);
+        const cardData = {
+          number: cc_number && cc_number.trim().replace(/ /g, ''),
+          cvc: cc_cvc,
+          // holderName : 'John Smith',
+          expiryMonth: mmYY[0],
+          expiryYear: mmYY[1],
+          // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
+        };
 
-                let address = '';
-                if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
-                  address = addressForced;
-                } else {
-                  // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
-                  address = walletSelected.address;
-                }
-                local.save(APP.CC_ADDRESS, address);
+        // var key     =   "your key as retrieved from the Adyen Customer Area Web Service User page";
+        const key = '8215383657770652';
+        const options = {}; // See adyen.encrypt.nodom.html for details
 
-                window.location = result.source.redirect.url;
-              }
-            });
+        const cseInstance = adyenEncrypt.createEncryption(key, options);
+        // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
+        postData.card = cseInstance.encrypt(cardData);
+        postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
 
-            // const newCCNum = payload.data.id;
-            // cc = {
-            //   cc_num: newCCNum,
-            //   cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ""),
-            //   expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ""),
-            //   token: "",
-            //   save: "true"
-            // };
-            // this.handleCreateCCOrder(cc);
-          }).catch((error) => {
-            console.log('error', error);
-            this.hideLoading();
+        console.log('cardData', cardData);
+        console.log('postData', postData);
 
-            // const message = error?.response?.data?.error?.message || 'Something wrong!';
-            const message = 'Opp, something wrong! Please go back later!';
-            this.props.showAlert({
-              message: <div className="text-center">{message}</div>,
-              timeOut: 5000,
-              type: 'danger',
-            // callBack: this.handleBuySuccess
-            });
-          });
+        this.props.initPaymentInstantBuy({
+          PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
+          data: postData,
+          METHOD: 'POST',
+          successFn: this.handleInitPaymentSuccess,
+          errorFn: this.handleInitPaymentFailed,
+        });
+
+        // axios.post(
+        //   'https://api.stripe.com/v1/sources',
+        //   params,
+        //   { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+        //   .then((payload) => {
+        //     console.log('payload', payload);
+        //     const stripe = Stripe(process.env.stripeKey);
+        //     stripe.createSource({
+        //       type: 'three_d_secure',
+        //       amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
+        //       currency: FIAT_CURRENCY.USD,
+        //       three_d_secure: {
+        //         card: payload.data.id,
+        //       },
+        //       redirect: {
+        //         return_url: `${window.origin}${URL.CC_PAYMENT_URL}`,
+        //       },
+        //     }).then((result) => {
+        //       console.log('submit result', result);
+        //       if (result.source.three_d_secure.three_d_secure === 'not_supported') {
+        //         this.hideLoading();
+        //
+        //         const message = <FormattedMessage id="threeDSecureNotSupported" />;
+        //         this.props.showAlert({
+        //           message: <div className="text-center">{message}</div>,
+        //           timeOut: 3000,
+        //           type: 'danger',
+        //           // callBack: this.handleBuySuccess
+        //         });
+        //       } else {
+        //         local.save(APP.CC_SOURCE, result.source);
+        //         local.save(APP.CC_PRICE, cryptoPrice);
+        //         local.save(APP.CC_TOKEN, payload.data.id);
+        //         local.save(APP.CC_EMAIL, cc_email);
+        //
+        //         let address = '';
+        //         if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
+        //           address = addressForced;
+        //         } else {
+        //           // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+        //           address = walletSelected.address;
+        //         }
+        //         local.save(APP.CC_ADDRESS, address);
+        //
+        //         window.location = result.source.redirect.url;
+        //       }
+        //     });
+        //
+        //     // const newCCNum = payload.data.id;
+        //     // cc = {
+        //     //   cc_num: newCCNum,
+        //     //   cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ""),
+        //     //   expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ""),
+        //     //   token: "",
+        //     //   save: "true"
+        //     // };
+        //     // this.handleCreateCCOrder(cc);
+        //   }).catch((error) => {
+        //     console.log('error', error);
+        //     this.hideLoading();
+        //
+        //     // const message = error?.response?.data?.error?.message || 'Something wrong!';
+        //     const message = 'Opp, something wrong! Please go back later!';
+        //     this.props.showAlert({
+        //       message: <div className="text-center">{message}</div>,
+        //       timeOut: 5000,
+        //       type: 'danger',
+        //     // callBack: this.handleBuySuccess
+        //     });
+        //   });
       }
       // console.log('handleSubmit', cc);
     }
   };
+
+  handleInitPaymentSuccess = (data) => {
+    console.log('handleInitPaymentSuccess', data);
+    const { cryptoPrice, addressForced, currencyForced } = this.props;
+    const { cc_email } = this.props;
+    const { walletSelected } = this.state;
+
+    local.save(APP.CC_PRICE, cryptoPrice);
+    local.save(APP.CC_EMAIL, cc_email);
+
+    let address = '';
+    if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
+      address = addressForced;
+    } else {
+      // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+      address = walletSelected.address;
+    }
+    local.save(APP.CC_ADDRESS, address);
+
+    // window.location = result.source.redirect.url;
+  }
+
+  handleInitPaymentFailed = (e) => {
+    console.log('handleInitPaymentFailed', e);
+
+    const message = 'Opp, something wrong! Please go back later!';
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 5000,
+      type: 'danger',
+    // callBack: this.handleBuySuccess
+    });
+  }
 
   handleCreateCCOrder = (params) => {
     const { cryptoPrice, addressForced, authProfile, currencyForced } = this.props;
@@ -769,13 +837,13 @@ class FeedCreditCard extends React.Component {
                         <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
                       </div>
                       <div className="d-table-cell align-middle pl-3">
-                         <div className="p-price">
+                        <div className="p-price">
                           {fiatAmount} {FIAT_CURRENCY.USD}
-                          {/*{
+                          {/* {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
-                          }*/}
+                          } */}
                         </div>
                         <div className="p-amount">{amount} {currency}</div>
                       </div>
@@ -977,6 +1045,7 @@ const mapStateToProps = (state) => ({
   ccLimits: state.exchange.ccLimits || [],
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
+  cc_email: selectorFormCreditCard(state, 'cc_email'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -989,6 +1058,7 @@ const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
+  initPaymentInstantBuy: bindActionCreators(initPaymentInstantBuy, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));
