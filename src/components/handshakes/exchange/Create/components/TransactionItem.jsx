@@ -39,6 +39,8 @@ class TransactionItem extends React.Component {
     const { extraData } = props;
 
     this.transaction = CashStoreTransaction.cashStoreTransaction(JSON.parse(extraData));
+    const { initAt } = this.props;
+    this.transaction.createdAt = initAt;
   }
 
   render() {

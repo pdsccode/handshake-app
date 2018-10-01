@@ -46,6 +46,7 @@ class Transaction extends React.Component {
       amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
       fiatCurrency: transaction.fiatCurrency,
       referenceCode: transaction.refCode,
+      createdAt: transaction.createdAt,
     };
 
     this.setState({
