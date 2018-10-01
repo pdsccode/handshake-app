@@ -419,7 +419,7 @@ class FeedCreditCard extends React.Component {
             this.hideLoading();
 
             // const message = error?.response?.data?.error?.message || 'Something wrong!';
-            const message = 'Something wrong! Please try again later';
+            const message = 'Something wrong! Please go back later!';
             this.props.showAlert({
               message: <div className="text-center">{message}</div>,
               timeOut: 5000,
