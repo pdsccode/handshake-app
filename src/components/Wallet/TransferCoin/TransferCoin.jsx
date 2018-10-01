@@ -101,18 +101,18 @@ class Transfer extends React.Component {
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
-    //this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
-
-    let amount = this.props.amount || "";
-    let toAddress = this.props.toAddress || "";
-
-    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
-    this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);
-
     await this.getWalletDefault();
     this.hideLoading();
 
-    this.setRate();
+    await this.setRate();
+
+    let amount = this.props.amount || "";
+    if(amount){console.log(amount);
+      this.updateAddressAmountValue(null, amount);
+    }
+
+    let toAddress = this.props.toAddress || "";
+    this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);
     this.getBalanceWallets();
   }
 
@@ -450,19 +450,6 @@ handleScan=(data) =>{
       }
     }
 
-    // let value = data.split(',');
-    // this.setState({
-    //   inputAddressAmountValue: value[0],
-    // });
-    // rfChange(nameFormSendWallet, 'to_address', value[0]);
-    // if (value.length == 2){
-    //   this.setState({
-    //     inputSendAmountValue: value[1],
-    //   });
-
-    //   //rfChange(nameFormSendWallet, 'amountCoin', value[1]);
-    //   this.updateAddressAmountValue(null, value[1]);
-    // }
     this.modalScanQrCodeRef.close();
   }
 }
