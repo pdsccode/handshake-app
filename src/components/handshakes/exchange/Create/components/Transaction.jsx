@@ -61,13 +61,19 @@ class Transaction extends React.Component {
     });
   }
 
-  render() {
+  renderTransactionList = () => {
     const { cashStoreTransaction } = this.props;
-    const { modalContent, modalTitle } = this.state;
+
+    if (cashStoreTransaction && cashStoreTransaction.length === 0) {
+      return (
+        <div className="empty-list">
+          <span>No history!</span>
+        </div>
+      );
+    }
 
     return (
-      <div className="transaction-container mt-4">
-        <div>
+      <div>
         {
           cashStoreTransaction && cashStoreTransaction.map(transaction => {
             const { id } = transaction;
@@ -76,7 +82,17 @@ class Transaction extends React.Component {
             );
           })
         }
-        </div>
+      </div>
+    );
+  }
+
+  render() {
+    const { cashStoreTransaction } = this.props;
+    const { modalContent, modalTitle } = this.state;
+
+    return (
+      <div className="transaction-container mt-4">
+        {this.renderTransactionList()}
         <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
           {modalContent}
         </Modal>

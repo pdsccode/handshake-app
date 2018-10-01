@@ -2,6 +2,12 @@
 
 .transaction-container {
   background: #F7F8FC;
+  .empty-list {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .transaction {
     margin: 15px 0px 20px;
     .transaction-detail {

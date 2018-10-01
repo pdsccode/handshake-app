@@ -1092,6 +1092,7 @@ export default {
 
     },
     atm: {
+      title: 'Open an ATM',
       tab: {
         storeInfo: 'ATM Info',
         transaction: 'History',

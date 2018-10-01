@@ -37,6 +37,7 @@ import local from '@/services/localStore';
 import Modal from '@/components/core/controls/Modal/Modal';
 // import _debounce from 'lodash/debounce';
 import AtmCashTransfer from '@/components/handshakes/exchange/AtmCashTransfer';
+import CreateStoreATM from '@/components/handshakes/exchange/Create/CreateStoreATM';
 import moment from "moment/moment";
 
 const defaultZoomLevel = 13;
@@ -386,6 +387,20 @@ class DiscoverPage extends React.Component {
     });
   }
 
+  openAtmManagement = () => {
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalTitle: messages.create.atm.title,
+      modalContent:
+        (
+          <CreateStoreATM />
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
   getWorkingHour(station) {
     const startTime = moment(station.information.open_hour, TIME_FORMAT).format(TIME_FORMAT_AM_PM);
     const endTime = moment(station.information.close_hour, TIME_FORMAT).format(TIME_FORMAT_AM_PM);
@@ -455,6 +470,7 @@ class DiscoverPage extends React.Component {
           onZoomChanged={this.handleOnZoomChanged}
           onCenterChanged={this.handleOnCenterChanged}
           openNewTransaction={this.openNewTransaction}
+          openAtmManagement={this.openAtmManagement}
           curStationIdShowAllDetails={curStationIdShowAllDetails}
           onChangeShowAllDetails={this.handleOnChangeShowAllDetails}
         />
