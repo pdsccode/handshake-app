@@ -13,6 +13,7 @@ import { showAlert, hideQRCodeContent } from '@/reducers/app/action';
 
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
+
 window.Clipboard = (function (window, document, navigator) {
   let textArea,
     copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() {
@@ -73,6 +74,9 @@ class QRCodeContent extends React.Component {
               this.setURLContent(data);
               break;
           case MasterWallet.QRCODE_TYPE.REDEEM:
+              this.callBackRedeem(data.data);
+              this.props.hideQRCodeContent();
+              break;
               
               break;
           case MasterWallet.QRCODE_TYPE.TRANSFER:
@@ -90,6 +94,10 @@ class QRCodeContent extends React.Component {
         }
       }
     }
+  }
+
+  setRedeemContent(result){
+
   }
   
   setURLContent(result){
@@ -144,7 +152,10 @@ class QRCodeContent extends React.Component {
       this.modalScanQrCodeContentRef.open();
     })
   }
-
+  callBackRedeem=(dataRedeem)=>{    
+    this.props.onRedeemClick(dataRedeem);
+    this.modalScanQrCodeContentRef.close();
+  }
   callBackTransfer=(dataAddress)=>{    
     this.props.onTransferClick(dataAddress);
     this.modalScanQrCodeContentRef.close();
@@ -201,8 +212,6 @@ class QRCodeContent extends React.Component {
     else{
 
     }
-    
-    
   }   
 
 oncloseQrData=() => {   

@@ -1191,6 +1191,14 @@ export default {
           }
         }
       },
+      redeem:{
+        title: "Redeem to coin",
+        your_code: "Your code",
+        giftcard: "Gift card",
+        value: "Value",
+        agree_text: "By clicking REDEEM, you agree to Gift Card & Promotional code Terms and Conditions as applicable",
+        button_redeem: "Redeem now",
+      },
       remove: {
         title: 'Remove',
         header: 'Are you sure?',

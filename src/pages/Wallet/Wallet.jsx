@@ -86,6 +86,7 @@ import floatButtonScanQRCode from '@/assets/images/wallet/icons/float-button-sca
 import WalletPreferences from '@/components/Wallet/WalletPreferences';
 import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
 import QRCodeContent from '@/components/Wallet/QRCodeContent';
+import Redeem from '@/components/Wallet/Redeem';
 
 
 const QRCode = require('qrcode.react');
@@ -179,6 +180,8 @@ class Wallet extends React.Component {
       modalWalletPreferences: "",
       backupWalletContent: "",
       restoreWalletContent: "",
+
+      redeemContent: "",
 
       // sortable:
       listSortable: {coin: false, token: false, collectitble: false},
@@ -920,11 +923,32 @@ class Wallet extends React.Component {
   }
 
   onQRCodeScaned=(data)=>{
-    let result = MasterWallet.getQRCodeDetail(data);        
+    let data2="ninja-redeem:2342342342342342?value=234";
+    let result = MasterWallet.getQRCodeDetail(data2);        
     this.props.showQRCodeContent({   
       data: result      
+    });    
+  }
+
+  // redeem:
+  showRedeemModal=(data)=>{
+    this.setState({
+      redeemContent:
+        (
+          <Redeem                  
+            data={data}
+            onFinish={(result) => { 
+              this.modalRedeemRef.close();
+             }}            
+          />
+        ),
+      }, ()=>{
+      this.modalRedeemRef.open();
     });
-    
+  }
+
+  closeModalRedeem=(data)=>{
+    this.setState({redeemContent: ''});
   }
   
   render = () => {
@@ -949,7 +973,11 @@ class Wallet extends React.Component {
         </Modal>
 
         {/* qrcode result detected modal popup*/}
-        <QRCodeContent onTransferClick={(data)=> {this.showTransferFromQRCode(data);}} />
+        <QRCodeContent callBackRedeem={(data)=> {this.showRedeemModal(data);}}  onTransferClick={(data)=> {this.showTransferFromQRCode(data);}} />
+
+        <Modal title={this.messages.wallet.action.redeem.title} onRef={modal => this.modalRedeemRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closeModalRedeem}>
+          {this.state.redeemContent}
+        </Modal>
 
         {/* add new token modal */}
         <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
