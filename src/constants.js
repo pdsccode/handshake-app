@@ -579,7 +579,7 @@ export const URL = {
   CASH_FOR_BUSINESS: '/cash-for-business',
   ATM_FOR_BUSINESS: '/atm-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
-  PEX_INSTRUCTION_URL: '/pex/instruction',
+  PEX_INSTRUCTION_URL: '/pex/instructions',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
   PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
