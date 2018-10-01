@@ -4,7 +4,6 @@ import {blockchainNetworks} from '@/constants'
 
 const network = blockchainNetworks.rinkeby.endpoint
 const contractAddress = "0xdcca696b0c8c8faa8f82f2ac9380f74879867165";
-var contract = new web3.eth.Contract(ABI, contractAddress)
 
 export const eth_callMethod = async function(
     actionType,
@@ -15,6 +14,7 @@ export const eth_callMethod = async function(
     var privateProvider = new PrivateKeyProvider(privateKey, network);
     let account = web3.eth.accounts.privateKeyToAccount(privateKey);
     var web3 = new Web3(privateProvider)
+    var contract = new web3.eth.Contract(ABI, contractAddress)
 
     switch(actionType){
         case 'call':
