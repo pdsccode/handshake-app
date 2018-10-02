@@ -24,7 +24,7 @@ import './CreateStoreATM.scss';
 import '../styles.scss';
 import Transaction from './components/Transaction';
 
-const CASH_ATM_TAB = {
+export const CASH_ATM_TAB = {
   INFO: 'INFO',
   TRANSACTION: 'TRANSACTION',
 };
@@ -97,9 +97,14 @@ class Component extends React.Component {
 
   componentDidMount() {
     const {
-      ipInfo,
+      ipInfo, options,
     } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude, ipInfo?.addressDefault);
+
+    // open default tab
+    if (options && options.defaultTab) {
+      this.changeTab(options.defaultTab);
+    }
 
     // show popup to get GPS permission
     this.props.showPopupGetGPSPermission();
@@ -183,12 +188,22 @@ class Component extends React.Component {
   onCashTabChange = (e, newValue) => {
     console.log('onTypeChange', newValue);
     if (this.state.cashTab !== newValue) {
-      this.setState({ cashTab: newValue }, () => {
-        if (newValue === CASH_ATM_TAB.TRANSACTION) {
-          this.getTransactionCreditATM();
-        }
-      });
+      this.changeTab(newValue);
     }
+  }
+
+  changeTab = (tab) => {
+    if (Object.values(CASH_ATM_TAB).indexOf(tab) === -1) {
+      console.warn('tab must be one of ', Object.values(CASH_ATM_TAB).join('|'));
+      return;
+    }
+    const { rfChange } = this.props;
+    rfChange(nameFormFilterFeeds, 'cash-show-type', tab);
+    this.setState({ cashTab: tab }, () => {
+      if (tab === CASH_ATM_TAB.TRANSACTION) {
+        this.getTransactionCreditATM();
+      }
+    });
   }
 
   setAddressFromLatLng = (lat, lng, addressDefault) => {
@@ -342,7 +357,21 @@ class Component extends React.Component {
   }
 
   toggleGoogleMap = () => {
-    this.setState(({ showMap }) => ({ showMap: !showMap }));
+    this.setState({ showMap: !this.state.showMap }, () => {
+      const { showMap } = this.state;
+      if (showMap) {
+        // scroll map to top
+        const containerEl = document.getElementsByClassName('create-store-atm-container');
+        const modelEl = containerEl && containerEl[0]?.offsetParent;
+        setTimeout(() => {
+          modelEl && modelEl.scrollTo({
+            behavior: 'smooth',
+            left: 0,
+            top: modelEl.offsetHeight,
+          });
+        }, 500);
+      }
+    });
   }
 
   renderMap = () => {

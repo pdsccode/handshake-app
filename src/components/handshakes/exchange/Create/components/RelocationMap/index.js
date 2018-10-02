@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
 import { getAddressFromLatLng } from '@/components/handshakes/exchange/utils';
 import { debounce } from 'lodash';
+import './styles.scss';
 
 let mapInstance = null;
 
@@ -15,6 +16,8 @@ class RelocationMap extends PureComponent {
     this.map = React.createRef();
     this.onCenterChanged = :: this.onCenterChanged;
     this.getAddress = debounce(::this.getAddress, 1000);
+    this.onZoomChanged = :: this.onZoomChanged;
+    this.onIdle = :: this.onIdle;
   }
 
   componentDidMount() {
@@ -39,6 +42,19 @@ class RelocationMap extends PureComponent {
     }
   }
 
+  onZoomChanged() {
+    this.setState({ isZooming: true });
+    this.map.current.panTo(this.state.position);
+  }
+
+  onIdle() {
+    const { isZooming } = this.state;
+
+    // avoid re-centered map if it is zooming
+    !isZooming && this.onCenterChanged();
+    this.setState({ isZooming: false });
+  }
+
   async getAddress(position) {
     try {
       const address = await getAddressFromLatLng(position);
@@ -60,25 +76,26 @@ class RelocationMap extends PureComponent {
     return (
       <GoogleMap
         zoom={19}
-        center={position}
+        defaultCenter={position}
         ref={this.map}
-        onCenterChanged={this.onCenterChanged}
+        onZoomChanged={this.onZoomChanged}
+        onIdle={this.onIdle}
         options={{
           gestureHandling: 'greedy',
           mapTypeControl: false,
           panControl: false,
           zoomControl: false,
           streetViewControl: false,
-       }}
+      }}
       >
-        <Marker
+        {/* <Marker
           defaultIcon={{
             url: currentLocationIndicator,
             scaledSize: { width: 30, height: 30 },
           }}
           position={position}
           zIndex={-1111}
-        />
+        /> */}
       </GoogleMap>
     );
   }
@@ -100,14 +117,17 @@ class RelocationMapContainer extends Component {
   render() {
     const Map = withScriptjs(withGoogleMap(RelocationMap));
     return (
-      <Map
-        ref={this.map}
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div className="address-update-map-container" style={{ height: '400px', position: 'relative' }} />}
-        mapElement={<div style={{ height: `100%` }} />}
-        {...this.props}
-      />
+      <div className="relocation-map-container">
+        <Map
+          ref={this.map}
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div className="address-update-map-container" style={{ height: '400px', position: 'relative' }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+          {...this.props}
+        />
+        <img src={currentLocationIndicator} width={30} height={30} alt="marker" className="custom-marker" />
+      </div>
     );
   }
 }
