@@ -139,14 +139,14 @@ class ListCoin extends React.Component {
 
   get showListCoin(){
     const { wallets, walletSelected } = this.state;
-    if(wallets){console.log(wallets);
+    if(wallets){
       return wallets.map(e => {
         let icon = '';
         try{ icon = require("@/assets/images/icon/wallet/coins/" + e.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
         let isLive = e.network === MasterWallet.ListCoin[e.className].Network.Mainnet;
-        let isSelected = walletSelected && e.network == walletSelected.network && e.address == walletSelected.address;
+        let isSelected = walletSelected && e.network == walletSelected.network && e.address == walletSelected.address && e.name == walletSelected.name;
 
-        return <div className={"coinName " + (!isLive && " test") + (isSelected ? " selected" : "")} key={e.network+e.address}>
+        return <div className={"coinName " + (!isLive && " test") + (isSelected ? " selected" : "")} key={e.name+e.network+e.address}>
             <div className="row">
               <div className="col-2 icon" onClick={()=> this.selectCoin(e)}><img src={isSelected ? iconSelected : icon} /></div>
               <div className="col-5" onClick={()=> this.selectCoin(e)}>
@@ -154,8 +154,8 @@ class ListCoin extends React.Component {
                 <div className="address">{e.getShortAddress()}</div>
               </div>
               <div className="col-5 text-right pr-3">
-                <div className="balance">{e.balance} {e.name}</div>
-                <div className="qrcode" onClick={()=> this.openQRCode(e)}><img src={isSelected ? iconQRCodeWhite : iconQRCodeBlack} /></div>
+                <div className="balance" onClick={()=> this.selectCoin(e)}>{e.balance} {e.name}</div>
+                <div className="qrcode"><img src={isSelected ? iconQRCodeWhite : iconQRCodeBlack}  onClick={()=> this.openQRCode(e)} /></div>
               </div>
             </div>
           </div>

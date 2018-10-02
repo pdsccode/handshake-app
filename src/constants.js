@@ -576,7 +576,7 @@ export const URL = {
   CASH_FOR_BUSINESS: '/cash-for-business',
   ATM_FOR_BUSINESS: '/atm-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
-  PEX_INSTRUCTION_URL: '/pex/instruction',
+  PEX_INSTRUCTION_URL: '/pex/instructions',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
   PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
@@ -955,6 +955,8 @@ export const AUTONOMOUS_END_POINT = {
   CHECKOUT: '/order-api/order/cart/checkout',
   PRODUCTS: '/product-api/v2/products',
   PRODUCT: '/product-api/product',
+  CURRENT_COUNTRY: '/common-api/current-country',
+  CHANGE_COUNTRY: '/common-api/change-country',
 };
 export const COUNTRY_LIST = {
   "AD": "AD - Andorra",

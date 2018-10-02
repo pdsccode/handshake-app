@@ -18,6 +18,7 @@ import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
+import { isJSON } from '@/utils/object';
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
@@ -70,6 +71,7 @@ class Prediction extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     this.props.dispatch(loadMatches());
+    this.receiverMessage(this.props); // @TODO: Extensions
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
@@ -79,11 +81,27 @@ class Prediction extends React.Component {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-
   onCountdownComplete = (eventId) => {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
+  }
+
+  // @TODO: Extensions
+  /* eslint no-useless-escape: 0 */
+  receiverMessage = (props) => {
+    console.log(window.localStorage.getItem('test'));
+    const windowInfo = isJSON(window.name) ? JSON.parse(window.name) : null;
+    if (windowInfo) {
+      const { message } = windowInfo;
+      if (window.self !== window.top && message) {
+        const urlPattern = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)/i;
+        const { url } = message;
+        const matches = url.match(urlPattern);
+        const source = matches && matches[0];
+        props.dispatch(loadMatches({ source }));
+      }
+    }
   }
 
   handleScroll = () => {

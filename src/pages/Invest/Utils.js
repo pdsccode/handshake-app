@@ -1,3 +1,6 @@
+import ethereumAPI from './ethereumAPI'
+import axios from 'axios'
+
 export default {
   duration: function (timeInSecond) {
     var interval = Math.floor(timeInSecond / 31536000)
@@ -26,7 +29,7 @@ export default {
     if (typeof web3 !== 'undefined') return true
     else return false
   },
-  isMainnet: function isMainnet (web3) {
+  isMainnet: function (web3) {
     return new Promise(async function (resolve) {
       if (!web3) return false
       setTimeout(() => {
@@ -39,5 +42,21 @@ export default {
         }
       }, 1)
     })
+  },
+  fetchData: async function(url, body) {
+    try {
+      if (body){
+        return await axios.post(url, body)
+      } else {
+        return await axios.get(url)
+      }
+    } catch(err){
+      console.log(err)
+      return {status: 'fail', msg: err.message}
+    }
   }
 }
+
+
+
+
