@@ -43,10 +43,19 @@ class TransactionItem extends React.Component {
     this.transaction.createdAt = new Date(initAt * 1000).toISOString();
   }
 
+  ellipsisText(text = '') {
+    let newText = '';
+    if (text.length >= 20) {
+      newText = `${text.substr(0, 4)}...${text.substr(-6)}`;
+    }
+
+    return newText;
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatAmount, status } = this.transaction;
+    const { amount, currency, fiatAmount, status, address } = this.transaction;
 
     return (
       <div className="transaction">
@@ -116,6 +125,14 @@ class TransactionItem extends React.Component {
                 <span className="font-weight-bold">{fiatAmount}</span>
                 &nbsp;
                 <span className="text-normal">{FIAT_CURRENCY.USD}</span>
+              </div>
+            </div>
+            <div className="d-table w-100">
+              <div className="d-table-cell text-normal">
+                {messages.create.atm.transactions.to_wallet}
+              </div>
+              <div className="d-table-cell text-right">
+                <span className="font-weight-bold">{this.ellipsisText(address)}</span>
               </div>
             </div>
             <div className="d-table w-100">

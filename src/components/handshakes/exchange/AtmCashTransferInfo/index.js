@@ -52,7 +52,7 @@ class AtmCashTransferInfo extends PureComponent {
   static getDerivedStateFromProps({ receipt }, prevState) {
     const newData = { ...prevState?.data };
     const { amount, fiatCurrency, referenceCode } = receipt;
-    amount && fiatCurrency && (newData.AMOUNT.text = `${amount} ${fiatCurrency}`);
+    amount && fiatCurrency && (newData.AMOUNT.text = `${Number.parseFloat(amount).toFixed(2)} ${fiatCurrency}`);
     referenceCode && (newData['REFERENCE CODE'].text = referenceCode);
     return { data: newData };
   }

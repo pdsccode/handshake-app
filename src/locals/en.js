@@ -300,7 +300,7 @@ export default {
   'ex.sort.price.sell.eth': 'Sell ETH',
   'ex.discover.label.open.atm': 'Open your ATM',
   'ex.discover.label.manage.atm': 'My ATM',
-  'ex.discover.label.dashboard': 'Transactions',
+  'ex.discover.label.dashboard': 'New Order',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   'cc.label.1': 'Buy crypto with credit card',
@@ -1095,7 +1095,7 @@ export default {
       title: 'Open an ATM',
       tab: {
         storeInfo: 'ATM Info',
-        transaction: 'History',
+        transaction: 'Order History',
       },
       text: {
         nameTitle: 'Name',
@@ -1130,6 +1130,7 @@ export default {
         amount: 'Amount',
         needToTransfer: 'Need to transfer',
         status: 'Status',
+        to_wallet: 'To Wallet',
         statusValues: {
           processing: 'Pending',
           success: 'Success',
@@ -1639,7 +1640,7 @@ export default {
 
   // ATM cash transfer page
   atm_cash_transfer: {
-    to_wallet_address: 'YOUR WALLET ADDRESS',
+    to_wallet_address: 'TO WALLER ADDRESS',
     copy_address_or_scan_qr: 'Copy address or scan QR code',
     we_will_send_coin_to_this_address_desc: 'We will send coins to this address after receiving your bank receipt.',
     amount: 'WANTED AMOUNT',
