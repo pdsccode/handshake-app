@@ -1137,7 +1137,7 @@ export default {
           transferring: 'Sending coins...',
         },
         messageTransfer: 'You haven\'t transferred yet.',
-        transferNow: ' Transfer now',
+        transferNow: 'View detail',
       },
     },
   },
