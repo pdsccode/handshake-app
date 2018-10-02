@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 import React, { PureComponent, Component } from 'react';
-import { GoogleMap, Marker, withGoogleMap, withScriptjs } from 'react-google-maps';
+import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
 import PropTypes from 'prop-types';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
 import { getAddressFromLatLng } from '@/components/handshakes/exchange/utils';
@@ -44,7 +44,7 @@ class RelocationMap extends PureComponent {
 
   onZoomChanged() {
     this.setState({ isZooming: true });
-    this.map.current.panTo(this.state.position);
+    this.state.position && this.map?.current?.panTo(this.state.position);
   }
 
   onIdle() {
