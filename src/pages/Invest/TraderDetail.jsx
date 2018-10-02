@@ -1,31 +1,6 @@
 import React, { Component } from 'react';
 import InvestNavigation from './InvestNavigation';
-import './TraderDetail.scss';
-import ProfileSumary from './TraderDetail/ProfileSumary';
-import FundingItem from './TraderDetail/FundingItem';
-import CompletedItem from './TraderDetail/CompletedItem';
-
-const TraderDetailBlock = (props) => (
-    <div key={'addlater'} style={{ marginTop: '1em' }} >
-        <ProfileSumary {...props} />
-        <div className="funding">
-            <div className="funding-title">
-                <label>CURRENTLY FUNDING</label>
-            </div>
-            <div className="funding-body">
-                {[60,80,20,10,30].map((e, i) => <FundingItem percentage={e} key={i} />)}
-            </div>
-        </div>
-        <div className="completed">
-            <div className="completed-title">
-                <label>{'COMPLETED PROJECTS'}</label>
-            </div>
-            <div className="completed-body">
-                {[1,2,3,4,5].map((e, i) => <CompletedItem key={i} />)}
-            </div>
-        </div>
-    </div>
-);
+import TraderDetailBlock from './TraderDetailBlock';
 
 export default class TraderDetail extends Component {
     render(){

@@ -1,6 +1,6 @@
+import './TraderDetail.scss';
 import React from 'react';
 import StarRatings from 'react-star-ratings';
-import '../TraderDetail.scss';
 import { wrapBoundary } from '../../../components/ErrorBoundary';
 import {
     ACTIVE_PROJECTS,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProgressBar } from 'react-bootstrap';
 import { wrapBoundary } from '../../../components/ErrorBoundary';
-import '../TraderDetail.scss';
+import './TraderDetail.scss';
 
 const handleProgressBar = (values) => [
     { label: 'success', value: 80 },
