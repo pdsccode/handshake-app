@@ -34,16 +34,16 @@ class CCConfirm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
-    //   console.log('componentWillReceiveProps', nextProps);
-    //   const { client_secret } = Helper.getQueryStrings(window.location.search);
-    //   this.source = local.get(APP.CC_SOURCE);
-    //   const { client_secret: cc_client_secret } = this.source;
-    //
-    //   if (client_secret && client_secret === cc_client_secret) {
-    //     this.handleSubmit({}, nextProps.userProfile);
-    //   }
-    // }
+    if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
+      console.log('componentWillReceiveProps', nextProps);
+      const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
+      this.source = local.get(APP.CC_SOURCE);
+      const { id: cc_client_secret } = this.source;
+
+      if (client_secret && client_secret === cc_client_secret) {
+        this.handleSubmit({}, nextProps.userProfile);
+      }
+    }
   }
 
   showLoading = () => {
@@ -55,7 +55,7 @@ class CCConfirm extends React.Component {
   };
 
   handleSubmit = (values, userProfile) => {
-    const { client_secret } = Helper.getQueryStrings(window.location.search);
+    const { PaRes: client_secret } = Helper.getQueryStrings(window.location.search);
     console.log('handleSubmit', this.props);
     const { handleSubmit } = this.props;
 
@@ -75,11 +75,11 @@ class CCConfirm extends React.Component {
       } = this.source;
       const cc_number = last4;
       const cc_expired = `${exp_month}/${exp_year.toString().substr(2, 2)}`;
-      const card = local.get(APP.CC_TOKEN);
+      // const card = local.get(APP.CC_TOKEN);
 
       const cc = {
         cc_num: cc_number,
-        cvv: card,
+        // cvv: card,
         expiration_date: cc_expired,
         token,
         client_secret,
