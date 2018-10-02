@@ -172,6 +172,7 @@ class AtmCashTransfer extends Component {
           fiatCurrency: res?.data?.fiat_currency,
           referenceCode: res?.data?.ref_code,
           createdAt: res?.data?.created_at,
+          status: res?.data?.status,
         };
         this.setState({ isDone: true, receipt });
       },
