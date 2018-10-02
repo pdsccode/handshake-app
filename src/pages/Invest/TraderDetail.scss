@@ -68,12 +68,14 @@
         }
     }
     &-body {
-        background-color: grey;
+        background-color: #ffffff;
+        font-size: 14px;
+        padding-top: 10px;
         &-row {
-            padding: 10px;
+            margin: 10px;
             // height: 50px;
-            background-color:green;
-            border: 1px solid black;
+            // background-color:green;
+            border-bottom: 0.5px solid grey;
             display: flex;
             flex-direction: row;
             &-left {
@@ -81,6 +83,8 @@
                 // background-color: yellow;
                 label {
                     display: block;
+                    font-weight: 400;
+                    color: black;
                 }
                 .progress {
                     margin: 0px 0px 10px 22px;
@@ -92,6 +96,9 @@
             }
             &-right {
                 text-align: right;
+                label {
+                    width: 100%;
+                }
             }
         }
     }
@@ -106,39 +113,59 @@
         }
     }
     &-body {
-        background-color: grey;
+        background-color: #ffffff;
+        padding-top: 10px;
         &-row {
-            font-size: 14px;
-            padding: 10px;
-            // height: 50px;
-            background-color:green;
-            border: 1px solid black;
-            display: flex;
-            flex-direction: row;
-            &-left {
-                min-width: 50%;
-                // background-color: yellow;
-                label {
-                    display: block;
-                    color: grey;
-                }
-                .progress {
-                    margin: 0px 0px 10px 22px;
-                    height: 4px;
-                }
-                .progress-title {
-                    margin-left: 22px;
-                }
+            &-title {
+                padding: 10px;
+                font-size: 16px;
             }
-            &-right {
-                min-width: 50%;
-                text-align: right;
-                label {
-                    display: block;
-                    color: black;
-                    font-weight: bold;
+            &-body {
+                font-size: 14px;
+                margin: 10px;
+                // height: 50px;
+                // background-color:green;
+                border-bottom: 0.5px solid grey;
+                display: flex;
+                flex-direction: row;
+                .green {
+                    color: green;
                 }
+                &-left {
+                    min-width: 50%;
+                    // background-color: yellow;
+                    label {
+                        display: block;
+                        color: grey;
+                    }
+                    .progress {
+                        margin: 0px 0px 10px 22px;
+                        height: 4px;
+                    }
+                    .progress-title {
+                        margin-left: 22px;
+                    }
+                }
+                &-right {
+                    min-width: 50%;
+                    text-align: right;
+                    label {
+                        display: block;
+                        color: black;
+                        font-weight: 400;
+                    }
+                }
+
             }
         }
+    }
+}
+
+.colorTrader {
+    &-green {
+        color: green;
+    }
+    &-grey {
+        color: grey
     }
 }

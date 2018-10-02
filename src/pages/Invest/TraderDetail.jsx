@@ -61,34 +61,43 @@ const TraderDetailBlock = ({ rating }) => (
                     <div className="funding-body-row">
                         <div className="funding-body-row-left">
                             <label>1. TraderId</label>
-                            <ProgressBar className="progress" now={60} />
-                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                            <ProgressBar className="progress" now={100} />
+                            <label className="progress-title">
+                                {'150,000'}
+                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
+                            </label>
                         </div>
                         <div className="funding-body-row-right">
-                            <label>{'5 days left'}</label>
-                            <label>{'55%'}</label>
+                            <label className="colorTrader-grey">{'5 days left'}</label>
+                            <label className="colorTrader-green">{'55%'}</label>
                         </div>
                     </div>
                     <div className="funding-body-row">
                         <div className="funding-body-row-left">
-                            <label>1. TraderId</label>
+                            <label>2. TraderId</label>
                             <ProgressBar className="progress" now={60} />
-                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                            <label className="progress-title">
+                                {'10,000'}
+                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
+                            </label>
                         </div>
                         <div className="funding-body-row-right">
-                            <label>{'5 days left'}</label>
-                            <label>{'55%'}</label>
+                            <label className="colorTrader-grey">{'5 days left'}</label>
+                            <label className="colorTrader-green">{'55%'}</label>
                         </div>
                     </div>
                     <div className="funding-body-row">
                         <div className="funding-body-row-left">
-                            <label>1. TraderId</label>
+                            <label>3. TraderId</label>
                             <ProgressBar className="progress" now={60} />
-                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                            <label className="progress-title">
+                                {'10,000'}
+                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
+                            </label>
                         </div>
                         <div className="funding-body-row-right">
-                            <label>{'5 days left'}</label>
-                            <label>{'55%'}</label>
+                            <label className="colorTrader-grey">{'5 days left'}</label>
+                            <label className="colorTrader-green">{'55%'}</label>
                         </div>
                     </div>
                 </div>
@@ -98,22 +107,54 @@ const TraderDetailBlock = ({ rating }) => (
                     <label>{'COMPLETED PROJECTS'}</label>
                 </div>
                 <div className="completed-body">
-                    <div>
-                        <div style={{ padding: '10px', fontSize: '16px' }}>{'XProject'}</div>
-                        <div className="completed-body-row">
-                            <div className="completed-body-row-left">
+                    <div className="completed-body-row">
+                        <div className="completed-body-row-title">{'XProject'}</div>
+                        <div className="completed-body-row-body">
+                            <div className="completed-body-row-body-left">
                                 <label>{'Duration'}</label>
                                 <label>{'Deadline'}</label>
                                 <label>{'Requested fund'}</label>
                                 <label>{'Returns'}</label>
                                 <label>{''}</label>
                             </div>
-                            <div className="completed-body-row-right">
+                            <div className="completed-body-row-body-right">
                                 <label>{'3 months'}</label>
                                 <label>{'14 Sep 2018'}</label>
-                                <label>{'1,000,000 ETH'}</label>
-                                <label>{'1,200,000 ETH'}</label>
-                                <label>{'+25%'}</label>
+                                <label>
+                                    {'1,000,000'}
+                                    <span className="colorTrader-grey">{' ETH'}</span>
+                                </label>
+                                <label>
+                                    {'1,200,000'}
+                                    <span className="colorTrader-grey">{' ETH'}</span>
+                                </label>
+                                <label className="green">{'+25%'}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="completed-body-row">
+                        <div className="completed-body-row-title">{'XProject'}</div>
+                        <div className="completed-body-row-body">
+                            <div className="completed-body-row-body-left">
+                                <label>{'Duration'}</label>
+                                <label>{'Deadline'}</label>
+                                <label>{'Requested fund'}</label>
+                                <label>{'Returns'}</label>
+                                <label>{''}</label>
+                            </div>
+                            <div className="completed-body-row-body-right">
+                                <label>{'3 months'}</label>
+                                <label>{'14 Sep 2018'}</label>
+                                <label>
+                                    {'1,000,000'}
+                                    <span className="colorTrader-grey">{' ETH'}</span>
+                                </label>
+                                <label>
+                                    {'1,200,000'}
+                                    <span className="colorTrader-grey">{' ETH'}</span>
+                                </label>
+                                <label className="green">{'+25%'}</label>
                             </div>
                         </div>
                     </div>
