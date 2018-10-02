@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Slider from 'react-rangeslider';
-import _ from 'lodash';
 import 'react-rangeslider/lib/index.css';
 import './ConfirmButton.scss';
 

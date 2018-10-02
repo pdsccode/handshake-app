@@ -16,47 +16,8 @@ import { shortenUser } from '@/services/offer-util';
 import Button from '@/components/core/controls/Button';
 import Input from '../Input';
 
-window.Clipboard = (function (window, document, navigator) {
-  let textArea,
-    copy;
+import gitfBox from '@/assets/images/wallet/images/gift-gift-box.svg';
 
-  function isOS() {
-    return navigator.userAgent.match(/ipad|iphone/i);
-  }
-
-  function createTextArea(text) {
-    textArea = document.createElement('textArea');
-    textArea.value = text;
-    document.body.appendChild(textArea);
-  }
-
-  function selectText() {
-    let range,
-      selection;
-    if (isOS()) {
-      range = document.createRange();
-      range.selectNodeContents(textArea);
-      selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-      textArea.setSelectionRange(0, 999999);
-    } else {
-      textArea.select();
-    }
-  }
-
-  function copyToClipboard() {
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-  }
-
-  copy = function (text) {
-    createTextArea(text);
-    selectText();
-    copyToClipboard();
-  };
-  return { copy };
-}(window, document, navigator));
 
 class Redeem extends React.Component {
   static propTypes = {
@@ -66,14 +27,9 @@ class Redeem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-
-      giftcardValue: 0,
-      cryptoValue: "",
-
-      code: '',
-      isLoading: false
-    };
+    this.state = {      
+      redeemCode: this.props.data.code || ' ',
+    };    
   }
 
 
@@ -105,27 +61,33 @@ class Redeem extends React.Component {
 
   hideLoading = () => {
     this.props.hideLoading();
+  }  
+
+  handleNameChange =(value)=>{
+    this.setState({redeemCode: value});
   }
 
 
   render() {
-    const { messages } = this.props.intl;
-    const { referalInfo } = this.props;
-
+    const { messages } = this.props.intl;    
+    
     return (
-     <div className="redeem-page">
-        <div className="title">{this.messages.wallet.action.redeem.title}</div>
+     <div className="redeem-page">        
+        <div className="title">
+          <img src={gitfBox} /> 
+          <div>{messages.wallet.action.redeem.title}</div>
+        </div>
         <div className="body">
-            <div>
-              <Input required placeholder={this.messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.walletName} onChange={(value) => {this.handleWalletNameChange(value)}} /> 
-            </div>         
-            <div><span>{this.messages.wallet.action.redeem.giftcard}:</span> <span>${this.state.giftcardValue}</span></div>         
-            <div><span>{this.messages.wallet.action.redeem.value}:</span> <span>{this.state.cryptoValue}</span></div>         
-            <div>
-              {this.messages.wallet.action.redeem.agree_text}
+            <div className="redeem-code">
+              <Input required placeholder={messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.redeemCode} /> 
+            </div>                     
+            <div className="buttonRedeem">              
+              <Button>{messages.wallet.action.redeem.button_check}</Button>
             </div>
-            <div>
-              <Button>{this.messages.wallet.action.redeem.button_redeem}</Button>
+            <div className="findcode">
+              <a href="#">
+                {messages.wallet.action.redeem.find_code}
+              </a>            
             </div>
         </div>
      </div>

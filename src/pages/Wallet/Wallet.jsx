@@ -918,8 +918,13 @@ class Wallet extends React.Component {
     }
   }
 
-  getETHFree() {
-    window.open('https://www.rinkeby.io/#faucet', '_blank');
+  getETHFree=()=> {
+    // window.open('https://www.rinkeby.io/#faucet', '_blank');
+    let data="ninja-redeem:2342342342342342?value=234";
+    let result = MasterWallet.getQRCodeDetail(data);
+    this.props.showQRCodeContent({   
+      data: result      
+    });    
   }
 
   onQRCodeScaned=(data)=>{
@@ -973,9 +978,9 @@ class Wallet extends React.Component {
         </Modal>
 
         {/* qrcode result detected modal popup*/}
-        <QRCodeContent callBackRedeem={(data)=> {this.showRedeemModal(data);}}  onTransferClick={(data)=> {this.showTransferFromQRCode(data);}} />
+        <QRCodeContent onRedeemClick={(data)=> {this.showRedeemModal(data);}}  onTransferClick={(data)=> {this.showTransferFromQRCode(data);}} />
 
-        <Modal title={this.messages.wallet.action.redeem.title} onRef={modal => this.modalRedeemRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closeModalRedeem}>
+        <Modal title={messages.wallet.action.redeem.title} onRef={modal => this.modalRedeemRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closeModalRedeem}>
           {this.state.redeemContent}
         </Modal>
 

@@ -1,0 +1,33 @@
+.redeem-page{
+    padding: 20px;
+    .title{
+        text-align: center;
+        img{
+            margin: auto;
+            width: 70px;
+        }
+        div{
+            margin-top: 10px;
+            font-size: 30px;
+        }
+    }    
+    .buttonRedeem{        
+        margin-top: 30px;        
+        button{
+            width: 100%;
+        }
+    }
+    .term{
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    .findcode{
+        text-align: center;
+        margin-top: 30px;
+    }
+    .redeem-code{
+        .placeholder, input{
+            text-align: center;
+        }        
+    }
+}

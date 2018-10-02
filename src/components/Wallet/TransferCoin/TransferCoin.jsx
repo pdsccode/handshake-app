@@ -612,7 +612,7 @@ render() {
               {this.showWallet}
 
               <div className="wallets-wrapper">
-                <Modal title="Select wallets" onRef={modal => this.modalListCoinRef = modal}>
+                <Modal title={messages.wallet.action.transfer.placeholder.select_wallet} onRef={modal => this.modalListCoinRef = modal}>
                   {modalListCoin}
                 </Modal>
               </div>
