@@ -90,6 +90,14 @@ $bg-color: #FAFBFF;
         width: 100px;
       }
 
+      >span span.select-country-code {
+        color: $title-color;
+        font-size: 16px;
+        font-weight: normal;
+        text-align: left;
+        letter-spacing: 0;
+      }
+
       >span span.phone-input-country {
         border-right: none;
         border-top-right-radius: 0px;
@@ -110,6 +118,8 @@ $bg-color: #FAFBFF;
       color: $title-color;
       letter-spacing: 0.5px;
       margin-top: 1rem;
+      font-weight: normal;
+      text-align: left;
     }
 
     .form-control-input {
@@ -139,17 +149,23 @@ $bg-color: #FAFBFF;
       background: #EDF0FA;
       border-radius: 4px;
       padding: 15px;
+      height: 107px;
       display: flex;
-      height: 68px;
       justify-content: space-between;
       .atm-time-item {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-start;
       }
       .from-time, .to-time {
-        margin-right: 10px;
-        font-weight: 300;
-        font-weight: 300;
+        align-items: center;
+        text-transform: uppercase;
+        color: #868DAD;
+        font-size: 14px;
+        font-weight: normal;
+        text-align: left;
+        letter-spacing: 0.5px;
       }
     }
 

@@ -288,26 +288,42 @@ class Component extends React.Component {
       PATH_URL: API_URL.EXCHANGE.CASH_STORE_ATM,
       data: offer,
       METHOD: 'PUT',
-      successFn: this.handleCreateOfferSuccess,
+      successFn: this.handleUpdateSuccess,
       errorFn: this.handleCreateOfferFailed,
     });
   }
 
-  handleCreateOfferSuccess = async (responseData) => {
+  handleCreateOfferSuccess = async (responseData, opt = {}) => {
+    const { messages } = this.props.intl;
+    let text = messages.create.atm.text.createdAtmSuccess;
+    opt.isUpdate && (text = messages.create.atm.text.updatedAtmSuccess);
     console.log('handleCreateOfferSuccess', responseData);
     // const offer = OfferShop.offerShop(responseData.data);
     // this.offer = offer;
 
 
     this.hideLoading();
-    const message = <FormattedMessage id="createOfferSuccessMessage" />;
-
     this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
+      message: <div className="text-center">{text}</div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(`${URL.HANDSHAKE_ATM}`);
+        // this.props.history.push(`${URL.HANDSHAKE_ATM}`);
+      },
+    });
+  }
+
+  handleUpdateSuccess = () => {
+    const { intl: { messages }, closeModal } = this.props;
+    this.hideLoading();
+    this.props.showAlert({
+      message: <div className="text-center">{messages.create.atm.text.updatedAtmSuccess}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        if (typeof closeModal === 'function') {
+          closeModal();
+        }
       },
     });
   }
@@ -463,7 +479,7 @@ class Component extends React.Component {
                     <div className="input-group item-info">
                       <div className="w-100 atm-time">
                         <div className="atm-time-item">
-                          <div className="from-time">From</div>
+                          <div className="from-time">{messages.create.atm.text.open}</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
@@ -472,7 +488,7 @@ class Component extends React.Component {
                           />
                         </div>
                         <div className="atm-time-item">
-                          <div className="to-time">To</div>
+                          <div className="to-time">{messages.create.atm.text.closed}</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}

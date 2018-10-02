@@ -25,6 +25,10 @@ const DATA_TEMPLATE = {
   'REFERENCE CODE': { intlKey: 'reference_code', text: '---', className: 'reference-code', copyable: true },
 };
 
+const STATUS = {
+  TRANSFERRING: 'transferring',
+};
+
 class AtmCashTransferInfo extends PureComponent {
   constructor() {
     super();
@@ -178,7 +182,7 @@ class AtmCashTransferInfo extends PureComponent {
 
   render() {
     const { showUploader, uploaded, expired } = this.state;
-    const { intl: { messages: { atm_cash_transfer_info } }, receipt: { createdAt } } = this.props;
+    const { intl: { messages: { atm_cash_transfer_info } }, receipt: { createdAt, status } } = this.props;
     return (
       <div className="transaction-info-container">
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
@@ -219,7 +223,7 @@ class AtmCashTransferInfo extends PureComponent {
             />
           }
           {
-            uploaded ?
+            (uploaded || status === STATUS.TRANSFERRING) ?
               <button className="btn btn-upload-receipt" onClick={this.onDone}>{atm_cash_transfer_info.done_btn}</button> :
               <button className="btn btn-upload-receipt" onClick={this.onUpload}>
                 <img src={iconUpload} height="10px" alt="upload receipt" />

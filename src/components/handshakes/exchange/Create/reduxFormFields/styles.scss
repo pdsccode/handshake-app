@@ -17,6 +17,14 @@
   display: flex;
   justify-content: space-around;
   padding: 10px 0px;
+  span {
+    color: #868DAD;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
+  }
+
   .rf-type-atm-radio-container {
     display: block;
     position: relative;
@@ -90,6 +98,9 @@
 }
 
 .hour-selector-container {
-  width: 100px;
+  width: 150px;
   margin: auto;
+  select {
+    height: 54px;
+  }
 }
