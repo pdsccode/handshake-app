@@ -25,6 +25,8 @@ class CCConfirm extends React.Component {
     this.state = {
       isLoading: false,
     };
+
+    console.log('location.search', window.location.search);
   }
 
   componentDidMount() {
@@ -32,16 +34,16 @@ class CCConfirm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
-      console.log('componentWillReceiveProps', nextProps);
-      const { client_secret } = Helper.getQueryStrings(window.location.search);
-      this.source = local.get(APP.CC_SOURCE);
-      const { client_secret: cc_client_secret } = this.source;
-
-      if (client_secret && client_secret === cc_client_secret) {
-        this.handleSubmit({}, nextProps.userProfile);
-      }
-    }
+    // if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
+    //   console.log('componentWillReceiveProps', nextProps);
+    //   const { client_secret } = Helper.getQueryStrings(window.location.search);
+    //   this.source = local.get(APP.CC_SOURCE);
+    //   const { client_secret: cc_client_secret } = this.source;
+    //
+    //   if (client_secret && client_secret === cc_client_secret) {
+    //     this.handleSubmit({}, nextProps.userProfile);
+    //   }
+    // }
   }
 
   showLoading = () => {

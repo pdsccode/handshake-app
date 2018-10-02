@@ -128,6 +128,10 @@ class FeedCreditCard extends React.Component {
       walletSelected: false,
       allowBuy: true,
       hasSelectedPackage: false,
+      issuerUrl: '',
+      paReq: '',
+      md: '',
+      termUrl: '',
     };
   }
 
@@ -531,35 +535,39 @@ class FeedCreditCard extends React.Component {
     }
     local.save(APP.CC_ADDRESS, address);
 
-    var bodyFormData = new FormData();
+    this.setState({ issuerUrl: issuerUrl, paReq: paRequest, md: md, termUrl: `${window.origin}${URL.CC_PAYMENT_URL}` }, () => {
+      document.getElementById('3dform').submit();
+    });
 
-    bodyFormData.set('PaReq', paRequest);
-    bodyFormData.set('MD', md);
-    bodyFormData.set('TermUrl', `${window.origin}${URL.CC_PAYMENT_URL}`);
-
-    axios({
-      method: 'post',
-      url: issuerUrl,
-      data: bodyFormData,
-      config: { headers: {'Content-Type': 'multipart/form-data' }}
-    })
-      .then((payload) => {
-        console.log(payload);
-      })
-      .catch((error) => {
-        console.log(error);
-
-        this.hideLoading();
-
-        // const message = error?.response?.data?.error?.message || 'Something wrong!';
-        const message = 'Opp, something wrong! Please go back later!';
-        this.props.showAlert({
-          message: <div className="text-center">{message}</div>,
-          timeOut: 5000,
-          type: 'danger',
-          // callBack: this.handleBuySuccess
-        });
-      });
+    // var bodyFormData = new FormData();
+    //
+    // bodyFormData.set('PaReq', paRequest);
+    // bodyFormData.set('MD', md);
+    // bodyFormData.set('TermUrl', `${window.origin}${URL.CC_PAYMENT_URL}`);
+    //
+    // axios({
+    //   method: 'post',
+    //   url: issuerUrl,
+    //   data: bodyFormData,
+    //   config: { headers: {'Content-Type': 'multipart/form-data' }}
+    // })
+    //   .then((payload) => {
+    //     console.log(payload);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //
+    //     this.hideLoading();
+    //
+    //     // const message = error?.response?.data?.error?.message || 'Something wrong!';
+    //     const message = 'Opp, something wrong! Please go back later!';
+    //     this.props.showAlert({
+    //       message: <div className="text-center">{message}</div>,
+    //       timeOut: 5000,
+    //       type: 'danger',
+    //       // callBack: this.handleBuySuccess
+    //     });
+    //   });
 
     // window.location = result.source.redirect.url;
   }
@@ -835,6 +843,7 @@ class FeedCreditCard extends React.Component {
     const { intl, isPopup } = this.props;
     const { amount, cryptoPrice } = this.props;
     const { currency, allowBuy } = this.state;
+    const { issuerUrl, paReq, md, termUrl } = this.state;
 
     const packages = listPackages[currency];
 
@@ -1108,6 +1117,13 @@ class FeedCreditCard extends React.Component {
           </FormCreditCard>
           {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
           {/* <div className="alert alert-success">You have successfully paid</div> */}
+        </div>
+        <div>
+          <form method="POST" action={issuerUrl} id="3dform">
+            <input type="hidden" name="PaReq" value={paReq} />
+            <input type="hidden" name="MD" value={md} />
+            <input type="hidden" name="TermUrl" value={termUrl} />
+          </form>
         </div>
       </div>
     );
