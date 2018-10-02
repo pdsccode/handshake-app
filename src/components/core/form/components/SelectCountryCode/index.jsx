@@ -39,7 +39,7 @@ class SelectCountryCode extends React.Component {
     });
     if (!this.state.showSelect) {
       setTimeout(() => {
-        this.selectListCountryCode.focus();
+        this?.selectListCountryCode?.focus();
       }, 500);
     }
   };
