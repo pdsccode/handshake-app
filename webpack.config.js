@@ -221,6 +221,7 @@ module.exports = function webpackConfig(env, argv = {}) {
           favicon: xPath('src/assets/favicon.png'),
           env: appEnvConfig,
         }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         // new BundleAnalyzerPlugin(),
       ],
       module: {
