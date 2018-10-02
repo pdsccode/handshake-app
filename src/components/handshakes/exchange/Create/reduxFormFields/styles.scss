@@ -16,7 +16,7 @@
 .rf-type-atm-container {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
+  padding: 10px 0px;
   .rf-type-atm-radio-container {
     display: block;
     position: relative;
@@ -74,7 +74,7 @@
 
 .rf-status-atm {
   display: flex;
-  height: 56px;
+  height: 68px;
   background: #EDF0FA;
   border-radius: 4px 4px 4px 4px;
   padding: 0px 20px;

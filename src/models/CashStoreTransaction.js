@@ -13,6 +13,7 @@ class CashStoreTransaction {
       address: data.address || '',
       status: data.status || '',
       refCode: data.ref_code || '',
+      createdAt: data.created_at || '',
     };
   }
 }

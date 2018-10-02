@@ -18,6 +18,10 @@ div.new-transaction-container {
     letter-spacing: 0.5px;
   }
 
+  span.text-danger>span {
+    color: inherit;
+  }
+
   form.form-new-transaction {
     height: 100%;
     display: flex;

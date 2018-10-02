@@ -8,11 +8,11 @@ import './styles.scss';
 export const fieldTypeAtm = ({ input, texts, atmType }) => {
   const { onChange, value } = input;
   return (
-    <div className="rf-type-atm-container" onChange={({ target }) => onChange(target.value)}>
+    <div className="rf-type-atm-container d-table w-100" onChange={({ target }) => onChange(target.value)}>
       {Object.entries(atmType).map(([key, name]) => {
         const label = name === atmType.PERSONAL ? texts.personalAtm : texts.storeAtm;
         return (
-          <label key={key} className="radio-inline rf-type-atm-radio-container">
+          <label key={key} className="radio-inline rf-type-atm-radio-container d-table-cell w-50">
             <input
               value={name}
               type="radio"

@@ -20,7 +20,8 @@ class Map extends React.Component {
   }
 
   goToManageAtm = () => {
-    this.props.history.push(`${URL.CASH_STORE_URL}`);
+    // this.props.history.push(`${URL.CASH_STORE_URL}`);
+    this.props.openAtmManagement();
   }
 
   render() {
