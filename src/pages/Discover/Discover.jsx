@@ -37,7 +37,7 @@ import local from '@/services/localStore';
 import Modal from '@/components/core/controls/Modal/Modal';
 // import _debounce from 'lodash/debounce';
 import AtmCashTransfer from '@/components/handshakes/exchange/AtmCashTransfer';
-import CreateStoreATM from '@/components/handshakes/exchange/Create/CreateStoreATM';
+import CreateStoreATM, { CASH_ATM_TAB } from '@/components/handshakes/exchange/Create/CreateStoreATM';
 import moment from "moment/moment";
 
 const defaultZoomLevel = 13;
@@ -373,6 +373,10 @@ class DiscoverPage extends React.Component {
     this.setState({ curStationIdShowAllDetails: newValue ? id : null, curStation: offer });
   }
 
+  onReceiptSaved = () => {
+    this.openAtmManagement({ defaultTab: CASH_ATM_TAB.TRANSACTION });
+  }
+
   openNewTransaction = () => {
     const { messages } = this.props.intl;
 
@@ -380,21 +384,21 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.atm_cash_transfer.title,
       modalContent:
         (
-          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} onReceiptSaved={this.modalRef.close} />
+          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} onReceiptSaved={this.onReceiptSaved} />
         ),
     }, () => {
       this.modalRef.open();
     });
   }
 
-  openAtmManagement = () => {
+  openAtmManagement = (opt = {}) => {
     const { messages } = this.props.intl;
 
     this.setState({
       modalTitle: messages.create.atm.title,
       modalContent:
         (
-          <CreateStoreATM />
+          <CreateStoreATM options={opt} />
         ),
     }, () => {
       this.modalRef.open();
