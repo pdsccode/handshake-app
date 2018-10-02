@@ -463,7 +463,7 @@ class Component extends React.Component {
                     <div className="input-group item-info">
                       <div className="w-100 atm-time">
                         <div className="atm-time-item">
-                          <div className="from-time">From</div>
+                          <div className="from-time">{messages.create.atm.text.open}</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
@@ -472,7 +472,7 @@ class Component extends React.Component {
                           />
                         </div>
                         <div className="atm-time-item">
-                          <div className="to-time">To</div>
+                          <div className="to-time">{messages.create.atm.text.closed}</div>
                           <Field
                             component={fieldTimePicker}
                             texts={messages.create.atm.text}
