@@ -60,16 +60,85 @@
     }
 }
 .funding {
-    height: 300px;
     padding: 5%;
     &-title {
         label {
             font-size: 15px;
-            color: white;
+            color: grey;
         }
     }
     &-body {
         background-color: grey;
-        height: 200px;
+        &-row {
+            padding: 10px;
+            // height: 50px;
+            background-color:green;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            &-left {
+                min-width: 70%;
+                // background-color: yellow;
+                label {
+                    display: block;
+                }
+                .progress {
+                    margin: 0px 0px 10px 22px;
+                    height: 4px;
+                }
+                .progress-title {
+                    margin-left: 22px;
+                }
+            }
+            &-right {
+                text-align: right;
+            }
+        }
+    }
+}
+
+.completed {
+    padding: 5%;
+    &-title {
+        label {
+            font-size: 15px;
+            color: grey;
+        }
+    }
+    &-body {
+        background-color: grey;
+        &-row {
+            font-size: 14px;
+            padding: 10px;
+            // height: 50px;
+            background-color:green;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            &-left {
+                min-width: 50%;
+                // background-color: yellow;
+                label {
+                    display: block;
+                    color: grey;
+                }
+                .progress {
+                    margin: 0px 0px 10px 22px;
+                    height: 4px;
+                }
+                .progress-title {
+                    margin-left: 22px;
+                }
+            }
+            &-right {
+                min-width: 50%;
+                text-align: right;
+                label {
+                    display: block;
+                    color: black;
+                    font-weight: bold;
+                }
+            }
+        }
     }
 }

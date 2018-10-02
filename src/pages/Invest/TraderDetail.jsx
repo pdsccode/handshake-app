@@ -4,9 +4,10 @@ import StarRatings from 'react-star-ratings';
 import './TraderDetail.scss';
 import './TraderList.scss';
 import { green } from 'ansi-colors';
+import { ProgressBar } from 'react-bootstrap';
 
 const TraderDetailBlock = ({ rating }) => (
-    <div key={'addlater'} style={{ marginTop: '1em' }} >
+    <div key={'addlater'} style={{ marginTop: '1em', height: '2000px' }} >
         <div className="profile">
             <div className="relativeLine">
                 <div className="profile-picture">
@@ -57,9 +58,68 @@ const TraderDetailBlock = ({ rating }) => (
                     <label>CURRENTLY FUNDING</label>
                 </div>
                 <div className="funding-body">
-                    
+                    <div className="funding-body-row">
+                        <div className="funding-body-row-left">
+                            <label>1. TraderId</label>
+                            <ProgressBar className="progress" now={60} />
+                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                        </div>
+                        <div className="funding-body-row-right">
+                            <label>{'5 days left'}</label>
+                            <label>{'55%'}</label>
+                        </div>
+                    </div>
+                    <div className="funding-body-row">
+                        <div className="funding-body-row-left">
+                            <label>1. TraderId</label>
+                            <ProgressBar className="progress" now={60} />
+                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                        </div>
+                        <div className="funding-body-row-right">
+                            <label>{'5 days left'}</label>
+                            <label>{'55%'}</label>
+                        </div>
+                    </div>
+                    <div className="funding-body-row">
+                        <div className="funding-body-row-left">
+                            <label>1. TraderId</label>
+                            <ProgressBar className="progress" now={60} />
+                            <label className="progress-title">{'10,000 of 150,000 ETH'}</label>
+                        </div>
+                        <div className="funding-body-row-right">
+                            <label>{'5 days left'}</label>
+                            <label>{'55%'}</label>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div className="completed">
+                <div className="completed-title">
+                    <label>{'COMPLETED PROJECTS'}</label>
+                </div>
+                <div className="completed-body">
+                    <div>
+                        <div style={{ padding: '10px', fontSize: '16px' }}>{'XProject'}</div>
+                        <div className="completed-body-row">
+                            <div className="completed-body-row-left">
+                                <label>{'Duration'}</label>
+                                <label>{'Deadline'}</label>
+                                <label>{'Requested fund'}</label>
+                                <label>{'Returns'}</label>
+                                <label>{''}</label>
+                            </div>
+                            <div className="completed-body-row-right">
+                                <label>{'3 months'}</label>
+                                <label>{'14 Sep 2018'}</label>
+                                <label>{'1,000,000 ETH'}</label>
+                                <label>{'1,200,000 ETH'}</label>
+                                <label>{'+25%'}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 );
