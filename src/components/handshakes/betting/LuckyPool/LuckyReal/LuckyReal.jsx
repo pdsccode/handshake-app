@@ -31,6 +31,7 @@ class LuckyReal extends React.Component {
       email: '',
       isValidEmail: true,
       errorMessage: '',
+      isSubcribed: false,
     };
   }
   changeText(text) {
@@ -61,7 +62,10 @@ class LuckyReal extends React.Component {
       METHOD: 'POST',
       data: params,
       successFn: ((successData)=> {
-        this.props.onButtonClick();
+        //this.props.onButtonClick();
+        this.setState({
+          isSubcribed: true,
+        });
       }),
       errorFn: ((error)=> {
         const { status, code } = error;
@@ -82,10 +86,24 @@ class LuckyReal extends React.Component {
       <div className="errorField">*{errorMessage}</div>
     );
   }
-  renderEmail() {
+  renderThanksMessage() {
+    return (
+      <div className="thanksMessage">We already have your email, thanks and good luck!</div>
+    );
+  }
+  renderCountDown() {
+    return (
+      <div className="countdown"><strong>767</strong> bets left until we draw the winners</div>
+    );
+  }
+  renderEmailField() {
     const { isValidEmail } = this.state;
     return (
       <div className="wrapperEmail">
+
+        <div className="luckySmallDes">
+        BUT, you’ll need to give us your email address so we can contact you if you win:
+        </div>
         {!isValidEmail && this.renderErrorField()}
         <div className="wrapperFieldEmail">
           <input
@@ -111,17 +129,24 @@ class LuckyReal extends React.Component {
       </div>
     );
   }
+  renderEmail() {
+    const { isSubcribed } = this.state;
+    return (
+      <div className="wrapperCheckEmail">
+        { isSubcribed ? this.renderThanksMessage() : this.renderEmailField()}
+      </div>
+    );
+  }
 
   render() {
+    const { isExistEmail } = this.props;
     return (
       <div className="wrapperLuckyReal">
         <Image className="luckyImage" src={LuckyReallSVG} alt="luckyreal" />
-        <div className="luckySmallDes">Nice. You’ll be entered into the prize draw to win one (or more) of 10x 1ETH prizes!</div>
-        <div className="luckySmallDes">
-        BUT, you’ll need to give us your email address so we can contact you if you win:
-        </div>
-        {this.renderEmail()}
-        <div className="luckyDes">Increase your chances</div>
+        <div className="luckySmallDes">Nice. You’ll be entered into the prize draw to win one (or more) of <strong>10x 1ETH</strong> prizes!</div>
+        {this.renderCountDown()}
+        {!isExistEmail && this.renderEmail()}
+        <div className="luckyDes"><strong>Increase your chances</strong></div>
         <Button
           className="luckyButton"
           onClick={() => this.props.onButtonClick()}
