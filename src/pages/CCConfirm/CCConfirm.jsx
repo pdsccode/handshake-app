@@ -30,7 +30,13 @@ class CCConfirm extends React.Component {
   }
 
   componentDidMount() {
+    const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
+    this.source = local.get(APP.CC_SOURCE);
+    const { id: cc_client_secret } = this.source;
 
+    if (client_secret && client_secret === cc_client_secret) {
+      this.handleSubmit({}, nextProps.userProfile);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
