@@ -15,6 +15,7 @@ class ClockCount extends PureComponent {
     this.timer = null;
 
     this.count = :: this.count;
+    this.clearTimer = :: this.clearTimer;
   }
 
   componentDidMount() {
@@ -25,6 +26,10 @@ class ClockCount extends PureComponent {
 
   componentWillUnmount() {
     // clear timer
+    this.clearTimer();
+  }
+
+  clearTimer() {
     clearInterval(this.timer);
     this.timer = null;
   }
@@ -46,6 +51,8 @@ class ClockCount extends PureComponent {
       this.setState({ time });
     } else {
       this.setState({ expired: true });
+      this.clearTimer();
+      this.props.onExpired();
     }
   }
 
@@ -66,6 +73,7 @@ class ClockCount extends PureComponent {
 ClockCount.propTypes = {
   startAt: PropTypes.string.isRequired,
   expiredText: PropTypes.string.isRequired,
+  onExpired: PropTypes.func.isRequired,
 };
 
 export default ClockCount;

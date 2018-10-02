@@ -34,6 +34,7 @@ class AtmCashTransferInfo extends PureComponent {
       uploaded: false,
       imgUploaded: null,
       isLoading: false,
+      expired: false,
     };
 
     this.uploader = React.createRef();
@@ -45,6 +46,7 @@ class AtmCashTransferInfo extends PureComponent {
     this.saveReceipt = :: this.saveReceipt;
     this.copied = :: this.copied;
     this.getBankInfo = :: this.getBankInfo;
+    this.onExpired = :: this.onExpired;
   }
 
   static getDerivedStateFromProps({ receipt }, prevState) {
@@ -76,6 +78,10 @@ class AtmCashTransferInfo extends PureComponent {
     if (typeof this.props.onDone === 'function') {
       typeof this.props.onDone();
     }
+  }
+
+  onExpired() {
+    this.setState({ expired: true });
   }
 
   getBankInfo() {
@@ -171,7 +177,7 @@ class AtmCashTransferInfo extends PureComponent {
   }
 
   render() {
-    const { showUploader, uploaded } = this.state;
+    const { showUploader, uploaded, expired } = this.state;
     const { intl: { messages: { atm_cash_transfer_info } }, receipt: { createdAt } } = this.props;
     return (
       <div className="transaction-info-container">
@@ -185,8 +191,12 @@ class AtmCashTransferInfo extends PureComponent {
             </div>
             <div>
               <span className="text">
-                {atm_cash_transfer_info.order_will_expire_in}
-                <ClockCount startAt={createdAt} expiredText="Expired" />
+                {!expired && atm_cash_transfer_info.order_will_expire_in}
+                <ClockCount
+                  startAt={createdAt}
+                  expiredText="Expired"
+                  onExpired={this.onExpired}
+                />
               </span>
             </div>
           </div>
