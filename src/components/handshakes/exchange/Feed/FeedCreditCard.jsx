@@ -304,6 +304,40 @@ class FeedCreditCard extends React.Component {
     return validateSpecificAmount(values, this.state, this.props);
   };
 
+  getEncryptedFormData = (cardNumber, cvc, holderName, expiryMonth, expiryYear, generationtime) => {
+
+    var postData = {};
+
+    var cardData = {
+      number : cardNumber,
+      cvc : cvc,
+      holderName : holderName,
+      expiryMonth : expiryMonth,
+      expiryYear : expiryYear,
+      generationtime : generationtime
+    };
+
+    const key = '10001|943D378B1AA2186B336633E6D8E876EB6C34B1A198B0C8518FFA4507FD4689A7C3D29D5B6898945D78CEDD088956DCA4AAC3C5B69DB82AC101AB4462032F6392C11D0B73570550DB91CD915BFDDFEEEF07888F7F2641048A6CE1327F080871917C775D490D8F00A2E5D162A7EA9FB2A8419EFDD8B2A0CAACD0D2B9A8B343A0E76FA72527BE99D4F3FD59C1B0431253C57F8944B7A6B4A2276B34FF4CE7462FBAD14F8B9C51008E4BFDAF155FA6D8987A2B1AA7B7DACD30489E7AF30041B053456AB2D6024D070A520D4BDDC49E14BBC281B89650A5E352ED822EF15A573873F11CE552C98282B9FAD822B7B53736C77EFBE6E23C6A14C4727AF18541AA571E49';
+    const options = {}; // See adyen.encrypt.nodom.html for details
+
+    const cseInstance = adyenEncrypt.createEncryption(key, options);
+
+    postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
+
+    return postData;
+  }
+
+  encryptExample = () => {
+    var generationTime = new Date().toISOString(); // Note:
+    // Generate this
+    // serverside!
+
+    var postData = this.getEncryptedFormData("5555 4444 3333 1111", "737", "John Doe", "06", "2016", generationTime);
+
+    console.log('encryptExample', postData);
+
+  }
+
   handleSubmit = async (values) => {
     console.log('handleSubmit', values);
 
@@ -353,44 +387,55 @@ class FeedCreditCard extends React.Component {
       } else {
         const { cc_number, cc_expired, cc_cvc, cc_email } = values;
         const mmYY = cc_expired.split('/');
-        const params = new URLSearchParams();
-        params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
-        params.append('card[exp_month]', mmYY[0]);
-        params.append('card[exp_year]', mmYY[1]);
-        params.append('card[cvc]', cc_cvc);
-        params.append('key', process.env.stripeKey);
-        params.append('type', 'card');
+        // const params = new URLSearchParams();
+        // params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
+        // params.append('card[exp_month]', mmYY[0]);
+        // params.append('card[exp_year]', `20${mmYY[1]}`);
+        // params.append('card[cvc]', cc_cvc);
+        // params.append('key', process.env.stripeKey);
+        // params.append('type', 'card');
 
-        const postData = {};
+        // const serverTime = await axios.get('https://staging.ninja.org/public-api/exchange/server-time');
+        // console.log('serverTime',serverTime);
 
-        const cardData = {
-          number: cc_number && cc_number.trim().replace(/ /g, ''),
-          cvc: cc_cvc,
-          // holderName : 'John Smith',
-          expiryMonth: mmYY[0],
-          expiryYear: mmYY[1],
-          // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
-        };
 
-        // var key     =   "your key as retrieved from the Adyen Customer Area Web Service User page";
-        const key = '8215383657770652';
-        const options = {}; // See adyen.encrypt.nodom.html for details
+        try {
+          const postData = {};
 
-        const cseInstance = adyenEncrypt.createEncryption(key, options);
-        // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
-        postData.card = cseInstance.encrypt(cardData);
-        postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
+          const cardData = {
+            number: cc_number && cc_number.trim().replace(/ /g, ''),
+            cvc: cc_cvc,
+            holderName : 'John Smith',
+            expiryMonth: mmYY[0],
+            expiryYear: `20${mmYY[1]}`,
+            // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
+            generationtime : '2018-10-01T13:15:50.584+00:00',
+          };
 
-        console.log('cardData', cardData);
-        console.log('postData', postData);
+          // var key     =   "your key as retrieved from the Adyen Customer Area Web Service User page";
+          const key = process.env.adyenKey;
+          const options = {}; // See adyen.encrypt.nodom.html for details
 
-        this.props.initPaymentInstantBuy({
-          PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
-          data: postData,
-          METHOD: 'POST',
-          successFn: this.handleInitPaymentSuccess,
-          errorFn: this.handleInitPaymentFailed,
-        });
+          const cseInstance = adyenEncrypt.createEncryption(key, options);
+          // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
+          postData.additionalData = { 'card.encrypted.json': cseInstance.encrypt(cardData) };
+          postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
+
+          console.log('cardData', cardData);
+          console.log('postData', JSON.stringify(postData));
+
+          // this.encryptExample();
+
+          this.props.initPaymentInstantBuy({
+            PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
+            data: postData,
+            METHOD: 'POST',
+            successFn: this.handleInitPaymentSuccess,
+            errorFn: this.handleInitPaymentFailed,
+          });
+        } catch(e) {
+          console.log('', e.toString());
+        }
 
         // axios.post(
         //   'https://api.stripe.com/v1/sources',
@@ -467,8 +512,9 @@ class FeedCreditCard extends React.Component {
     }
   };
 
-  handleInitPaymentSuccess = (data) => {
-    console.log('handleInitPaymentSuccess', data);
+  handleInitPaymentSuccess = (res) => {
+    console.log('handleInitPaymentSuccess', res);
+    const { additionalData, authCode, issuerUrl, md, paRequest, pspReference, resultCode  } = res.data;
     const { cryptoPrice, addressForced, currencyForced } = this.props;
     const { cc_email } = this.props;
     const { walletSelected } = this.state;
@@ -484,6 +530,36 @@ class FeedCreditCard extends React.Component {
       address = walletSelected.address;
     }
     local.save(APP.CC_ADDRESS, address);
+
+    var bodyFormData = new FormData();
+
+    bodyFormData.set('PaReq', paRequest);
+    bodyFormData.set('MD', md);
+    bodyFormData.set('TermUrl', `${window.origin}${URL.CC_PAYMENT_URL}`);
+
+    axios({
+      method: 'post',
+      url: issuerUrl,
+      data: bodyFormData,
+      config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+      .then((payload) => {
+        console.log(payload);
+      })
+      .catch((error) => {
+        console.log(error);
+
+        this.hideLoading();
+
+        // const message = error?.response?.data?.error?.message || 'Something wrong!';
+        const message = 'Opp, something wrong! Please go back later!';
+        this.props.showAlert({
+          message: <div className="text-center">{message}</div>,
+          timeOut: 5000,
+          type: 'danger',
+          // callBack: this.handleBuySuccess
+        });
+      });
 
     // window.location = result.source.redirect.url;
   }
