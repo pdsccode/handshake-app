@@ -535,7 +535,10 @@ class FeedCreditCard extends React.Component {
     }
     local.save(APP.CC_ADDRESS, address);
 
-    this.setState({ issuerUrl: issuerUrl, paReq: paRequest, md: md, termUrl: `${window.origin}${URL.CC_PAYMENT_URL}` }, () => {
+    const paymentUrl = `https://staging.ninja.org/public-api/exchange/authorise-receive`;
+    // `${window.origin}${URL.CC_PAYMENT_URL}`
+
+    this.setState({ issuerUrl: issuerUrl, paReq: paRequest, md: md, termUrl: paymentUrl }, () => {
       document.getElementById('3dform').submit();
     });
 
