@@ -1,173 +1,46 @@
 import React, { Component } from 'react';
 import InvestNavigation from './InvestNavigation';
-import StarRatings from 'react-star-ratings';
 import './TraderDetail.scss';
-import './TraderList.scss';
-import { green } from 'ansi-colors';
-import { ProgressBar } from 'react-bootstrap';
+import ProfileSumary from './TraderDetail/ProfileSumary';
+import FundingItem from './TraderDetail/FundingItem';
+import CompletedItem from './TraderDetail/CompletedItem';
 
-const TraderDetailBlock = ({ rating }) => (
-    <div key={'addlater'} style={{ marginTop: '1em', height: '2000px' }} >
-        <div className="profile">
-            <div className="relativeLine">
-                <div className="profile-picture">
-                <img
-                    src={'https://randomuser.me/api/portraits/men/9.jpg'} 
-                />
-                <label>{'Quang Vo'}</label>
-                <div className="star-ratings">
-                    <StarRatings
-                    className="stars"
-                    rating={rating}
-                    isSelectable={false}
-                    starDimension="14px"
-                    starRatedColor="#546FF7"
-                    starSpacing="3px"
-                    numberOfStars={5}
-                    name="rating"
-                    />
-                    <span className="rating-count">(26)</span>
-                </div>
+const TraderDetailBlock = (props) => (
+    <div key={'addlater'} style={{ marginTop: '1em' }} >
+        <ProfileSumary {...props} />
+        <div className="funding">
+            <div className="funding-title">
+                <label>CURRENTLY FUNDING</label>
             </div>
+            <div className="funding-body">
+                {[60,80,20,10,30].map((e, i) => <FundingItem percentage={e} key={i} />)}
             </div>
-            <div style={{ height: '50px' }}></div>
-            <div className="profile-banner"></div>
-            <div className="relativeLine">
-                <div className="profile-sumary">
-                    <div className="block block-b1">
-                        <label className="black">{'115'}</label>
-                        <label className="grey">{'ACTIVE PROJECTS'}</label>
-                    </div>
-                    <div className="block block-b2">
-                        <label className="black">{'$200,000,000'}</label>
-                        <label className="grey">{'CUM.VALUE OF MANAGED FUNDS'}</label>
-                    </div>
-                    <div className="block block-b2">
-                        <label className="green">{'32%'}</label>
-                        <label className="grey">{'AVERAGE RETURN'}</label>
-                    </div>
-                    <div className="block block-b1">
-                        <label className="black">{'$15,000'}</label>
-                        <label className="grey">{'CUM EARNINGS'}</label>
-                    </div>
-                </div>
+        </div>
+        <div className="completed">
+            <div className="completed-title">
+                <label>{'COMPLETED PROJECTS'}</label>
             </div>
-            <div style={{ height: '200px' }}></div>
-            <div className="funding">
-                <div className="funding-title">
-                    <label>CURRENTLY FUNDING</label>
-                </div>
-                <div className="funding-body">
-                    <div className="funding-body-row">
-                        <div className="funding-body-row-left">
-                            <label>1. TraderId</label>
-                            <ProgressBar className="progress" now={100} />
-                            <label className="progress-title">
-                                {'150,000'}
-                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
-                            </label>
-                        </div>
-                        <div className="funding-body-row-right">
-                            <label className="colorTrader-grey">{'5 days left'}</label>
-                            <label className="colorTrader-green">{'55%'}</label>
-                        </div>
-                    </div>
-                    <div className="funding-body-row">
-                        <div className="funding-body-row-left">
-                            <label>2. TraderId</label>
-                            <ProgressBar className="progress" now={60} />
-                            <label className="progress-title">
-                                {'10,000'}
-                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
-                            </label>
-                        </div>
-                        <div className="funding-body-row-right">
-                            <label className="colorTrader-grey">{'5 days left'}</label>
-                            <label className="colorTrader-green">{'55%'}</label>
-                        </div>
-                    </div>
-                    <div className="funding-body-row">
-                        <div className="funding-body-row-left">
-                            <label>3. TraderId</label>
-                            <ProgressBar className="progress" now={60} />
-                            <label className="progress-title">
-                                {'10,000'}
-                                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
-                            </label>
-                        </div>
-                        <div className="funding-body-row-right">
-                            <label className="colorTrader-grey">{'5 days left'}</label>
-                            <label className="colorTrader-green">{'55%'}</label>
-                        </div>
-                    </div>
-                </div>
+            <div className="completed-body">
+                {[1,2,3,4,5].map((e, i) => <CompletedItem key={i} />)}
             </div>
-            <div className="completed">
-                <div className="completed-title">
-                    <label>{'COMPLETED PROJECTS'}</label>
-                </div>
-                <div className="completed-body">
-                    <div className="completed-body-row">
-                        <div className="completed-body-row-title">{'XProject'}</div>
-                        <div className="completed-body-row-body">
-                            <div className="completed-body-row-body-left">
-                                <label>{'Duration'}</label>
-                                <label>{'Deadline'}</label>
-                                <label>{'Requested fund'}</label>
-                                <label>{'Returns'}</label>
-                                <label>{''}</label>
-                            </div>
-                            <div className="completed-body-row-body-right">
-                                <label>{'3 months'}</label>
-                                <label>{'14 Sep 2018'}</label>
-                                <label>
-                                    {'1,000,000'}
-                                    <span className="colorTrader-grey">{' ETH'}</span>
-                                </label>
-                                <label>
-                                    {'1,200,000'}
-                                    <span className="colorTrader-grey">{' ETH'}</span>
-                                </label>
-                                <label className="green">{'+25%'}</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="completed-body-row">
-                        <div className="completed-body-row-title">{'XProject'}</div>
-                        <div className="completed-body-row-body">
-                            <div className="completed-body-row-body-left">
-                                <label>{'Duration'}</label>
-                                <label>{'Deadline'}</label>
-                                <label>{'Requested fund'}</label>
-                                <label>{'Returns'}</label>
-                                <label>{''}</label>
-                            </div>
-                            <div className="completed-body-row-body-right">
-                                <label>{'3 months'}</label>
-                                <label>{'14 Sep 2018'}</label>
-                                <label>
-                                    {'1,000,000'}
-                                    <span className="colorTrader-grey">{' ETH'}</span>
-                                </label>
-                                <label>
-                                    {'1,200,000'}
-                                    <span className="colorTrader-grey">{' ETH'}</span>
-                                </label>
-                                <label className="green">{'+25%'}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 );
 
 export default class TraderDetail extends Component {
     render(){
-        const item = { rating: 1 }
+        const item = {
+            rating: 1,
+            avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
+            name: 'Quang Vo',
+            activeProjects: 115,
+            managedFunds: '200,000,000',
+            averageReturn: 0.32,
+            cumEarning: '15,000',
+            currentlyFundings: [],
+            completedProjects: []
+        };
+        
         return (
             <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
                 <InvestNavigation header="Trader" history={this.props.history} />

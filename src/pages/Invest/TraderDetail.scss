@@ -1,6 +1,5 @@
 .profile {
-    // background-color: grey;
-    height: 300px;
+    height: 450px;
     .relativeLine {
         position: relative;
     }
@@ -167,5 +166,16 @@
     }
     &-grey {
         color: grey
+    }
+}
+.progress-bar {
+    &-info {
+        background-color: yellow;
+    }
+    &-success {
+        background-color: green;
+    }
+    &-danger {
+        background-color: red;
     }
 }
