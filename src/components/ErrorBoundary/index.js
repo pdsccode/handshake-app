@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
     constructor(props) {
       super(props);
       this.state = { hasError: false };
@@ -10,7 +10,7 @@ export default class ErrorBoundary extends React.Component {
       // Display fallback UI
       this.setState({ hasError: true });
       // You can also log the error to an error reporting service
-      logErrorToMyService(error, info);
+      // logErrorToMyService(error, info);
     }
   
     render() {
@@ -21,3 +21,17 @@ export default class ErrorBoundary extends React.Component {
       return this.props.children;
     }
 }
+
+export const wrapBoundary = (WrappedComponent) => {
+  class HOC extends React.Component {
+    render() {
+      return (<ErrorBoundary>
+        <WrappedComponent {...this.props} />
+      </ErrorBoundary>);
+    }
+  }
+  return HOC;
+};
+
+
+export default ErrorBoundary;
