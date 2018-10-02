@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import './ProjectList.scss';
 import ProjectList from '@/pages/Invest/ProjectList';
+import LinkWallet from '@/pages/Invest/LinkWallet';
 import TraderList from '@/pages/Invest/TraderList';
 import ExpandArrowSVG from './settings.svg';
 
@@ -21,73 +22,109 @@ class InvestBlock extends Component {
       activeTab,
     };
   }
-
-  navigateToSettings=() => {
-
+  switchTabs=() => {
+    switch (this.state.activeTab) {
+      case 'trader':
+        return <TraderList {...this.props} />;
+      case 'projects':
+        return <ProjectList {...this.props} />;
+      case 'linkwallet':
+        return <LinkWallet {...this.props} />;
+      default:
+        return <div />;
+    }
   }
+  navigateToSettings = () => {};
   render() {
     return (
       <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
         <div
           style={{
-        backgroundColor: '#fff',
-        height: '43px',
-        padding: '13px 1em',
-        marginBottom: '2px',
-      }}
+            backgroundColor: '#fff',
+            height: '43px',
+            padding: '13px 1em',
+            marginBottom: '2px',
+          }}
           className="clearfix"
         >
-          <button
-            type="button"
+          {/* <button
             style={{
-          float: 'right',
-          width: '25px',
-          position: 'relative',
-          padding: 0,
-          top: '-4px',
-          }}
+              float: 'right',
+              width: '25px',
+              position: 'relative',
+              padding: 0,
+              top: '-4px',
+            }}
+            className="btn-transparent"
             onClick={this.navigateToSettings}
-          ><img
-            src={ExpandArrowSVG}
-            alt="arrow"
-          />
-          </button>
+          >
+            <img src={ExpandArrowSVG} alt="arrow" />
+          </button> */}
           <button
             style={{ paddingLeft: 0 }}
-            className={this.state.activeTab === 'projects' ? 'active-tab' : 'inactive-tab'}
-          >
-            <h6
-              style={{
-              textAlign: 'left',
-            }}
-              onClick={() => {
+            onClick={() => {
               this.setState({
                 activeTab: 'trader',
               });
-              sessionStorage.setItem('activeTab','trader');
+              sessionStorage.setItem('activeTab', 'trader');
             }}
+            className={
+              this.state.activeTab === 'trader'
+                ? 'active-tab btn-transparent'
+                : 'inactive-tab btn-transparent'
+            }
+          >
+            <h6
+              style={{
+                textAlign: 'left',
+              }}
             >
-          Trader
+              Trader
             </h6>
           </button>
           <button
-            className={this.state.activeTab === 'trader' ? 'active-tab' : 'inactive-tab'}
+            className={
+              this.state.activeTab === 'projects' ? 'active-tab btn-transparent' : 'inactive-tab btn-transparent'
+            }
             onClick={() => {
               this.setState({
                 activeTab: 'projects',
               });
-              sessionStorage.setItem('activeTab','projects');
+              sessionStorage.setItem('activeTab', 'projects');
             }}
           >
-            <h6 style={{
-              textAlign: 'left',
+            <h6
+              style={{
+                textAlign: 'left',
               }}
             >
               Projects
             </h6>
           </button>
+          <button
+            style={{ paddingLeft: 0, marginLeft: 7 }}
+            onClick={() => {
+              this.setState({
+                activeTab: 'linkwallet',
+              });
+              sessionStorage.setItem('activeTab', 'linkwallet');
+            }}
+            className={
+              this.state.activeTab === 'linkwallet'
+                ? 'active-tab btn-transparent'
+                : 'inactive-tab btn-transparent'
+            }
+          >
+            <h6
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              Sync Wallet
+            </h6>
+          </button>
         </div>
-        {this.state.activeTab === 'trader' ? <TraderList {...this.props} /> : <ProjectList {...this.props} />}
+        <this.switchTabs />
       </div>
     );
   }

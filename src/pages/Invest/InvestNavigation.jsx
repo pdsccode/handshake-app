@@ -22,6 +22,7 @@ export default class InvestNavigation extends Component {
       >
         <button
           type="button"
+          className="btn-transparent"
           style={{
           float: 'left',
           width: '19px',
