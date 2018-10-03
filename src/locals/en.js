@@ -1656,7 +1656,8 @@ export default {
     payment_detail: 'Payment detail',
     order_will_expire_in: 'This order will expire in ',
     expired: 'Expired',
-    amount: 'AMOUNT',
+    customer_amount: 'CUSTOMER AMOUNT',
+    amount: 'YOUR AMOUNT',
     account_name: 'ACCOUNT NAME',
     account_number: 'ACCOUNT NUMBER',
     bank_name: 'BANK NAME',
@@ -1668,5 +1669,6 @@ export default {
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
     title: 'Payment detail',
+    amount_info: 'Profit = Customer Amount - Your Amount',
   },
 };
