@@ -10,6 +10,7 @@ import Dashboard from '@/models/Dashboard';
 import Referal from '@/models/Referal';
 import Deposit from '@/models/Deposit';
 import Handshake from '@/models/Handshake';
+import CashStore from "@/models/CashStore";
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
@@ -120,6 +121,22 @@ function exchangeReducter(state = {
 
       return {
         ...state, depositInfo,
+      };
+    }
+    case `${EXCHANGE_ACTIONS.GET_STORE_ATM}_SUCCESS`: {
+      const cashStore = CashStore.cashStore(action.payload.data);
+      return {
+        ...state, cashStore,
+      };
+    }
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CASH_STORE}_SUCCESS`: {
+      const list = handleListPayload(action.payload.data.handshakes);
+      list.filter(handshake => handshake.offerFeedType === 'cash_order');
+
+      console.log('GET_TRANSACTION_CASH_STORE', list.filter(handshake => handshake.offerFeedType === 'cash_order'));
+      return {
+        ...state,
+        cashStoreTransaction: list.filter(handshake => handshake.offerFeedType === 'cash_order'),
       };
     }
     default:
