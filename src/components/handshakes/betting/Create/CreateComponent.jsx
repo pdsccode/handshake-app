@@ -65,7 +65,8 @@ class BettingCreate extends React.Component {
       values: [],
       isChangeOdds: false,
       winValue: 0,
-      disable: false
+      disable: false,
+      balance: 0,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -122,7 +123,10 @@ class BettingCreate extends React.Component {
 
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message, code, value } = validate;
+    const { status, message, code, value, balance } = validate;
+    this.setState({
+      balance,
+    });
     if (status) {
       this.initHandshake(values, fromAddress);
       onSubmitClick();
@@ -320,7 +324,7 @@ class BettingCreate extends React.Component {
     const { handshakes, total_bets:totalBets } = data;
     const { bettingShake } = this.props;
     const { matchName, matchOutcome, side } = bettingShake;
-
+    const { balance } = this.state;
     if (status && data) {
       this.props.dispatch(updateTotalBets(totalBets));
       const isExist = isExistMatchBet(handshakes);
@@ -328,7 +332,7 @@ class BettingCreate extends React.Component {
       if (isExist) {
         message = MESSAGE.CREATE_BET_MATCHED;
       }
-      betHandshakeHandler.controlShake(handshakes);
+      betHandshakeHandler.controlShake(handshakes, balance);
 
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
