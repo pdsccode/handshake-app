@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@firebase/app-types": "^0.3.2",
+    "adyen-cse-web": "git+https://github.com/Adyen/adyen-cse-web.git#v0.1.22",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
-    "adyen-cse-web": "git+https://github.com/Adyen/adyen-cse-web.git#v0.1.22",
     "bignumber.js": "^7.2.1",
     "bignumber.js-4.1.0": "github:0xngoubou/bignumber.js-4.1.0",
     "bip39": "^2.5.0",
@@ -48,6 +48,7 @@
     "react-autosuggest": "^9.3.4",
     "react-bootstrap": "^0.32.1",
     "react-bottomsheet": "^1.1.0",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-datetime": "^2.14.0",
     "react-dom": "^16.4.0",
     "react-dropzone": "^4.2.11",
@@ -83,8 +84,8 @@
     "styled-components": "^3.3.0",
     "tls": "^0.0.1",
     "validator": "^10.4.0",
-    "webpack": "^4.11.1",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.34",
+    "webpack": "^4.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
