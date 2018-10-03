@@ -501,9 +501,9 @@ class DiscoverPage extends React.Component {
         {/* <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}> */}
         {/* {modalContent} */}
         {/* </ModalDialog> */}
-        {
-          curStationIdShowAllDetails && (
-            <div className="popup-all-station-details">
+        <div className={`popup-all-station-details ${curStationIdShowAllDetails ? 'open' : 'close'}`}>
+          { curStationIdShowAllDetails && (
+            <div>
               <div className="text-center">
                 <div className="line" onClick={() => this.handleOnChangeShowAllDetails(null, null)} />
               </div>
@@ -554,9 +554,10 @@ class DiscoverPage extends React.Component {
                   }
                 </div>
               </div>
-            </div>
-          )
-        }
+            </div>)
+          }
+        </div>
+
         <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
           {modalContent}
         </Modal>

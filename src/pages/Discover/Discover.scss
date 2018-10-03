@@ -113,11 +113,18 @@
 
 .popup-all-station-details {
   background: #FFFFFF;
-  padding: 0 10px;
+  padding: 0px 10px 20px 10px;
   position: fixed;
   bottom: 60px;
-  height: 160px;
+  height: auto;
   width: 100%;
+  transition: transform 0.5s;
+  &.open {
+    transform: translateY(0px);
+  }
+  &.open {
+    transform: translateY(700px);
+  }
   .line {
     display: inline-block;
     width: 100px;
@@ -127,16 +134,25 @@
     cursor: pointer;
   }
   .primary-text {
-    color: #000000;
+    color: #060E2E;
+    font-size: 18px;
     font-weight: 500;
+    text-align: left;
+    letter-spacing: 0;
   }
   .secondary-text {
-    font-size: 16px;
     color: #868DAD;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
   }
   .information-text {
-    font-size: 16px;
     color: #060E2E;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
   }
   .success-text {
     font-weight: 500;
