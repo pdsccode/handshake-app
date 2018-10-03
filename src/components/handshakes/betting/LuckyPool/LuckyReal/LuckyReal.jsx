@@ -103,7 +103,7 @@ class LuckyReal extends React.Component {
       <div className="wrapperEmail">
 
         <div className="luckySmallDes">
-        BUT, you’ll need to give us your email address so we can contact you if you win:
+        Pop in your email and we'll contact you if you're a winner.
         </div>
         {!isValidEmail && this.renderErrorField()}
         <div className="wrapperFieldEmail">
@@ -144,10 +144,10 @@ class LuckyReal extends React.Component {
     return (
       <div className="wrapperLuckyReal">
         <Image className="luckyImage" src={LuckyReallSVG} alt="luckyreal" />
-        <div className="luckySmallDes">Nice. You’ll be entered into the prize draw to win one (or more) of <strong>10x 1ETH</strong> prizes!</div>
+        <div className="luckySmallDes">Nice one!.<br/>You’ll be entered into the prize draw to win one (or more) of <strong>10x 1ETH</strong> prizes!</div>
         {this.renderCountDown()}
         {!isExistEmail && this.renderEmail()}
-        <div className="luckyDes"><strong>Increase your chances</strong></div>
+        <div className="luckyDes"><strong>One more shot at glory?</strong></div>
         <Button
           className="luckyButton"
           onClick={() => this.props.onButtonClick()}

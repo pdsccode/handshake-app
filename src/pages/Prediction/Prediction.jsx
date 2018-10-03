@@ -326,6 +326,7 @@ class Prediction extends React.Component {
           this.modalLuckyReal.close();
         }}
       />
+
     </ModalDialog>
   )
 
@@ -334,6 +335,8 @@ class Prediction extends React.Component {
       <LuckyFree onButtonClick={() => {
         this.modalLuckyFree.close();
       }}
+        totalBets={this.props.totalBets}
+
       />
     </ModalDialog>
   )
