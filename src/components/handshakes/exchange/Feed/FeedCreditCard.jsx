@@ -4,6 +4,7 @@ import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import local from '@/services/localStore';
 import {
+  API_ENDPOINT,
   API_URL,
   APP,
   CRYPTO_CURRENCY,
@@ -20,11 +21,8 @@ import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import {
-  createCCOrder,
-  getCcLimits,
-  getCryptoPrice,
-  getCryptoPriceForPackage,
-  getUserCcLimit,
+  createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
+  getUserCcLimit, initPaymentInstantBuy,
 } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -43,6 +41,7 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
 import Deposit from '@/pages/Escrow/Deposit';
@@ -50,6 +49,10 @@ import Modal from '@/components/core/controls/Modal/Modal';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 
+
+const moment = require('moment');
+
+const adyenEncrypt = require('adyen-cse-web');
 
 const nameFormShowAddressWallet = 'showAddressWallet';
 const ShowAddressWalletForm = createForm({ propsReduxForm: { form: nameFormShowAddressWallet } });
@@ -129,20 +132,20 @@ class FeedCreditCard extends React.Component {
       modalContent: '',
       modalTitle: '',
       isLoading: false,
+      issuerUrl: '',
+      paReq: '',
+      md: '',
+      termUrl: '',
     };
   }
 
   showLoading = () => {
-    this.setLoading(true);
+    this.props.showLoading({ message: '' });
   };
 
   hideLoading = () => {
-    this.setLoading(false);
+    this.props.hideLoading();
   };
-
-  setLoading = (loadingState) => {
-    this.setState({ isLoading: loadingState });
-  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps.cryptoPrice) !== JSON.stringify(prevState.cryptoPrice)) {
@@ -358,88 +361,226 @@ class FeedCreditCard extends React.Component {
       } else {
         const { cc_number, cc_expired, cc_cvc, cc_email } = values;
         const mmYY = cc_expired.split('/');
-        const params = new URLSearchParams();
-        params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
-        params.append('card[exp_month]', mmYY[0]);
-        params.append('card[exp_year]', mmYY[1]);
-        params.append('card[cvc]', cc_cvc);
-        params.append('key', process.env.stripeKey);
-        params.append('type', 'card');
+        // const params = new URLSearchParams();
+        // params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
+        // params.append('card[exp_month]', mmYY[0]);
+        // params.append('card[exp_year]', `20${mmYY[1]}`);
+        // params.append('card[cvc]', cc_cvc);
+        // params.append('key', process.env.stripeKey);
+        // params.append('type', 'card');
 
-        axios.post(
-          'https://api.stripe.com/v1/sources',
-          params,
-          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-          .then((payload) => {
-            console.log('payload', payload);
-            const stripe = Stripe(process.env.stripeKey);
-            stripe.createSource({
-              type: 'three_d_secure',
-              amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
-              currency: FIAT_CURRENCY.USD,
-              three_d_secure: {
-                card: payload.data.id,
-              },
-              redirect: {
-                return_url: `${window.origin}${URL.CC_PAYMENT_URL}`,
-              },
-            }).then((result) => {
-              console.log('submit result', result);
-              if (result.source.three_d_secure.three_d_secure === 'not_supported') {
-                this.hideLoading();
+        const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
+        console.log('serverTime',serverTime?.data?.data);
 
-                const message = <FormattedMessage id="threeDSecureNotSupported" />;
-                this.props.showAlert({
-                  message: <div className="text-center">{message}</div>,
-                  timeOut: 3000,
-                  type: 'danger',
-                  // callBack: this.handleBuySuccess
-                });
-              } else {
-                local.save(APP.CC_SOURCE, result.source);
-                local.save(APP.CC_PRICE, cryptoPrice);
-                local.save(APP.CC_TOKEN, payload.data.id);
-                local.save(APP.CC_EMAIL, cc_email);
+        try {
+          const postData = {};
 
-                let address = '';
-                if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
-                  address = addressForced;
-                } else {
-                  // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
-                  address = walletSelected.address;
-                }
-                local.save(APP.CC_ADDRESS, address);
+          const cardData = {
+            number: cc_number && cc_number.trim().replace(/ /g, ''),
+            cvc: cc_cvc,
+            holderName : 'First Last',
+            expiryMonth: mmYY[0],
+            expiryYear: `20${mmYY[1]}`,
+            // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
+            generationtime : serverTime?.data?.data,
+          };
 
-                window.location = result.source.redirect.url;
-              }
-            });
+          const source = {
+            three_d_secure: {
+              last4: cc_number.substr(cc_number.length - 4, 4),
+              exp_month: mmYY[0],
+              exp_year: `20${mmYY[1]}`,
+            },
+          };
 
-            // const newCCNum = payload.data.id;
-            // cc = {
-            //   cc_num: newCCNum,
-            //   cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ""),
-            //   expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ""),
-            //   token: "",
-            //   save: "true"
-            // };
-            // this.handleCreateCCOrder(cc);
-          }).catch((error) => {
-            console.log('error', error);
-            this.hideLoading();
+          local.save(APP.CC_SOURCE, source);
 
-            // const message = error?.response?.data?.error?.message || 'Something wrong!';
-            const message = 'Opp, something wrong! Please go back later!';
-            this.props.showAlert({
-              message: <div className="text-center">{message}</div>,
-              timeOut: 5000,
-              type: 'danger',
-            // callBack: this.handleBuySuccess
-            });
+          const key = process.env.adyenKey;
+          const options = {}; // See adyen.encrypt.nodom.html for details
+
+          const cseInstance = adyenEncrypt.createEncryption(key, options);
+          // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
+          postData.additionalData = { 'card.encrypted.json': cseInstance.encrypt(cardData) };
+          postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
+
+          console.log('source', source);
+          console.log('cardData', cardData);
+          console.log('postData', JSON.stringify(postData));
+
+          // this.encryptExample();
+
+          this.props.initPaymentInstantBuy({
+            PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
+            data: postData,
+            METHOD: 'POST',
+            successFn: this.handleInitPaymentSuccess,
+            errorFn: this.handleInitPaymentFailed,
           });
+        } catch(e) {
+          console.log('', e.toString());
+        }
+
+        // axios.post(
+        //   'https://api.stripe.com/v1/sources',
+        //   params,
+        //   { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+        //   .then((payload) => {
+        //     console.log('payload', payload);
+        //     const stripe = Stripe(process.env.stripeKey);
+        //     stripe.createSource({
+        //       type: 'three_d_secure',
+        //       amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
+        //       currency: FIAT_CURRENCY.USD,
+        //       three_d_secure: {
+        //         card: payload.data.id,
+        //       },
+        //       redirect: {
+        //         return_url: `${window.origin}${URL.CC_PAYMENT_URL}`,
+        //       },
+        //     }).then((result) => {
+        //       console.log('submit result', result);
+        //       if (result.source.three_d_secure.three_d_secure === 'not_supported') {
+        //         this.hideLoading();
+        //
+        //         const message = <FormattedMessage id="threeDSecureNotSupported" />;
+        //         this.props.showAlert({
+        //           message: <div className="text-center">{message}</div>,
+        //           timeOut: 3000,
+        //           type: 'danger',
+        //           // callBack: this.handleBuySuccess
+        //         });
+        //       } else {
+        //         local.save(APP.CC_SOURCE, result.source);
+        //         local.save(APP.CC_PRICE, cryptoPrice);
+        //         local.save(APP.CC_TOKEN, payload.data.id);
+        //         local.save(APP.CC_EMAIL, cc_email);
+        //
+        //         let address = '';
+        //         if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
+        //           address = addressForced;
+        //         } else {
+        //           // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+        //           address = walletSelected.address;
+        //         }
+        //         local.save(APP.CC_ADDRESS, address);
+        //
+        //         window.location = result.source.redirect.url;
+        //       }
+        //     });
+        //
+        //     // const newCCNum = payload.data.id;
+        //     // cc = {
+        //     //   cc_num: newCCNum,
+        //     //   cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ""),
+        //     //   expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ""),
+        //     //   token: "",
+        //     //   save: "true"
+        //     // };
+        //     // this.handleCreateCCOrder(cc);
+        //   }).catch((error) => {
+        //     console.log('error', error);
+        //     this.hideLoading();
+        //
+        //     // const message = error?.response?.data?.error?.message || 'Something wrong!';
+        //     const message = 'Opp, something wrong! Please go back later!';
+        //     this.props.showAlert({
+        //       message: <div className="text-center">{message}</div>,
+        //       timeOut: 5000,
+        //       type: 'danger',
+        //     // callBack: this.handleBuySuccess
+        //     });
+        //   });
       }
       // console.log('handleSubmit', cc);
     }
   };
+
+  handleInitPaymentSuccess = (res) => {
+    console.log('handleInitPaymentSuccess', res);
+    const { additionalData, authCode, issuerUrl, md, paRequest, pspReference, resultCode  } = res.data;
+    const { cryptoPrice, addressForced, currencyForced } = this.props;
+    const { cc_email } = this.props;
+    const { walletSelected } = this.state;
+
+    if (resultCode !== 'RedirectShopper') {
+      const message = 'Opp, something wrong! Please go back later!';
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 5000,
+        type: 'danger',
+        // callBack: this.handleBuySuccess
+      });
+      return;
+    }
+
+    local.save(APP.CC_PRICE, cryptoPrice);
+    local.save(APP.CC_EMAIL, cc_email);
+
+    let source = local.get(APP.CC_SOURCE);
+
+    source.id = md;
+
+    local.save(APP.CC_SOURCE, source);
+
+    let address = '';
+    if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
+      address = addressForced;
+    } else {
+      // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+      address = walletSelected.address;
+    }
+    local.save(APP.CC_ADDRESS, address);
+    const paymentUrl = `${API_ENDPOINT}/public-api/exchange/authorise-receive`;
+    // `${window.origin}${URL.CC_PAYMENT_URL}`
+
+    this.setState({ issuerUrl: issuerUrl, paReq: paRequest, md: md, termUrl: paymentUrl }, () => {
+      document.getElementById('3dform').submit();
+    });
+
+    // var bodyFormData = new FormData();
+    //
+    // bodyFormData.set('PaReq', paRequest);
+    // bodyFormData.set('MD', md);
+    // bodyFormData.set('TermUrl', `${window.origin}${URL.CC_PAYMENT_URL}`);
+    //
+    // axios({
+    //   method: 'post',
+    //   url: issuerUrl,
+    //   data: bodyFormData,
+    //   config: { headers: {'Content-Type': 'multipart/form-data' }}
+    // })
+    //   .then((payload) => {
+    //     console.log(payload);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //
+    //     this.hideLoading();
+    //
+    //     // const message = error?.response?.data?.error?.message || 'Something wrong!';
+    //     const message = 'Opp, something wrong! Please go back later!';
+    //     this.props.showAlert({
+    //       message: <div className="text-center">{message}</div>,
+    //       timeOut: 5000,
+    //       type: 'danger',
+    //       // callBack: this.handleBuySuccess
+    //     });
+    //   });
+
+    // window.location = result.source.redirect.url;
+  }
+
+  handleInitPaymentFailed = (e) => {
+    console.log('handleInitPaymentFailed', e);
+
+    const message = 'Opp, something wrong! Please go back later!';
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 5000,
+      type: 'danger',
+      // callBack: this.handleBuySuccess
+    });
+  }
 
   handleCreateCCOrder = (params) => {
     const { cryptoPrice, addressForced, authProfile, currencyForced } = this.props;
@@ -718,264 +859,262 @@ class FeedCreditCard extends React.Component {
     const { intl, isPopup } = this.props;
     const { amount, cryptoPrice } = this.props;
     const { currency, allowBuy } = this.state;
-    const { modalContent, modalTitle } = this.state;
+    const { issuerUrl, paReq, md, termUrl } = this.state;
 
     const packages = listPackages[currency];
-    return (<div>
-        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" width="100" />
-        </div>
-      {
-        !hasSelectedCoin ? (
-          <div className="choose-coin">
-            <div className="specific-amount">
-              <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
-                {/* <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div> */}
-                <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
-                <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
-                <div className="input-group mt-4">
+
+    return !hasSelectedCoin ? (
+      <div className="choose-coin">
+        <div className="specific-amount">
+          <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
+            {/* <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div> */}
+            <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
+            <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
+            <div className="input-group mt-4">
+              <Field
+                name="amount"
+                className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                type="text"
+                component={fieldInput}
+                onChange={this.onAmountChange}
+                validate={[required]}
+                elementAppend={
                   <Field
-                    name="amount"
-                    className="form-control form-control-lg border-0 rounded-right form-control-cc"
-                    type="text"
-                    component={fieldInput}
-                    onChange={this.onAmountChange}
-                    validate={[required]}
-                    elementAppend={
-                      <Field
-                        name="currency"
-                        classNameWrapper=""
-                        // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                        classNameDropdownToggle="dropdown-button"
-                        list={listCurrency}
-                        component={fieldDropdown}
-                        // disabled={!enableChooseFiatCurrency}
-                        onChange={this.onCurrencyChange}
-                      />
-                    }
+                    name="currency"
+                    classNameWrapper=""
+                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                    classNameDropdownToggle="dropdown-button"
+                    list={listCurrency}
+                    component={fieldDropdown}
+                    // disabled={!enableChooseFiatCurrency}
+                    onChange={this.onCurrencyChange}
                   />
-                </div>
-                <div className="input-group mt-2">
-                  <Field
-                    name="fiatAmount"
-                    className="form-control form-control-lg border-0 rounded-right form-control-cc"
-                    type="text"
-                    component={fieldInput}
-                    // onChange={this.onFiatAmountChange}
-                    validate={[required]}
-                    elementAppend={
-                      <Field
-                        name="fiatCurrency"
-                        classNameWrapper=""
-                        // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                        classNameDropdownToggle="dropdown-button"
-                        list={listFiatCurrency}
-                        component={fieldDropdown}
-                        caret={false}
-                      />
-                    }
-                    disabled
-                  />
-                </div>
-                <div className="mt-3 mb-3">
-                  <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
-                    <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
-                  </button>
-                </div>
-              </FormSpecificAmount>
+                }
+              />
             </div>
+            <div className="input-group mt-2">
+              <Field
+                name="fiatAmount"
+                className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                type="text"
+                component={fieldInput}
+                // onChange={this.onFiatAmountChange}
+                validate={[required]}
+                elementAppend={
+                  <Field
+                    name="fiatCurrency"
+                    classNameWrapper=""
+                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                    classNameDropdownToggle="dropdown-button"
+                    list={listFiatCurrency}
+                    component={fieldDropdown}
+                    caret={false}
+                  />
+                }
+                disabled
+              />
+            </div>
+            <div className="mt-3 mb-3">
+              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
+                <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
+              </button>
+            </div>
+          </FormSpecificAmount>
+        </div>
 
-            <div className="by-package">
-              <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
-              <div className="mb-5">
-                {
-                  packages && packages.map((item, index) => {
-                    const {
-                      name, amount, fiatAmount, show,
-                    } = item;
+        <div className="by-package">
+          <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
+          <div className="mb-5">
+            {
+              packages && packages.map((item, index) => {
+                const {
+                  name, amount, fiatAmount, show,
+                } = item;
 
-                    return show && (
-                      <div key={name}>
-                        <div className="d-table w-100">
-                          <div className="d-table-cell align-middle" style={{ width: '80px' }}>
-                            <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
-                          </div>
-                          <div className="d-table-cell align-middle pl-3">
-                            <div className="p-price">
-                              {fiatAmount} {FIAT_CURRENCY.USD}
-                              {/* {
+                return show && (
+                  <div key={name}>
+                    <div className="d-table w-100">
+                      <div className="d-table-cell align-middle" style={{ width: '80px' }}>
+                        <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
+                      </div>
+                      <div className="d-table-cell align-middle pl-3">
+                        <div className="p-price">
+                          {fiatAmount} {FIAT_CURRENCY.USD}
+                          {/* {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
                           } */}
-                            </div>
-                            <div className="p-amount">{amount} {currency}</div>
-                          </div>
-                          <div className="d-table-cell align-middle text-right">
-                            <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
-                          </div>
                         </div>
-                        { index < packages.length - 1 && <hr /> }
+                        <div className="p-amount">{amount} {currency}</div>
                       </div>
-                    );
-                  })
-                }
-              </div>
-            </div>
+                      <div className="d-table-cell align-middle text-right">
+                        <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
+                      </div>
+                    </div>
+                    { index < packages.length - 1 && <hr /> }
+                  </div>
+                );
+              })
+            }
+          </div>
+        </div>
+        <div>
+          <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
+            <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
             <div>
-              <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
-                <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
-                <div>
-                  <button className="btn btn-become" onClick={this.depositCoinATM}><FormattedMessage id="ex.credit.banner.btnText" /></button>
-                </div>
-              </div>
+              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
+                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
+              </Link>
             </div>
           </div>
-        ) : (
-          <div className="credit-card">
-            <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
-            <div className="wrapper">
-              <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-                {cryptoPrice && (<div>
-                    <div className="d-table w-100">
-                      <div className="d-table-cell text-normal">
-                        <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
-                        &nbsp;
-                        <span className="font-weight-bold">{cryptoPrice?.amount}</span>
-                        &nbsp;
-                        <span className="text-normal">{cryptoPrice?.currency}</span>
-                      </div>
-                      <div className="d-table-cell text-right">
-                        <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
-                        &nbsp;
-                        <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
-                        &nbsp;
-                        <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
-                      </div>
-                    </div>
+        </div>
+      </div>
+    ) : (
+      <div className="credit-card">
+        <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
+        <div className="wrapper">
+          <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+            {cryptoPrice && (<div>
+                <div className="d-table w-100">
+                  <div className="d-table-cell text-normal">
+                    <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
+                    &nbsp;
+                    <span className="font-weight-bold">{cryptoPrice?.amount}</span>
+                    &nbsp;
+                    <span className="text-normal">{cryptoPrice?.currency}</span>
                   </div>
-                )}
-
-                <div className={['bodyBackup bodyShareAddress']}>
-                  <div className="bodyTitle">
-                    <span><FormattedMessage id="cc.label.receive.address" /></span>
+                  <div className="d-table-cell text-right">
+                    <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
+                    &nbsp;
+                    <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
+                    &nbsp;
+                    <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
                   </div>
+                </div>
+              </div>
+            )}
 
-                  <div className="box-addresses">
-                    <div className="box-address">
-                      <div className="addressDivPopup">{ walletSelected ? walletSelected.address : ''}&nbsp;
-                        <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
-                      </div>
-                    </div>
+            <div className={['bodyBackup bodyShareAddress']}>
+              <div className="bodyTitle">
+                <span><FormattedMessage id="cc.label.receive.address" /></span>
+              </div>
 
-                    <div className="box-hide-wallet">
-                      <div className="receivewallet-wrapper">
-                        { walletSelected &&
-
-                        <Field
-                          name="showWalletSelected"
-                          component={fieldDropdown}
-                          placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
-                          defaultText={currency}
-                          list={wallets}
-                          onChange={(item) => {
-                            this.onItemSelectedWallet(item);
-                          }
-                          }
-                        />
-                        }
-                      </div>
-                    </div>
+              <div className="box-addresses">
+                <div className="box-address">
+                  <div className="addressDivPopup">{ walletSelected ? walletSelected.address : ''}&nbsp;
+                    <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
                   </div>
                 </div>
 
+                <div className="box-hide-wallet">
+                  <div className="receivewallet-wrapper">
+                    { walletSelected &&
+
+                    <Field
+                      name="showWalletSelected"
+                      component={fieldDropdown}
+                      placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
+                      defaultText={currency}
+                      list={wallets}
+                      onChange={(item) => {
+                        this.onItemSelectedWallet(item);
+                      }
+                      }
+                    />
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
+              <div>
+                <Field
+                  name="cc_number"
+                  className="form-control input-custom w-100"
+                  component={fieldCleave}
+                  // elementPrepend={
+                  //   <div className="input-group-prepend">
+                  //     <span className="input-group-text bg-white">
+                  //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
+                  //     </span>
+                  //   </div>
+                  // }
+                  propsCleave={{
+                    // id: `card-number-${this.lastUniqueId()}`,
+                    placeholder: '4111 1111 1111 1111',
+                    options: {
+                      creditCard: true,
+                      onCreditCardTypeChanged: this.handleCCTypeChanged,
+                    },
+                    // type: "tel",
+                    // maxLength: "19",
+                    // htmlRef: input => this.ccNumberRef = input,
+                  }}
+                  // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                />
+              </div>
+            </div>
+
+            <div className="d-table w-100 mt-4">
+              <div className="d-table-cell pr-1">
+                <div className="cc-label"><FormattedMessage id="cc.label.cvv" /></div>
                 <div>
-                  <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
-                  <div>
-                    <Field
-                      name="cc_number"
-                      className="form-control input-custom w-100"
-                      component={fieldCleave}
-                      // elementPrepend={
-                      //   <div className="input-group-prepend">
-                      //     <span className="input-group-text bg-white">
-                      //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
-                      //     </span>
-                      //   </div>
-                      // }
-                      propsCleave={{
-                        // id: `card-number-${this.lastUniqueId()}`,
-                        placeholder: '4111 1111 1111 1111',
-                        options: {
-                          creditCard: true,
-                          onCreditCardTypeChanged: this.handleCCTypeChanged,
-                        },
-                        // type: "tel",
-                        // maxLength: "19",
-                        // htmlRef: input => this.ccNumberRef = input,
-                      }}
-                      // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                    />
-                  </div>
+                  <Field
+                    name="cc_cvc"
+                    className="form-control input-custom w-100"
+                    component={fieldCleave}
+                    propsCleave={{
+                      placeholder: intl.formatMessage({ id: 'securityCode' }),
+                      options: { blocks: [4], numericOnly: true },
+                      // type: "password",
+                      // maxLength: "4",
+                      // minLength: "3",
+                      // id: `cart-cvc-${this.lastUniqueId()}`,
+                      // htmlRef: input => this.ccCvcRef = input,
+                    }}
+                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                  />
                 </div>
+              </div>
 
-                <div className="d-table w-100 mt-4">
-                  <div className="d-table-cell pr-1">
-                    <div className="cc-label"><FormattedMessage id="cc.label.cvv" /></div>
-                    <div>
-                      <Field
-                        name="cc_cvc"
-                        className="form-control input-custom w-100"
-                        component={fieldCleave}
-                        propsCleave={{
-                          placeholder: intl.formatMessage({ id: 'securityCode' }),
-                          options: { blocks: [4], numericOnly: true },
-                          // type: "password",
-                          // maxLength: "4",
-                          // minLength: "3",
-                          // id: `cart-cvc-${this.lastUniqueId()}`,
-                          // htmlRef: input => this.ccCvcRef = input,
-                        }}
-                        // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="d-table-cell pl-1">
-                    <div className="cc-label"><FormattedMessage id="cc.label.expiration" /></div>
-                    <div>
-                      <Field
-                        name="cc_expired"
-                        className="form-control input-custom w-100"
-                        component={fieldCleave}
-                        propsCleave={{
-                          placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
-                          options: { blocks: [2, 2], delimiter: '/', numericOnly: true },
-                          // type: "tel",
-                          // id: `cart-date-${this.lastUniqueId()}`,
-                          // htmlRef: input => this.ccExpiredRef = input,
-                          // onKeyDown: this.ccExpiredRefKeyDown,
-                        }}
-                        // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                      />
-                    </div>
-                  </div>
+              <div className="d-table-cell pl-1">
+                <div className="cc-label"><FormattedMessage id="cc.label.expiration" /></div>
+                <div>
+                  <Field
+                    name="cc_expired"
+                    className="form-control input-custom w-100"
+                    component={fieldCleave}
+                    propsCleave={{
+                      placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
+                      options: { blocks: [2, 2], delimiter: '/', numericOnly: true },
+                      // type: "tel",
+                      // id: `cart-date-${this.lastUniqueId()}`,
+                      // htmlRef: input => this.ccExpiredRef = input,
+                      // onKeyDown: this.ccExpiredRefKeyDown,
+                    }}
+                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                  />
                 </div>
+              </div>
+            </div>
 
-                <div className="d-table w-100 mt-4">
-                  <div className="cc-label"><FormattedMessage id="cc.label.email" /></div>
-                  <div>
-                    <Field
-                      name="cc_email"
-                      className="form-control input-custom w-100"
-                      component={fieldInput}
-                      validate={[required, email]}
-                      placeholder={intl.formatMessage({ id: 'cc.label.email.hint' })}
-                    />
-                  </div>
-                </div>
+            <div className="d-table w-100 mt-4">
+              <div className="cc-label"><FormattedMessage id="cc.label.email" /></div>
+              <div>
+                <Field
+                  name="cc_email"
+                  className="form-control input-custom w-100"
+                  component={fieldInput}
+                  validate={[required, email]}
+                  placeholder={intl.formatMessage({ id: 'cc.label.email.hint' })}
+                />
+              </div>
+            </div>
 
-                {/* <div className="mt-4 custom-control custom-checkbox">
+            {/* <div className="mt-4 custom-control custom-checkbox">
               <Field
                 id="cc-save-card"
                 name="saveCard"
@@ -986,21 +1125,22 @@ class FeedCreditCard extends React.Component {
               <label htmlFor="cc-save-card" className="custom-control-label"><FormattedMessage id="cc.label.saveCard" /></label>
             </div> */}
 
-                <div className="mt-4">
-                  <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
-                    <img src={iconLock} width={18} className="align-top mr-2" /><span><FormattedMessage id="cc.btn.payNow" /></span>
-                  </button>
-                </div>
-              </FormCreditCard>
-              {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
-              {/* <div className="alert alert-success">You have successfully paid</div> */}
+            <div className="mt-4">
+              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
+                <img src={iconLock} width={18} className="align-top mr-2" /><span><FormattedMessage id="cc.btn.payNow" /></span>
+              </button>
             </div>
-          </div>
-        )
-      }
-        <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
-          {modalContent}
-        </Modal>
+          </FormCreditCard>
+          {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
+          {/* <div className="alert alert-success">You have successfully paid</div> */}
+        </div>
+        <div>
+          <form method="POST" action={issuerUrl} id="3dform">
+            <input type="hidden" name="PaReq" value={paReq} />
+            <input type="hidden" name="MD" value={md} />
+            <input type="hidden" name="TermUrl" value={termUrl} />
+          </form>
+        </div>
       </div>
     );
   }
@@ -1013,6 +1153,7 @@ const mapStateToProps = (state) => ({
   ccLimits: state.exchange.ccLimits || [],
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
+  cc_email: selectorFormCreditCard(state, 'cc_email'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -1023,6 +1164,9 @@ const mapDispatchToProps = (dispatch) => ({
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
+  initPaymentInstantBuy: bindActionCreators(initPaymentInstantBuy, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));
