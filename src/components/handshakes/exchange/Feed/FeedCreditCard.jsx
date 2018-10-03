@@ -8,21 +8,17 @@ import {
   API_URL,
   APP,
   CRYPTO_CURRENCY,
-  CRYPTO_CURRENCY_DEFAULT,
-  CRYPTO_CURRENCY_LIST,
   CRYPTO_CURRENCY_NAME,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_NAME,
-  FIAT_CURRENCY_SYMBOL,
-  HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
-import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
+import { fieldCleave, fieldDropdown, fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import {
   createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
@@ -31,9 +27,8 @@ import {
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { bindActionCreators } from 'redux';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
-import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
-import { formatMoney, formatMoneyByLocale, roundNumberByLocale } from '@/services/offer-util';
+import { showAlert } from '@/reducers/app/action';
+import { roundNumberByLocale } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
 import './FeedCreditCard.scss';
@@ -49,6 +44,11 @@ import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
+import Deposit from '@/pages/Escrow/Deposit';
+import Modal from '@/components/core/controls/Modal/Modal';
+import Image from '@/components/core/presentation/Image';
+import loadingSVG from '@/assets/images/icon/loading.gif';
+
 
 const moment = require('moment');
 
@@ -129,6 +129,9 @@ class FeedCreditCard extends React.Component {
       walletSelected: false,
       allowBuy: true,
       hasSelectedPackage: false,
+      modalContent: '',
+      modalTitle: '',
+      isLoading: false,
       issuerUrl: '',
       paReq: '',
       md: '',
@@ -830,6 +833,24 @@ class FeedCreditCard extends React.Component {
     this.setState({ wallets: listWalletCoin, walletSelected: walletDefault }, () => {
       // this.checkValid();
     });
+  }
+
+  depositCoinATM = () => {
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalTitle: messages.me.credit.deposit.title,
+      modalContent:
+        (
+          <Deposit setLoading={this.setLoading} history={this.props.history} />
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  closeModal = () => {
+    this.setState({ modalContent: '' });
   }
 
   render() {
