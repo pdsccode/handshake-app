@@ -4,6 +4,7 @@ import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import local from '@/services/localStore';
 import {
+  API_ENDPOINT,
   API_URL,
   APP,
   CRYPTO_CURRENCY,
@@ -308,40 +309,6 @@ class FeedCreditCard extends React.Component {
     return validateSpecificAmount(values, this.state, this.props);
   };
 
-  getEncryptedFormData = (cardNumber, cvc, holderName, expiryMonth, expiryYear, generationtime) => {
-
-    var postData = {};
-
-    var cardData = {
-      number : cardNumber,
-      cvc : cvc,
-      holderName : holderName,
-      expiryMonth : expiryMonth,
-      expiryYear : expiryYear,
-      generationtime : generationtime
-    };
-
-    const key = '10001|943D378B1AA2186B336633E6D8E876EB6C34B1A198B0C8518FFA4507FD4689A7C3D29D5B6898945D78CEDD088956DCA4AAC3C5B69DB82AC101AB4462032F6392C11D0B73570550DB91CD915BFDDFEEEF07888F7F2641048A6CE1327F080871917C775D490D8F00A2E5D162A7EA9FB2A8419EFDD8B2A0CAACD0D2B9A8B343A0E76FA72527BE99D4F3FD59C1B0431253C57F8944B7A6B4A2276B34FF4CE7462FBAD14F8B9C51008E4BFDAF155FA6D8987A2B1AA7B7DACD30489E7AF30041B053456AB2D6024D070A520D4BDDC49E14BBC281B89650A5E352ED822EF15A573873F11CE552C98282B9FAD822B7B53736C77EFBE6E23C6A14C4727AF18541AA571E49';
-    const options = {}; // See adyen.encrypt.nodom.html for details
-
-    const cseInstance = adyenEncrypt.createEncryption(key, options);
-
-    postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
-
-    return postData;
-  }
-
-  encryptExample = () => {
-    var generationTime = new Date().toISOString(); // Note:
-    // Generate this
-    // serverside!
-
-    var postData = this.getEncryptedFormData("5555 4444 3333 1111", "737", "John Doe", "06", "2016", generationTime);
-
-    console.log('encryptExample', postData);
-
-  }
-
   handleSubmit = async (values) => {
     console.log('handleSubmit', values);
 
@@ -399,9 +366,8 @@ class FeedCreditCard extends React.Component {
         // params.append('key', process.env.stripeKey);
         // params.append('type', 'card');
 
-        // const serverTime = await axios.get('https://staging.ninja.org/public-api/exchange/server-time');
-        // console.log('serverTime',serverTime);
-
+        const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
+        console.log('serverTime',serverTime?.data?.data);
 
         try {
           const postData = {};
@@ -413,7 +379,7 @@ class FeedCreditCard extends React.Component {
             expiryMonth: mmYY[0],
             expiryYear: `20${mmYY[1]}`,
             // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
-            generationtime : '2018-10-01T13:15:50.584+00:00',
+            generationtime : serverTime?.data?.data,
           };
 
           const source = {
@@ -534,6 +500,17 @@ class FeedCreditCard extends React.Component {
     const { cc_email } = this.props;
     const { walletSelected } = this.state;
 
+    if (resultCode !== 'RedirectShopper') {
+      const message = 'Opp, something wrong! Please go back later!';
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 5000,
+        type: 'danger',
+        // callBack: this.handleBuySuccess
+      });
+      return;
+    }
+
     local.save(APP.CC_PRICE, cryptoPrice);
     local.save(APP.CC_EMAIL, cc_email);
 
@@ -600,7 +577,7 @@ class FeedCreditCard extends React.Component {
       message: <div className="text-center">{message}</div>,
       timeOut: 5000,
       type: 'danger',
-    // callBack: this.handleBuySuccess
+      // callBack: this.handleBuySuccess
     });
   }
 
@@ -980,23 +957,23 @@ class FeedCreditCard extends React.Component {
         <div className="wrapper">
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
             {cryptoPrice && (<div>
-              <div className="d-table w-100">
-                <div className="d-table-cell text-normal">
-                  <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
-                  &nbsp;
-                  <span className="font-weight-bold">{cryptoPrice?.amount}</span>
-                  &nbsp;
-                  <span className="text-normal">{cryptoPrice?.currency}</span>
-                </div>
-                <div className="d-table-cell text-right">
-                  <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
-                  &nbsp;
-                  <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
-                  &nbsp;
-                  <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
+                <div className="d-table w-100">
+                  <div className="d-table-cell text-normal">
+                    <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
+                    &nbsp;
+                    <span className="font-weight-bold">{cryptoPrice?.amount}</span>
+                    &nbsp;
+                    <span className="text-normal">{cryptoPrice?.currency}</span>
+                  </div>
+                  <div className="d-table-cell text-right">
+                    <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
+                    &nbsp;
+                    <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
+                    &nbsp;
+                    <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
+                  </div>
                 </div>
               </div>
-            </div>
             )}
 
             <div className={['bodyBackup bodyShareAddress']}>
@@ -1015,17 +992,17 @@ class FeedCreditCard extends React.Component {
                   <div className="receivewallet-wrapper">
                     { walletSelected &&
 
-                      <Field
-                        name="showWalletSelected"
-                        component={fieldDropdown}
-                        placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
-                        defaultText={currency}
-                        list={wallets}
-                        onChange={(item) => {
-                          this.onItemSelectedWallet(item);
-                        }
-                        }
-                      />
+                    <Field
+                      name="showWalletSelected"
+                      component={fieldDropdown}
+                      placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
+                      defaultText={currency}
+                      list={wallets}
+                      onChange={(item) => {
+                        this.onItemSelectedWallet(item);
+                      }
+                      }
+                    />
                     }
                   </div>
                 </div>
