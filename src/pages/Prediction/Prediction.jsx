@@ -90,7 +90,6 @@ class Prediction extends React.Component {
   // @TODO: Extensions
   /* eslint no-useless-escape: 0 */
   receiverMessage = (props) => {
-    console.log(window.localStorage.getItem('test'));
     const windowInfo = isJSON(window.name) ? JSON.parse(window.name) : null;
     if (windowInfo) {
       const { message } = windowInfo;
