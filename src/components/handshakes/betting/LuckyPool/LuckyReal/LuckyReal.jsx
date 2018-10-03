@@ -92,7 +92,7 @@ class LuckyReal extends React.Component {
     );
   }
   renderCountDown() {
-    const { totalBets } = this.props.totalBets;
+    const { totalBets } = this.props;
     return (
       <div className="countdown"><strong>{totalBets}</strong> bets left until we draw the winners</div>
     );
@@ -151,7 +151,6 @@ class LuckyReal extends React.Component {
         <Button
           className="luckyButton"
           onClick={() => this.props.onButtonClick()}
-
         >
             Place another bet
         </Button>
