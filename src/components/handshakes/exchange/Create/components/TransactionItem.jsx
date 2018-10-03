@@ -36,11 +36,20 @@ export const CASH_ORDER_STATUS = {
 class TransactionItem extends React.Component {
   constructor(props) {
     super(props);
-    const { extraData } = props;
+    this.state = {
+      transaction: {},
+    };
+  }
 
-    this.transaction = CashStoreTransaction.cashStoreTransaction(JSON.parse(extraData));
-    const { initAt } = this.props;
-    this.transaction.createdAt = new Date(initAt * 1000).toISOString();
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.extraData && nextProps.initAt) {
+      let transaction = {};
+      transaction = CashStoreTransaction.cashStoreTransaction(JSON.parse(nextProps.extraData));
+      transaction.createdAt = new Date(nextProps.initAt * 1000).toISOString();
+      return { transaction };
+    }
+
+    return null;
   }
 
   ellipsisText(text = '') {
@@ -55,7 +64,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatAmount, status, address } = this.transaction;
+    const { amount, currency, fiatAmount, status, address } = this.state.transaction;
 
     return (
       <div className="transaction">
@@ -94,7 +103,7 @@ class TransactionItem extends React.Component {
               {status === CASH_ORDER_STATUS.PROCESSING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
-                  <span className="transfer-now" onClick={() => this.props.onShowTransferInfo(this.transaction)}>{messages.create.atm.transactions.transferNow}</span>
+                  <span className="transfer-now" onClick={() => this.props.onShowTransferInfo(this.state.transaction)}>{messages.create.atm.transactions.transferNow}</span>
                 </div>
               )
               }

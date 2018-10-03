@@ -173,6 +173,7 @@ class AtmCashTransfer extends Component {
           referenceCode: res?.data?.ref_code,
           createdAt: res?.data?.created_at,
           status: res?.data?.status,
+          id: res?.data?.id,
         };
         this.setState({ isDone: true, receipt });
       },

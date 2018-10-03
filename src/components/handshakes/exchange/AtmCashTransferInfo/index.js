@@ -123,7 +123,7 @@ class AtmCashTransferInfo extends PureComponent {
       receipt_url: imgUploaded.url,
     };
     this.props.uploadReceipAtmCashTransfer({
-      PATH_URL: `${API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER}/${receipt.referenceCode}`,
+      PATH_URL: `${API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER}/${receipt?.id}`,
       METHOD: 'PUT',
       data,
       successFn: () => {
