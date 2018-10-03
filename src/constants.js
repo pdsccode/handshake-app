@@ -505,8 +505,8 @@ export const LOCATION_METHODS = {
 };
 
 export const ATM_TYPE = {
-  PERSONAL: 'personal',
   STORE: 'store',
+  PERSONAL: 'personal',
 };
 
 export const ATM_STATUS = {

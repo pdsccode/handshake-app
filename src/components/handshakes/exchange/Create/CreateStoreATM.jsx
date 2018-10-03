@@ -11,7 +11,7 @@ import { change, clearFields, Field, formValueSelector, reset } from 'redux-form
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import COUNTRIES from '@/data/country-dial-codes.js';
-import { API_URL, ATM_STATUS, ATM_TYPE, HANDSHAKE_ID, TIME_FORMAT, URL } from '@/constants';
+import { API_URL, ATM_STATUS, ATM_TYPE, HANDSHAKE_ID, TIME_FORMAT } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
 import { createStoreATM, getStoreATM, getTransactionCashStore, updateStoreATM } from '@/reducers/exchange/action';
@@ -79,6 +79,8 @@ class Component extends React.Component {
       cashStore: this.props.cashStore,
       showMap: false,
     };
+
+    this.handleUpdateSuccess = :: this.handleUpdateSuccess;
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -294,13 +296,10 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = async (responseData, opt = {}) => {
-    const { messages } = this.props.intl;
+    const { intl: { messages }, closeModal } = this.props;
     let text = messages.create.atm.text.createdAtmSuccess;
     opt.isUpdate && (text = messages.create.atm.text.updatedAtmSuccess);
     console.log('handleCreateOfferSuccess', responseData);
-    // const offer = OfferShop.offerShop(responseData.data);
-    // this.offer = offer;
-
 
     this.hideLoading();
     this.props.showAlert({
@@ -308,13 +307,19 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(`${URL.HANDSHAKE_ATM}`);
+        if (typeof closeModal === 'function') {
+          closeModal();
+        }
       },
     });
   }
 
   handleUpdateSuccess = () => {
-    const { intl: { messages }, closeModal } = this.props;
+    const { intl: { messages }, closeModal, onAtmUpdated } = this.props;
+    if (typeof onAtmUpdated === 'function') {
+      // refresh new discover ata from server (for diplaying on map)
+      onAtmUpdated();
+    }
     this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center">{messages.create.atm.text.updatedAtmSuccess}</div>,

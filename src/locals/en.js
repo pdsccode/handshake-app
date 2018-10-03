@@ -1667,5 +1667,6 @@ export default {
     upload_btn: 'Upload your bank receipt',
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
+    title: 'Payment detail',
   },
 };

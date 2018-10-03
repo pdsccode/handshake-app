@@ -6,7 +6,9 @@ import { injectIntl } from 'react-intl';
 // components
 // style
 import createForm from '@/components/core/form/createForm';
+import { getTransactionCashStore } from '@/reducers/exchange/action';
 import { change } from 'redux-form';
+import { API_URL, HANDSHAKE_ID } from '@/constants';
 
 import TransactionItem from './TransactionItem';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
@@ -37,6 +39,13 @@ class Transaction extends React.Component {
   }
 
   onReceiptSaved = () => {
+    // get new data from server
+    this.props.getTransactionCashStore({
+      PATH_URL: API_URL.ME.BASE,
+      qs: {
+        type: HANDSHAKE_ID.EXCHANGE,
+      },
+    });
     this.modalRef.close();
   }
 
@@ -48,10 +57,11 @@ class Transaction extends React.Component {
       fiatCurrency: transaction.fiatCurrency,
       referenceCode: transaction.refCode,
       status: transaction.status,
+      id: transaction.id,
     };
 
     this.setState({
-      modalTitle: messages.atm_cash_transfer.title,
+      modalTitle: messages.atm_cash_transfer_info.title,
       modalContent:
         (
           <AtmCashTransferInfo receipt={receipt} onDone={this.onReceiptSaved} />
@@ -107,6 +117,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
+  getTransactionCashStore: bindActionCreators(getTransactionCashStore, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Transaction));

@@ -377,6 +377,12 @@ class DiscoverPage extends React.Component {
     this.openAtmManagement({ defaultTab: CASH_ATM_TAB.TRANSACTION });
   }
 
+  setModalTitle = (title) => {
+    this.setState({
+      modalTitle: title,
+    });
+  }
+
   openNewTransaction = () => {
     const { messages } = this.props.intl;
 
@@ -384,7 +390,12 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.atm_cash_transfer.title,
       modalContent:
         (
-          <AtmCashTransfer setLoading={this.setLoading} history={this.props.history} onReceiptSaved={this.onReceiptSaved} />
+          <AtmCashTransfer
+            setLoading={this.setLoading}
+            history={this.props.history}
+            onReceiptSaved={this.onReceiptSaved}
+            setModalTitle={this.setModalTitle}
+          />
         ),
     }, () => {
       this.modalRef.open();
@@ -398,7 +409,7 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.create.atm.title,
       modalContent:
         (
-          <CreateStoreATM closeModal={this.modalRef.close} options={opt} />
+          <CreateStoreATM onAtmUpdated={this.loadDiscoverList} closeModal={this.modalRef.close} options={opt} />
         ),
     }, () => {
       this.modalRef.open();
@@ -490,9 +501,9 @@ class DiscoverPage extends React.Component {
         {/* <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}> */}
         {/* {modalContent} */}
         {/* </ModalDialog> */}
-        {
-          curStationIdShowAllDetails && (
-            <div className="popup-all-station-details">
+        <div className={`popup-all-station-details ${curStationIdShowAllDetails ? 'open' : 'close'}`}>
+          { curStationIdShowAllDetails && (
+            <div>
               <div className="text-center">
                 <div className="line" onClick={() => this.handleOnChangeShowAllDetails(null, null)} />
               </div>
@@ -543,9 +554,10 @@ class DiscoverPage extends React.Component {
                   }
                 </div>
               </div>
-            </div>
-          )
-        }
+            </div>)
+          }
+        </div>
+
         <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
           {modalContent}
         </Modal>
