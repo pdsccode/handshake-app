@@ -73,12 +73,12 @@ class Transaction extends React.Component {
   }
 
   renderTransactionList = () => {
-    const { cashStoreTransaction } = this.props;
+    const { cashStoreTransaction, intl: { messages } } = this.props;
 
     if (cashStoreTransaction && cashStoreTransaction.length === 0) {
       return (
         <div className="empty-list">
-          <span>No history!</span>
+          <span>{messages.create.atm.text.no_history}</span>
         </div>
       );
     }

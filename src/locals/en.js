@@ -1114,6 +1114,7 @@ export default {
         confirmUpdateAtm: 'Update your ATM?',
         createdAtmSuccess: 'Success! You have created an ATM on Ninja.',
         updatedAtmSuccess: 'Success!',
+        no_history: 'You do not have any order yet.',
       },
       button: {
         create: 'Create my ATM',
