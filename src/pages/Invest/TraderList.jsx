@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { fetch_traders } from '../../reducers/invest/action';
+import { fetch_traders, exampleTraders } from '../../reducers/invest/action';
 import Web3 from './Web3'
 import ('./TraderList.scss');
 import StarRatings from 'react-star-ratings';
@@ -13,36 +13,6 @@ const toHexColor = (str) => {
 	}
 	return `#${hex.substring(0, 6)}`;
 };
-
-const listTrading = [
-    {
-        id: 1,
-        avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
-        firstName: 'Booby Gabershek',
-        lastName: 'Ga',
-        rating: 1,
-        average: -0.36,
-        amount: 2000,
-    },
-    {
-        id: 2,
-        avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
-        firstName: 'Quang Vo',
-        lastName: 'Ga',
-        rating: 3,
-        average: 0.25,
-        amount: 14567892000
-    },
-    {
-        id: 3,
-        avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
-        firstName: 'Anonymous',
-        lastName: 'Ga',
-        rating: 3,
-        average: 0.2,
-        amount: 1000650
-    }
-];
 
 const TraderItem = ({ avatar, firstName, lastName, rating, average = 0, amount, handleOnClick }) => (
     <div className="traderItem" onClick={handleOnClick}>
@@ -103,9 +73,8 @@ class TraderList extends Component {
         this.props.history.push(`/invest/trader/${item.id}`)
     }
     render() {
-        console.log('=================', this.props.traders)
         return (
-            this.props.traders.concat(listTrading).map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
+            this.props.traders.concat(exampleTraders).map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
         )
     }
 }
