@@ -62,6 +62,7 @@ class BetingShake extends React.Component {
       oddValue: 0,
       amountValue: 0,
       winValue: 0,
+      balance: 0,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -106,7 +107,11 @@ class BetingShake extends React.Component {
     }
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message, code, value } = validate;
+    const { status, message, code, value, balance } = validate;
+    this.setState({
+      balance,
+    });
+
     if (status) {
       this.initHandshake(amount, odds);
       onSubmitClick();
@@ -132,6 +137,7 @@ class BetingShake extends React.Component {
 
       }
     }
+
   }
 
 
@@ -183,9 +189,9 @@ class BetingShake extends React.Component {
   initHandshakeSuccess = async (successData) => {
     console.log(TAG, 'initHandshakeSuccess', successData);
     const { status, data } = successData;
-
+    const { balance } = this.state;
     if (status && data) {
-      betHandshakeHandler.controlShake(data);
+      betHandshakeHandler.controlShake(data, balance);
       const isExist = isExistMatchBet(data);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;
       if (isExist) {
