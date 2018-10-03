@@ -1,5 +1,5 @@
 import { createAPI } from '@/reducers/action'
-
+import axios from 'axios';
 export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
   FETCH_TRADERS: 'FETCH_TRADERS',
@@ -13,12 +13,23 @@ export const fetch_projects = function () {
   }
 }
 
-export const fetch_traders = function () {
-  return {
-    type: ACTIONS.FETCH_TRADERS,
-    payload: exampleTraders
-  }
-}
+// export const fetch_traders = function () {
+//   return {
+//     type: ACTIONS.FETCH_TRADERS,
+//     payload: exampleTraders
+//   }
+// }
+export const fetch_traders = () => dispatch => new Promise((resolve, reject) => {
+  axios.get('http://35.198.235.226:9000/api/users/list-trader')
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_TRADERS, payload })
+      resolve(payload)
+    }
+    reject('');
+  })
+  .catch(err => reject(err));
+})
 
 export const eth_sendTransaction = ({
   privateKey,

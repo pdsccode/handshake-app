@@ -17,11 +17,12 @@ class InvestBlock extends Component {
 
   static getDerivedStateFromProps(props) {
     const activeTab = sessionStorage.getItem('activeTab');
-    console.log(activeTab);
     return {
       activeTab,
     };
   }
+  shouldComponentUpdate = (p, s) => s.activeTab !== this.state.activeTab
+
   switchTabs=() => {
     switch (this.state.activeTab) {
       case 'trader':
