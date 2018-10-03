@@ -375,7 +375,7 @@ class FeedCreditCard extends React.Component {
           const cardData = {
             number: cc_number && cc_number.trim().replace(/ /g, ''),
             cvc: cc_cvc,
-            holderName : 'John Smith',
+            holderName : 'First Last',
             expiryMonth: mmYY[0],
             expiryYear: `20${mmYY[1]}`,
             // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
