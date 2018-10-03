@@ -50,3 +50,7 @@ export const checkExistSubcribeEmailSelector = (state) => {
   const { isExistEmail = false } = state.ui;
   return isExistEmail;
 };
+export const totalBetsSelector = (state) => {
+  console.log('TotalBets:', state.ui.totalBets);
+  return state.ui.totalBets || 0;
+};

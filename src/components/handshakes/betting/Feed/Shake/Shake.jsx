@@ -183,10 +183,11 @@ class BetingShake extends React.Component {
   initHandshakeSuccess = async (successData) => {
     console.log(TAG, 'initHandshakeSuccess', successData);
     const { status, data } = successData;
+    const { handshakes, total_users:totalUser } = data;
 
     if (status && data) {
-      betHandshakeHandler.controlShake(data);
-      const isExist = isExistMatchBet(data);
+      betHandshakeHandler.controlShake(handshakes);
+      const isExist = isExistMatchBet(handshakes);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;
       if (isExist) {
         message = MESSAGE.CREATE_BET_MATCHED;

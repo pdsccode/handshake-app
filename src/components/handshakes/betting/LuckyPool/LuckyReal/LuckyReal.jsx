@@ -11,7 +11,6 @@ import {
 import GA from '@/services/googleAnalytics';
 import { API_URL } from '@/constants';
 import { submitEmailSubcribe } from '@/reducers/auth/action';
-
 import './LuckyReal.scss';
 
 class LuckyReal extends React.Component {
@@ -23,6 +22,7 @@ class LuckyReal extends React.Component {
       PropTypes.number,
     ]),
     fetching: PropTypes.bool,
+    totalBets: PropTypes.number,
   }
   constructor(props) {
     super(props);
@@ -92,8 +92,9 @@ class LuckyReal extends React.Component {
     );
   }
   renderCountDown() {
+    const { totalBets } = this.props.totalBets;
     return (
-      <div className="countdown"><strong>767</strong> bets left until we draw the winners</div>
+      <div className="countdown"><strong>{totalBets}</strong> bets left until we draw the winners</div>
     );
   }
   renderEmailField() {

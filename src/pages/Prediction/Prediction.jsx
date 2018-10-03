@@ -22,7 +22,7 @@ import { predictionStatistics } from '@/components/handshakes/betting/Feed/Order
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
@@ -44,6 +44,7 @@ class Prediction extends React.Component {
     isSharePage: PropTypes.bool,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
+    totalBets: PropTypes.number,
     isExistEmail: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.number,
@@ -318,6 +319,7 @@ class Prediction extends React.Component {
   renderLuckyReal = () => (
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
       <LuckyReal
+        totalBets={this.props.totalBets}
         isExistEmail={this.props.isExistEmail}
         onButtonClick={() => {
           this.modalLuckyReal.close();
@@ -441,6 +443,7 @@ export default injectIntl(connect(
       freeBet: checkFreeBetSelector(state),
       isExistEmail: checkExistSubcribeEmailSelector(state),
       shareEvent: shareEventSelector(state),
+      totalBets: totalBetsSelector(state),
     };
   },
 )(Prediction));

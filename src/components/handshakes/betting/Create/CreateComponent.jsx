@@ -26,6 +26,7 @@ import {
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
 import EstimateGas from '@/modules/EstimateGas';
 import { getGasPrice } from '@/utils/gasPrice';
+import { updateTotalBets } from '@/pages/Prediction/action';
 
 
 import { getKeyByValue } from '@/utils/object';
@@ -33,6 +34,7 @@ import { getKeyByValue } from '@/utils/object';
 // self
 import { InputField } from '../form/customField';
 import './Create.scss';
+import { totalBetsSelector } from '@/pages/Prediction/selector';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
@@ -315,16 +317,18 @@ class BettingCreate extends React.Component {
     console.log('initHandshakeSuccess', successData);
 
     const { status, data } = successData;
+    const { handshakes, total_bets:totalBets } = data;
     const { bettingShake } = this.props;
     const { matchName, matchOutcome, side } = bettingShake;
 
     if (status && data) {
-      const isExist = isExistMatchBet(data);
+      this.props.dispatch(updateTotalBets(totalBets));
+      const isExist = isExistMatchBet(handshakes);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;
       if (isExist) {
         message = MESSAGE.CREATE_BET_MATCHED;
       }
-      betHandshakeHandler.controlShake(data);
+      betHandshakeHandler.controlShake(handshakes);
 
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
