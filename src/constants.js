@@ -291,6 +291,7 @@ export const API_URL = {
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+    GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
 };
 
