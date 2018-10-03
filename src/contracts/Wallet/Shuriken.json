@@ -282,7 +282,7 @@
       "name": "Transfer",
       "type": "event"
     }
-  ],  
+  ],
   "source": "pragma solidity ^0.4.23;\n\nimport 'openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';\n\ncontract Shuriken is StandardToken {\n\n        uint public INITIAL_SUPPLY = 27000000;\n\n        string public constant name = \"Shuriken\";\n        string public constant symbol = \"SHURI\";\n        uint public constant decimals = 18;\n\n        constructor() public {\n                totalSupply_ = INITIAL_SUPPLY * (10 ** decimals);\n                balances[msg.sender] = totalSupply_;\n        }\n}\n",
-  "sourcePath": "/Workspace/robotbase/crypto/handshake-protocol/contracts/Shuriken.sol",  
+  "sourcePath": "/Workspace/robotbase/crypto/handshake-protocol/contracts/Shuriken.sol"
 }
