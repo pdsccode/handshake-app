@@ -34,7 +34,6 @@ import { getKeyByValue } from '@/utils/object';
 // self
 import { InputField } from '../form/customField';
 import './Create.scss';
-import { totalBetsSelector } from '@/pages/Prediction/selector';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
@@ -326,6 +325,7 @@ class BettingCreate extends React.Component {
     const { matchName, matchOutcome, side } = bettingShake;
     const { balance } = this.state;
     if (status && data) {
+      console.log('PROPS', this.props);
       this.props.dispatch(updateTotalBets(totalBets));
       const isExist = isExistMatchBet(handshakes);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;

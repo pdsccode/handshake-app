@@ -21,6 +21,7 @@ import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
+import { updateTotalBets } from '@/pages/Prediction/action';
 
 
 import './Shake.scss';
@@ -44,6 +45,7 @@ class BetingShake extends React.Component {
     reportTime: PropTypes.any.isRequired,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -191,9 +193,10 @@ class BetingShake extends React.Component {
     const { status, data } = successData;
     const { balance } = this.state;
 
-    const { handshakes, total_users:totalUser } = data;
+    const { handshakes, total_bets: totalBets } = data;
 
     if (status && data) {
+      this.props.dispatch(updateTotalBets(totalBets));
       betHandshakeHandler.controlShake(handshakes, balance);
       const isExist = isExistMatchBet(handshakes);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;
@@ -325,10 +328,11 @@ class BetingShake extends React.Component {
     return this.renderForm();
   }
 }
-
+const mapState = state => ({
+});
 const mapDispatch = ({
   initHandshake,
   shakeItem,
   showAlert,
 });
-export default connect(null, mapDispatch)(BetingShake);
+export default connect(mapState, mapDispatch)(BetingShake);
