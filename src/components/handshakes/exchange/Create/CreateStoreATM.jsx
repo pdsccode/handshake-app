@@ -294,13 +294,10 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = async (responseData, opt = {}) => {
-    const { messages } = this.props.intl;
+    const { intl: { messages }, closeModal } = this.props;
     let text = messages.create.atm.text.createdAtmSuccess;
     opt.isUpdate && (text = messages.create.atm.text.updatedAtmSuccess);
     console.log('handleCreateOfferSuccess', responseData);
-    // const offer = OfferShop.offerShop(responseData.data);
-    // this.offer = offer;
-
 
     this.hideLoading();
     this.props.showAlert({
@@ -308,7 +305,9 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(`${URL.HANDSHAKE_ATM}`);
+        if (typeof closeModal === 'function') {
+          closeModal();
+        }
       },
     });
   }

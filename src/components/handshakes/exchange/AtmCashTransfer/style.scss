@@ -102,6 +102,7 @@ div.new-transaction-container {
       position: relative;
       .prepend {
         position: absolute;
+        z-index: 10;
         top: 16px;
         right: 10px;
         color: $blur_color;

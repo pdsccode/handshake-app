@@ -87,6 +87,7 @@ class AtmCashTransfer extends Component {
     this.validateWallet = ::this.validateWallet;
     this.getMessage = :: this.getMessage;
     this.detectCryptoCurrency = debounce(::this.detectCryptoCurrency, 1000);
+    this.renderPaymentDetail = :: this.renderPaymentDetail;
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -267,12 +268,19 @@ class AtmCashTransfer extends Component {
     return { ...this.validateWallet(values.walletAddress), ...validateSpecificAmount(values, this.state, this.props) };
   }
 
+  renderPaymentDetail() {
+    const { receipt } = this.state;
+    const { messages: { atm_cash_transfer_info } } = this.props.intl;
+    this.props.setModalTitle(atm_cash_transfer_info?.title);
+    return <AtmCashTransferInfo receipt={receipt} onDone={this.props.onReceiptSaved} />;
+  }
+
   render() {
-    const { fiatCurrencyUnit, fiatAmount, isTransferable, shouldLockWalletChange, isDone, receipt } = this.state;
+    const { fiatCurrencyUnit, fiatAmount, isTransferable, shouldLockWalletChange, isDone } = this.state;
     const { messages: { atm_cash_transfer } } = this.props.intl;
 
     if (isDone) {
-      return <AtmCashTransferInfo receipt={receipt} onDone={this.props.onReceiptSaved} />;
+      return this.renderPaymentDetail();
     }
     return (
       <React.Fragment>
@@ -327,6 +335,7 @@ class AtmCashTransfer extends Component {
                     className="form-control transaction-input fiat-amount"
                     placeholder={fiatAmount}
                     component={fieldInput}
+                    validate={[required]}
                     disabled
                   />
                 </div>
@@ -354,12 +363,12 @@ const mapState = (state) => {
 AtmCashTransfer.propTypes = {
   getCashFromCrypto: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
-  form: PropTypes.object.isRequired,
   change: PropTypes.func.isRequired,
   sendAtmCashTransfer: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
   showScanQRCode: PropTypes.func.isRequired,
   onReceiptSaved: PropTypes.func.isRequired,
+  setModalTitle: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapState, ({ getCashFromCrypto, showAlert, change, sendAtmCashTransfer, showScanQRCode }))(AtmCashTransfer));

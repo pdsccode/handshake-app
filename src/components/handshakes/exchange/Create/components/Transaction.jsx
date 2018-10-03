@@ -61,7 +61,7 @@ class Transaction extends React.Component {
     };
 
     this.setState({
-      modalTitle: messages.atm_cash_transfer.title,
+      modalTitle: messages.atm_cash_transfer_info.title,
       modalContent:
         (
           <AtmCashTransferInfo receipt={receipt} onDone={this.onReceiptSaved} />
