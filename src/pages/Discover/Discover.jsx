@@ -409,7 +409,7 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.create.atm.title,
       modalContent:
         (
-          <CreateStoreATM closeModal={this.modalRef.close} options={opt} />
+          <CreateStoreATM onAtmUpdated={this.loadDiscoverList} closeModal={this.modalRef.close} options={opt} />
         ),
     }, () => {
       this.modalRef.open();
