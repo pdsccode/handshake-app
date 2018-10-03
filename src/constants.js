@@ -507,6 +507,8 @@ export const BASE_API = {
   TIMEOUT: 10000,
 };
 
+export const API_ENDPOINT = process.env.PUBLIC_URL;
+
 export const URL = {
   INDEX: '/',
 
