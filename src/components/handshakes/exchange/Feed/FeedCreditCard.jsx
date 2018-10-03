@@ -21,8 +21,12 @@ import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import {
-  createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
-  getUserCcLimit, initPaymentInstantBuy,
+  createCCOrder,
+  getCcLimits,
+  getCryptoPrice,
+  getCryptoPriceForPackage,
+  getUserCcLimit,
+  initPaymentInstantBuy,
 } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -41,7 +45,6 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
 import Deposit from '@/pages/Escrow/Deposit';
@@ -49,8 +52,6 @@ import Modal from '@/components/core/controls/Modal/Modal';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 
-
-const moment = require('moment');
 
 const adyenEncrypt = require('adyen-cse-web');
 
@@ -140,12 +141,16 @@ class FeedCreditCard extends React.Component {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.setLoading(true);
   };
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.setLoading(false);
   };
+
+  setLoading = (loadingState) => {
+    this.setState({ isLoading: loadingState });
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps.cryptoPrice) !== JSON.stringify(prevState.cryptoPrice)) {
@@ -370,7 +375,7 @@ class FeedCreditCard extends React.Component {
         // params.append('type', 'card');
 
         const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
-        console.log('serverTime',serverTime?.data?.data);
+        console.log('serverTime', serverTime?.data?.data);
 
         try {
           const postData = {};
@@ -378,11 +383,11 @@ class FeedCreditCard extends React.Component {
           const cardData = {
             number: cc_number && cc_number.trim().replace(/ /g, ''),
             cvc: cc_cvc,
-            holderName : 'First Last',
+            holderName: 'First Last',
             expiryMonth: mmYY[0],
             expiryYear: `20${mmYY[1]}`,
             // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
-            generationtime : serverTime?.data?.data,
+            generationtime: serverTime?.data?.data,
           };
 
           const source = {
@@ -416,7 +421,7 @@ class FeedCreditCard extends React.Component {
             successFn: this.handleInitPaymentSuccess,
             errorFn: this.handleInitPaymentFailed,
           });
-        } catch(e) {
+        } catch (e) {
           console.log('', e.toString());
         }
 
@@ -497,7 +502,7 @@ class FeedCreditCard extends React.Component {
 
   handleInitPaymentSuccess = (res) => {
     console.log('handleInitPaymentSuccess', res);
-    const { additionalData, authCode, issuerUrl, md, paRequest, pspReference, resultCode  } = res.data;
+    const { additionalData, authCode, issuerUrl, md, paRequest, pspReference, resultCode } = res.data;
     const { cryptoPrice, addressForced, currencyForced } = this.props;
     const { cc_email } = this.props;
     const { walletSelected } = this.state;
@@ -516,7 +521,7 @@ class FeedCreditCard extends React.Component {
     local.save(APP.CC_PRICE, cryptoPrice);
     local.save(APP.CC_EMAIL, cc_email);
 
-    let source = local.get(APP.CC_SOURCE);
+    const source = local.get(APP.CC_SOURCE);
 
     source.id = md;
 
@@ -533,7 +538,7 @@ class FeedCreditCard extends React.Component {
     const paymentUrl = `${API_ENDPOINT}/public-api/exchange/authorise-receive`;
     // `${window.origin}${URL.CC_PAYMENT_URL}`
 
-    this.setState({ issuerUrl: issuerUrl, paReq: paRequest, md: md, termUrl: paymentUrl }, () => {
+    this.setState({ issuerUrl, paReq: paRequest, md, termUrl: paymentUrl }, () => {
       document.getElementById('3dform').submit();
     });
 
@@ -860,10 +865,16 @@ class FeedCreditCard extends React.Component {
     const { amount, cryptoPrice } = this.props;
     const { currency, allowBuy } = this.state;
     const { issuerUrl, paReq, md, termUrl } = this.state;
+    const { modalContent, modalTitle } = this.state;
 
     const packages = listPackages[currency];
 
-    return !hasSelectedCoin ? (
+    return (<div>
+      <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+        <Image src={loadingSVG} alt="loading" width="100" />
+      </div>
+      {
+    !hasSelectedCoin ? (
       <div className="choose-coin">
         <div className="specific-amount">
           <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
@@ -963,9 +974,7 @@ class FeedCreditCard extends React.Component {
           <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
             <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
             <div>
-              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
-                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
-              </Link>
+              <button className="btn btn-become" onClick={this.depositCoinATM}><FormattedMessage id="ex.credit.banner.btnText" /></button>
             </div>
           </div>
         </div>
@@ -976,23 +985,23 @@ class FeedCreditCard extends React.Component {
         <div className="wrapper">
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
             {cryptoPrice && (<div>
-                <div className="d-table w-100">
-                  <div className="d-table-cell text-normal">
-                    <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
+              <div className="d-table w-100">
+                <div className="d-table-cell text-normal">
+                  <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
                     &nbsp;
-                    <span className="font-weight-bold">{cryptoPrice?.amount}</span>
+                  <span className="font-weight-bold">{cryptoPrice?.amount}</span>
                     &nbsp;
-                    <span className="text-normal">{cryptoPrice?.currency}</span>
-                  </div>
-                  <div className="d-table-cell text-right">
-                    <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
+                  <span className="text-normal">{cryptoPrice?.currency}</span>
+                </div>
+                <div className="d-table-cell text-right">
+                  <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
                     &nbsp;
-                    <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
+                  <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
                     &nbsp;
-                    <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
-                  </div>
+                  <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
                 </div>
               </div>
+            </div>
             )}
 
             <div className={['bodyBackup bodyShareAddress']}>
@@ -1142,6 +1151,12 @@ class FeedCreditCard extends React.Component {
           </form>
         </div>
       </div>
+    )
+      }
+      <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
+        {modalContent}
+      </Modal>
+            </div>
     );
   }
 }
@@ -1164,8 +1179,6 @@ const mapDispatchToProps = (dispatch) => ({
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
   initPaymentInstantBuy: bindActionCreators(initPaymentInstantBuy, dispatch),
 });
 
