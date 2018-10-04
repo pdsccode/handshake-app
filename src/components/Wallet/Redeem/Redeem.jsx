@@ -3,7 +3,7 @@ import { FormattedDate, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { verifyRedeemCode } from '@/reducers/auth/action';
 import Image from '@/components/core/presentation/Image';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { referredInfo } from '@/reducers/auth/action';
@@ -29,42 +29,31 @@ class Redeem extends React.Component {
 
     this.state = {      
       redeemCode: this.props.data.code || ' ',
+      error: '',
     };    
   }
 
-
-  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
-    this.props.showAlert({
-      message: <div className="textCenter">{icon}{msg}</div>,
-      timeOut,
-      type,
-      callBack: () => {
-      },
-    });
-  }
-
-  showToast(mst) {
-    this.showAlert(mst, 'primary', 3000);
-  }
-
-  showLoading(status) {
-    this.props.showLoading({ message: '' });
-  }
-
-  hideLoading() {
-    this.props.hideLoading();
-  }
-
-  showLoading = () => {
-    this.props.showLoading({ message: '' });
-  }
-
-  hideLoading = () => {
-    this.props.hideLoading();
-  }  
-
   handleNameChange =(value)=>{
-    this.setState({redeemCode: value});
+    this.setState({redeemCode: value, error: ''});
+  }
+
+  checkRedeemCode=()=>{
+    this.props.verifyRedeemCode({
+      PATH_URL: 'user/verification/redeem-code/check?code='+this.state.redeemCode,
+      METHOD: 'POST',
+      successFn: (res) => {
+        alert(res.status);
+        if(res){
+          // move step 2 
+        }        
+      },
+      errorFn: (e) =>{ 
+        if (e.message)       
+          this.setState({error: e.message});
+        else
+          console.log(e);
+      }
+    });
   }
 
 
@@ -72,17 +61,26 @@ class Redeem extends React.Component {
     const { messages } = this.props.intl;    
     
     return (
-     <div className="redeem-page">        
+     <div className="redeem-page">   
+
+        <Modal title={messages.wallet.action.redeem.title}>
+          < div className="title"> 
+              <img src={gitfBox} /> 
+              <div>{messages.wallet.action.redeem.title}</div>
+          </div>
+        </Modal>
+
         <div className="title">
           <img src={gitfBox} /> 
           <div>{messages.wallet.action.redeem.title}</div>
         </div>
         <div className="body">
             <div className="redeem-code">
-              <Input required placeholder={messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.redeemCode} /> 
+              <Input required placeholder={messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.redeemCode} onChange={this.handleNameChange} /> 
+              {this.state.error && <div className="error">{this.state.error}</div>}
             </div>                     
             <div className="buttonRedeem">              
-              <Button>{messages.wallet.action.redeem.button_check}</Button>
+              <Button onClick={this.checkRedeemCode}>{messages.wallet.action.redeem.button_check}</Button>
             </div>
             <div className="findcode">
               <a href="#">
@@ -99,10 +97,8 @@ const mapStateToProps = (state) => ({
   referalInfo: state.exchange.referalInfo,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),  
+const mapDispatchToProps = (dispatch) => ({  
+  verifyRedeemCode: bindActionCreators(verifyRedeemCode, dispatch),   
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Redeem));
