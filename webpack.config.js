@@ -24,7 +24,7 @@ if (fs.existsSync('./.env.js')) {
 } else {
   envConfig = Object.keys(process.env).reduce((envVars, key) => {
     return Object.assign({}, envVars, {
-      [key]: JSON.stringify(process.env[key]),
+      [key]: (JSON.stringify(process.env[key]) || '').trim(),
     });
   }, {});
 }
