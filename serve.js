@@ -10,8 +10,8 @@ const root = `${__dirname}/dist`;
 app.use(express.static(root));
 app.use(fallback('index.html', { root }));
 app.use(compression());
-app.get('*',(req, res) => {
-  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+app.get('*', (req, res) => {
+  res.render('index');
 });
 
 const port = process.env.PORT || 8080;
