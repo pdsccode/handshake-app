@@ -18,7 +18,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 // const OfflinePlugin = require('offline-plugin');
 
 // configs
-const envConfig = require('./.env.js');
+let envConfig = {};
+if (fs.existsSync('./.env.js')) {
+  envConfig = require('./.env.js');
+}
 
 module.exports = function webpackConfig(env, argv = {}) {
   const isProduction = argv.mode === 'production';
