@@ -64,14 +64,12 @@ const TraderItemBoudary = (props) => (
 class TraderList extends Component {
     constructor(props) {
         super(props);
-        this.props.fetch_traders().then().catch(err => console.log(err));
+        this.props.fetch_traders().then().catch(err => err);
     }
     shouldComponentUpdate = (nextProps) => nextProps.traders.length !== this.props.traders.length
 
-    navigateToDetail = (item) => {
-        console.log(item);
-        this.props.history.push(`/invest/trader/${item.id}`)
-    }
+    navigateToDetail = item => this.props.history.push(`/invest/trader/${item.id}`)
+    
     render() {
         return (
             this.props.traders.concat(exampleTraders).map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))

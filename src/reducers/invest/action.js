@@ -1,13 +1,13 @@
-import { createAPI } from '@/reducers/action'
-import axios from 'axios';
+ import { axiosInstance } from '@/reducers/action'
 export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
   FETCH_TRADERS: 'FETCH_TRADERS',
 }
+const LIST_PROJECT_URL = '/projects/list?isFunding=true';
+const LIST_TRADER_URL = '/users/list-trader';
 
-// export const fetch_projects = createAPI(ACTIONS.FETCH_PROJECTS)
 export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
-  axios.get('http://35.198.235.226:9000/api/projects/list?isFunding=true')
+  axiosInstance.get(LIST_PROJECT_URL)
   .then(({ status, data: payload }) => {
     if (status === 200) {
       dispatch({ type: ACTIONS.FETCH_PROJECTS, payload })
@@ -18,14 +18,8 @@ export const fetch_projects = () => dispatch => new Promise((resolve, reject) =>
   .catch(err => reject(err));
 })
 
-// export const fetch_traders = function () {
-//   return {
-//     type: ACTIONS.FETCH_TRADERS,
-//     payload: exampleTraders
-//   }
-// }
 export const fetch_traders = () => dispatch => new Promise((resolve, reject) => {
-  axios.get('http://35.198.235.226:9000/api/users/list-trader')
+  axiosInstance.get(LIST_TRADER_URL)
   .then(({ status, data: payload }) => {
     if (status === 200) {
       dispatch({ type: ACTIONS.FETCH_TRADERS, payload })
