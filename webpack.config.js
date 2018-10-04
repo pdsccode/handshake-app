@@ -21,6 +21,12 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 let envConfig = {};
 if (fs.existsSync('./.env.js')) {
   envConfig = require('./.env.js');
+} else {
+  envConfig = Object.keys(process.env).reduce((envVars, key) => {
+    return Object.assign({}, envVars, {
+      [key]: JSON.stringify(process.env[key]),
+    });
+  }, {});
 }
 
 module.exports = function webpackConfig(env, argv = {}) {
