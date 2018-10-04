@@ -18,7 +18,13 @@ import reducers from '@/reducers';
 import rootSaga from '@/stores/root-saga';
 import defaultStore from '@/stores/default-store';
 
-firebase.initializeApp(process.env.firebase);
+firebase.initializeApp({
+  apiKey: process.env.firebase_apiKey,
+  authDomain: process.env.firebase_authDomain,
+  databaseURL: process.env.firebase_databaseURL,
+  storageBucket: process.env.firebase_storageBucket,
+  messagingSenderId: process.env.firebase_messagingSenderId,
+});
 
 /*
  * Reduce multiple reducers into a single reducer from left to right.
@@ -49,7 +55,7 @@ const AppReducers = combineReducers(
 const sagaMiddleware = createSagaMiddleware();
 
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, process.env.firebase),
+  reactReduxFirebase(firebase, {}),
   composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk, sagaMiddleware)),
 )(createStore);
 

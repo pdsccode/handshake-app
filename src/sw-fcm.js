@@ -6,9 +6,8 @@ import logo from '@/assets/images/app/logo.png';
 
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
-
 firebase.initializeApp({
-  messagingSenderId: process.env.firebase.messagingSenderId,
+  messagingSenderId: process.env.firebase_messagingSenderId,
 });
 
 const messaging = firebase.messaging();
@@ -19,7 +18,7 @@ messaging.setBackgroundMessageHandler((payload) => {
   const notificationOptions = {
     body: payload.body,
     icon: logo,
-  };  
+  };
   return self.registration.showNotification(
     notificationTitle,
     notificationOptions,
