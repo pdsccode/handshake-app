@@ -5,15 +5,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 
-// service, constant
-import { Grid, Row, Col } from 'react-bootstrap';
-
-// components
-import Button from '@/components/core/controls/Button';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import Input from '@/components/core/forms/Input/Input';
-import { StringHelper } from '@/services/helper';
-
 import {
   fieldCleave,
   fieldDropdown,
@@ -23,7 +14,6 @@ import {
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {change, Field, formValueSelector, clearFields} from 'redux-form';
-import {bindActionCreators} from 'redux';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 import TransferToken from '@/components/Wallet/TransferToken';
