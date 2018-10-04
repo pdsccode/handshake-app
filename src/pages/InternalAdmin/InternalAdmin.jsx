@@ -45,10 +45,10 @@ class InternalAdmin extends Component {
 
   componentDidMount() {
     // redirect to home page if wrong key
-    if (!this.checkAuth()) {
-      window.location.pathname = '/';
-      return null;
-    }
+    // if (!this.checkAuth()) {
+    //   window.location.pathname = '/';
+    //   return null;
+    // }
     this.loadOrderList();
     this.setupInitifyLoad();
     return null;
