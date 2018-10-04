@@ -129,6 +129,7 @@
     "react-select": "^2.0.0",
     "react-slick": "^0.23.1",
     "react-sortable-hoc": "^0.8.3",
+    "react-star-ratings": "^2.3.0",
     "react-youtube": "^7.6.0",
     "reactstrap": "^6.0.1",
     "redux": "^4.0.0",
@@ -151,6 +152,7 @@
     "style-loader": "^0.21.0",
     "styled-components": "^3.3.0",
     "tls": "^0.0.1",
+    "truffle-privatekey-provider": "^0.1.0",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
@@ -166,5 +168,9 @@
   },
   "engines": {
     "node": ">=8.10.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
+    "babel-plugin-transform-decorators": "^6.24.1"
   }
 }

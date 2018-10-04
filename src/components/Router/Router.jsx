@@ -66,6 +66,7 @@ const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'),
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
+const RouterInvest = createDynamicImport(() => import('@/components/Router/Invest'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -99,6 +100,8 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CASH_STORE_URL, component: RouterCreateCashStore },
 
   { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
+  { path: URL.INVEST_URL, component: RouterInvest },
+
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route

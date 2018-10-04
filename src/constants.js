@@ -623,6 +623,14 @@ export const URL = {
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
+
+  INVEST_PROJECT_LIST: '/invest/project',
+  INVEST_TRADER_LIST: '/invest/trader',
+  INVEST_PROJECT_INFO: '/invest/project/:projectID',
+  INVEST_TRADER_INFO: '/invest/trader/:traderID',
+  INVEST_URL: '/invest',
+
+
 };
 
 export const LANDING_PAGE_TYPE = {
