@@ -1,24 +1,34 @@
-import { createAPI } from '@/reducers/action'
-
+ import { axiosInstance } from '@/reducers/action'
 export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
   FETCH_TRADERS: 'FETCH_TRADERS',
 }
+const LIST_PROJECT_URL = '/projects/list?isFunding=true';
+const LIST_TRADER_URL = '/users/list-trader';
 
-// export const fetch_projects = createAPI(ACTIONS.FETCH_PROJECTS)
-export const fetch_projects = function () {
-  return {
-    type: ACTIONS.FETCH_PROJECTS,
-    payload: exampleProjects
-  }
-}
+export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
+  axiosInstance.get(LIST_PROJECT_URL)
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_PROJECTS, payload })
+      resolve(payload)
+    }
+    reject(`Response return status is not success ${status}`);
+  })
+  .catch(err => reject(err));
+})
 
-export const fetch_traders = function () {
-  return {
-    type: ACTIONS.FETCH_TRADERS,
-    payload: exampleTraders
-  }
-}
+export const fetch_traders = () => dispatch => new Promise((resolve, reject) => {
+  axiosInstance.get(LIST_TRADER_URL)
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_TRADERS, payload })
+      resolve(payload)
+    }
+    reject('');
+  })
+  .catch(err => reject(err));
+})
 
 export const eth_sendTransaction = ({
   privateKey,
@@ -27,27 +37,37 @@ export const eth_sendTransaction = ({
 
 }
 
-var exampleTraders = [
+export const exampleTraders = [
   {
-    firstName: 'Andy',
-    lastName: 'Vo',
-    userType: 'trader',
-    username: 'amit11',
-    email: 'amit007kolambikar@gmail.com',
-    emailVerified: false,
-    id: '5b8e55f3a572c4004ffaa973'
+      id: 1,
+      avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
+      firstName: 'Booby Gabershek',
+      lastName: 'Ga',
+      rating: 1,
+      average: -0.36,
+      amount: 2000,
   },
   {
-    firstName: 'Andy',
-    lastName: 'Vo',
-    userType: 'trader',
-    username: 'amit11',
-    email: 'amit007kolambikar@gmail.com',
-    emailVerified: false,
-    id: '5b8e55f3a572c4004ffaa973'
+      id: 2,
+      avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
+      firstName: 'Quang Vo',
+      lastName: 'Ga',
+      rating: 3,
+      average: 0.25,
+      amount: 14567892000
+  },
+  {
+      id: 3,
+      avatar: 'https://randomuser.me/api/portraits/men/9.jpg',
+      firstName: 'Anonymous',
+      lastName: 'Ga',
+      rating: 3,
+      average: 0.2,
+      amount: 1000650
   }
-]
-var exampleProjects = [
+];
+
+export const exampleProjects = [
   {
     name: 'Project A1',
     owner: ' ',

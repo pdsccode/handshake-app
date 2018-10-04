@@ -1,45 +1,33 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { fetch_traders, exampleTraders } from '../../reducers/invest/action';
 import Web3 from './Web3'
 import ('./TraderList.scss');
 import StarRatings from 'react-star-ratings';
 import ErrorBoundary from '../../components/ErrorBoundary';
-const listTrading = [
-    {
-        id: 1,
-        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
-        username: 'Booby Gabershek',
-        rating: 1,
-        average: -0.36,
-        amount: 2000,
-    },
-    {
-        id: 2,
-        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
-        username: 'Quang Vo',
-        rating: 3,
-        average: 0.25,
-        amount: 14567892000
-    },
-    {
-        id: 3,
-        avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
-        username: 'Anonymous',
-        rating: 3,
-        average: 0.2,
-        amount: 1000650
-    }
-];
+import { currencyFormat }from '../../utils/number';
+const IMAGE_PREFIX = 'http://35.198.235.226:9000/api/file-storages/avatar/download';
+const toHexColor = (str) => {
+	var hex = '';
+	for(var i=0;i<str.length;i++) {
+		hex += ''+str.charCodeAt(i).toString(16);
+	}
+	return `#${hex.substring(0, 6)}`;
+};
 
-const TraderItem = ({ avatarUrl, username, rating, average, amount, handleOnClick }) => (
+const TraderItem = ({ avatar, firstName, lastName, rating, average = 0, amount, handleOnClick }) => (
     <div className="traderItem" onClick={handleOnClick}>
         <div className="userInfoBlock clearfix">
             <div className="traderItem-left">
-            <img
-                src={avatarUrl}
+            {avatar && <img
+                src={avatar.indexOf('http') >= 0 ? avatar :`${IMAGE_PREFIX}/${avatar}`}
                 alt=""
                 className="userImage"
-            />
-            <label>{username}</label>
+            />}
+            {!avatar && <div className="avatar_non" style={{ backgroundColor: toHexColor(firstName)}}>
+                {`${firstName[0].toUpperCase() + lastName[0].toUpperCase()}`}
+            </div>}
+            <label>{firstName}</label>
             <div className="star-ratings">
                 <StarRatings
                 className="stars"
@@ -60,7 +48,7 @@ const TraderItem = ({ avatarUrl, username, rating, average, amount, handleOnClic
                 <label className="grey fontSmall">AVERAGE RETURNS</label>
             </div>
             <div>
-                <label>${amount}</label>
+                <label>{currencyFormat.format(amount || 0)}</label>
                 <label className="grey fontSmall">CUM EARNINGS</label>
             </div>
             </div>
@@ -74,15 +62,25 @@ const TraderItemBoudary = (props) => (
     </ErrorBoundary>
 );
 
-export default class TraderList extends Component {
-    
-    navigateToDetail = (item) => {
-        console.log(item);
-        this.props.history.push(`/invest/trader/${item.id}`)
+class TraderList extends Component {
+    constructor(props) {
+        super(props);
+        this.props.fetch_traders().then().catch(err => err);
     }
+    shouldComponentUpdate = (nextProps) => nextProps.traders.length !== this.props.traders.length
+
+    navigateToDetail = item => this.props.history.push(`/invest/trader/${item.id}`)
+    
     render() {
         return (
-            listTrading.map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
+            this.props.traders.concat(exampleTraders).map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
         )
     }
 }
+
+const mapState = state => ({
+    traders: state.invest && state.invest.traders ? state.invest.traders : []
+});
+const mapDispatch = { fetch_traders }
+
+export default connect(mapState, mapDispatch)(TraderList)

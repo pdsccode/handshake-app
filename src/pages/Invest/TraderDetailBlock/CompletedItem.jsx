@@ -1,5 +1,5 @@
+import './TraderDetail.scss';
 import React from 'react';
-import '../TraderDetail.scss';
 import { wrapBoundary } from '../../../components/ErrorBoundary';
 
 const CompletedItem = wrapBoundary(() => (
