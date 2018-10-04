@@ -169,6 +169,7 @@ class AtmCashTransfer extends Component {
           type: 'success',
         });
         const receipt = {
+          customerAmount: parseFloat(res?.data?.fiat_amount) || 0,
           amount: parseFloat(res?.data?.fiat_amount - res?.data?.store_fee) || 0,
           fiatCurrency: res?.data?.fiat_currency,
           referenceCode: res?.data?.ref_code,

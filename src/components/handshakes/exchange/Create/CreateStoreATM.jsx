@@ -296,10 +296,15 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = async (responseData, opt = {}) => {
-    const { intl: { messages }, closeModal } = this.props;
+    const { intl: { messages }, closeModal, onAtmCreated } = this.props;
     let text = messages.create.atm.text.createdAtmSuccess;
     opt.isUpdate && (text = messages.create.atm.text.updatedAtmSuccess);
     console.log('handleCreateOfferSuccess', responseData);
+
+    if (typeof onAtmCreated === 'function') {
+      // refresh new cash store data from server (for diplaying on map)
+      onAtmCreated();
+    }
 
     this.hideLoading();
     this.props.showAlert({
