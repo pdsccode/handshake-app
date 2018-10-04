@@ -49,7 +49,7 @@ class NavBar extends React.Component {
         {/* <button className="ml-2">
           <img src={iconMyATM} width={24} />
           <span className="mx-2">My ATM</span>
-        </button> */}000
+        </button> */}
         <div className="d-inline-block">
           {
             listCurrency.map(coin => {
