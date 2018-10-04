@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import TransferToken from '@/components/Wallet/TransferToken';
 
 import {
   fieldCleave,
@@ -13,10 +14,9 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
-import {change, Field, formValueSelector, clearFields} from 'redux-form';
+import { change, clearFields } from 'redux-form';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
-import TransferToken from '@/components/Wallet/TransferToken';
 import Complete from './Complete';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
