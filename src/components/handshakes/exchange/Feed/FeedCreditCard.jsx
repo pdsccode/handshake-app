@@ -507,7 +507,7 @@ class FeedCreditCard extends React.Component {
     const { cc_email } = this.props;
     const { walletSelected } = this.state;
 
-    if (resultCode !== 'RedirectShopper') {
+    if (resultCode !== 'RedirectShopper' && resultCode !== 'Authorised') {
       const message = 'Opp, something wrong! Please go back later!';
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
