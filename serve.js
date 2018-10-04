@@ -9,7 +9,7 @@ app.use(express.static(root));
 app.use(fallback('index.html', { root }));
 app.use(compression());
 app.get('*', (req, res) => {
-  res.sendFile(`${root}/index.html`);
+  res.sendFile('index.html');
 });
 
 const port = process.env.PORT || 8080;
