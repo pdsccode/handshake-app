@@ -4,8 +4,6 @@
   "main": "",
   "private": true,
   "scripts": {
-    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false yarn install --dev-dependencies",
-    "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;",
     "i18n": "yarn add github:ninjadotorg/handshake-i18n",
     "start": "yarn i18n && webpack-dev-server --mode development",
     "build": "yarn i18n && node node_modules/webpack/bin/webpack.js --mode production",
@@ -86,9 +84,8 @@
     "styled-components": "^3.3.0",
     "tls": "^0.0.1",
     "validator": "^10.4.0",
-    "web3": "1.0.0-beta.34"
-  },
-  "devDependencies": {
+    "web3": "1.0.0-beta.34",
+
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.51",
     "@babel/plugin-proposal-optional-chaining": "^7.0.0-beta.51",
