@@ -7,7 +7,7 @@
     "i18n": "yarn add github:ninjadotorg/handshake-i18n",
     "start": "yarn i18n && webpack-dev-server --mode development",
     "build": "yarn i18n && webpack --mode production",
-    "heroku-postbuild": "yarn i18n && webpack --mode production",
+    "heroku-postbuild": "yarn i18n && ./node_modules/.bin/webpack --mode production",
     "lint": "eslint --fix src/**",
     "test": "__tests__/fake_test.sh",
     "serve": "cd dist && ws --spa index.html --port 8080",
