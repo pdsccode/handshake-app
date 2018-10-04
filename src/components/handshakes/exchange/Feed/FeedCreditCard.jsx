@@ -513,7 +513,10 @@ class FeedCreditCard extends React.Component {
         message: <div className="text-center">{message}</div>,
         timeOut: 5000,
         type: 'danger',
-        // callBack: this.handleBuySuccess
+        callBack: () => {
+          this.hideLoading();
+          // this.props.history.push(`${URL.BUY_BY_CC_URL}`);
+        },
       });
       return;
     }

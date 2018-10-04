@@ -220,7 +220,7 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
-  getStoreATM() {
+  getStoreATM = () => {
     this.props.getStoreATM({
       PATH_URL: `${API_URL.EXCHANGE.CASH_STORE_ATM}`,
     });
@@ -409,7 +409,7 @@ class DiscoverPage extends React.Component {
       modalTitle: messages.create.atm.title,
       modalContent:
         (
-          <CreateStoreATM onAtmUpdated={this.loadDiscoverList} closeModal={this.modalRef.close} options={opt} />
+          <CreateStoreATM onAtmCreated={this.getStoreATM} onAtmUpdated={this.loadDiscoverList} closeModal={this.modalRef.close} options={opt} />
         ),
     }, () => {
       this.modalRef.open();

@@ -50,5 +50,5 @@ export const checkExistSubcribeEmailSelector = (state) => {
   return isExistEmail;
 };
 export const totalBetsSelector = (state) => {
-  return state.ui.totalBets || 0;
+  return (1000 - state.ui.totalBets || 0);
 };
