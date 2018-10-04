@@ -44,7 +44,7 @@ const RouterReport = createDynamicImport(() => import('@/components/Router/Repor
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
-//const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+// const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
@@ -62,11 +62,10 @@ const ContentForPexInstruction = createDynamicImport(() => import('@/pages/Landi
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
-const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
-const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
+const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
@@ -89,18 +88,19 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
 
-  { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
-  { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
       window.location.href = URL.PRODUCT_DAD_URL_SUBDOMAIN;
       return null;
-    }
+    },
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
+  { path: URL.CASH_STORE_URL, component: RouterCreateCashStore },
+
+  { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -132,7 +132,6 @@ if (BrowserDetect.isDesktop) {
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
-    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} reactHelmetElement={SEOWhisper} /> },
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (

@@ -1,6 +1,6 @@
 // import { createSelector } from 'reselect';
 import qs from 'querystring';
-import _ from 'lodash';
+import { isEmpty } from '@/utils/is';
 
 export const queryStringSelector = (state) => {
   return state.router.location.search;
@@ -11,10 +11,10 @@ export const eventSelector = (state) => {
   const urlParams = qs.parse(queryString.slice(1));
   const { match } = urlParams;
   const { events } = state.prediction;
-  if (_.isEmpty(urlParams) || _.isEmpty(events)) {
+  if (isEmpty(urlParams) || isEmpty(events)) {
     return state.prediction.events;
   }
-  return events.filter(event => (event.id === _.toInteger(match)));
+  return events.filter(event => (event.id === parseInt(match, 10)));
 };
 
 export const countReportSelector = (state) => {
@@ -49,4 +49,7 @@ export const checkExistSubcribeEmailSelector = (state) => {
   */
   const { isExistEmail = false } = state.ui;
   return isExistEmail;
+};
+export const totalBetsSelector = (state) => {
+  return (1000 - state.ui.totalBets || 0);
 };
