@@ -41,7 +41,7 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 class NavBar extends React.Component {
   render() {
     const { messages } = this.props.intl;
-    const { listOfferPrice } = this.props;
+    const { listOfferPriceCashAtm } = this.props;
 
     return (
       <div className="cash-nav-bar">
@@ -49,12 +49,12 @@ class NavBar extends React.Component {
         {/* <button className="ml-2">
           <img src={iconMyATM} width={24} />
           <span className="mx-2">My ATM</span>
-        </button> */}
+        </button> */}000
         <div className="d-inline-block">
           {
             listCurrency.map(coin => {
               const { id, text } = coin;
-              const { price } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, id, FIAT_CURRENCY.USD);
+              const { price } = getOfferPrice(listOfferPriceCashAtm, EXCHANGE_ACTION.SELL, id, FIAT_CURRENCY.USD);
               return (
                 <span key={id} className="d-inline-block mr-3">
                   {text}
@@ -71,7 +71,7 @@ class NavBar extends React.Component {
 }
 
 const mapState = state => ({
-  listOfferPrice: state.exchange.listOfferPrice,
+  listOfferPriceCashAtm: state.exchange.listOfferPriceCashAtm,
 });
 
 const mapDispatch = dispatch => ({
