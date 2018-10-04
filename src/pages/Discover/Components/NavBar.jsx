@@ -60,7 +60,7 @@ class NavBar extends React.Component {
                 <span key={id} className="d-inline-block mr-3">
                   {text}
                   {' '}
-                  <span><strong>{formatMoneyByLocale(price, FIAT_CURRENCY.USD)}</strong> {FIAT_CURRENCY.USD} </span>
+                  <span><strong>{formatMoneyByLocale(price.price, FIAT_CURRENCY.USD)}</strong> {FIAT_CURRENCY.USD} </span>
                 </span>
               ) : null;
             })
