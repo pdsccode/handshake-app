@@ -1,5 +1,0 @@
-build:
-  languages:
-  - node_js
-run:
-  web: yarn serve-heroku
