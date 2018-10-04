@@ -17,6 +17,10 @@ import {
 import { change, clearFields } from 'redux-form';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
+<<<<<<< HEAD
+=======
+import TransferToken from '@/components/Wallet/TransferToken';
+>>>>>>> 148b23fa2e5c192f86531baa366550d31cb5b317
 import Complete from './Complete';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
