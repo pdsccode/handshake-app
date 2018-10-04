@@ -8,8 +8,9 @@ import {
     AVERAGE_RETURN,
     CUM_EARNINGS
 } from './Messages';
+import { currencyFormat } from '../../../utils/number'
 
-const ProfileSumary = wrapBoundary(({ rating, avatarUrl, name, activeProjects, managedFunds, averageReturn, cumEarning }) => (
+const ProfileSumary = wrapBoundary(({ rating, avatarUrl, name, activeProjects, managedFunds = 0, averageReturn, cumEarning = 0 }) => (
     <div className="profile">
         <div className="relativeLine">
             <div className="profile-picture">
@@ -39,7 +40,7 @@ const ProfileSumary = wrapBoundary(({ rating, avatarUrl, name, activeProjects, m
                     <label className="grey">{ACTIVE_PROJECTS}</label>
                 </div>
                 <div className="block block-b2">
-                    <label className="black">{`$${managedFunds}`}</label>
+                    <label className="black">{currencyFormat.format(managedFunds)}</label>
                     <label className="grey">{CUM_VALUE_OF_MANAGED_FUNDS}</label>
                 </div>
                 <div className="block block-b2">
@@ -47,7 +48,7 @@ const ProfileSumary = wrapBoundary(({ rating, avatarUrl, name, activeProjects, m
                     <label className="grey">{AVERAGE_RETURN}</label>
                 </div>
                 <div className="block block-b1">
-                    <label className="black">{`$${cumEarning}`}</label>
+                    <label className="black">{currencyFormat.format(cumEarning)}</label>
                     <label className="grey">{CUM_EARNINGS}</label>
                 </div>
             </div>

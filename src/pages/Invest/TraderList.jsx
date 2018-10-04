@@ -5,6 +5,7 @@ import Web3 from './Web3'
 import ('./TraderList.scss');
 import StarRatings from 'react-star-ratings';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { currencyFormat }from '../../utils/number';
 const IMAGE_PREFIX = 'http://35.198.235.226:9000/api/file-storages/avatar/download';
 const toHexColor = (str) => {
 	var hex = '';
@@ -47,7 +48,7 @@ const TraderItem = ({ avatar, firstName, lastName, rating, average = 0, amount, 
                 <label className="grey fontSmall">AVERAGE RETURNS</label>
             </div>
             <div>
-                <label>${amount}</label>
+                <label>{currencyFormat.format(amount || 0)}</label>
                 <label className="grey fontSmall">CUM EARNINGS</label>
             </div>
             </div>

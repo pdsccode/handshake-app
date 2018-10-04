@@ -9,9 +9,9 @@ export default class TraderDetail extends Component {
             avatarUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
             name: 'Quang Vo',
             activeProjects: 115,
-            managedFunds: '200,000,000',
+            managedFunds: 200000000,
             averageReturn: 0.32,
-            cumEarning: '15,000',
+            cumEarning: 15000,
             currentlyFundings: [],
             completedProjects: []
         };
