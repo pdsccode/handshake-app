@@ -55,3 +55,12 @@ table td, table th {
 table th {
 	text-transform:uppercase;
 }
+
+tr.show-more-btn {
+  cursor: pointer;
+  span {
+    margin: 0px;
+    font-weight: bold;
+    color: blue;
+  }
+}

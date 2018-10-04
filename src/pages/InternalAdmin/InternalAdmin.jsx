@@ -5,15 +5,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
+import { debounce } from 'lodash';
 import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/action';
-// import StatusButton from './components/StatusButton';
 import './InternalAdmin.scss';
 
 const STATUS = {
-  processing: {
-    id: 'processing',
-    name: 'Waiting',
-  },
   transferring: {
     id: 'transferring',
     name: 'Sending',
@@ -22,21 +18,29 @@ const STATUS = {
     id: 'success',
     name: 'Sent',
   },
+  processing: {
+    id: 'processing',
+    name: 'Created',
+  },
 };
 
 const backupScroll = window.onscroll;
+const DEFAULT_TYPE = Object.values(STATUS)[0].id;
 
 class InternalAdmin extends Component {
   constructor() {
     super();
     this.state = {
-      type: STATUS.processing.id,
+      type: DEFAULT_TYPE,
+      isFinished: false,
+      page: null,
     };
 
     this.send = :: this.send;
     this.loadOrderList = :: this.loadOrderList;
     this.setupInitifyLoad = :: this.setupInitifyLoad;
     this.onSuccess = :: this.onSuccess;
+    this.autoLoadMore = debounce(:: this.autoLoadMore, 1000);
   }
 
   componentDidMount() {
@@ -54,12 +58,14 @@ class InternalAdmin extends Component {
     window.onscroll = backupScroll;
   }
 
+  autoLoadMore() {
+    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+      this.loadOrderList();
+    }
+  }
+
   setupInitifyLoad() {
-    window.onscroll = () => {
-      if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-        this.loadOrderList();
-      }
-    };
+    window.onscroll = this.autoLoadMore;
   }
 
   getAmount(order = {}) {
@@ -78,21 +84,42 @@ class InternalAdmin extends Component {
     return STATUS[order.status]?.name || '---';
   }
 
+  isLastType() {
+    const len = Object.keys(STATUS).length;
+    const index = Object.values(STATUS).findIndex(item => item.id === this.state.type);
+    if (index === (len - 1)) {
+      return true;
+    }
+    return false;
+  }
+
   onSuccess(res) {
     if (res?.can_move === false) {
+      // if this is last of type, jod done!
+      if (this.isLastType()) {
+        this.setState({ isFinished: true });
+        return;
+      }
+
       // load next type of order
       const types = Object.keys(STATUS);
       const foundIndex = types.indexOf(this.state.type);
       if (types[foundIndex + 1]) {
-        this.setState({ type: types[foundIndex + 1] });
+        this.setState({ type: types[foundIndex + 1], page: null }, this.autoLoadMore);
       }
+    } else {
+      this.setState({ page: res?.page }, this.autoLoadMore);
     }
   }
 
   loadOrderList(status = this.state.type) {
+    if (this.state.isFinished) {
+      return;
+    }
+
     const qs = { status };
-    if (this.props.page) {
-      qs.page = this.props.page;
+    if (this.state.page) {
+      qs.page = this.state.page;
     }
 
     this.props.loadCashOrderList({
@@ -116,12 +143,12 @@ class InternalAdmin extends Component {
   }
 
   renderActionBtn(order = {}) {
-    if (order.status !== STATUS.processing.id) {
+    if (order.status !== STATUS.transferring.id) {
       return null;
     }
 
     return (
-      <button onClick={() => this.send(order)}>
+      <button onClick={() => this.send(order)} className="btn btn-primary">
         Send
       </button>
     );
@@ -129,6 +156,7 @@ class InternalAdmin extends Component {
 
   render() {
     const { orderList } = this.props;
+    const { isFinished } = this.state;
     return (
       <div>
         <table>
@@ -162,9 +190,10 @@ class InternalAdmin extends Component {
                 </tr>
               ))
             }
-            <tr>
-              <td colSpan="7" onClick={() => this.loadOrderList()}><p>Show more</p></td>
-            </tr>
+            { isFinished &&
+              <tr>
+                <td colSpan="7"><p>No more order</p></td>
+              </tr>}
           </tbody>
         </table>
       </div>
@@ -177,7 +206,6 @@ InternalAdmin.propTypes = {
   match: PropTypes.object.isRequired,
   loadCashOrderList: PropTypes.func.isRequired,
   sendCashOrder: PropTypes.func.isRequired,
-  page: PropTypes.string,
 };
 
 InternalAdmin.defaultProps = {
