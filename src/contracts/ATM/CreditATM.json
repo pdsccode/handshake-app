@@ -47,6 +47,39 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "addAdmin",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "ad",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "constant": true,
       "inputs": [
         {
@@ -96,10 +129,58 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "a",
+          "type": "address"
+        }
+      ],
+      "name": "rAdmin",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "length",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "ad",
+          "type": "address"
+        }
+      ],
+      "name": "__addAdmin",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "length",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "ad",
+          "type": "address"
+        }
+      ],
+      "name": "__rAdmin",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -162,5 +243,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-09-07T03:56:43.536Z"
+  "updatedAt": "2018-10-03T08:34:02.181Z"
 }
