@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -143,4 +143,4 @@ const mapDispatch = ({
 });
 
 
-export default injectIntl(connect(mapState, mapDispatch)(PaymentTransfer));
+export default injectIntl(withRouter(PaymentTransfer));
