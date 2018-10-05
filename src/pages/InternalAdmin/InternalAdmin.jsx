@@ -10,6 +10,10 @@ import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/actio
 import './InternalAdmin.scss';
 
 const STATUS = {
+  fiat_transferring: {
+    id: 'fiat_transferring',
+    name: 'Fiat transferring',
+  },
   transferring: {
     id: 'transferring',
     name: 'Sending',
@@ -18,9 +22,9 @@ const STATUS = {
     id: 'success',
     name: 'Sent',
   },
-  processing: {
-    id: 'processing',
-    name: 'Created',
+  transfer_failed: {
+    id: 'transfer_failed',
+    name: 'Failed',
   },
 };
 
@@ -143,7 +147,7 @@ class InternalAdmin extends Component {
   }
 
   renderActionBtn(order = {}) {
-    if (order.status !== STATUS.transferring.id) {
+    if (order.status !== STATUS.fiat_transferring.id) {
       return null;
     }
 
