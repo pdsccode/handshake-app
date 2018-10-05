@@ -183,7 +183,7 @@ class Wallet extends React.Component {
     };
 
     this.props.setHeaderRight(this.headerRight());
-    this.listener = _.throttle(this.scrollListener, 200).bind(this);   
+    // this.listener = _.throttle(this.scrollListener, 200).bind(this);   
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -284,14 +284,14 @@ class Wallet extends React.Component {
   }
 
   attachScrollListener() {
-    window.addEventListener('scroll', this.listener);
-    window.addEventListener('resize', this.listener);
-    this.listener();
+    // window.addEventListener('scroll', this.listener);
+    // window.addEventListener('resize', this.listener);
+    // this.listener();
   }
 
   detachScrollListener() {
-    window.removeEventListener('scroll', this.listener);
-    window.removeEventListener('resize', this.listener);
+    // window.removeEventListener('scroll', this.listener);
+    // window.removeEventListener('resize', this.listener);
   }
 
   componentWillUnmount() {
