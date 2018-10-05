@@ -70,7 +70,6 @@ class Complete extends React.Component {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
     const { order_id, confirm_url } = this.querystringParsed;
-console.log(data);
     if(data) {
       let icon = '', title = '', msg = '', fullBackUrl = '', success = true;
 
@@ -78,7 +77,7 @@ console.log(data);
         icon = iconSuccess;
         title = 'Payment processed!';
         msg = 'Thank you for your purchase!';
-        fullBackUrl = `${confirm_url}?order_id=${order_id}&hash=${data.hash}&status=1`;
+        fullBackUrl = `${confirm_url}?order_id=${order_id}&transaction=${data.hash}&status=1`;
         setTimeout(() => {window.location.href = fullBackUrl}, 7000);
       }
       else{
