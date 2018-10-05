@@ -27,7 +27,6 @@ class CCConfirm extends React.Component {
     super(props);
     this.state = {
       isLoading: false,
-      userProfile: {},
       firebaseUser: this.props.firebaseUser,
     };
 
@@ -42,7 +41,7 @@ class CCConfirm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
-    if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
+    if (nextProps.userProfile && JSON.stringify(nextProps.userProfile) !== JSON.stringify(this.props.userProfile)) {
       console.log('componentWillReceiveProps', nextProps);
       // const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
       // const source = local.get(APP.CC_SOURCE);
