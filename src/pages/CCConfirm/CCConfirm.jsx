@@ -37,18 +37,26 @@ class CCConfirm extends React.Component {
   // };
 
   componentDidMount() {
-    this.intervalCountdown = setInterval(() => {
-      const { isRequest } = this.state;
-      if (!isRequest) {
-        this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
-      }
-    }, 5000);
+    const { isRequest } = this.state;
+
+    if (!isRequest) {
+      this.setState({ isRequest: true }, () => {
+        this.getAuthoriseInfo();
+      });
+    }
+
+    // this.intervalCountdown = setInterval(() => {
+    //   const { isRequest } = this.state;
+    //   if (!isRequest) {
+    //     this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+    //   }
+    // }, 5000);
   }
 
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
-    }
+    // if (this.intervalCountdown) {
+    //   clearInterval(this.intervalCountdown);
+    // }
   }
 
 
@@ -64,13 +72,13 @@ class CCConfirm extends React.Component {
       //   this.handleSubmit({}, nextProps.userProfile);
       // }
 
-      const { isRequest } = this.state;
-
-      if (!isRequest) {
-        this.setState({ isRequest: true }, () => {
-          this.getAuthoriseInfo();
-        });
-      }
+      // const { isRequest } = this.state;
+      //
+      // if (!isRequest) {
+      //   this.setState({ isRequest: true }, () => {
+      //     this.getAuthoriseInfo();
+      //   });
+      // }
     }
   }
 
