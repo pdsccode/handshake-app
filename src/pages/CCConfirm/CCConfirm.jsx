@@ -28,6 +28,7 @@ class CCConfirm extends React.Component {
     this.state = {
       isLoading: false,
       firebaseUser: this.props.firebaseUser,
+      isRequest: false,
     };
 
     console.log('location.search', window.location.search);
@@ -50,7 +51,14 @@ class CCConfirm extends React.Component {
       // if (client_secret && client_secret === cc_client_secret) {
       //   this.handleSubmit({}, nextProps.userProfile);
       // }
-      this.getAuthoriseInfo();
+
+      const { isRequest } = this.state;
+
+      if (!isRequest) {
+        this.setState({ isRequest: true }, ()=> {
+          this.getAuthoriseInfo();
+        });
+      }
     }
   }
 
