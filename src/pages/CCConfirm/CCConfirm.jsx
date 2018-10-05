@@ -37,8 +37,20 @@ class CCConfirm extends React.Component {
   // };
 
   componentDidMount() {
-    this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+    this.intervalCountdown = setInterval(() => {
+      const { isRequest } = this.state;
+      if (!isRequest) {
+        this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+      }
+    }, 5000);
   }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
+  }
+
 
   componentWillReceiveProps(nextProps) {
     // const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
