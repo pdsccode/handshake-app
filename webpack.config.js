@@ -23,9 +23,8 @@ if (fs.existsSync('./.env.js')) {
   envConfig = require('./.env.js');
 } else {
   envConfig = Object.keys(process.env).reduce((envVars, key) => {
-    return Object.assign({}, envVars, {
-      [key]: (JSON.stringify(process.env[key]) || '').trim(),
-    });
+    envVars[key] = JSON.stringify(process.env[key]); // eslint-disable-line
+    return envVars;
   }, {});
 }
 
