@@ -1144,6 +1144,8 @@ export default {
           success: 'Success',
           transferring: 'Sending coins...',
           cancelled: 'Canceled',
+          fiat_transfering: 'Sending money...',
+          transfer_failed: 'Failed',
         },
         messageTransfer: 'You haven\'t transferred yet.',
         transferNow: 'View detail',

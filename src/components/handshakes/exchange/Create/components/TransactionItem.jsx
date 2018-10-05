@@ -32,6 +32,8 @@ export const CASH_ORDER_STATUS = {
   SUCCESS: 'success',
   TRANSFERRING: 'transferring',
   CANCELLED: 'cancelled',
+  FAILED: 'transfer_failed',
+  FIAT_TRANSFERRING: 'fiat_transferring',
 };
 
 class TransactionItem extends React.Component {
@@ -174,7 +176,7 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.status}
               </div>
               <div className="d-table-cell text-right">
-                <span className={cx('text-normal', `${status}`)}>{messages.create.atm.transactions.statusValues[status]}</span>
+                <span className={cx('text-normal', `${status}`)}>{messages.create.atm.transactions.statusValues[status] || '---'}</span>
               </div>
             </div>
             {
