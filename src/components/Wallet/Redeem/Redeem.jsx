@@ -20,6 +20,7 @@ import ConfirmButton from '@/components/Wallet/ConfirmButton';
 
 import gitfBox from '@/assets/images/wallet/images/gift-gift-box.svg';
 import RedeemConfirm from '@/components/Wallet/Redeem/RedeemConfirm';
+import BackChevronSVGWhite from '@/assets/images/icon/back-chevron-white.svg';
 
 
 class Redeem extends React.Component {
@@ -30,11 +31,13 @@ class Redeem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {      
+    this.state = {
       redeemCode: this.props.data.code || ' ',
       error: ''      ,
       contentRedeemConfirm: '',
     };    
+    this.modalHeaderStyle = {color: "#fff", background: "#546FF7"};
+    this.modalBodyStyle = {padding: 0};
   }
 
   handleNameChange =(value)=>{
@@ -51,6 +54,7 @@ class Redeem extends React.Component {
         }        
       },
       errorFn: (e) =>{ 
+        this.openConfirm();
         if (e.message)       
           this.setState({error: e.message});
         else
@@ -71,7 +75,7 @@ class Redeem extends React.Component {
     return (
       <div>  
 
-          <Modal onRef={modal => this.modalRedeemConfirmRef = modal} title={messages.wallet.action.redeem.title}>
+          <Modal onRef={modal => this.modalRedeemConfirmRef = modal} title={messages.wallet.action.redeem.title} modalBodyStyle={this.modalBodyStyle} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}   >
               {this.state.contentRedeemConfirm}
           </Modal>
 

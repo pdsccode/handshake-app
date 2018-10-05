@@ -20,6 +20,11 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 import ListCoin from '@/components/Wallet/ListCoin';
 
+import {getFiatCurrency} from '@/reducers/exchange/action';
+import { API_URL } from "@/constants";
+import Helper from '@/services/helper';
+import { renderToString } from 'react-dom/server';
+
 function changeIconConfirmButton(icon){
   try{
     document.querySelector(".confirm-button .rangeslider__handle").style.backgroundImage = 'url("'+icon+'")';    
@@ -45,13 +50,13 @@ class RedeemConfirm extends React.Component {
       walletSelected: null,
       listWalletCoin: [],
       contentWalletSelected: '',
-      modalListCoin: '',      
-      contentConfirmButton: '',
+      modalListCoin: '',            
+      cryptoValue: "",
     };    
   }
 
   componentDidMount(){
-    this.getWalletDefault();
+    this.getWalletDefault();    
   }
 
   checkRedeemCode=()=>{
@@ -99,14 +104,13 @@ class RedeemConfirm extends React.Component {
     
     if (listWalletCoin.length > 0){
       walletSelected = listWalletCoin[0];
-    }    
+    }        
     
     this.setState({listWalletCoin: listWalletCoin, walletSelected: walletSelected}, ()=>{
       this.genWalletSelect();
-    });
-
+    });   
   }
-
+  
   selectWallet=(wallet)=>{
     this.setState({walletSelected: wallet}, ()=> {    
       this.genWalletSelect();  
@@ -137,14 +141,34 @@ class RedeemConfirm extends React.Component {
     if(this.state.walletSelected){
       let icon = ''; try{ icon = require("@/assets/images/icon/wallet/coins/" + this.state.walletSelected.name.toLowerCase() + '.svg')} catch (ex){};
       
+      this.props.getFiatCurrency({
+        PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
+        qs: {fiat_currency: 'USD', currency: this.state.walletSelected.name},
+        successFn: (res) => {
+          let data = res.data;
+          let rate = fiat_currency == 'USD' ? data.price : data.fiat_amount;  
+
+          let amount = Number(money)/rate;
+          if(amount && amount < 1e-6){
+            amount = Number(amount).toFixed(6);
+          }
+          let cryptoValue = `${amount} ${this.state.walletSelected.name}`;
+          this.setState({cryptoValue: cryptoValue});        
+        },
+        errorFn: (err) => {
+          console.log("Error", err);          
+          let cryptoValue = `0 ${this.state.walletSelected.name}`;
+          this.setState({cryptoValue: cryptoValue});        
+        },
+      });                
+      
       this.setState({
-        contentWalletSelected: 
-          <div className="wallet-from" onClick={() => {this.openListCoin() }}>
-            <img className="logo" src={icon} alt=""/>
-            <span className="re-name"> {this.state.walletSelected.title} </span> <span className="re-address">({this.state.walletSelected.getShortAddress()})</span>
-            <img className="arrow-down" src={ExpandArrowSVG} />
-          </div>
-        , contentConfirmButton: <ConfirmButton onConfirmed={this.onRedeemConfirm} buttonText={messages.wallet.action.redeem.swipe_button_redeem + " " + this.state.walletSelected.name}/>
+        contentWalletSelected:                      
+            <div className="wallet-from" onClick={() => {this.openListCoin() }}>
+              <img className="logo" src={icon} alt=""/>
+              <span className="re-name"> {this.state.walletSelected.title} </span> <span className="re-address">({this.state.walletSelected.getShortAddress()})</span>
+              <img className="arrow-down" src={ExpandArrowSVG} />
+            </div>                  
       }, ()=>{
         changeIconConfirmButton(icon);
       })            
@@ -152,9 +176,11 @@ class RedeemConfirm extends React.Component {
   }
 
 
-  render() {
-    const { messages } = this.props.intl;        
-            
+  render() { 
+    const { messages } = this.props.intl;      
+    // let linkTerm = <span className="term-link">Terms and Conditions </span>  ;
+    
+    // let term = StringHelper.format(messages.wallet.action.redeem.agree_text, linkTerm);    
     return (                      
         <div className="redeem-page"> 
 
@@ -166,17 +192,30 @@ class RedeemConfirm extends React.Component {
                 <img src={gitfBox} /> 
                 <div className="title code">{this.state.redeemCode}</div>                  
             </div>
-            <div><span>{messages.wallet.action.redeem.giftcard}:</span> <span>${this.state.giftcardValue}</span></div>         
-            <div><span>{messages.wallet.action.redeem.value}:</span> <span>{this.state.cryptoValue}</span></div>         
 
-            {/* wallet receive  */}
+            <div className="box-value">
+                <div className="giftcard-value">
+                  <div className="v-title">{messages.wallet.action.redeem.giftcard}</div> 
+                  <div className="v-value">${this.state.giftcardValue}</div></div>   
+
+                <div className="coin-value">
+                  <div className="v-title">{messages.wallet.action.redeem.value}</div> 
+                  <div className="v-value">{this.state.cryptoValue}</div>
+                </div>     
+            </div>
+
+                
+
+            {/* wallet receive  */}        
+            <div className="wallet-select-title">Choose a wallet</div>    
             {this.state.contentWalletSelected}
 
             <div className="term">
-              {messages.wallet.action.redeem.agree_text}
+              {/* {term}  */}
+              By clicking REDEEM, you agree to Gift Card & Promotional code <span className="term-link">Terms and Conditions </span> as applicable
             </div>
-            <div className="buttonRedeem">              
-              {this.state.contentConfirmButton}
+            <div className="buttonConfirmRedeem">              
+              <ConfirmButton onConfirmed={this.onRedeemConfirm} buttonText={messages.wallet.action.redeem.swipe_button_redeem}/>
             </div>
         </div>       
     );
@@ -189,6 +228,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({  
   verifyRedeemCode: bindActionCreators(verifyRedeemCode, dispatch),   
+  getFiatCurrency: bindActionCreators(getFiatCurrency, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(RedeemConfirm));
