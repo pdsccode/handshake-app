@@ -18,13 +18,14 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 // const OfflinePlugin = require('offline-plugin');
 
 // configs
+const NINJA_ENV = /^NINJA_/i;
 let envConfig = {};
 if (fs.existsSync('./.env.js')) {
   envConfig = require('./.env.js');
 } else {
-  envConfig = Object.keys(process.env).reduce((envVars, key) => {
-    envVars[key] = JSON.stringify(process.env[key]); // eslint-disable-line
-    return envVars;
+  envConfig = Object.keys(process.env).filter(k => NINJA_ENV.test(k)).reduce((env, key) => {
+    env[key] = process.env[key]; // eslint-disable-line
+    return env;
   }, {});
 }
 
@@ -151,7 +152,7 @@ module.exports = function webpackConfig(env, argv = {}) {
         chunkFilename: 'css/[hash].[name].css',
       }),
       new PwaManifestPlugin({
-        name: appEnvConfig.title,
+        name: appEnvConfig.NINJA_title,
         short_name: 'Ninja',
         description: '',
         background_color: '#1A1919',

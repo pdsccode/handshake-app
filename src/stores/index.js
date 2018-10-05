@@ -19,11 +19,11 @@ import rootSaga from '@/stores/root-saga';
 import defaultStore from '@/stores/default-store';
 
 firebase.initializeApp({
-  apiKey: process.env.firebase_apiKey,
-  authDomain: process.env.firebase_authDomain,
-  databaseURL: `${process.env.firebase_databaseURL}111`,
-  storageBucket: process.env.firebase_storageBucket,
-  messagingSenderId: process.env.firebase_messagingSenderId,
+  apiKey: process.env.NINJA_firebase_apiKey,
+  authDomain: process.env.NINJA_firebase_authDomain,
+  databaseURL: process.env.NINJA_firebase_databaseURL,
+  storageBucket: process.env.NINJA_firebase_storageBucket,
+  messagingSenderId: process.env.NINJA_firebase_messagingSenderId,
 });
 
 /*

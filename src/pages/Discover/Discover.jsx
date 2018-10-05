@@ -462,7 +462,7 @@ class DiscoverPage extends React.Component {
           isMarkerShown={this.state.isMarkerShown}
           onMarkerClick={this.handleMarkerClick}
           // googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.NINJA_GOOGLE_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div className="map-container" style={{ height: `${browserHeight - marginTop}px`, marginTop: `${marginTop}px`, position: 'relative' }} />}
           mapElement={<div style={{ height: `100%` }} />}

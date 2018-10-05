@@ -214,7 +214,7 @@ class Router extends React.Component {
                             {/*exact*/}
                             {/*path={URL.INDEX}*/}
                             {/*render={() => {*/}
-                            {/*if (process.env.isDojo) {*/}
+                            {/*if (process.env.NINJA_isDojo) {*/}
                             {/*return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />*/}
                             {/*}*/}
                             {/*return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />*/}

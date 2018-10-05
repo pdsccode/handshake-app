@@ -85,20 +85,20 @@ export class MasterWallet {
       const masterWallet = [];
 
       let defaultWallet = [1, 3];// eth main, eth test, btc main, btc test => local web
-      if (process.env.isLive) { // // eth main, eth test, btc main, btc test => live web
+      if (process.env.NINJA_isLive) { // // eth main, eth test, btc main, btc test => live web
         defaultWallet = [0, 1, 2, 3];
       }
-      if (process.env.isDojo) { // eth test, shuri test, btc test => dojo web
+      if (process.env.NINJA_isDojo) { // eth test, shuri test, btc test => dojo web
         defaultWallet = [0, 2];
       }
 
       for (const k1 in MasterWallet.ListDefaultCoin) {
         for (const k2 in MasterWallet.ListDefaultCoin[k1].Network) {
           // check production, only get mainnet:
-          if (process.env.isLive && k2 != 'Mainnet') {
+          if (process.env.NINJA_isLive && k2 != 'Mainnet') {
             break;
           }
-          if (!process.env.isLive && process.env.isDojo && k2 == 'Mainnet') {
+          if (!process.env.NINJA_isLive && process.env.NINJA_isDojo && k2 == 'Mainnet') {
             continue;
           }
           // init a wallet:
@@ -146,7 +146,7 @@ export class MasterWallet {
       for (const k1 in MasterWallet.ListDefaultCoin) {
         for (const k2 in MasterWallet.ListDefaultCoin[k1].Network) {
           // check production, only get mainnet:
-          if (process.env.isLive && k2 != 'Mainnet') {
+          if (process.env.NINJA_isLive && k2 != 'Mainnet') {
             break;
           }
           const wallet = new MasterWallet.ListDefaultCoin[k1]();
@@ -334,7 +334,7 @@ export class MasterWallet {
           shuriWalletMain = MasterWallet.convertObject(shuriWalletMain);
           hasUpdateMain = true;
         }
-        if (!process.env.isLive && wallet.name == 'ETH' && !hasUpdateTest) {
+        if (!process.env.NINJA_isLive && wallet.name == 'ETH' && !hasUpdateTest) {
           shuriWalletTest = JSON.parse(JSON.stringify(wallet));
           const shuriTemp = new Shuriken();
           shuriWalletTest.name = shuriTemp.name;
@@ -364,7 +364,7 @@ export class MasterWallet {
       const listWallet = [];
       let isDefaultBTC = false;
       let isDefaultETH = false;
-      if (process.env.isLive) {
+      if (process.env.NINJA_isLive) {
         wallets.forEach((wallet) => {
           if (wallet.getNetworkName() == 'Mainnet') {
             if (wallet.default) {
@@ -456,7 +456,7 @@ export class MasterWallet {
 
     static fixBitcoinCashTestnet(wallets){
       let walletTemps = [];
-      if (process.env.isLive)
+      if (process.env.NINJA_isLive)
       {
         wallets.forEach((wallet) => {
           if (wallet.name =='BCH'){
@@ -500,7 +500,7 @@ export class MasterWallet {
           let wallet = false;
           wallets.forEach((walletJson) => {
             if (coinName === walletJson.name) {
-              if (process.env.isLive) {
+              if (process.env.NINJA_isLive) {
                 if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet) {
                   result.push(MasterWallet.convertObject(walletJson));
                 }
@@ -532,7 +532,7 @@ export class MasterWallet {
           let wallet = false;
           wallets.forEach((walletJson) => {
             if (walletJson.default && coinName === walletJson.name) {
-              if (process.env.isLive) {
+              if (process.env.NINJA_isLive) {
                 if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet) {
                   wallet = MasterWallet.convertObject(walletJson);
                 }
@@ -547,7 +547,7 @@ export class MasterWallet {
         wallets.forEach((walletJson) => {
           if (!lstDefault.hasOwnProperty(walletJson.name)) { lstDefault[walletJson.name] = null; }
           if (walletJson.default) {
-            if (process.env.isLive) {
+            if (process.env.NINJA_isLive) {
               if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet) {
                 lstDefault[walletJson.name] = MasterWallet.convertObject(walletJson);
               }
@@ -744,7 +744,7 @@ export class MasterWallet {
     }
     static encrypt(message) {
       try{
-        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
+        let WALLET_SECRET_KEY = process.env.NINJA_WALLET_SECRET_KEY;
         let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }
@@ -755,7 +755,7 @@ export class MasterWallet {
     }
     static decrypt(ciphertext) {
       try{
-        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
+        let WALLET_SECRET_KEY = process.env.NINJA_WALLET_SECRET_KEY;
         let bytes = CryptoJS.AES.decrypt(ciphertext, WALLET_SECRET_KEY);
         let plaintext = bytes.toString(CryptoJS.enc.Utf8);
         return plaintext;

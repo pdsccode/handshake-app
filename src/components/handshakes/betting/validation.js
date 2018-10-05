@@ -11,10 +11,10 @@ export const isRightNetwork = () => {
   const wallet = MasterWallet.getWalletDefault('ETH');
   MasterWallet.log(MasterWallet.getWalletDefault('ETH'));
 
-  if (process.env.isStaging) {
+  if (process.env.NINJA_isStaging) {
     return true;
   }
-  if (process.env.isProduction) {
+  if (process.env.NINJA_isProduction) {
     if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
       return true;
     }

@@ -131,7 +131,7 @@ export const getCryptoFromAddress = (walletAddress) => {
 
 export const getAddressFromLatLng = ({ lat, lng }) => {
   if (lat && lng) {
-    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true&key=${process.env.GOOGLE_API_KEY}`).then((response) => {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true&key=${process.env.NINJA_GOOGLE_API_KEY}`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       return address;
     });
@@ -141,7 +141,7 @@ export const getAddressFromLatLng = ({ lat, lng }) => {
 
 export const getGeoCodeFromAddress = (inputAddress) => {
   if (inputAddress) {
-    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${inputAddress}&sensor=true&key=${process.env.GOOGLE_API_KEY}`).then((response) => {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${inputAddress}&sensor=true&key=${process.env.NINJA_GOOGLE_API_KEY}`).then((response) => {
       const location = response.data.results[0] && response.data.results[0].geometry.location;
       return location;
     });

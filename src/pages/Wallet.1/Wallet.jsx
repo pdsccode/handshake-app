@@ -199,7 +199,7 @@ class Wallet extends React.Component {
       }
       // is Mainnet (coin, token, collectible)
       else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-        if (!process.env.isDojo)
+        if (!process.env.NINJA_isDojo)
         { // not show for Dojo
           if(wallet.isToken){
             wallet.default = false;
@@ -1073,7 +1073,7 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           {/* Coin*/}
-          {!process.env.isDojo ?
+          {!process.env.NINJA_isDojo ?
             <Row className="list">
               <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
             </Row>
@@ -1083,7 +1083,7 @@ class Wallet extends React.Component {
           </Row>
 
           {/* Tokens */}
-          {!process.env.isDojo ?
+          {!process.env.NINJA_isDojo ?
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
           </Row>
@@ -1093,7 +1093,7 @@ class Wallet extends React.Component {
           </Row>
 
           {/* Collectible */}
-          {!process.env.isDojo ?
+          {!process.env.NINJA_isDojo ?
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
           </Row>
@@ -1102,16 +1102,16 @@ class Wallet extends React.Component {
             {this.listCollectibleWalletBalance}
           </Row>
 
-          {!process.env.isLive ?
+          {!process.env.NINJA_isLive ?
           <Row className="list">
-            {!process.env.isDojo ?
+            {!process.env.NINJA_isDojo ?
             <Header title={messages.wallet.action.create.label.test_net} hasLink linkTitle={messages.wallet.action.create.button.request_free_eth} onLinkClick={this.getETHFree} />
             :
             <Header title=""/>
             }
           </Row>
           : ''}
-          {!process.env.isLive ?
+          {!process.env.NINJA_isLive ?
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>

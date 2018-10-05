@@ -146,7 +146,7 @@ class Component extends React.Component {
   checkMainNetDefaultWallet = wallet => {
     let result = true
 
-    if (process.env.isLive) {
+    if (process.env.NINJA_isLive) {
       if (
         wallet.network ===
         MasterWallet.ListCoin[wallet.className].Network.Mainnet

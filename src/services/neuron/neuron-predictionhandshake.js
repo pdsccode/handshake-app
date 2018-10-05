@@ -14,8 +14,8 @@ export default class predictionHandshake extends BaseHandshake {
     // });
   }
   get contractFileNameWithoutExtension() {
-    // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
-    return process.env.PredictionHandshakeFileName;
+    // return process.env.NINJA_isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    return process.env.NINJA_PredictionHandshakeFileName;
   }
   get address() {
     const wallet = MasterWallet.getWalletDefault('ETH');

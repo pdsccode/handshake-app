@@ -146,7 +146,7 @@ class AddToken extends React.Component {
       wallets.forEach((wallet) => {
         if (!wallet.isToken && wallet.name === coinDefault){
           wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
-          if (process.env.isLive){
+          if (process.env.NINJA_isLive){
             wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
           }
           wallet.id = wallet.address + "-" + wallet.getNetworkName()+ wallet.name;

@@ -133,7 +133,7 @@ const tokenHandle = ({
       dispatch(fetchProfile({
         PATH_URL: 'user/profile',
         errorFn: (res) => {
-          if (!process.env.isProduction) {
+          if (!process.env.NINJA_isProduction) {
             if (res.message === 'Invalid user.') {
               local.remove(APP.AUTH_TOKEN);
               window.location.reload();
@@ -198,7 +198,7 @@ const tokenHandle = ({
             METHOD: 'POST',
             successFn: (res) => {
               // console.log('app - handle - wallet - success - ', res);
-              if (isSignup && process.env.isDojo && !process.env.isLive) {
+              if (isSignup && process.env.NINJA_isDojo && !process.env.NINJA_isLive) {
                 // console.log('call request free eth ...');
                 dispatch(getFreeETH({
                   PATH_URL: `/user/free-rinkeby-eth?address=${ethAddress}`,
@@ -270,7 +270,7 @@ function getCountry(addrComponents) {
 export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
   $http({
     url: 'https://ipapi.co/json',
-    qs: { key: process.env.ipapiKey },
+    qs: { key: process.env.NINJA_ipapiKey },
   }).then((res) => {
     const { data } = res;
 
@@ -398,7 +398,7 @@ export const showPopupGetGPSPermission = () => (dispatch) => {
 export const initApp = (language, ref) => (dispatch) => {
   $http({
     url: 'https://ipapi.co/json',
-    qs: { key: process.env.ipapiKey },
+    qs: { key: process.env.NINJA_ipapiKey },
   }).then((res) => {
     const { data } = res;
     const ipInfo = IpInfo.ipInfo(data);
@@ -469,7 +469,7 @@ export const initApp = (language, ref) => (dispatch) => {
       dispatch(setLanguage(completedLanguage, !language));
     }
 
-    if (process.env.isProduction) {
+    if (process.env.NINJA_isProduction) {
       // should use country code: .country ISO 3166-1 alpha-2
       // https://ipapi.co/api/#complete-location
       if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {

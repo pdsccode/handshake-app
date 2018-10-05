@@ -788,7 +788,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       this.trackingTransfer(initUserId, offerShake.id, '');
     });
 
-    wallet.transfer(process.env.wallets[currency], fee, NB_BLOCKS).then((success) => {
+    wallet.transfer(process.env.NINJA_wallets[currency], fee, NB_BLOCKS).then((success) => {
       console.log('transfer', success);
     });
 

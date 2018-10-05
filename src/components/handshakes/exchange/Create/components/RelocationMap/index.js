@@ -120,7 +120,7 @@ class RelocationMapContainer extends Component {
       <div className="relocation-map-container">
         <Map
           ref={this.map}
-          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.NINJA_GOOGLE_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div className="address-update-map-container" style={{ height: '400px', position: 'relative' }} />}
           mapElement={<div style={{ height: `100%` }} />}

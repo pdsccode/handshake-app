@@ -103,7 +103,7 @@ class FeedExchangeLocal extends React.PureComponent {
     let result = false;
 
     try {
-      if (process.env.isLive) {
+      if (process.env.NINJA_isLive) {
         if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
           result = true;
         } else {
@@ -114,7 +114,7 @@ class FeedExchangeLocal extends React.PureComponent {
       result = false;
     }
 
-    if (process.env.isDojo) {
+    if (process.env.NINJA_isDojo) {
       result = true;
     }
 

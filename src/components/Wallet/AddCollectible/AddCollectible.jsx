@@ -62,27 +62,27 @@ const listToken721 = [CryptoKitties, CryptoPunks, CryptoStrikers, Axie, Blockcha
   ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
   CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
   EtheremonAsset, EtherLambos, ExoPlanets,
-  Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken];    
+  Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken];
 
 class AddCollectible extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      wallets: [],      
+      wallets: [],
       walletSelected: false,
       inputContractAddressValue: '',
       inputCollectibleDecimalsValue: 0,
       inputCollectibleNameValue: '',
-      inputCollectibleSymbolValue: '',      
+      inputCollectibleSymbolValue: '',
       formAddCollectibleIsActive: false,
-      
+
       walletsData: false,
-      collectibleType: false,    
-      
+      collectibleType: false,
+
       // Autosuggest
-      listCollectibleType: [],          
-    }    
+      listCollectibleType: [],
+    }
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -109,11 +109,11 @@ class AddCollectible extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidMount() {    
-    // clear form:    
-    this.resetForm();  
+  componentDidMount() {
+    // clear form:
+    this.resetForm();
     this.getWalletDefault();
-    this.listCollectibleType();        
+    this.listCollectibleType();
   }
 
   resetForm(){
@@ -121,17 +121,17 @@ class AddCollectible extends React.Component {
   }
 
   componentWillUnmount() {
-    
+
   }
   componentDidUpdate (){
-  
+
   }
-  componentWillReceiveProps() {       
-    if (!this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){    
+  componentWillReceiveProps() {
+    if (!this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){
       this.props.clearFields(nameFormAddCollectible, false, false, "contractAddress", "collectibleName", "collectibleSymbol", "collectibleDecimals");
       this.setState({formAddCollectibleIsActive: this.props.formAddCollectibleIsActive});
     }
-    if (this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){      
+    if (this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){
       this.getWalletDefault();
       this.setState({formAddCollectibleIsActive: this.props.formAddCollectibleIsActive});
     }
@@ -147,13 +147,13 @@ class AddCollectible extends React.Component {
 
 
   onFinish = () => {
-   
+
     const { onFinish } = this.props;
-    
-    if (onFinish) {      
+
+    if (onFinish) {
       onFinish({"data": this.state.CollectibleType});
     } else {
-      
+
     }
   }
 
@@ -162,45 +162,45 @@ class AddCollectible extends React.Component {
     let coinDefault = 'ETH';
 
     let wallets = MasterWallet.getMasterWallet();
-    
+
     let listWalletETH = [];
     let walletDefault = false;
-    
+
     // set name + text for list:
     if (wallets.length > 0){
       wallets.forEach((wallet) => {
         if (!wallet.isToken && wallet.name === coinDefault){
           wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
-          if (process.env.isLive){
+          if (process.env.NINJA_isLive){
             wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
           }
-          wallet.id = wallet.address + "-" + wallet.getNetworkName()+ wallet.name;  
+          wallet.id = wallet.address + "-" + wallet.getNetworkName()+ wallet.name;
 
           if (walletDefault === false &&  wallet.default){
-              walletDefault = wallet;                          
+              walletDefault = wallet;
           }
           listWalletETH.push(wallet);
-        }              
+        }
       });
     }
-    
+
     if (walletDefault === false && listWalletETH.length > 0)
       walletDefault = listWalletETH[0];
-    
+
     this.setState({wallets: listWalletETH, walletSelected: walletDefault});
-    this.props.rfChange(nameFormAddCollectible, 'walletSelected', walletDefault);    
+    this.props.rfChange(nameFormAddCollectible, 'walletSelected', walletDefault);
 
   }
 
-  invalidateAddNewCollectible = (value) => {    
+  invalidateAddNewCollectible = (value) => {
     if (!this.state.walletSelected) return {};
     let errors = {};
     if (this.state.walletSelected){
       // check address:
       let result = this.state.walletSelected.checkAddressValid(value['contractAddress']);
       if (result !== true){
-          errors.contractAddress = 'Please enter a valid contract address';      
-          this.props.clearFields(nameFormAddCollectible, false, false, "collectibleName", "collectibleSymbol", "collectibleDecimals");   
+          errors.contractAddress = 'Please enter a valid contract address';
+          this.props.clearFields(nameFormAddCollectible, false, false, "collectibleName", "collectibleSymbol", "collectibleDecimals");
       }
     }
     return errors
@@ -224,27 +224,27 @@ class AddCollectible extends React.Component {
   }
 
 submitAddCollectible=()=>{
-  
+
   if (this.state.collectibleType != false){
-    this.setState({isRestoreLoading: true});  
+    this.setState({isRestoreLoading: true});
     let collectibleType  = this.state.collectibleType;
-    
+
     collectibleType.decimals = this.state.inputCollectibleDecimalsValue;
     collectibleType.name = this.state.inputCollectibleSymbolValue;
     collectibleType.title = this.state.inputCollectibleNameValue;
 
-    // create from walet sellected:    
+    // create from walet sellected:
     collectibleType.createFromWallet(this.state.walletSelected);
 
     this.setState({collectibleType: collectibleType});
-    
+
     let result = MasterWallet.AddToken(collectibleType);
-    
+
     this.showSuccess("Successfully added collectible");
-    
+
     this.onFinish();
-    
-    this.setState({isRestoreLoading: false, collectibleType: false});  
+
+    this.setState({isRestoreLoading: false, collectibleType: false});
   }
   else{
     this.showError("Unable to add collectible");
@@ -252,14 +252,14 @@ submitAddCollectible=()=>{
 }
 
 onItemSelectedWallet = (item) =>{
-  
+
   // I don't know why the item is not object ?????
-  let wallet = MasterWallet.convertObject(item);  
-  this.setState({walletSelected: wallet}, () => {});  
+  let wallet = MasterWallet.convertObject(item);
+  this.setState({walletSelected: wallet}, () => {});
 }
 
-onItemSelectedCollectibleType = (item) =>{    
-  
+onItemSelectedCollectibleType = (item) =>{
+
   let collectibleType = item.object;
 
   this.setState({
@@ -269,32 +269,32 @@ onItemSelectedCollectibleType = (item) =>{
     inputContractAddressValue: collectibleType.contractAddress,
     collectibleType: collectibleType,
   });
-  const { rfChange } = this.props        
+  const { rfChange } = this.props
   rfChange(nameFormAddCollectible, 'collectibleName', collectibleType.title);
   rfChange(nameFormAddCollectible, 'collectibleSymbol', collectibleType.name);
   rfChange(nameFormAddCollectible, 'collectibleDecimals', collectibleType.decimals);
   rfChange(nameFormAddCollectible, 'contractAddress', collectibleType.contractAddress);
-  
+
 }
 
  listCollectibleType(){
 
    let objectCollectibleList = this.state.listCollectibleType;
    if (objectCollectibleList.length == 0){
-    let listCollectibleType = [];        
+    let listCollectibleType = [];
     listToken721.forEach(tokenERC720 => {
       let token = new tokenERC720();
       let item = {"id": token.contractAddress, "value": `${token.title} (${token.name})`, "object": token}
       listCollectibleType.push(item);
     });
     this.setState({listCollectibleType: listCollectibleType});
-   }   
+   }
  }
-  
+
   render() {
-        
-    return ( 
-      <div>                                           
+
+    return (
+      <div>
           <AddNewCollectibleForm className="addtoken-wrapper" onSubmit={this.submitAddCollectible}>
 
           {/* Box: */}
@@ -320,44 +320,44 @@ onItemSelectedCollectibleType = (item) =>{
                     value={this.state.inputContractAddressValue}
                     onChange={evt => this.updateAddressValue(evt)}
                     validate={[required]}
-                  />                        
+                  />
             </div>
 
-            <p className="labelText">Name</p>           
+            <p className="labelText">Name</p>
             <Field
-                  name="collectibleName"                  
+                  name="collectibleName"
                   type="text" className="form-control"
                   component={fieldInput}
                   value={this.state.inputCollectibleNameValue}
-                  onChange={evt => this.updateCollectibleNameValue(evt)}                  
-                  validate={[required]}                    
+                  onChange={evt => this.updateCollectibleNameValue(evt)}
+                  validate={[required]}
               />
 
-              <p className="labelText">Symbol</p>                      
+              <p className="labelText">Symbol</p>
               <Field
                   name="collectibleSymbol"
                   type="text"className="form-control"
                   component={fieldInput}
                   value={this.state.inputCollectibleSymbolValue}
-                  onChange={evt => this.updateCollectibleSymbolValue(evt)}                  
+                  onChange={evt => this.updateCollectibleSymbolValue(evt)}
                   validate={[required]}
               />
 
-              <p className="labelText">Decimals</p>                      
+              <p className="labelText">Decimals</p>
               <Field
                   name="collectibleDecimals"
                   type="text"className="form-control"
                   component={fieldInput}
                   value={this.state.inputCollectibleDecimalsValue}
-                  onChange={evt => this.updateCollectibleDecimalsValue(evt)}                  
+                  onChange={evt => this.updateCollectibleDecimalsValue(evt)}
                   // validate={[required]}
               />
 
-                <div className ="dropdown-wallet-tranfer">                
-                  <p className="labelText">For wallet</p>            
+                <div className ="dropdown-wallet-tranfer">
+                  <p className="labelText">For wallet</p>
                   <Field
-                      name="walletSelected"                      
-                      component={fieldDropdown}                  
+                      name="walletSelected"
+                      component={fieldDropdown}
                       placeholder="Select a wallet"
                       defaultText={this.state.walletSelected ? this.state.walletSelected.text : ''}
                       list={this.state.wallets}
@@ -365,11 +365,11 @@ onItemSelectedCollectibleType = (item) =>{
                           this.onItemSelectedWallet(item);
                         }
                       }
-                    />                                    
+                    />
                 </div>
-                                
+
                 <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Add Token</Button>
-              </div>            
+              </div>
           </AddNewCollectibleForm>
         </div>
     )
@@ -377,20 +377,20 @@ onItemSelectedCollectibleType = (item) =>{
 }
 
 AddCollectible.propTypes = {
-  formAddCollectibleIsActive: PropTypes.bool,  
+  formAddCollectibleIsActive: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
-  
+
 });
 
-const mapDispatchToProps = (dispatch) => ({  
+const mapDispatchToProps = (dispatch) => ({
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  
+
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(AddCollectible));

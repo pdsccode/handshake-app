@@ -10,7 +10,7 @@ import LogManage from '@/services/logmanage';
 // import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
-if (process.env.isStaging) {
+if (process.env.NINJA_isStaging) {
   console.debug = function (message) {
     LogManage.bettingSaveLog(message);
   };
@@ -20,7 +20,7 @@ window.gasPrice = 64;
 getGasPrice();
 //setInterval(getGasPrice, 1000 * 60);
 
-if (process.env.caches) {
+if (process.env.NINJA_caches) {
   OfflinePlugin.install({
     onUpdateReady() {
       OfflinePlugin.applyUpdate();

@@ -398,7 +398,7 @@ class EscrowDeposit extends React.Component {
 
   async getNonce() {
     try {
-      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
+      const url = `${process.env.NINJA_PUBLIC_URL}/public-api/exchange/nonce`;
       const response = await axios.get(url);
 
       if (response.status === 200) {

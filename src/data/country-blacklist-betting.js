@@ -65,7 +65,7 @@ const COUNTRIES_BLACKLIST = [
   'Chile',
   'HongKong',
   'Japan',
-  process.env.isStaging ? '' : 'Vietnam',
+  process.env.NINJA_isStaging ? '' : 'Vietnam',
   */
 ];
 

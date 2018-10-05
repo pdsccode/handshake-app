@@ -371,7 +371,7 @@ class FeedCreditCard extends React.Component {
         // params.append('card[exp_month]', mmYY[0]);
         // params.append('card[exp_year]', `20${mmYY[1]}`);
         // params.append('card[cvc]', cc_cvc);
-        // params.append('key', process.env.stripeKey);
+        // params.append('key', process.env.NINJA_stripeKey);
         // params.append('type', 'card');
 
         const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
@@ -400,7 +400,7 @@ class FeedCreditCard extends React.Component {
 
           local.save(APP.CC_SOURCE, source);
 
-          const key = process.env.adyenKey;
+          const key = process.env.NINJA_adyenKey;
           const options = {}; // See adyen.encrypt.nodom.html for details
 
           const cseInstance = adyenEncrypt.createEncryption(key, options);
@@ -431,7 +431,7 @@ class FeedCreditCard extends React.Component {
         //   { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         //   .then((payload) => {
         //     console.log('payload', payload);
-        //     const stripe = Stripe(process.env.stripeKey);
+        //     const stripe = Stripe(process.env.NINJA_stripeKey);
         //     stripe.createSource({
         //       type: 'three_d_secure',
         //       amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
@@ -807,7 +807,7 @@ class FeedCreditCard extends React.Component {
       wallets.forEach((wal) => {
         if (!wal.isCollectibles) {
           wal.text = `${wal.getShortAddress()} (${wal.name}-${wal.getNetworkName()})`;
-          if (process.env.isLive) {
+          if (process.env.NINJA_isLive) {
             wal.text = `${wal.getShortAddress()} (${wal.className} ${wal.name})`;
           }
           wal.id = `${wal.address}-${wal.getNetworkName()}${wal.name}`;
@@ -825,7 +825,7 @@ class FeedCreditCard extends React.Component {
 
     if (walletDefault) {
       walletDefault.text = `${walletDefault.getShortAddress()} (${walletDefault.name}-${walletDefault.getNetworkName()})`;
-      if (process.env.isLive) {
+      if (process.env.NINJA_isLive) {
         walletDefault.text = `${walletDefault.getShortAddress()} (${walletDefault.className} ${walletDefault.name})`;
       }
       walletDefault.id = `${walletDefault.address}-${walletDefault.getNetworkName()}${walletDefault.name}`;

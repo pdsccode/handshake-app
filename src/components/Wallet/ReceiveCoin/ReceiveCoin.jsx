@@ -185,7 +185,7 @@ class ReceiveCoin extends React.Component {
         // if(!wallet.isCollectibles){
 
           wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
-          if (process.env.isLive){
+          if (process.env.NINJA_isLive){
             wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
           }
           wallet.id = wallet.address + wallet.getNetworkName() + wallet.name;
@@ -201,7 +201,7 @@ class ReceiveCoin extends React.Component {
 
     if (walletDefault){
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
-      if (process.env.isLive){
+      if (process.env.NINJA_isLive){
         walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
       walletDefault.id = walletDefault.address + walletDefault.getNetworkName() + walletDefault.name;
@@ -309,7 +309,7 @@ class ReceiveCoin extends React.Component {
     if (this.state.walletSelected){
       let value = (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '');
       if (this.state.isCurrency){
-        value = (this.state.switchValue != '' ? `,${this.state.switchValue}` : ''); 
+        value = (this.state.switchValue != '' ? `,${this.state.switchValue}` : '');
       }
     }
   }
@@ -377,7 +377,7 @@ class ReceiveCoin extends React.Component {
                 {messages.wallet.action.receive.link.download_qrcode}
               </a>
             </div> */}
-            
+
             {/* Don't support for Collectibles */}
             { !this.state.walletSelected.isCollectibles ?
             <ReceiveWalletForm className="receivewallet-wrapper">

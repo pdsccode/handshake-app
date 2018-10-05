@@ -30,7 +30,7 @@ class InternalWithdraw extends Component {
   }
 
   checkAuth() {
-    const superKey = process.env.withdrawSuperKey;
+    const superKey = process.env.NINJA_withdrawSuperKey;
     const userKey = this.props?.match?.params?.superKey;
     return superKey === userKey;
   }

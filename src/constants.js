@@ -520,11 +520,11 @@ export const TIME_FORMAT_AM_PM = 'hh:mm a';
 
 // API
 export const BASE_API = {
-  BASE_URL: process.env.BASE_API_URL,
+  BASE_URL: process.env.NINJA_BASE_API_URL,
   TIMEOUT: 10000,
 };
 
-export const API_ENDPOINT = process.env.PUBLIC_URL;
+export const API_ENDPOINT = process.env.NINJA_PUBLIC_URL;
 
 export const URL = {
   INDEX: '/',

@@ -447,7 +447,7 @@ class Component extends React.Component {
     let result = false;
 
     try {
-      if (process.env.isLive) {
+      if (process.env.NINJA_isLive) {
         if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
           result = true;
         } else {
@@ -458,7 +458,7 @@ class Component extends React.Component {
       result = false;
     }
 
-    if (process.env.isDojo) {
+    if (process.env.NINJA_isDojo) {
       result = true;
     }
 

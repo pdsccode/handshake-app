@@ -8,4 +8,4 @@ class Basic extends React.Component {
   }
 }
 
-export default process.env.isProduction ? Basic : hot(module)(Basic);
+export default process.env.NINJA_isProduction ? Basic : hot(module)(Basic);

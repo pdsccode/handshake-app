@@ -10,7 +10,7 @@ export const getGasPrice = async () => {
     .catch((error) => {
       console.log('Failed to get data from ethGasStation: ', error);
       axios
-        .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`)
+        .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.NINJA_apikeyEtherscan}`)
         .then(({ data }) => {
           const gasPrice = Number(data.result)
             .toString();

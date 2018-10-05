@@ -125,7 +125,7 @@ class Checkout extends React.Component {
       for(let wal of wallets){
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
-          if (process.env.isLive){
+          if (process.env.NINJA_isLive){
             wal.text = wal.getShortAddress() + " (" + wal.className + " " + wal.name + ")";
           }
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
@@ -144,7 +144,7 @@ class Checkout extends React.Component {
 
     if (walletDefault){
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
-      if (process.env.isLive){
+      if (process.env.NINJA_isLive){
         walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;

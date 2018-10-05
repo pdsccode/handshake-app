@@ -1,5 +1,5 @@
 const invariant = (condition, format, a, b, c, d, e, f) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NINJA_NODE_ENV !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }

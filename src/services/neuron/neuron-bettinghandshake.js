@@ -15,10 +15,10 @@ export default class BettingHandshake extends BaseHandshake {
     // });
   }
   get contractFileNameWithoutExtension() {
-    // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
-    //return process.env.PredictionHandshakeFileName;
+    // return process.env.NINJA_isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    //return process.env.NINJA_PredictionHandshakeFileName;
     if (this.contractFileName) {
-      const folder = process.env.isLive ? 'live' : 'stag';
+      const folder = process.env.NINJA_isLive ? 'live' : 'stag';
       return `Prediction/${folder}/${this.contractFileName}`;
     }
     return null;
