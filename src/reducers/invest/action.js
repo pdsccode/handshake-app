@@ -1,10 +1,14 @@
- import { axiosInstance } from '@/reducers/action'
+ import { axiosInstance } from '@/reducers/action';
+ import { MasterWallet } from '../../services/Wallets/MasterWallet';
 export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
   FETCH_TRADERS: 'FETCH_TRADERS',
+  SYNC_WALLET: 'SYNC_WALLET',
+  SYNCED_INFO: 'SYNCED_INFO',
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const LIST_TRADER_URL = '/users/list-trader';
+const LINK_WALLET_URL = '/link-to-wallet';
 
 export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
   axiosInstance.get(LIST_PROJECT_URL)
@@ -174,3 +178,47 @@ export const exampleProjects = [
     }
   }
 ]
+
+export const hasLinkedWallet = () => dispatch => new Promise((resolve, reject) => {
+  try {
+    const authProfile = JSON.parse(localStorage.getItem('auth_profile'));
+    console.log(authProfile);
+    const { id: walletId } = authProfile;
+    axiosInstance.get(`/link-to-wallet/has-linked?walletId=${walletId}`)
+    .then(({ status, data: payload }) => {
+      if (status === 200) {
+        dispatch({ type: ACTIONS.SYNC_WALLET, payload })
+        resolve(payload)
+      }
+      reject('');
+    })
+    .catch(err => reject(err));
+  } catch( err) {
+    reject(err);
+  }
+})
+
+export const linkWallet = (password) => dispatch => new Promise((resolve, reject) => {
+  try {
+    const token = JSON.parse(localStorage.getItem('auth_token'));
+    const authProfile = JSON.parse(localStorage.getItem('auth_profile'));
+    const { id, username: walletName } = authProfile;
+    const walletId = id.toString();
+    const wallets = MasterWallet.encryptWalletsByPassword(password);
+    axiosInstance.post(LINK_WALLET_URL, {
+      walletId,
+      walletName,
+      wallets,
+      token
+    }).then(({ status, data: payload }) => {
+      if(status === 200) {
+        dispatch({ type: ACTIONS.SYNCED_INFO, payload });
+        resolve(payload);
+      }
+    }).catch(err => reject(err));
+  } catch (err) {
+    reject(err);
+  }
+})
+
+export const resetLinkWallet = () => dispatch => dispatch({ type: ACTIONS.SYNCED_INFO, payload: false })

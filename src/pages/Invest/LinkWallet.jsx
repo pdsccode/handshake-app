@@ -8,8 +8,9 @@ import './ProjectList.scss'
 import createForm from '@/components/core/form/createForm'
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap'
 import InvestNavigation from './InvestNavigation'
-
-
+import { MasterWallet } from '../../services/Wallets/MasterWallet';
+import { hasLinkedWallet } from '../../reducers/invest/action';
+import FormSync from './SyncBlock/FormSync';
 const FormInvest = createForm({
   propsReduxForm: {
     form: 'FormInvest'
@@ -23,6 +24,7 @@ class LinkWallet extends Component {
     this.state = {
       showCode: false
     }
+    this.props.hasLinkedWallet();
   }
 
   componentDidMount() {
@@ -60,34 +62,18 @@ class LinkWallet extends Component {
   render () {
     // render show code
     if (this.state.showCode) {
-      var body = (
-        <div>
-          <InputGroup style={{ marginTop: 10 }}>
-            <label style={{ width: '100%' }} htmlFor='' className='label'>
-              Your secret key
-            </label>
-            <Input readOnly value={this.state.verifyCode} />
-          </InputGroup>
-          <InputGroup style={{ marginTop: 15, marginBottom: 10 }}>
-            <label htmlFor='' className='label'>
-              Your password to encrypt the wallet. Required to decrypt on another device.
-            </label>
-            <Input placeholder='Enter your password' />
-          </InputGroup>
-          <Button className='invest-submit-button' size='lg'>Submit</Button>
-          {' '}
-        </div>
-      )
+      var body = (<FormSync />)
     } else {
       var body = (
         <div>
           <label htmlFor='' className='label'>
-              Link this wallet to other device. Before proceeding, make sure you already opened the page that allow to link Ninja wallet. (ex: NinjaFund desktop website)
+              {'Link this wallet to other device. Before proceeding, make sure you already opened the page that allow to link Ninja wallet. (ex: NinjaFund desktop website)'}
             </label>
+          {this.props.syncWallet && <label style={{ color: 'red', fontWeight: '400' }}>Noted: Your wallet is synced</label>}
           <Button
             className='invest-submit-button'
             size='lg'
-            onClick={() => this.showVerifyCode()}
+            onClick={() => this.setState({ showCode: true })}
           >
             Start
           </Button>
@@ -107,5 +93,9 @@ class LinkWallet extends Component {
     )
   }
 }
+const mapState = state => ({
+  syncWallet: state.invest && state.invest.syncWallet ? state.invest.syncWallet : false
+})
+const mapDispatch = { hasLinkedWallet }
 
-export default LinkWallet
+export default connect(mapState, mapDispatch)(LinkWallet)

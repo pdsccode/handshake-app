@@ -739,12 +739,32 @@ export class MasterWallet {
       return JSON.stringify(reward_wallet_string);
     }
 
+    static encryptWalletsByPassword(password) {
+      try {
+        const wallets = MasterWallet.getWalletDataLocalString();
+        const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(wallets), password);
+        return ciphertext.toString();
+      } catch (err) {
+        return false;
+      }
+    }
+    static decryptWalletsByPassword(ciphertext, password) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, password);
+        const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+        const walletsObject = MasterWallet.IsJsonString(plaintext);
+        return walletsObject;
+      } catch (err) {
+        return false;
+      }
+    }
+
     static log(data, key = MasterWallet.KEY) {
       //console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
     }
     static encrypt(message) {
       try{
-        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;        
+        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;  
         let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }

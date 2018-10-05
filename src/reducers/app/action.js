@@ -397,7 +397,7 @@ export const showPopupGetGPSPermission = () => (dispatch) => {
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
   $http({
-    url: 'https://ipapi.co/json',
+    url: 'http://35.198.235.226/json',
     qs: { key: process.env.ipapiKey },
   }).then((res) => {
     const { data } = res;
