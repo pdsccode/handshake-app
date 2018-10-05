@@ -29,13 +29,20 @@ class PexExtension extends React.Component {
           <div className="GuideClipArea">
             <img src={MacBook} alt="Extension Instruction" className="MacBook" />
             <div className="FrameClip">
-              <img src={GuideClip} alt="Extension Instruction" className="GuideClip" />
+              {/* <img src={GuideClip} alt="Extension Instruction" className="GuideClip" /> */}
+              <iframe
+                title="Chrome Extension Instruction"
+                src="https://www.youtube.com/embed/uXmGFiJnxrg"
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
             </div>
           </div>
-          <div className="Description">
+          {/* <div className="Description">
             <span>Bet on anything, against anyone on the Internet.</span>
             <a href={URL_EXT} target="blank" title="Add to chrome" className="btn btn-warning">Add to chrome</a>
-          </div>
+          </div> */}
         </div>
       </React.Fragment>
     );
