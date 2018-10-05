@@ -56,7 +56,15 @@ function* callApi({ _path, _key, type, method, data, headers, BASE_URL = BASE_AP
 }
 
 function* apiGet(actions) {
-  return yield callApi({ ...actions, method: 'GET' });
+  return yield callApi({
+    ...actions,
+    method: 'GET',
+    // TODO: chrome-extension
+    headers: (window.self !== window.top) ? {
+      ...actions.headers,
+      'Request-Form': 'extension',
+    } : { ...actions.headers },
+  });
 }
 
 function* apiPost(actions) {
