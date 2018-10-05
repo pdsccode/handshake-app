@@ -1,4 +1,3 @@
-// import { createSelector } from 'reselect';
 import qs from 'querystring';
 import { isEmpty } from '@/utils/is';
 
@@ -49,4 +48,7 @@ export const checkExistSubcribeEmailSelector = (state) => {
   */
   const { isExistEmail = false } = state.ui;
   return isExistEmail;
+};
+export const totalBetsSelector = (state) => {
+  return (1000 - state.ui.totalBets || 0);
 };

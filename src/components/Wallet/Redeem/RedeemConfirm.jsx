@@ -13,6 +13,7 @@ import local from '@/services/localStore';
 import { APP } from '@/constants';
 import { getReferalInfo } from '@/reducers/exchange/action';
 import Modal from '@/components/core/controls/Modal';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import ConfirmButton from '@/components/Wallet/ConfirmButton';
 
 import gitfBox from '@/assets/images/wallet/images/gift-gift-box.svg';
@@ -24,6 +25,7 @@ import {getFiatCurrency} from '@/reducers/exchange/action';
 import { API_URL } from "@/constants";
 import Helper from '@/services/helper';
 import { renderToString } from 'react-dom/server';
+const moment = require('moment');
 
 function changeIconConfirmButton(icon){
   try{
@@ -43,15 +45,16 @@ class RedeemConfirm extends React.Component {
     super(props);
 
     this.state = {      
-      redeemCode: this.props.redeemCode || '',
+      redeemCode: this.props.data.promotion_code || '',
       error: '',
-      giftcardValue: 0,
+      giftcardValue: this.props.data.amount || 0,
       cryptoValue: "",      
       walletSelected: null,
       listWalletCoin: [],
       contentWalletSelected: '',
       modalListCoin: '',            
       cryptoValue: "",
+      expired_date: this.props.data.expired_date || "",
     };    
   }
 
@@ -136,7 +139,10 @@ class RedeemConfirm extends React.Component {
   
   genWalletSelect=()=>{
     
-    const { messages } = this.props.intl;    
+    const { messages } = this.props.intl;  
+    
+    let redeemData = this.props.data;
+
 
     if(this.state.walletSelected){
       let icon = ''; try{ icon = require("@/assets/images/icon/wallet/coins/" + this.state.walletSelected.name.toLowerCase() + '.svg')} catch (ex){};
@@ -178,9 +184,8 @@ class RedeemConfirm extends React.Component {
 
   render() { 
     const { messages } = this.props.intl;      
-    // let linkTerm = <span className="term-link">Terms and Conditions </span>  ;
-    
-    // let term = StringHelper.format(messages.wallet.action.redeem.agree_text, linkTerm);    
+    let expired_date = moment(this.state.expired_date).format('MMM Do YY')
+        
     return (                      
         <div className="redeem-page"> 
 
@@ -188,9 +193,22 @@ class RedeemConfirm extends React.Component {
                 {this.state.modalListCoin}
             </Modal>
 
+            <ModalDialog onRef={modal => this.modalRedeenTermRef = modal}>
+            <div className="re-term-header">Terms and Conditions </div>
+            <div className="re-term-body">
+              <ol>
+              <li type="1">Autonomous is not liable in the case of loss, theft, damage or fraudulent use.</li>
+              <li type="1">The Ninja code is single use and cannot be reloaded, resold or exchanged for cash.</li>
+              <li type="1">The Ninja code is pre-loaded with USD and can only be converted into Bitcoin, Ethereum or Bitcoin cash. No refunds or exchanges are accepted.</li>
+              <li type="1">The cryptocurrency exchange rate is based on the market price at the time of conversion on the Ninja platform.</li>
+              </ol>
+            </div>           
+            </ModalDialog>
+
             < div className="titleBox"> 
                 <img src={gitfBox} /> 
-                <div className="title code">{this.state.redeemCode}</div>                  
+                <div className="title code">{this.state.redeemCode}</div>    
+                <div>Redeem until {expired_date}</div>              
             </div>
 
             <div className="box-value">
@@ -212,7 +230,7 @@ class RedeemConfirm extends React.Component {
 
             <div className="term">
               {/* {term}  */}
-              By clicking REDEEM, you agree to Gift Card & Promotional code <span className="term-link">Terms and Conditions </span> as applicable
+              By clicking REDEEM, you agree to Gift Card & Promotional code <span onClick={()=>{this.modalRedeenTermRef.open()}} className="term-link">Terms and Conditions </span> as applicable
             </div>
             <div className="buttonConfirmRedeem">              
               <ConfirmButton onConfirmed={this.onRedeemConfirm} buttonText={messages.wallet.action.redeem.swipe_button_redeem}/>

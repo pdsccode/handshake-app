@@ -238,6 +238,7 @@ export const API_URL = {
     GET_USER_PROFILE: 'exchange/user/profile', // {path: '/user/profile', method: 'get'},
     GET_OFFER_PRICE: 'exchange/info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
     GET_LIST_OFFER_PRICE: 'exchange/info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
+    GET_LIST_OFFER_PRICE_CASH_ATM: 'exchange/cash/quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'exchange/user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'exchange/offers',
     SHAKE: 'shake',
@@ -255,6 +256,9 @@ export const API_URL = {
     WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
     CASH_ATM: 'exchange/cash',
     CASH_STORE_ATM: 'exchange/cash/store',
+    CRYPTO_TO_CASH: 'exchange/cash/price', // GET /cash/price?amount=1&currency=ETH
+    SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
+    GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
   },
   SEED: {
     BASE: 'seed',
@@ -501,11 +505,26 @@ export const LOCATION_METHODS = {
   IP: 'I',
 };
 
+export const ATM_TYPE = {
+  STORE: 'store',
+  PERSONAL: 'personal',
+};
+
+export const ATM_STATUS = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};
+
+export const TIME_FORMAT = 'HH:mm';
+export const TIME_FORMAT_AM_PM = 'hh:mm a';
+
 // API
 export const BASE_API = {
   BASE_URL: process.env.BASE_API_URL,
   TIMEOUT: 10000,
 };
+
+export const API_ENDPOINT = process.env.PUBLIC_URL;
 
 export const URL = {
   INDEX: '/',
@@ -594,8 +613,6 @@ export const URL = {
   CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
-  ESCROW_DEPOSIT: '/escrow/deposit',
-  ESCROW_WITHDRAW: '/escrow/withdraw',
   ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 
   SHOP_URL: '/shop',
@@ -604,6 +621,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
 

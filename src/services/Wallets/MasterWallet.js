@@ -39,7 +39,6 @@ import { APP, BASE_API } from '@/constants';
 import Helper, { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
 import axios from 'axios';
-import { merge, trimEnd } from 'lodash';
 import { isEqual } from '@/utils/array.js';
 
 const bip39 = require('bip39');
@@ -193,7 +192,7 @@ export class MasterWallet {
     }
 
     static UpdateLocalStore(masterWallet, sync = false) {
-      
+
       // encrypt wallet:
       let encryptWalletData = MasterWallet.encrypt(JSON.stringify(masterWallet));
 
@@ -226,17 +225,11 @@ export class MasterWallet {
         let listAddresses = MasterWallet.getListWalletAddressJson();
 
         console.log("update wallet addresses ...");
+        const token = localStore.get(APP.AUTH_TOKEN);
 
         const defaultHeaders = {
-          'Content-Type': 'application/json',
-        };
-        let headers = {};
-        const completedHeaders = merge(
-          defaultHeaders,
-          headers,
-        );
-        const token = localStore.get(APP.AUTH_TOKEN);
-        completedHeaders.Payload = token;
+          'Content-Type': 'application/json', Payload: token
+        };                        
 
         let data = new FormData();
         data.append ("wallet_addresses", listAddresses);
@@ -402,17 +395,17 @@ export class MasterWallet {
     }
 
     // get wallet data string local store:
-    static getWalletDataLocalString(){      
-      
+    static getWalletDataLocalString(){
+
       const wallets = localStore.get(MasterWallet.KEY);
 
       if (wallets == false) return false;
 
       // check is json or encrypt data:
-      if (typeof(wallets) !== 'object'){                
+      if (typeof(wallets) !== 'object'){
         let walletDecrypt = MasterWallet.decrypt(wallets);
-        let walletsObject = MasterWallet.IsJsonString(walletDecrypt);        
-        if (walletsObject !== false){          
+        let walletsObject = MasterWallet.IsJsonString(walletDecrypt);
+        if (walletsObject !== false){
           return walletsObject;
         }
       }
@@ -420,18 +413,18 @@ export class MasterWallet {
         // backup:
         try {localStore.save('backup', CryptoJS.AES.encrypt(JSON.stringify(wallets), 'backup').toString());} catch (e){console.log(e);};
         MasterWallet.UpdateLocalStore(wallets);
-      }      
-        
+      }
+
       return wallets;
     }
 
     // Get list wallet from store local:
     static getMasterWallet() {
-            
+
       let wallets = MasterWallet.getWalletDataLocalString();
-      
-      if (wallets == false) return false;      
-      
+
+      if (wallets == false) return false;
+
       const listWallet = [];
       let hasTestnet = false;
 
@@ -457,11 +450,11 @@ export class MasterWallet {
 
     static fixBitcoinCashTestnet(wallets){
       let walletTemps = [];
-      if (process.env.isLive) 
+      if (process.env.isLive)
       {
         wallets.forEach((wallet) => {
           if (wallet.name =='BCH'){
-            try {              
+            try {
               // console.log("fix bch testnet");
               let newBCHWallet = new BitcoinCash();
               newBCHWallet.mnemonic = wallet.mnemonic;
@@ -617,7 +610,7 @@ export class MasterWallet {
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
         if (walletJson.secret) wallet.secret = walletJson.secret;
         if (walletJson.publicKey) wallet.publicKey = walletJson.publicKey;
-        if (walletJson.hideBalance) wallet.hideBalance = walletJson.hideBalance;    
+        if (walletJson.hideBalance) wallet.hideBalance = walletJson.hideBalance;
 
         return wallet;
       } catch (e) {
@@ -637,11 +630,11 @@ export class MasterWallet {
         let jsonData = MasterWallet.IsJsonString(dataString);
 
         // check encrypt if not json ?
-        if (jsonData === false){          
-          jsonData = MasterWallet.decrypt(dataString);          
-          if (jsonData !== false){          
+        if (jsonData === false){
+          jsonData = MasterWallet.decrypt(dataString);
+          if (jsonData !== false){
             jsonData = MasterWallet.IsJsonString(jsonData);
-          }          
+          }
         }
 
         let auth_token = false;
@@ -745,7 +738,7 @@ export class MasterWallet {
     }
     static encrypt(message) {
       try{
-        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;        
+        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
         let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }

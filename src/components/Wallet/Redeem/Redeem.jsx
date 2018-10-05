@@ -35,6 +35,7 @@ class Redeem extends React.Component {
       redeemCode: this.props.data.code || ' ',
       error: ''      ,
       contentRedeemConfirm: '',
+      data: '', 
     };    
     this.modalHeaderStyle = {color: "#fff", background: "#546FF7"};
     this.modalBodyStyle = {padding: 0};
@@ -50,11 +51,13 @@ class Redeem extends React.Component {
       METHOD: 'POST',
       successFn: (res) => {        
         if(res){
-          this.openConfirm();
+          this.setState({data: res.data}, ()=>{            
+            this.openConfirm();
+          })
+          
         }        
       },
-      errorFn: (e) =>{ 
-        this.openConfirm();
+      errorFn: (e) =>{         
         if (e.message)       
           this.setState({error: e.message});
         else
@@ -64,7 +67,7 @@ class Redeem extends React.Component {
   }  
 
   openConfirm=()=>{
-    this.setState({contentRedeemConfirm: <RedeemConfirm redeemCode={this.state.redeemCode} />}, ()=>{
+    this.setState({contentRedeemConfirm: <RedeemConfirm data={this.state.data} />}, ()=>{
       this.modalRedeemConfirmRef.open();
     });
   }
