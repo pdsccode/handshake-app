@@ -4,6 +4,11 @@ import classNames from 'classnames';
 import Slider from 'react-rangeslider';
 import 'react-rangeslider/lib/index.css';
 import './ConfirmButton.scss';
+import iconETH from '@/assets/images/wallet/icons/coins/btc.svg';
+
+function changeIconConfirmButton(icon){
+  document.querySelector(".confirm-button .rangeslider__handle").style.backgroundImage = 'url("'+icon+'")';    
+}
 
 class ConfirmButton extends Component {
   
@@ -16,15 +21,27 @@ class ConfirmButton extends Component {
       confirm: false,
       delay: props.delay || 100,
       buttonText: props.buttonText || "Slide to Confirm",
-      buttonConfirmedText: props.buttonConfirmedText || "Confirmed"
-      // icon: props.icon 
-    };
+      buttonConfirmedText: props.buttonConfirmedText || "Confirmed",
+      icon: props.icon || null,
+    };        
+  }
+
+  componentDidMount() {  
+    // if (this.state.icon){
+    //   changeIconConfirmButton(this.props.icon);
+    // }
   }
 
   handleOnChange = (value) => {    
     this.setState({
       volume: value
     })
+  }
+  componentWillReceiveProps(){
+    // if (this.props.icon){      
+    //   changeIconConfirmButton(this.props.icon);
+    // }
+    
   }
 
   onChangeComplete = () => {      
@@ -52,7 +69,7 @@ class ConfirmButton extends Component {
 
 
   render (){
-    let { volume } = this.state
+    let { volume } = this.state;
     let text = this.state.confirm ? this.state.buttonConfirmedText : this.state.buttonText;
 
     return (

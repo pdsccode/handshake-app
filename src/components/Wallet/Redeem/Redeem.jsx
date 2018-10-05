@@ -15,8 +15,11 @@ import { getReferalInfo } from '@/reducers/exchange/action';
 import { shortenUser } from '@/services/offer-util';
 import Button from '@/components/core/controls/Button';
 import Input from '../Input';
+import Modal from '@/components/core/controls/Modal';
+import ConfirmButton from '@/components/Wallet/ConfirmButton';
 
 import gitfBox from '@/assets/images/wallet/images/gift-gift-box.svg';
+import RedeemConfirm from '@/components/Wallet/Redeem/RedeemConfirm';
 
 
 class Redeem extends React.Component {
@@ -29,7 +32,8 @@ class Redeem extends React.Component {
 
     this.state = {      
       redeemCode: this.props.data.code || ' ',
-      error: '',
+      error: ''      ,
+      contentRedeemConfirm: '',
     };    
   }
 
@@ -41,10 +45,9 @@ class Redeem extends React.Component {
     this.props.verifyRedeemCode({
       PATH_URL: 'user/verification/redeem-code/check?code='+this.state.redeemCode,
       METHOD: 'POST',
-      successFn: (res) => {
-        alert(res.status);
+      successFn: (res) => {        
         if(res){
-          // move step 2 
+          this.openConfirm();
         }        
       },
       errorFn: (e) =>{ 
@@ -54,41 +57,45 @@ class Redeem extends React.Component {
           console.log(e);
       }
     });
-  }
+  }  
 
+  openConfirm=()=>{
+    this.setState({contentRedeemConfirm: <RedeemConfirm redeemCode={this.state.redeemCode} />}, ()=>{
+      this.modalRedeemConfirmRef.open();
+    });
+  }
 
   render() {
     const { messages } = this.props.intl;    
     
     return (
-     <div className="redeem-page">   
+      <div>  
 
-        <Modal title={messages.wallet.action.redeem.title}>
-          < div className="title"> 
-              <img src={gitfBox} /> 
-              <div>{messages.wallet.action.redeem.title}</div>
+          <Modal onRef={modal => this.modalRedeemConfirmRef = modal} title={messages.wallet.action.redeem.title}>
+              {this.state.contentRedeemConfirm}
+          </Modal>
+
+        <div className="redeem-page">   
+          <div className="titleBox">
+            <img src={gitfBox} /> 
+            <div className="title">{messages.wallet.action.redeem.title}</div>
           </div>
-        </Modal>
-
-        <div className="title">
-          <img src={gitfBox} /> 
-          <div>{messages.wallet.action.redeem.title}</div>
+          <div className="body">
+              <div className="redeem-code">
+                <Input required placeholder={messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.redeemCode} onChange={this.handleNameChange} /> 
+                {this.state.error && <div className="error">{this.state.error}</div>}
+              </div>                     
+              <div className="buttonRedeem">              
+                <Button onClick={this.checkRedeemCode}>{messages.wallet.action.redeem.button_check}</Button>
+              </div>
+              <div className="findcode">
+                <a href="#">
+                  {messages.wallet.action.redeem.find_code}
+                </a>            
+              </div>
+          </div>
         </div>
-        <div className="body">
-            <div className="redeem-code">
-              <Input required placeholder={messages.wallet.action.redeem.your_code} maxLength="40" value={this.state.redeemCode} onChange={this.handleNameChange} /> 
-              {this.state.error && <div className="error">{this.state.error}</div>}
-            </div>                     
-            <div className="buttonRedeem">              
-              <Button onClick={this.checkRedeemCode}>{messages.wallet.action.redeem.button_check}</Button>
-            </div>
-            <div className="findcode">
-              <a href="#">
-                {messages.wallet.action.redeem.find_code}
-              </a>            
-            </div>
-        </div>
-     </div>
+     </div>    
     );
   }
 }

@@ -1,14 +1,28 @@
+
 .redeem-page{
+
     padding: 20px;
-    .title{
+
+    @media (max-width: 330px){
+        margin-top: 10px;     
+        padding: 5px;
+        .confirm-button label{
+            font-size: 16px;
+        }        
+    }
+    
+    .titleBox{
         text-align: center;
         img{
             margin: auto;
             width: 70px;
         }
-        div{
+        .title{
             margin-top: 10px;
             font-size: 30px;
+        }
+        .code{
+            color: #009688
         }
     }    
     .buttonRedeem{        
@@ -34,5 +48,45 @@
         text-align: center;
         color: #f83c37;
         margin-top: -10px;
+    }
+    .wallet-from{
+        border: solid 1px #EAEAEC;
+        border-radius: 5px;
+        padding: 0.5rem 0.5rem 0.5rem 1rem;
+        margin-top: 1rem;
+        .re-name{            
+            font-size: 1rem;
+            opacity: 0.72;            
+            font-size: 16px;
+            color: #211D2C;
+            letter-spacing: 0;
+        }
+        .re-address{            
+            opacity: 0.78;            
+            font-size: 16px;
+            color: #8593A2;
+            letter-spacing: 0;
+        }        
+        
+        position: relative;
+        .arrow-down{
+            position: absolute;
+            right: 10px;
+            top: 16px;
+        }
+        .logo{
+            width: 20px;
+            margin-right: 10px;
+            margin-left: -5px;
+            margin-top: -2px;
+        }
+        @media (max-width: 330px){            
+            .re-address{
+                display: none;
+            }
+            .logo{
+                margin-right: 5px;
+            }
+        }
     }
 }

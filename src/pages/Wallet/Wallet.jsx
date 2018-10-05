@@ -920,7 +920,7 @@ class Wallet extends React.Component {
 
   getETHFree=()=> {
     // window.open('https://www.rinkeby.io/#faucet', '_blank');
-    let data="ninja-redeem:2342342342342342?value=234";
+    let data="ninja-redeem:NINJA101F8DC?value=234";
     let result = MasterWallet.getQRCodeDetail(data);
     this.props.showQRCodeContent({   
       data: result      
