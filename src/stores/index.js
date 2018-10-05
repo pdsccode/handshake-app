@@ -21,7 +21,7 @@ import defaultStore from '@/stores/default-store';
 firebase.initializeApp({
   apiKey: process.env.firebase_apiKey,
   authDomain: process.env.firebase_authDomain,
-  databaseURL: process.env.firebase_databaseURL.trim(),
+  databaseURL: process.env.firebase_databaseURL,
   storageBucket: process.env.firebase_storageBucket,
   messagingSenderId: process.env.firebase_messagingSenderId,
 });
