@@ -185,7 +185,7 @@ export const hasLinkedWallet = () => dispatch => new Promise((resolve, reject) =
     console.log(authProfile);
     const { id: walletId } = authProfile;
     axiosInstance.get(`/link-to-wallet/has-linked?walletId=${walletId}`)
-    .then(({ status, data: payload }) => {
+    .then(({ status, data: { success: payload} }) => {
       if (status === 200) {
         dispatch({ type: ACTIONS.SYNC_WALLET, payload })
         resolve(payload)
