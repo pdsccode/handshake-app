@@ -45,7 +45,7 @@ class WalletProtect extends React.Component {
           </div>
           <div className="msg3">
             <Checkbox name="checkBoxProtected" label={messages.wallet.action.protect.text.step1_label}
-              checked={this.state.step1_confirm}
+              defaultChecked={this.state.step1_confirm}
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
           <Button className="button-wallet" block disabled={!this.state.step1_confirm} type="submit" onClick={this.doStep1}>Continue</Button>

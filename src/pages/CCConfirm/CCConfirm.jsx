@@ -27,22 +27,22 @@ class CCConfirm extends React.Component {
     super(props);
     this.state = {
       isLoading: false,
-      userProfile: {},
       firebaseUser: this.props.firebaseUser,
+      isRequest: false,
     };
 
     console.log('location.search', window.location.search);
   }
 
-  static source = {
-  };
+  // static source = {
+  // };
 
   componentDidMount() {
   }
 
   componentWillReceiveProps(nextProps) {
     // const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
-    if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
+    if (nextProps.userProfile && JSON.stringify(nextProps.userProfile) !== JSON.stringify(this.props.userProfile)) {
       console.log('componentWillReceiveProps', nextProps);
       // const { MD: client_secret } = Helper.getQueryStrings(window.location.search);
       // const source = local.get(APP.CC_SOURCE);
@@ -51,7 +51,14 @@ class CCConfirm extends React.Component {
       // if (client_secret && client_secret === cc_client_secret) {
       //   this.handleSubmit({}, nextProps.userProfile);
       // }
-      this.getAuthoriseInfo();
+
+      const { isRequest } = this.state;
+
+      if (!isRequest) {
+        this.setState({ isRequest: true }, ()=> {
+          this.getAuthoriseInfo();
+        });
+      }
     }
   }
 
@@ -400,7 +407,7 @@ class CCConfirm extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  userProfile: state.exchange.userProfile,
+  userProfile: state.exchange.userProfile || {},
   authProfile: state.auth.profile,
   firebaseUser: state.firebase.data,
 });

@@ -62,7 +62,7 @@ function* apiGet(actions) {
     // TODO: chrome-extension
     headers: (window.self !== window.top) ? {
       ...actions.headers,
-      'Request-Form': 'extension',
+      'Request-From': 'extension',
     } : { ...actions.headers },
   });
 }
