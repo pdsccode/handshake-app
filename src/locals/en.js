@@ -1116,6 +1116,11 @@ export default {
         updatedAtmSuccess: 'Success!',
         no_history: 'You do not have any order yet.',
       },
+      confirm_button: {
+        desc: 'Are you sure?',
+        confirm: 'Sure',
+        cancel: 'Cancel',
+      },
       button: {
         create: 'Create my ATM',
         update: 'Update my ATM',
@@ -1138,9 +1143,11 @@ export default {
           processing: 'Pending',
           success: 'Success',
           transferring: 'Sending coins...',
+          cancelled: 'Canceled',
         },
         messageTransfer: 'You haven\'t transferred yet.',
         transferNow: 'View detail',
+        cancel_order: 'Cancel',
       },
     },
   },
