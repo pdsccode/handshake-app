@@ -3,14 +3,13 @@ import React from 'react';
 import './CCConfirm.scss';
 import Helper from '@/services/helper';
 import local from '@/services/localStore';
-import {API_ENDPOINT, API_URL, APP, FIAT_CURRENCY, HANDSHAKE_ID, URL} from '@/constants';
+import { API_ENDPOINT, API_URL, APP, FIAT_CURRENCY, HANDSHAKE_ID, URL } from '@/constants';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { bindActionCreators } from 'redux';
 import { change } from 'redux-form';
 import { connect } from 'react-redux';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
-import {createCCOrder, getAuthoriseInfo} from '@/reducers/exchange/action';
+import { createCCOrder, getAuthoriseInfo, getUserProfile } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
@@ -18,7 +17,7 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import { BigNumber } from 'bignumber.js';
 import { roundNumberByLocale } from '@/services/offer-util';
-import axios from "axios/index";
+import axios from 'axios/index';
 
 const TAG = 'CCConfirm';
 
@@ -38,6 +37,7 @@ class CCConfirm extends React.Component {
   // };
 
   componentDidMount() {
+    this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,7 +55,7 @@ class CCConfirm extends React.Component {
       const { isRequest } = this.state;
 
       if (!isRequest) {
-        this.setState({ isRequest: true }, ()=> {
+        this.setState({ isRequest: true }, () => {
           this.getAuthoriseInfo();
         });
       }
@@ -257,31 +257,31 @@ class CCConfirm extends React.Component {
     // if (handleSubmit) {
     //   handleSubmit(values);
     // } else {
-      // console.log('handleSubmit', values);
-      // const { userProfile: { creditCard } } = this.props;
+    // console.log('handleSubmit', values);
+    // const { userProfile: { creditCard } } = this.props;
 
-      // Use existing credit card
+    // Use existing credit card
     const { md: token, pa_res: client_secret } = values;
     const source = local.get(APP.CC_SOURCE);
-      const {
-        three_d_secure: {
-          last4, exp_month, exp_year,
-        },
-      } = source;
-      const cc_number = last4;
-      const cc_expired = `${exp_month}/${exp_year.toString().substr(2, 2)}`;
-      // const card = local.get(APP.CC_TOKEN);
+    const {
+      three_d_secure: {
+        last4, exp_month, exp_year,
+      },
+    } = source;
+    const cc_number = last4;
+    const cc_expired = `${exp_month}/${exp_year.toString().substr(2, 2)}`;
+    // const card = local.get(APP.CC_TOKEN);
 
-      const cc = {
-        cc_num: cc_number,
-        // cvv: card,
-        expiration_date: cc_expired,
-        token,
-        client_secret,
-      };
+    const cc = {
+      cc_num: cc_number,
+      // cvv: card,
+      expiration_date: cc_expired,
+      token,
+      client_secret,
+    };
 
-      console.log('handleSubmit', cc);
-      this.handleCreateCCOrder(cc);
+    console.log('handleSubmit', cc);
+    this.handleCreateCCOrder(cc);
     // }
   };
 
@@ -306,7 +306,7 @@ class CCConfirm extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY.USD,
         address,
-        email: email,
+        email,
         payment_method_data: params,
         username: authProfile ? authProfile.username : '',
       };
@@ -419,6 +419,7 @@ const mapDispatchToProps = (dispatch) => ({
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   getAuthoriseInfo: bindActionCreators(getAuthoriseInfo, dispatch),
+  getUserProfile: bindActionCreators(getUserProfile, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CCConfirm));
