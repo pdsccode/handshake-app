@@ -1268,10 +1268,13 @@ export default {
         label: {
           from_wallet: 'From wallet',
           to_address: 'To wallet address',
+          to_address2: 'To address',
           amount: 'Amount',
           usd: 'USD',
           wallet_balance: 'Wallet balance',
           scan_qrcode: 'Scan QR code',
+          gas_limit: 'Gas Limit',
+          data: 'Data'
         },
         placeholder: {
           to_address: 'Wallet address...',
