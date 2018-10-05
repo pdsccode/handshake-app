@@ -25,7 +25,6 @@ import './TransferToken.scss';
 import '../TransferCoin/TransferCoin.scss';
 import BrowserDetect from '@/services/browser-detect';
 import ListCoin from '@/components/Wallet/ListCoin';
-import { reset } from 'kleur';
 
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 const gasValid = value => (value && isNaN(value) ? 'Invalid gas limit' : undefined);
