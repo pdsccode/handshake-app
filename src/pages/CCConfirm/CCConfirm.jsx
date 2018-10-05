@@ -407,7 +407,7 @@ class CCConfirm extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  userProfile: state.exchange.userProfile,
+  userProfile: state.exchange.userProfile || {},
   authProfile: state.auth.profile,
   firebaseUser: state.firebase.data,
 });
