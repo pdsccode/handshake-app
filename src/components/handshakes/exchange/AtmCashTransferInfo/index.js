@@ -14,10 +14,23 @@ import { injectIntl } from 'react-intl';
 import iconCopy from '@/assets/images/icon/icon-copy-white.svg';
 import iconUpload from '@/assets/images/icon/icon-upload-white.svg';
 import ClockCount from './components/ClockCount';
+import ExtraInfo from './components/ExtraInfo';
 import './styles.scss';
 
 const DATA_TEMPLATE = {
-  AMOUNT: { intlKey: 'amount', text: '--- USD', className: 'money' },
+  'CUSTOMER AMOUNT': {
+    intlKey: 'customer_amount',
+    text: '--- USD',
+    className: 'money',
+  },
+  'YOUR AMOUNT': {
+    intlKey: 'amount',
+    text: '--- USD',
+    className: 'money',
+    extraInfo: {
+      intlKey: 'amount_info',
+    },
+  },
   'ACCOUNT NAME': { intlKey: 'account_name', text: '---' },
   'ACCOUNT NUMBER': { intlKey: 'account_number', text: '---', copyable: true },
   'BANK NAME': { intlKey: 'bank_name', text: '---', copyable: true },
@@ -55,8 +68,9 @@ class AtmCashTransferInfo extends PureComponent {
 
   static getDerivedStateFromProps({ receipt }, prevState) {
     const newData = { ...prevState?.data };
-    const { amount, fiatCurrency, referenceCode } = receipt;
-    amount && fiatCurrency && (newData.AMOUNT.text = `${Number.parseFloat(amount).toFixed(2)} ${fiatCurrency}`);
+    const { amount, fiatCurrency, referenceCode, customerAmount } = receipt;
+    amount && fiatCurrency && (newData['YOUR AMOUNT'].text = `${Number.parseFloat(amount).toFixed(2)} ${fiatCurrency}`);
+    customerAmount && fiatCurrency && (newData['CUSTOMER AMOUNT'].text = `${Number.parseFloat(customerAmount).toFixed(2)} ${fiatCurrency}`);
     referenceCode && (newData['REFERENCE CODE'].text = referenceCode);
     return { data: newData };
   }
@@ -173,6 +187,7 @@ class AtmCashTransferInfo extends PureComponent {
             <div>
               <span className={`value ${value.className && value.className}`}>{value.text}</span>
               {value.copyable && this.renderCopyIcon(value.text)}
+              {value.extraInfo && <ExtraInfo info={atm_cash_transfer_info[value.extraInfo.intlKey]} />}
             </div>
           </div>
         ))}

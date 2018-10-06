@@ -118,11 +118,12 @@
 
 .div-amount {
   padding-bottom: 10px;
+  position: relative;
 
   .prepend{
-    padding-top: 11px;
+    padding-top: 10px;
     position: absolute;
-    right: 50px;
+    right: 10px;
     color: #7b7b7b;
   }
 

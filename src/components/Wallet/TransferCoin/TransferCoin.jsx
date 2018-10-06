@@ -52,10 +52,12 @@ class Transfer extends React.Component {
       walletDefault: false,
       walletSelected: false,
       currency: this.props.currency,
+
       // Qrcode
       qrCodeOpen: false,
       delay: 300,
-      walletsData: false,
+      legacyMode: false,
+
       rate: 0,
       inputSendAmountValue: 0,
       inputSendMoneyValue: 0,
@@ -91,7 +93,6 @@ class Transfer extends React.Component {
   componentWillReceiveProps() {
     const {currency} = this.props;
     this.setState({inputSendAmountValue: 0, inputSendMoneyValue: 0, currency: currency ? currency : 'USD'});
-    this.resetForm();
 
   }
 
@@ -117,19 +118,6 @@ class Transfer extends React.Component {
     this.setRate();
     this.getBalanceWallets();
   }
-
-  resetForm(){
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
-  }
-
-  showLoading = () => {
-    this.props.showLoading({message: '',});
-  }
-
-  hideLoading = () => {
-    this.props.hideLoading();
-  }
-
 
   onFinish = async (data) => {
     const { onFinish } = this.props;
@@ -289,7 +277,7 @@ class Transfer extends React.Component {
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;
     }
 
-    this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
+    this.setState({wallets: listWalletCoin, walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
   }
@@ -477,7 +465,6 @@ openListCoin=()=>{
 selectWallet = async (walletSelected) => {
 
   this.setState({walletSelected, modalListCoin: ''}, ()=> {
-    MasterWallet.UpdateBalanceItem(walletSelected);
     this.modalListCoinRef.close();
   });
 
