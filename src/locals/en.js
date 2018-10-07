@@ -954,10 +954,12 @@ export default {
           success: {
             phone: 'Phone number securely saved.',
             email: 'Your email has been verified.',
+            idVerification: 'Your documents has been submitted',
           },
           cannot: {
             phone: 'Can\'t verify your phone, please check your code',
             email: 'Can\'t verify your email, please check your code.',
+            idVerification: 'Can\'t submit your documents, please try again',
           },
         },
       },

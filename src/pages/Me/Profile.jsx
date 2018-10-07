@@ -66,6 +66,7 @@ class Profile extends React.Component {
       idVerificationFrontImage: null,
       idVerificationBackImage: null,
       idVerificationSelfieImage: null,
+      idVerified: props.auth.profile.idVerified,
     };
     // bind
     this.onSubmitVerifyPhone = :: this.onSubmitVerifyPhone;
@@ -190,8 +191,19 @@ class Profile extends React.Component {
       data,
       METHOD: 'POST',
       successFn: () => {
+        this.setState(() => ({ idVerified: 2, idVerificationCollapse: false }));
+        this.props.showAlert({
+          message: <div className="text-center">{messages.me.profile.verify.alert.success.idVerification}</div>,
+          timeOut: 3000,
+          type: 'success',
+        });
       },
       errorFn: () => {
+        this.props.showAlert({
+          message: <div className="text-center">{messages.me.profile.verify.alert.cannot.idVerification}</div>,
+          timeOut: 3000,
+          type: 'danger',
+        });
       },
     });
   }
@@ -640,7 +652,7 @@ class Profile extends React.Component {
                   <span>{messages.me.profile.text.id_verification.desc1}</span>
                 </p>
                 <div className="extend">
-                  <span className={`badge ${this.props.auth.profile.is_verified === 1 ? 'badge-sucess' : (this.props.auth.profile.is_verified === 2 ? 'badge-warning' : '')}`}>{this.props.auth.profile.is_verified === 1 ? 'Verified' : (this.props.auth.profile.is_verified === 2 ? 'Processing' : '')}</span>
+                  <span className={`badge ${this.state.idVerified === 1 ? 'badge-sucess' : (this.state.idVerified === 2 ? 'badge-warning' : '')}`}>{this.state.idVerified === 1 ? 'Verified' : (this.state.idVerified === 2 ? 'Processing' : '')}</span>
                   <Image className={this.state.idVerificationCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
