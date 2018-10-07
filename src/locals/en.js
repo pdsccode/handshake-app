@@ -940,6 +940,12 @@ export default {
               phone: 'A valid phone number would work better.',
               email: 'A valid email would work better.',
             },
+            idVerification: {
+              invalidDocument: 'Please choose a document type',
+              invalidFrontImage: 'Please upload front page of your document',
+              invalidBackImage: 'Please upload back page of your document',
+              invalidSelfieImage: 'Please upload a selife photo with your document',
+            },
           },
           require: {
             phone: 'Please enter your verify code.',
@@ -984,6 +990,21 @@ export default {
           button: {
             send: 'Send',
             submit: 'Verify your email',
+          },
+        },
+        id_verification: {
+          label: 'ID Verification',
+          desc1: 'Your account must be verified to comply with relevant anti-money laundering (AML) and counter-terrorism financing (CTF) laws and regulations',
+          desc2: '● All documents provided must be in Roman/Latin alphabet or a certified English translation is required.',
+          desc3: '● All files uploaded must be in png, jpg or jpeg.',
+          desc4: '● All fields in the following verification form are mandatory (NA for Non Applicable can be used).',
+          desc5: '● To avoid possible delays, please check the correctness before submitting documents, please double check you do not send the same document twice and possibly forget one.',
+          desc6: 'Select document type',
+          desc7: 'Document front page upload',
+          desc8: 'Document back page upload',
+          desc9: 'Selfie with document upload',
+          button: {
+            submit: 'Submit',
           },
         },
       },
