@@ -14,7 +14,8 @@ class ConfirmButton extends PureComponent {
     this.onConfirm = :: this.onConfirm;
   }
 
-  onClick() {
+  onClick(e) {
+    e.preventDefault();
     this.modal.open();
   }
 
@@ -27,7 +28,8 @@ class ConfirmButton extends PureComponent {
     this.modal.close();
   }
 
-  onCancel() {
+  onCancel(e) {
+    e.preventDefault();
     const { onCancel } = this.props;
     if (typeof onCancel === 'function') {
       onCancel();
@@ -37,10 +39,10 @@ class ConfirmButton extends PureComponent {
   }
 
   render() {
-    const { label, intl: { messages } } = this.props;
+    const { containerClassName, buttonClassName, label, intl: { messages } } = this.props;
     return (
-      <div className="confirm-btn-container">
-        <button className="btn btn-warning confirm-btn" onClick={this.onClick}>{label}</button>
+      <div className={`confirm-btn-container ${containerClassName}`}>
+        <button className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
         <ModalDialog onRef={modal => { this.modal = modal; }}>
           <div className="confirm-btn-content">
             <span className="confirm-btn-desc">{messages.create.atm.confirm_button.desc}</span>
@@ -57,13 +59,18 @@ class ConfirmButton extends PureComponent {
 
 ConfirmButton.defaultProps = {
   onCancel: () => {},
+  onConfirm: () => {},
+  containerClassName: '',
+  buttonClassName: '',
 };
 
 ConfirmButton.propTypes = {
   label: PropTypes.string.isRequired,
-  onConfirm: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
   intl: PropTypes.object.isRequired,
+  buttonClassName: PropTypes.string,
+  containerClassName: PropTypes.string,
 };
 
 export default injectIntl(ConfirmButton);

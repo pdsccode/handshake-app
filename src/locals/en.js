@@ -1106,6 +1106,12 @@ export default {
     },
   },
   create: {
+    cod_form: {
+      cod: 'Cash on Delivery',
+      your_address: 'Your address',
+      time_note: 'Time and note',
+      buy_btn: 'Buy',
+    },
     cash: {
       credit: {
         title: 'Buy coins',
