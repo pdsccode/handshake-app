@@ -1686,4 +1686,11 @@ export default {
     title: 'Payment detail',
     amount_info: 'Profit = Customer Amount - Your Amount',
   },
+  buy_coin: {
+    label: {
+      header: 'Buy crypto with Ninja',
+      description: 'Ninja has some of the best prices around',
+      common_packages: 'Common packages:',
+    },
+  },
 };
