@@ -15,6 +15,9 @@ export const eventSelector = (state) => {
   }
   return events.filter(event => (event.id === parseInt(match, 10)));
 };
+export const relevantEventSelector = (state) => {
+  return state.prediction.relevantEvents;
+}
 
 export const countReportSelector = (state) => {
   const { countReport } = state.ui;

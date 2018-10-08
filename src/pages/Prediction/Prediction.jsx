@@ -22,7 +22,7 @@ import { isJSON } from '@/utils/object';
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector } from './selector';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector, relevantEventSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
@@ -284,10 +284,32 @@ class Prediction extends React.Component {
             />
           );
         })}
+        {this.renderRelevantEventList(props)}
         <Disclaimer />
       </div>
     );
   };
+
+  renderRelevantEventList = (props) => {
+    if (!props.isSharePage) return null;
+    if (!props.eventList || !props.eventList.length) return null;
+    return (
+      <div className="RelevantEventList">
+        <div className="relevantTitle">Relevant events</div>
+        {props.eventList.map((event) => {
+          return (
+            <EventItem
+              key={event.id}
+              event={event}
+              onClickOutcome={this.handleClickEventItem}
+              onCountdownComplete={() => this.onCountdownComplete(event.id)}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
 
   renderBetMode = (props, state) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
@@ -441,6 +463,7 @@ export default injectIntl(connect(
     return {
       countReport: countReportSelector(state),
       eventList: eventSelector(state),
+      relevantEventList: relevantEventSelector(state),
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),

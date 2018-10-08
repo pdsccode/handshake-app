@@ -3,7 +3,7 @@ import { apiGet } from '@/stores/api-saga';
 import { REMOVE_DATA } from '@/stores/data-action';
 import { API_URL } from '@/constants';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail } from './action';
-import { eventSelector } from './selector';
+import { eventSelector, relevantEventSelector } from './selector';
 
 export function* handleLoadMatches({ cache = true, source }) {
   try {
@@ -22,6 +22,26 @@ export function* handleLoadMatches({ cache = true, source }) {
     });
   } catch (e) {
     return console.error('handleLoadMachesSaga', e);
+  }
+}
+
+export function* handleLoadRelevantEvents({ cache = true, eventId }) {
+  try {
+    if (cache) {
+      const events = yield select(relevantEventSelector);
+      if (events && events.length) {
+        return events;
+      }
+    }
+    const PATH_URL = `${API_URL.CRYPTOSIGN.RELEVANT_EVENTS}?match=${eventId}`;
+    return yield call(apiGet, {
+      PATH_URL,
+      type: 'LOAD_MATCHES',
+      _key: 'relevantEvents',
+      _path: 'prediction',
+    });
+  } catch (e) {
+    return console.error('handleLoadRelevantMachesSaga', e);
   }
 }
 
