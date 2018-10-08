@@ -380,15 +380,15 @@ class ReceiveCoin extends React.Component {
             </div>
 
             <div className="box-qr-code">
-                <QRCode size={230} value={qrCodeValue} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} />
+                <QRCode size={230} value={qrCodeValue} onClick={() => { Clipboard.copy(qrCodeValue); this.showToast(messages.wallet.action.receive.success.share);}} />
             </div>
 
-            {/* <div className="box-link">
+            <div className="box-link">
               <a className="link-copy-address" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}}>{messages.wallet.action.receive.link.copy_address}</a>
-              <a className="link-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
+              <a className="link-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(qrCodeValue);}}>
                 {messages.wallet.action.receive.link.download_qrcode}
               </a>
-            </div> */}
+            </div>
             
             {/* Don't support for Collectibles */}
             { !this.state.walletSelected.isCollectibles ?
@@ -438,13 +438,13 @@ class ReceiveCoin extends React.Component {
 
             {/* <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>{messages.wallet.action.receive.button.request_amount}</div> */}
 
-            <a className="button-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
+            {/* <a className="button-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
                 {messages.wallet.action.receive.link.download_qrcode}
             </a>
 
             <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} >
               {messages.wallet.action.receive.button.text}
-            </Button>
+            </Button> */}
           </div>
 
       </div>
