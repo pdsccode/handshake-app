@@ -1114,6 +1114,7 @@ export default {
         confirmUpdateAtm: 'Update your ATM?',
         createdAtmSuccess: 'Success! You have created an ATM on Ninja.',
         updatedAtmSuccess: 'Success!',
+        no_history: 'You do not have any order yet.',
       },
       button: {
         create: 'Create my ATM',
@@ -1267,10 +1268,13 @@ export default {
         label: {
           from_wallet: 'From wallet',
           to_address: 'To wallet address',
+          to_address2: 'To address',
           amount: 'Amount',
           usd: 'USD',
           wallet_balance: 'Wallet balance',
           scan_qrcode: 'Scan QR code',
+          gas_limit: 'Gas Limit',
+          data: 'Data'
         },
         placeholder: {
           to_address: 'Wallet address...',
@@ -1656,7 +1660,8 @@ export default {
     payment_detail: 'Payment detail',
     order_will_expire_in: 'This order will expire in ',
     expired: 'Expired',
-    amount: 'AMOUNT',
+    customer_amount: 'CUSTOMER AMOUNT',
+    amount: 'YOUR AMOUNT',
     account_name: 'ACCOUNT NAME',
     account_number: 'ACCOUNT NUMBER',
     bank_name: 'BANK NAME',
@@ -1668,5 +1673,6 @@ export default {
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
     title: 'Payment detail',
+    amount_info: 'Profit = Customer Amount - Your Amount',
   },
 };
