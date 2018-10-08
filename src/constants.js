@@ -564,8 +564,13 @@ export const URL = {
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
 
+  HANDSHAKE_PAYMENT_TRANSFER: '/payment/transfer',
+  HANDSHAKE_PAYMENT_TRANSFER_INDEX: '/payment/transfer',
+
   HANDSHAKE_PAYMENT: '/payment',
   HANDSHAKE_PAYMENT_INDEX: '/payment',
+
+
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',

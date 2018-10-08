@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Slider from 'react-rangeslider';
-import _ from 'lodash';
 import 'react-rangeslider/lib/index.css';
 import './ConfirmButton.scss';
 
 class ConfirmButton extends Component {
-  
+
   constructor(props) {
     super(props);
     this.timer = null;
@@ -18,17 +17,17 @@ class ConfirmButton extends Component {
       delay: props.delay || 100,
       buttonText: props.buttonText || "Slide to Confirm",
       buttonConfirmedText: props.buttonConfirmedText || "Confirmed"
-      // icon: props.icon 
+      // icon: props.icon
     };
   }
 
-  handleOnChange = (value) => {    
+  handleOnChange = (value) => {
     this.setState({
       volume: value
     })
   }
 
-  onChangeComplete = () => {      
+  onChangeComplete = () => {
     if (this.state.volume < 100){
       this.setState({
         volume: 0, confirm: false
@@ -45,9 +44,9 @@ class ConfirmButton extends Component {
             this.timer = setTimeout(function() {
               // once
               onConfirmed();
-          }, 100);    
-        })        
-      }      
+          }, 100);
+        })
+      }
     }
   }
 
@@ -57,20 +56,20 @@ class ConfirmButton extends Component {
     let text = this.state.confirm ? this.state.buttonConfirmedText : this.state.buttonText;
 
     return (
-      <div>        
+      <div>
         <div className="confirm-button">
-          <label>{text}</label>          
-          <Slider            
-            value={volume}  
-            tooltip={false}   
-            onChangeComplete={this.onChangeComplete}       
-            onChange={this.handleOnChange}    
-          />          
+          <label>{text}</label>
+          <Slider
+            value={volume}
+            tooltip={false}
+            onChangeComplete={this.onChangeComplete}
+            onChange={this.handleOnChange}
+          />
         </div>
       </div>
     );
   }
-  
+
 }
 
 export default ConfirmButton;

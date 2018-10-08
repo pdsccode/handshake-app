@@ -39,7 +39,6 @@ import { APP, BASE_API } from '@/constants';
 import { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
 import axios from 'axios';
-import { merge } from 'lodash';
 import { isEqual } from '@/utils/array.js';
 
 const bip39 = require('bip39');
@@ -225,17 +224,11 @@ export class MasterWallet {
         let listAddresses = MasterWallet.getListWalletAddressJson();
 
         console.log("update wallet addresses ...");
+        const token = localStore.get(APP.AUTH_TOKEN);
 
         const defaultHeaders = {
-          'Content-Type': 'application/json',
-        };
-        let headers = {};
-        const completedHeaders = merge(
-          defaultHeaders,
-          headers,
-        );
-        const token = localStore.get(APP.AUTH_TOKEN);
-        completedHeaders.Payload = token;
+          'Content-Type': 'application/json', Payload: token
+        };                        
 
         let data = new FormData();
         data.append ("wallet_addresses", listAddresses);
