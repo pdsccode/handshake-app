@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { email, required } from '@/components/core/form/validation';
 import { fieldInput } from '@/components/core/form/customField';
 import createForm from '@/components/core/form/createForm';
+import ReactDOM from 'react-dom';
 
 import './ContentForCashBusiness.scss';
 import './ContentForPrediction.scss';
@@ -67,8 +68,23 @@ class ContentForPrediction extends React.Component {
         console.log('err subscribe email', err);
       });
   };
+
   openTelegram = () => {
     window.open('https://t.me/ninja_org', '_blank');
+  }
+  scrollToRoadMap() {
+    const roadMapNode = ReactDOM.findDOMNode(this.refs.roadmap)
+
+    if (roadMapNode && location.href.includes('#roadmap')) {
+      roadMapNode.scrollIntoView({
+          behaviour: 'smooth',
+          block: 'start',
+          inline: 'center',
+      });
+    }
+  }
+  componentDidMount() {
+    this.scrollToRoadMap();
   }
   renderThanksSubcribe() {
     return (
@@ -144,7 +160,7 @@ class ContentForPrediction extends React.Component {
 
   renderRoadMap() {
     return (
-      <PexRoadMap className="wrapperBlock" />
+      <PexRoadMap ref="roadmap" className="wrapperBlock" />
 
     );
   }
@@ -176,7 +192,7 @@ class ContentForPrediction extends React.Component {
   }
   renderExtension() {
     return (
-      <section className="section" id="extension">
+      <section className="section">
         <div className="wrapperExtentsion wrapperBlock">
           <div className="column">
             <img src={imgExtension} alt="imgExtension" width="600" />
@@ -221,7 +237,7 @@ class ContentForPrediction extends React.Component {
   }
   renderMarket() {
     return (
-      <section className="section" id="market">
+      <section className="section">
         <div className="wrapperBlock">
           <div className="column">
             <img src={imgMarket} alt="imgMarket" width="500" />
