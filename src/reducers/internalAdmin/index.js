@@ -1,4 +1,4 @@
-import { uniqBy, reverse, sortBy } from 'lodash';
+import { uniqBy } from '@/utils/array';
 import { ACTIONS } from './action';
 
 // const TAG = 'InternalWithdrawReducer';
@@ -14,7 +14,6 @@ const internalAdminReducter = (
       if (action?.payload?.data) {
         let newList = [...state?.orderList, ...action?.payload?.data];
         newList = uniqBy(newList, item => item.id);
-        // newList = reverse(sortBy(newList, ['status', 'created_at']));
         return {
           ...state,
           orderList: newList,

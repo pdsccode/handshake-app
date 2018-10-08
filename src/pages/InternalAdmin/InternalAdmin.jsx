@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
-import { debounce } from 'lodash';
+import debounce from '@/utils/debounce';
 import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/action';
 import './InternalAdmin.scss';
 
