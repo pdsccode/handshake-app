@@ -52,7 +52,7 @@ class HedgeFundAPI extends NetworkAPI {
   }
 
   async _createTx (privateKey, value = 0, method, ...params) {
-    debugger
+    // debugger
     if (this.useMetamask) { //use metamask
       var web3js = new Web3js(web3.currentProvider)
       var account = (await web3js.eth.getAccounts())[0]
