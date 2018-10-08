@@ -6,6 +6,20 @@ export const loadMatches = (payload = {}) => {
     ...payload,
   };
 };
+export const loadRelevantEvents = (payload = {}) => {
+  return {
+    type: 'PREDICTION:LOAD_RELEVANT_EVENTS',
+    ...payload,
+  };
+};
+
+export const updateRelevantEvents = (events=[]) => {
+  return SET_DATA({
+    type: 'PREDICTION:UPDATE_FREE_BET',
+    _path: 'ui.freeBet',
+    _value: value,
+  });
+}
 
 export const removeExpiredEvent = (payload = {}) => {
   return {

@@ -19,11 +19,12 @@ import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
 import { isJSON } from '@/utils/object';
+import qs from 'querystring';
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector, relevantEventSelector } from './selector';
-import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail, loadRelevantEvents } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 
@@ -76,6 +77,10 @@ class Prediction extends React.Component {
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
+    const eventId = this.getEventId(this.props);
+    if (eventId) {
+      this.props.dispatch(loadRelevantEvents({eventId}));
+    }
   }
 
   componentWillUnmount() {
@@ -86,6 +91,13 @@ class Prediction extends React.Component {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
+  }
+  getEventId = (props) => {
+    const querystring = window.location.search.replace('?', '');
+    const querystringParsed = qs.parse(querystring);
+    console.log('Query:', querystringParsed);
+    const { match } = querystringParsed;
+    return match || null;
   }
 
   // @TODO: Extensions
@@ -100,6 +112,8 @@ class Prediction extends React.Component {
         const matches = url.match(urlPattern);
         const source = matches && matches[0];
         props.dispatch(loadMatches({ source }));
+        //props.dispatch(loadRelevantEvents({ source }));
+
       }
     }
   }
@@ -292,11 +306,11 @@ class Prediction extends React.Component {
 
   renderRelevantEventList = (props) => {
     if (!props.isSharePage) return null;
-    if (!props.eventList || !props.eventList.length) return null;
+    if (!props.relevantEvents || !props.relevantEvents.length) return null;
     return (
       <div className="RelevantEventList">
         <div className="relevantTitle">Relevant events</div>
-        {props.eventList.map((event) => {
+        {props.relevantEvents.map((event) => {
           return (
             <EventItem
               key={event.id}
