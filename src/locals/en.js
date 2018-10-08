@@ -1275,6 +1275,17 @@ export default {
           }
         }
       },
+      redeem:{
+        title: "Redeem to coin",
+        your_code: "Reedem code",
+        giftcard: "Gift card",
+        value: "Value",
+        agree_text: "By clicking REDEEM, you agree to Gift Card & Promotional code {0} as applicable",
+        button_redeem: "Redeem now",
+        button_check: "Check redeem code",
+        swipe_button_redeem: "Swipe to redeem",
+        find_code: "How do find claim code?"
+      },
       remove: {
         title: 'Remove',
         header: 'Are you sure?',

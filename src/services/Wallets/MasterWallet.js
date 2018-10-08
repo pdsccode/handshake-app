@@ -36,7 +36,7 @@ import { UnicornGO } from '@/services/Wallets/Collectibles/UnicornGO';
 import { WarToken } from '@/services/Wallets/Collectibles/WarToken';
 
 import { APP, BASE_API } from '@/constants';
-import { StringHelper } from '@/services/helper';
+import Helper, { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
 import axios from 'axios';
 import { isEqual } from '@/utils/array.js';
@@ -51,7 +51,6 @@ const SHA256 = require('crypto-js/sha256');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-
       Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, Ripple, BitcoinCashTestnet
     };
 
@@ -70,6 +69,8 @@ export class MasterWallet {
     static neutronTestNet = new Neuron(4);
 
     static KEY = 'wallets';
+
+    static QRCODE_TYPE = {"UNKNOW": 0, "URL": 1, "REDEEM": 2, "TRANSFER": 3, "CRYPTO_ADDRESS": 4};
 
     // Create an autonomous wallet:
 
@@ -238,7 +239,7 @@ export class MasterWallet {
         let response = axios({
           method: 'POST',
           timeout: BASE_API.TIMEOUT,
-          headers: completedHeaders,
+          headers: defaultHeaders,
           url: `${BASE_API.BASE_URL}/${endpoint}`,
           data
         });
@@ -264,23 +265,18 @@ export class MasterWallet {
         "to": to_address,
       }
 
+      const token = localStore.get(APP.AUTH_TOKEN);
+
       const defaultHeaders = {
-        'Content-Type': 'application/json',
-        'Content': 'application/json',
-      };
-      let headers = {};
-      const completedHeaders = merge(
-        defaultHeaders,
-        headers,
-      );
-      const token = 'kpWdZ3Rzk9E6m7O4clDWLGWoDOjdx08Qn_zXjY5xaxPCKYB0D14p1CRjtw==';
-      completedHeaders.Payload = token;
+        'Content-Type': 'application/json', Payload: token
+      };                        
+      
       let endpoint = "user/notification";
 
       let response = axios.post(
         `${BASE_API.BASE_URL}/${endpoint}`,
          JSON.stringify(data),
-        {headers: completedHeaders}
+        {headers: defaultHeaders}
       )
 
       console.log("called NotifyUserTransfer ", response );
@@ -758,6 +754,102 @@ export class MasterWallet {
         return false;
       }
     }
+    /**
+    * Get coin type from its wallet address
+    * @param {String} address
+    */
+    static getCoinSymbolFromAddress(address){            
+      for (const i in MasterWallet.ListDefaultCoin){
+        let wallet = new MasterWallet.ListDefaultCoin[i]();
+        if (wallet.checkAddressValid(address) === true){
+          return {"symbol": wallet.name, "name": wallet.title, "address": address, "amount": ""};
+        }
+      }
+      return false;       
+    }
+
+    static getQRCodeDetail(text){
+      // 0: any data ...
+      // 1: website:
+      // 2: ninja-redeem:code?value=25
+      // 3: <coin-title>:<address>?amount=<number>
+      // 4: <address-only>
+      
+      let keyRedem = "ninja-redeem";
+
+      function url(text) {        
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        if(!urlRegex.test(text)) {          
+          return false;
+        } else {
+          let match = text.match(urlRegex);
+          return match[0];
+        }        
+      }
+      function redeem(text){
+        if (text.includes(keyRedem)){
+          let dataSplit = text.split('?');
+          let code = dataSplit[0].split(':')[1];
+          let param = Helper.getQueryStrings("?"+dataSplit[1]);
+          return {"code": code, "value" : param['value']};
+        }               
+        return false; 
+      }
+      function transfer(text){         
+        let dataSplit = text.split('?');        
+        for (const i in MasterWallet.ListDefaultCoin){
+          let wallet = new MasterWallet.ListDefaultCoin[i]();
+          if (dataSplit[0].toLowerCase().includes((wallet.title.replace(/\s/g,'')).toLowerCase())){
+            let listData = dataSplit[0].split(':');
+            if(listData.length > 0){
+              let address = listData[1];
+              let param = Helper.getQueryStrings("?"+dataSplit[1]);              
+              return {"symbol": wallet.name, "address": address, "amount" : param['amount']};  
+            }
+            else{
+              return false;
+            }            
+          }
+        }          
+        return false;
+      }
+      function address(text){
+        return MasterWallet.getCoinSymbolFromAddress(text);
+      }
+      // let check:
+      // web:      
+      let result = {"type": MasterWallet.QRCODE_TYPE.UNKNOW, "data": {}, text: text};
+      
+      let tmpResult = url(text);      
+      if (tmpResult != false){
+        result.type = MasterWallet.QRCODE_TYPE.URL;
+        result.data = tmpResult;
+        return result;
+      }
+            
+      tmpResult = redeem(text);
+      
+      if (tmpResult != false){
+        result.type = MasterWallet.QRCODE_TYPE.REDEEM;
+        result.data = tmpResult;
+        return result;
+      }
+
+      tmpResult = transfer(text);
+      if (tmpResult != false){
+        result.type = MasterWallet.QRCODE_TYPE.TRANSFER;
+        result.data = tmpResult;
+        return result;
+      }
+      tmpResult = address(text);
+      if (tmpResult != false){
+        result.type = MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS;
+        result.data = tmpResult;
+        return result;
+      }      
+      return result;
+    }
+
 }
 
 export default { MasterWallet };

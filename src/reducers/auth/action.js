@@ -18,6 +18,7 @@ export const ACTIONS = {
   REFERRED_INFO: 'REFERRED_INFO',
   COMPLETE_PROFILE: 'COMPLETE_PROFILE',
   SUBMIT_EMAIL_SUBCRIBE: 'SUBMIT_EMAIL_SUBCRIBE',
+  VERIFY_REDEEM_CODE: 'VERIFY_REDEEM_CODE',
 };
 
 export const fetchProfile = createAPI(ACTIONS.AUTH_FETCH);
@@ -41,3 +42,4 @@ export const checkFollowTwitter = createAPI(ACTIONS.CHECK_FOLLOW_TWITTER);
 
 export const referredInfo = createAPI(ACTIONS.REFERRED_INFO);
 export const completeProfile = createAPI(ACTIONS.COMPLETE_PROFILE);
+export const verifyRedeemCode = createAPI(ACTIONS.VERIFY_REDEEM_CODE);
