@@ -258,6 +258,7 @@ export const API_URL = {
     CASH_STORE_ATM: 'exchange/cash/store',
     CRYPTO_TO_CASH: 'exchange/cash/price', // GET /cash/price?amount=1&currency=ETH
     SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
+    CANCEL_ATM_CASH_TRANSFER: 'exchange/cash/order', // DELETE /cash/order/{id}
     GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
   },
   SEED: {
