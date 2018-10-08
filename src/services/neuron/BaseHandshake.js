@@ -1,5 +1,5 @@
 import configs from '@/configs';
-import { camelCase } from 'lodash';
+import { toCamelCase } from '@/utils/string';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const TAG = 'BaseHandshake';
@@ -32,7 +32,7 @@ export default class BaseHandshake {
 
   get contractAddress() {
     return this.configs[
-      `${camelCase(this.contractFileNameWithoutExtension)}Address`
+      `${toCamelCase(this.contractFileNameWithoutExtension)}Address`
     ];
   }
 

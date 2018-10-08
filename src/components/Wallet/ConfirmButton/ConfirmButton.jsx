@@ -11,7 +11,7 @@ function changeIconConfirmButton(icon){
 }
 
 class ConfirmButton extends Component {
-  
+
   constructor(props) {
     super(props);
     this.timer = null;
@@ -30,9 +30,10 @@ class ConfirmButton extends Component {
     // if (this.state.icon){
     //   changeIconConfirmButton(this.props.icon);
     // }
+
   }
 
-  handleOnChange = (value) => {    
+  handleOnChange = (value) => {
     this.setState({
       volume: value
     })
@@ -44,7 +45,7 @@ class ConfirmButton extends Component {
     
   }
 
-  onChangeComplete = () => {      
+  onChangeComplete = () => {
     if (this.state.volume < 100){
       this.setState({
         volume: 0, confirm: false
@@ -61,9 +62,9 @@ class ConfirmButton extends Component {
             this.timer = setTimeout(function() {
               // once
               onConfirmed();
-          }, 100);    
-        })        
-      }      
+          }, 100);
+        })
+      }
     }
   }
 
@@ -73,20 +74,20 @@ class ConfirmButton extends Component {
     let text = this.state.confirm ? this.state.buttonConfirmedText : this.state.buttonText;
 
     return (
-      <div>        
+      <div>
         <div className="confirm-button">
-          <label>{text}</label>          
-          <Slider            
-            value={volume}  
-            tooltip={false}   
-            onChangeComplete={this.onChangeComplete}       
-            onChange={this.handleOnChange}    
-          />          
+          <label>{text}</label>
+          <Slider
+            value={volume}
+            tooltip={false}
+            onChangeComplete={this.onChangeComplete}
+            onChange={this.handleOnChange}
+          />
         </div>
       </div>
     );
   }
-  
+
 }
 
 export default ConfirmButton;

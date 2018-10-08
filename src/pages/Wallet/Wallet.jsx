@@ -53,9 +53,6 @@ import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
-import _ from 'lodash';
-import qs from 'querystring';
-import axios from 'axios';
 
 import AddToken from '@/components/Wallet/AddToken/AddToken';
 import AddCollectible from '@/components/Wallet/AddCollectible/AddCollectible';
@@ -188,7 +185,7 @@ class Wallet extends React.Component {
     };
 
     this.props.setHeaderRight(this.headerRight());
-    // this.listener = _.throttle(this.scrollListener, 200).bind(this);   
+    // this.listener = _.throttle(this.scrollListener, 200).bind(this);
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -351,7 +348,7 @@ class Wallet extends React.Component {
 
     await this.splitWalletData(listWallet);
 
-    await MasterWallet.UpdateLocalStore(listWallet);   
+    await MasterWallet.UpdateLocalStore(listWallet);
   }
 
   toggleBottomSheet() {
@@ -465,7 +462,7 @@ class Wallet extends React.Component {
           MasterWallet.UpdateLocalStore(lstWalletTemp);
         }
       })
-    }    
+    }
 
     return obj;
   }
@@ -578,7 +575,7 @@ class Wallet extends React.Component {
   }
 
   showTransfer(wallet){
-    this.props.requestWalletPasscode({      
+    this.props.requestWalletPasscode({
       onSuccess: () => {
           this.setState({ walletSelected: wallet,
             modalTransferCoin:
@@ -593,6 +590,7 @@ class Wallet extends React.Component {
             this.modalSendRef.open();
           });
       }
+
     });    
   }
   showTransferFromQRCode=(dataAddress)=>{        
@@ -633,38 +631,38 @@ class Wallet extends React.Component {
       this.modalReceiveCoinRef.open();
     });
   }
-  
+
   showBackupWalletAccount=()=>{
 
-    this.props.requestWalletPasscode({      
+    this.props.requestWalletPasscode({
       onSuccess: () => {
         this.setState({backupWalletContent: <BackupWallet />}, ()=>{
           this.modalBackupRef.open();
         })
       }
-    });  
+    });
   }
   closeBackupWalletAccount=()=>{
     this.setState({backupWalletContent: ""});
   }
-  
+
   showRestoreWalletAccount=()=>{
-    this.props.requestWalletPasscode({      
+    this.props.requestWalletPasscode({
       onSuccess: () => {
         this.setState({restoreWalletContent: <RestoreWallet />}, ()=>{
           this.modalRestoreRef.open();
-        })        
+        })
       }
-    })    
+    })
   }
   closeRestoreWalletAccount=()=>{
     this.setState({restoreWalletContent: ""});
   }
 
-  showWalletSettings(){    
+  showWalletSettings(){
     this.setState({
       modalSetting: (<SettingWallet onBackupWalletAccountClick={this.showBackupWalletAccount} onRestoreWalletAccountClick={this.showRestoreWalletAccount} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
-    }, ()=> {      
+    }, ()=> {
       this.modalSettingRef.open();
     });
   }
@@ -737,7 +735,7 @@ class Wallet extends React.Component {
     this.setState({ isNewCCOpen: !this.state.isNewCCOpen });
   }
 
-  onIconRightHeaderClick = () => {    
+  onIconRightHeaderClick = () => {
     // now show settings
     this.showWalletSettings();
   }
@@ -749,13 +747,13 @@ class Wallet extends React.Component {
 
   onWarningClick = (wallet) => {
     // if (!wallet.protected) {
-      this.props.requestWalletPasscode({      
+      this.props.requestWalletPasscode({
         onSuccess: () => {
           this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
           this.modalProtectRef.open();
         }
-      }) 
-      
+      })
+
     // } else {
 
     // }
@@ -784,7 +782,7 @@ class Wallet extends React.Component {
     MasterWallet.UpdateLocalStore(this.getAllWallet());
     this.onWalletItemClick(wallet);
   }
-  
+
   onOpenWalletPreferences = (wallet) =>{
     this.setState({
       modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.props.requestWalletPasscode({onSuccess: () => { this.modalRemoveRef.open();}});}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
