@@ -311,7 +311,7 @@ class ContentForPrediction extends React.Component {
         {/*<img src={imgPredictionContent} className='w-100' />*/}
         { this.renderIntroduce()}
         {this.renderHowToPlay()}
-        {this.renderExtension()}
+        {/*this.renderExtension()*/}
         {this.renderMobileGuide()}
         {/*this.renderExample()*/}
         {this.renderMarket()}
