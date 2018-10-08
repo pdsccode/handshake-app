@@ -75,6 +75,7 @@ export class Ethereum extends Wallet {
   }
 
   async getFee() {
+    await getGasPrice();
     return await getEstimateGas();
 
     // const web3 = this.getWeb3();
