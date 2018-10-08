@@ -140,7 +140,7 @@ class ContentForPrediction extends React.Component {
     return (
       <section className="section">
         <div className="wrapperIntroduce">
-          <div className="column">
+          <div className="column contentIntroduce">
             <p className="pexSmallTitle"><strong>Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.</strong></p>
             <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
             {/*this.renderEmail()*/}
@@ -222,7 +222,7 @@ class ContentForPrediction extends React.Component {
         <img className="mobile_shape2" src={imgMobileShape2} alt="imgMobileShape2" width="400" />
 
         <div className="wrapperMobile wrapperBlock">
-          <div className="contentBlock column ">
+          <div className="contentBlock column contentMobile">
             <div className="pexHeadLine">Mobile Web App</div>
             <div className="pexContent">No download or signup required. <br/> Simply open up your browser and you’re ready to go.</div>
             <img className="imageContent" src={imgMobileIcon} alt="imgMobileIcon" width="400" />
@@ -285,7 +285,7 @@ class ContentForPrediction extends React.Component {
     return (
       <section className="section">
         <div className="wrapperTransparent wrapperBlock">
-          <div className="wrapperContent column">
+          <div className="wrapperContent column contentTransparent">
             <div className="pexHeadLine" >Transparency</div>
             <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
           </div>
