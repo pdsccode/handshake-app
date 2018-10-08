@@ -20,6 +20,9 @@ export const APP_ACTION = {
   SHOW_SCAN_QRCODE: 'SHOW_SCAN_QRCODE',
   HIDE_SCAN_QRCODE: 'HIDE_SCAN_QRCODE',
 
+  SHOW_QRCODE_CONTENT: 'SHOW_QRCODE_CONTENT',
+  HIDE_QRCODE_CONTENT: 'HIDE_QRCODE_CONTENT',  
+
   NETWORK_ERROR: 'NETWORK_ERROR',
 
   SET_LANGUAGE: 'SET_LANGUAGE',
@@ -71,6 +74,10 @@ export const hidePasscode = config => ({ type: APP_ACTION.HIDE_CONFIRM, payload:
 // scan qrcode:
 export const showScanQRCode = config => ({ type: APP_ACTION.SHOW_SCAN_QRCODE, payload: { isShow: true, ...config } });
 export const hideScanQRCode = config => ({ type: APP_ACTION.HIDE_SCAN_QRCODE, payload: { isShow: false, ...config } });
+
+// qrcode content
+export const showQRCodeContent = config => ({ type: APP_ACTION.SHOW_QRCODE_CONTENT, payload: { isShow: true, ...config } });
+export const hideQRCodeContent = config => ({ type: APP_ACTION.HIDE_QRCODE_CONTENT, payload: { isShow: false, ...config } });
 
 // Loading
 export const showLoading = config => ({ type: APP_ACTION.LOADING, payload: { ...config } });
