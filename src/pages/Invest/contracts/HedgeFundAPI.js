@@ -7,27 +7,29 @@ import NetworkAPI from './NetworkAPI'
     reserved web3 for metamask
 */
 const hexEncode = function (str) {
+  if (str.startsWith('0x')) return str
   var hex, i
   var result = ''
   for (i = 0; i < str.length; i++) {
     hex = str.charCodeAt(i).toString(16)
     result += ('000' + hex).slice(-4)
   }
+  console.log('0x', result);
   return '0x' + result
 }
 
 function validatingPrivateKey (s) {
-  if (s.startWith('0x')) return s
+  if (s.startsWith('0x')) return s
   return '0x' + s
 }
 
-function getCurrentGasPrice () {
+function getCurrentGasPrice (webjs) {
   return fetch('https://www.etherchain.org/api/gasPriceOracle')
     .then(res => {
       return res.json()
     })
     .then(function (gasPrice) {
-      return web3.toWei(gasPrice.standard, 'gwei')
+      return webjs.utils.toWei(gasPrice.standard, 'gwei')
     })
 }
 
@@ -58,12 +60,16 @@ class HedgeFundAPI extends NetworkAPI {
         throw new Error('Not login metamask!')
       }
     } else if (typeof web3 !== 'undefined') {
+      console.log('create trx without metamask extension');
       let privateProvider = new PrivateKeyProvider(privateKey, this.network)
-      var web3js = new Web3(privateProvider)
+      console.log('privateProvider', privateProvider);
+      var web3js = new Web3js(privateProvider)
+      console.log('web3js', web3js)
+      // debugger
       var account = web3js.eth.accounts.privateKeyToAccount(
         validatingPrivateKey(privateKey)
       ).address
-
+      console.log('account', account);
       if (!account) {
         throw new Error('Can not get public address from private key')
       }
@@ -71,14 +77,14 @@ class HedgeFundAPI extends NetworkAPI {
     let contract = new web3js.eth.Contract(this.ABI, this.contractAddress)
     console.log(
       'gasPrice: ',
-      await getCurrentGasPrice(),
+      await getCurrentGasPrice(web3js),
       await web3js.eth.getTransactionCount(account)
     )
 
     let sendF = contract.methods[method](...params).send.bind(this, {
       from: account,
-      value: value,
-      gasPrice: await getCurrentGasPrice(),
+      value: web3js.utils.toWei(value, 'ether'),
+      gasPrice: await getCurrentGasPrice(web3js),
       nonce: await web3js.eth.getTransactionCount(account)
     })
 
@@ -86,9 +92,8 @@ class HedgeFundAPI extends NetworkAPI {
       [method](...params)
       .estimateGas.bind(this, {
         from: account,
-        value: value,
-        nonce: await web3js.eth.getTransactionCount(account),
-        gasPrice: await getCurrentGasPrice()
+        value: web3js.utils.toWei(value, 'ether'),
+        gasLimit: 3000000,
       })
 
     return {

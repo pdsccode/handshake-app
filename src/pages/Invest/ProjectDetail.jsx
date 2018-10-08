@@ -12,7 +12,8 @@ import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import createForm from '@/components/core/form/createForm';
 import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import InvestNavigation from './InvestNavigation';
-
+import HedgeFundAPI from './contracts/HedgeFundAPI';
+import { MasterWallet } from '../../services/Wallets/MasterWallet';
 // Refer to FeedCreditCard.jsx
 
 export const CRYPTO_ICONS = {
@@ -38,6 +39,59 @@ const FormInvest = createForm({
     form: 'FormInvest',
   },
 });
+
+class FormInvestBlock extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      investAmount: 0,
+      isUserConfirmed: false
+    }
+    this.hedgeFundApi = new  HedgeFundAPI('v1', false);
+  }
+
+  onChangeAmount = (e) => this.setState({ investAmount: e.target.value })
+
+  onSubmitInvest = async () => {
+    if (!this.props.pid) {
+      alert('Project ID doesnt existed');
+      return;
+    }
+    console.log('project id is', this.props.pid);
+    const wallets = MasterWallet.getWalletDataLocalString();
+    console.log(wallets);
+    const { balance, privateKey } = wallets.find(({ name, network}) => name === 'ETH' && network === 'https://rinkeby.infura.io/') || {};
+    const investAmount = Number(this.state.investAmount);
+    const totalBalance = Number(balance);
+    if (totalBalance <= investAmount) {
+      alert(`You dont have enough eth. Please invest amount less than ${balance}`);
+      return;
+    }
+    const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
+    console.log('estimateGas', await estimateGas());
+    console.log('run', run);
+    run().on('transactionHash', (hash) => {
+      console.log('txhash', hash);
+    }).on('receipt', (receipt) => {
+      console.log('receipt', receipt);
+    }).on('error', err => console.log('err', err));
+  }
+  render() {
+    return (
+      <div className="invest-button-form-block">
+        <FormInvest>
+          <label htmlFor="amountfield" className="fund-label">Amount to invest</label>
+          <InputGroup className="inputGroupInvestButton">
+            <Input value={this.state.investAmount} onChange={this.onChangeAmount} placeholder="Enter Quantity" type="number" className="inputGroupInvestField" />
+            <InputGroupAddon addonType="append"className="inputGroupInvestIcon"><img src={CRYPTO_ICONS[CRYPTO_CURRENCY_NAME[0]]} width={24} alt="icon" /></InputGroupAddon>
+          </InputGroup>
+          <Button className="invest-submit-button" size="lg" onClick={this.onSubmitInvest}>Invest now</Button>{' '}
+        </FormInvest>
+      </div>
+    )
+  }
+}
+
 
 class ProjectDetail extends Component {
   componentDidMount() {
@@ -110,16 +164,7 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          <div className="invest-button-form-block">
-            <FormInvest>
-              <label htmlFor="amountfield" className="fund-label">Amount to invest</label>
-              <InputGroup className="inputGroupInvestButton">
-                <Input placeholder="Enter Quantity" type="number" className="inputGroupInvestField" />
-                <InputGroupAddon addonType="append"className="inputGroupInvestIcon"><img src={CRYPTO_ICONS[CRYPTO_CURRENCY_NAME[0]]} width={24} alt="icon" /></InputGroupAddon>
-              </InputGroup>
-              <Button className="invest-submit-button" size="lg">Invest now</Button>{' '}
-            </FormInvest>
-          </div>
+          <FormInvestBlock pid={project.id} />
         </div>
     );
   }
