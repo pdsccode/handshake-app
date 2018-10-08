@@ -37,7 +37,7 @@ export const isSharePage = (state) => {
 };
 
 export const isLoading = (state) => {
-  if (!state.prediction._meta) return true;
+  if (!state.prediction._meta) return false;
   return state.prediction._meta.isFetching;
 };
 

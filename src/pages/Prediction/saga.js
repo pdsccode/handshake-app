@@ -2,7 +2,7 @@ import { takeLatest, call, select, put } from 'redux-saga/effects';
 import { apiGet } from '@/stores/api-saga';
 import { REMOVE_DATA } from '@/stores/data-action';
 import { API_URL } from '@/constants';
-import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail, loadRelevantEvents } from './action';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail, loadRelevantEvents, updateRelevantEvents, updateEvents } from './action';
 import { eventSelector, relevantEventSelector } from './selector';
 
 export function* handleLoadMatches({ cache = true, source }) {
@@ -14,12 +14,12 @@ export function* handleLoadMatches({ cache = true, source }) {
       }
     }
     const PATH_URL = source ? `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?source=${source}` : API_URL.CRYPTOSIGN.LOAD_MATCHES;
-    return yield call(apiGet, {
+    const response =  yield call(apiGet, {
       PATH_URL,
       type: 'LOAD_MATCHES',
-      _key: 'events',
-      _path: 'prediction',
     });
+    yield put(updateEvents(response.data));
+
   } catch (e) {
     return console.error('handleLoadMachesSaga', e);
   }

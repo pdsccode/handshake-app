@@ -40,6 +40,7 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    relevantEvents:PropTypes.array,
     shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
@@ -54,6 +55,7 @@ class Prediction extends React.Component {
 
   static defaultProps = {
     eventList: [],
+    relevantEvents: [],
     shareEvent: null,
     isExistEmail: 0,
   };
@@ -307,6 +309,7 @@ class Prediction extends React.Component {
   renderRelevantEventList = (props) => {
     if (!props.isSharePage) return null;
     if (!props.relevantEvents || !props.relevantEvents.length) return null;
+    console.log('renderRelevantEventList RelevantEvent: ', props.relevantEvents);
     return (
       <div className="RelevantEventList">
         <div className="relevantTitle">Relevant events</div>
@@ -477,7 +480,7 @@ export default injectIntl(connect(
     return {
       countReport: countReportSelector(state),
       eventList: eventSelector(state),
-      relevantEventList: relevantEventSelector(state),
+      relevantEvents: relevantEventSelector(state),
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),

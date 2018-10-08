@@ -12,12 +12,19 @@ export const loadRelevantEvents = (payload = {}) => {
     ...payload,
   };
 };
+export const updateEvents = (events=[]) => {
+  return SET_DATA({
+    type: 'PREDICTION:LOAD_MATCHES',
+    _path: 'prediction.events',
+    _value: events,
+  });
+}
 
 export const updateRelevantEvents = (events=[]) => {
   return SET_DATA({
-    type: 'PREDICTION:UPDATE_FREE_BET',
-    _path: 'ui.freeBet',
-    _value: value,
+    type: 'PREDICTION:LOAD_RELEVANT_EVENTS',
+    _path: 'prediction.relevantEvents',
+    _value: events,
   });
 }
 
