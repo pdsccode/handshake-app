@@ -239,7 +239,7 @@ export class MasterWallet {
         let response = axios({
           method: 'POST',
           timeout: BASE_API.TIMEOUT,
-          headers: completedHeaders,
+          headers: defaultHeaders,
           url: `${BASE_API.BASE_URL}/${endpoint}`,
           data
         });
@@ -265,23 +265,18 @@ export class MasterWallet {
         "to": to_address,
       }
 
+      const token = localStore.get(APP.AUTH_TOKEN);
+
       const defaultHeaders = {
-        'Content-Type': 'application/json',
-        'Content': 'application/json',
-      };
-      let headers = {};
-      const completedHeaders = merge(
-        defaultHeaders,
-        headers,
-      );
-      const token = 'kpWdZ3Rzk9E6m7O4clDWLGWoDOjdx08Qn_zXjY5xaxPCKYB0D14p1CRjtw==';
-      completedHeaders.Payload = token;
+        'Content-Type': 'application/json', Payload: token
+      };                        
+      
       let endpoint = "user/notification";
 
       let response = axios.post(
         `${BASE_API.BASE_URL}/${endpoint}`,
          JSON.stringify(data),
-        {headers: completedHeaders}
+        {headers: defaultHeaders}
       )
 
       console.log("called NotifyUserTransfer ", response );
