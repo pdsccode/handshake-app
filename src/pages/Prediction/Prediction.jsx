@@ -386,7 +386,7 @@ class Prediction extends React.Component {
           <div className="outtaMoneyMsg">
             To keep forecasting, you’ll need to top-up your wallet.
           </div>
-          <button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>
+          {/*<button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>*/}
         </div>
       </ModalDialog>
     );
