@@ -40,7 +40,6 @@ class HedgeFundAPI extends NetworkAPI {
     this.version = version
     this.ABI = contractInfo.abi
     this.contractAddress = contractInfo.address
-    this.contractOwner = contractInfo.owner
     this.useMetamask = useMetamask
   }
 
@@ -53,13 +52,14 @@ class HedgeFundAPI extends NetworkAPI {
   }
 
   async _createTx (privateKey, value = 0, method, ...params) {
-    if (this.useMetamask) {
+    debugger
+    if (this.useMetamask) { //use metamask
       var web3js = new Web3js(web3.currentProvider)
       var account = (await web3js.eth.getAccounts())[0]
       if (!account) {
         throw new Error('Not login metamask!')
       }
-    } else if (typeof web3 !== 'undefined') {
+    } else {
       console.log('create trx without metamask extension');
       let privateProvider = new PrivateKeyProvider(privateKey, this.network)
       console.log('privateProvider', privateProvider);
@@ -74,27 +74,31 @@ class HedgeFundAPI extends NetworkAPI {
         throw new Error('Can not get public address from private key')
       }
     }
+
+
+
     let contract = new web3js.eth.Contract(this.ABI, this.contractAddress)
     console.log(
       'gasPrice: ',
       await getCurrentGasPrice(web3js),
       await web3js.eth.getTransactionCount(account)
     )
-
+    
     let sendF = contract.methods[method](...params).send.bind(this, {
       from: account,
       value: web3js.utils.toWei(value, 'ether'),
       gasPrice: await getCurrentGasPrice(web3js),
       nonce: await web3js.eth.getTransactionCount(account)
     })
-
+    
+    console.log(method, params, value)
     let estimateGasF = contract.methods
       [method](...params)
       .estimateGas.bind(this, {
         from: account,
         value: web3js.utils.toWei(value, 'ether'),
-        gasLimit: 3000000,
       })
+
 
     return {
       run: sendF,

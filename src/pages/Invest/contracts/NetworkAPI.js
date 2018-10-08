@@ -1,6 +1,6 @@
 import Web3js from 'web3'
 
-export default class Base{
+export default class NetworkAPI {
     constructor(network){
         this.network = network
         this.checkTransactionStatus("0x0b0f4fe34e2b0ef11f778b258ed051bfc5b2c96bcbb1b900d0f0bff2a053ab3f")

@@ -1,6 +1,5 @@
 module.exports = {
-    "address": "0x73855c3ec520cba2ff3abe70728e288da91087df",
-    "owner": "0xa205ada522d1f2234e93e16ec672b1d712191d0c",
+    "address": "0x71beaab62b60f6a601752aa00c631e54ad2aec9e",
     "network": "https://rinkeby.infura.io/LLJy74SjotuIMxZJMUvf",
     "abi": [
         {

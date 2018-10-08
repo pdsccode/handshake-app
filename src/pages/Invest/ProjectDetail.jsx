@@ -67,7 +67,9 @@ class FormInvestBlock extends Component {
       alert(`You dont have enough eth. Please invest amount less than ${balance}`);
       return;
     }
-    const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
+    // const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
+    console.log(investAmount)
+    const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x1001') || {};
     console.log('estimateGas', await estimateGas());
     console.log('run', run);
     run().on('transactionHash', (hash) => {
