@@ -57,7 +57,8 @@ class Redeem extends React.Component {
           
         }        
       },
-      errorFn: (e) =>{         
+      errorFn: (e) =>{    
+        this.openConfirm();     
         if (e.message)       
           this.setState({error: e.message});
         else

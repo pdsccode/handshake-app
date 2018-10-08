@@ -83,14 +83,14 @@
         border-bottom: solid 1px #EAEAEC;
         .giftcard-value{
             float: left;
-            width: 50%;
-            border-right: solid 1px #EAEAEC;
+            width: 50%;            
             padding: 10px 0;
         }
         .coin-value{
             float: right;
             width: 50%;
             padding: 10px 0;
+            border-left: solid 1px #EAEAEC;
         }
         .v-title{
             font-weight: 400;
@@ -98,13 +98,26 @@
         }
         .v-value{
             font-weight: 400;
-            font-size: 20px;
+            font-size: 18px;
         }
     }
     .error{
         text-align: center;
         color: #f83c37;
         margin-top: -10px;
+    }
+    .box-header-success{
+        text-align: center;
+        margin-top: 30px;
+        img{
+            width: 60px;
+        }
+    }
+    .button-done{
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        height: 50px;
     }
     .wallet-select-title{
         margin-top: 20px;

@@ -17,6 +17,8 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import ConfirmButton from '@/components/Wallet/ConfirmButton';
 
 import gitfBox from '@/assets/images/wallet/images/gift-gift-box.svg';
+import success from '@/assets/images/wallet/icons/success.svg';
+
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 import ListCoin from '@/components/Wallet/ListCoin';
@@ -25,6 +27,7 @@ import {getFiatCurrency} from '@/reducers/exchange/action';
 import { API_URL } from "@/constants";
 import Helper from '@/services/helper';
 import { renderToString } from 'react-dom/server';
+import Button from '@/components/core/controls/Button';
 const moment = require('moment');
 
 function changeIconConfirmButton(icon){
@@ -62,22 +65,25 @@ class RedeemConfirm extends React.Component {
     this.getWalletDefault();    
   }
 
-  checkRedeemCode=()=>{
-    this.props.verifyRedeemCode({
-      PATH_URL: 'user/verification/redeem-code/check?code='+this.state.redeemCode,
-      METHOD: 'POST',
-      successFn: (res) => {        
-        if(res){
-          this.modalRedeemConfirmRef.open();
-        }        
-      },
-      errorFn: (e) =>{ 
-        if (e.message)       
-          this.setState({error: e.message});
-        else
-          console.log(e);
-      }
-    });
+  onRedeemConfirm=()=>{
+    if (this.walletSelected){      
+      this.props.verifyRedeemCode({
+        PATH_URL: 'user/verification/redeem-code/check?redeem='+this.state.redeemCode+"&to-address="+this.state.walletSelected.address+"&currency="+this.state.walletSelected.name,
+        METHOD: 'POST',
+        successFn: (res) => {        
+          if(res){
+            this.modalRedeenSuccessRef.open();
+          }        
+        },
+        errorFn: (e) =>{ 
+          if (e.message)       
+            this.setState({error: e.message});
+          else
+            console.log(e);
+        }
+      });
+    }
+    
   }
 
   getWalletDefault = () =>{    
@@ -152,12 +158,14 @@ class RedeemConfirm extends React.Component {
         qs: {fiat_currency: 'USD', currency: this.state.walletSelected.name},
         successFn: (res) => {
           let data = res.data;
-          let rate = fiat_currency == 'USD' ? data.price : data.fiat_amount;  
+          let rate = data.price;
+          let money = 25;//this.state.giftcardValue;
 
           let amount = Number(money)/rate;
-          if(amount && amount < 1e-6){
-            amount = Number(amount).toFixed(6);
-          }
+          // if(amount && amount < 1e-6){
+          //   amount = Number(amount).toFixed(8);
+          // }
+          amount = Number((parseFloat(amount)).toFixed(8));
           let cryptoValue = `${amount} ${this.state.walletSelected.name}`;
           this.setState({cryptoValue: cryptoValue});        
         },
@@ -205,6 +213,15 @@ class RedeemConfirm extends React.Component {
             </div>           
             </ModalDialog>
 
+            <ModalDialog onRef={modal => this.modalRedeenSuccessRef = modal}> 
+              <div className="box-header-success"><img src={success} /></div>
+              <div className="re-term-header">Redeem Successful</div>
+
+              <div className="box-header-success">Thank you, fund will be soon available on your Ninja Wallet.</div>
+
+              <Button onClick={()=>{this.modalRedeenSuccessRef.close()}} className="button-done"> Done </Button>
+            </ModalDialog>
+
             < div className="titleBox"> 
                 <img src={gitfBox} /> 
                 <div className="title code">{this.state.redeemCode}</div>    
@@ -230,7 +247,7 @@ class RedeemConfirm extends React.Component {
 
             <div className="term">
               {/* {term}  */}
-              By clicking REDEEM, you agree to Gift Card & Promotional code <span onClick={()=>{this.modalRedeenTermRef.open()}} className="term-link">Terms and Conditions </span> as applicable
+              By clicking REDEEM, you agree to Gift Card & Promotional code <span onClick={()=>{this.modalRedeenSuccessRef.open()}} className="term-link">Terms and Conditions </span> as applicable
             </div>
             <div className="buttonConfirmRedeem">              
               <ConfirmButton onConfirmed={this.onRedeemConfirm} buttonText={messages.wallet.action.redeem.swipe_button_redeem}/>
