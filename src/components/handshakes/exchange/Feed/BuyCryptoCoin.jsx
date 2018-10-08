@@ -6,13 +6,13 @@ import local from '@/services/localStore';
 import {
   API_ENDPOINT,
   API_URL,
-  APP,
+  APP, ATM_TYPE,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_NAME,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
-  FIAT_CURRENCY_NAME,
+  FIAT_CURRENCY_NAME, HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
@@ -35,7 +35,7 @@ import { showAlert } from '@/reducers/app/action';
 import { roundNumberByLocale } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
-import './FeedCreditCard.scss';
+import './BuyCryptoCoin.scss';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
@@ -51,7 +51,8 @@ import Deposit from '@/pages/Escrow/Deposit';
 import Modal from '@/components/core/controls/Modal/Modal';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
-
+import { fieldTypeAtm } from '@/components/handshakes/exchange/Create/reduxFormFields';
+import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 
 const adyenEncrypt = require('adyen-cse-web');
 
@@ -85,6 +86,11 @@ const listFiatCurrency = [
   },
 ];
 
+export const PAYMENT_METHODS = {
+  BANK_TRANSFER: 'bank_transfer',
+  COD: 'cod',
+};
+
 const nameFormSpecificAmount = 'specificAmount';
 const FormSpecificAmount = createForm({
   propsReduxForm: {
@@ -98,6 +104,7 @@ const FormSpecificAmount = createForm({
         id: FIAT_CURRENCY.USD,
         text: <span><img src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD]}</span>,
       },
+      payment_method: PAYMENT_METHODS.BANK_TRANSFER,
     },
   },
 });
@@ -113,6 +120,32 @@ const FormCreditCard = createForm({
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 const DECIMAL_NUMBER = 2;
+
+export const fieldCheckBoxList = ({ input, name, titles, items }) => {
+  const { onChange, value } = input;
+  return (
+    <div className="rf-type-atm-container d-table w-100" onChange={({ target }) => onChange(target.value)}>
+      {Object.entries(items).map(([key, item_value]) => {
+        console.log('key, item_value ', key, item_value);
+        const label = titles[item_value];
+        console.log('titels', titles, label);
+        return (
+          <label key={key} className="radio-inline rf-type-atm-radio-container d-table-cell w-50">
+            <input
+              value={item_value}
+              type="radio"
+              name={name}
+              checked={value === item_value}
+              onChange={() => null}
+            />
+            <span className="checkmark" />
+            <span>{label}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+};
 
 class FeedCreditCard extends React.Component {
   constructor(props) {
@@ -290,10 +323,20 @@ class FeedCreditCard extends React.Component {
   };
 
   handleSubmitSpecificAmount = (values) => {
+    console.log('handleSubmitSpecificAmount', values);
+
+    const { payment_method } = values;
+
     this.setState({
       hasSelectedCoin: true, amount: values.amount, fiatAmount: values.fiatAmount, currency: values.currency.id, fiatCurrency: values.fiatCurrency.id,
     }, () => {
       this.getCryptoPriceByAmount(values.amount);
+
+      if (payment_method === PAYMENT_METHODS.COD) {
+        this.depositCoinATM();
+      } else if (payment_method === PAYMENT_METHODS.BANK_TRANSFER) {
+        this.openNewTransaction({});
+      }
     });
   }
 
@@ -336,61 +379,61 @@ class FeedCreditCard extends React.Component {
     } else {
       // const { userProfile: { creditCard } } = this.props;
 
-      let cc = {};
+      const cc = {};
 
-        const { cc_number, cc_expired, cc_cvc, cc_email } = values;
-        const mmYY = cc_expired.split('/');
+      const { cc_number, cc_expired, cc_cvc, cc_email } = values;
+      const mmYY = cc_expired.split('/');
 
-        const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
-        console.log('serverTime', serverTime?.data?.data);
+      const serverTime = await axios.get(`${API_ENDPOINT}/public-api/exchange/server-time`);
+      console.log('serverTime', serverTime?.data?.data);
 
-        try {
-          const postData = {};
+      try {
+        const postData = {};
 
-          const cardData = {
-            number: cc_number && cc_number.trim().replace(/ /g, ''),
-            cvc: cc_cvc,
-            holderName: 'First Last',
-            expiryMonth: mmYY[0],
-            expiryYear: `20${mmYY[1]}`,
-            // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
-            generationtime: serverTime?.data?.data,
-          };
+        const cardData = {
+          number: cc_number && cc_number.trim().replace(/ /g, ''),
+          cvc: cc_cvc,
+          holderName: 'First Last',
+          expiryMonth: mmYY[0],
+          expiryYear: `20${mmYY[1]}`,
+          // generationtime : moment(new Date()).format('YYYY-MM-DDThh:mm:ss.sssTZD'),
+          generationtime: serverTime?.data?.data,
+        };
 
-          const source = {
-            three_d_secure: {
-              last4: cc_number.substr(cc_number.length - 4, 4),
-              exp_month: mmYY[0],
-              exp_year: `20${mmYY[1]}`,
-            },
-          };
+        const source = {
+          three_d_secure: {
+            last4: cc_number.substr(cc_number.length - 4, 4),
+            exp_month: mmYY[0],
+            exp_year: `20${mmYY[1]}`,
+          },
+        };
 
-          local.save(APP.CC_SOURCE, source);
+        local.save(APP.CC_SOURCE, source);
 
-          const key = process.env.adyenKey;
-          const options = {}; // See adyen.encrypt.nodom.html for details
+        const key = process.env.adyenKey;
+        const options = {}; // See adyen.encrypt.nodom.html for details
 
-          const cseInstance = adyenEncrypt.createEncryption(key, options);
-          // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
-          postData.additionalData = { 'card.encrypted.json': cseInstance.encrypt(cardData) };
-          postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
+        const cseInstance = adyenEncrypt.createEncryption(key, options);
+        // postData['adyen-encrypted-data'] = cseInstance.encrypt(cardData);
+        postData.additionalData = { 'card.encrypted.json': cseInstance.encrypt(cardData) };
+        postData.amount = { value: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toNumber(), currency: 'USD' };
 
-          console.log('source', source);
-          console.log('cardData', cardData);
-          console.log('postData', JSON.stringify(postData));
+        console.log('source', source);
+        console.log('cardData', cardData);
+        console.log('postData', JSON.stringify(postData));
 
-          // this.encryptExample();
+        // this.encryptExample();
 
-          this.props.initPaymentInstantBuy({
-            PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
-            data: postData,
-            METHOD: 'POST',
-            successFn: this.handleInitPaymentSuccess,
-            errorFn: this.handleInitPaymentFailed,
-          });
-        } catch (e) {
-          console.log('', e.toString());
-        }
+        this.props.initPaymentInstantBuy({
+          PATH_URL: `${API_URL.EXCHANGE.CREATE_CC_ORDER}/init-payment`,
+          data: postData,
+          METHOD: 'POST',
+          successFn: this.handleInitPaymentSuccess,
+          errorFn: this.handleInitPaymentFailed,
+        });
+      } catch (e) {
+        console.log('', e.toString());
+      }
     }
   };
 
@@ -695,6 +738,33 @@ class FeedCreditCard extends React.Component {
     this.setState({ modalContent: '' });
   }
 
+  openNewTransaction = (transaction) => {
+    const { messages } = this.props.intl;
+    const receipt = {
+      createdAt: transaction.createdAt,
+      customerAmount: +transaction.fiatAmount,
+      amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
+      fiatCurrency: transaction.fiatCurrency,
+      referenceCode: transaction.refCode,
+      status: transaction.status,
+      id: transaction.id,
+    };
+
+    this.setState({
+      modalTitle: messages.atm_cash_transfer_info.title,
+      modalContent:
+        (
+          <AtmCashTransferInfo receipt={receipt} onDone={this.onReceiptSaved} />
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  onReceiptSaved = () => {
+    this.modalRef.close();
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { hasSelectedCoin, wallets, walletSelected } = this.state;
@@ -760,6 +830,14 @@ class FeedCreditCard extends React.Component {
                 disabled
               />
             </div>
+            <div className="input-group item-info">
+              <Field
+                component={fieldCheckBoxList}
+                titles={messages.buy_coin.label.payment_methods}
+                name="payment_method"
+                items={PAYMENT_METHODS}
+              />
+            </div>
             <div className="mt-3 mb-3">
               <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
                 <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
@@ -809,7 +887,7 @@ class FeedCreditCard extends React.Component {
       <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
         {modalContent}
       </Modal>
-      </div>
+    </div>
     );
   }
 }

@@ -7,7 +7,7 @@ import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
 import { clearHeaderLeft, clearHeaderRight, hideHeader, setHeaderTitle } from '@/reducers/app/action';
 
-const BuyCoin = props => (<DynamicImport loading={Loading} load={() => import('@/components/handshakes/exchange/Feed/BuyCrytoCoin')}>{Component => <Component {...props} />}</DynamicImport>);
+const BuyCoin = props => (<DynamicImport loading={Loading} load={() => import('@/components/handshakes/exchange/Feed/BuyCryptoCoin')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [

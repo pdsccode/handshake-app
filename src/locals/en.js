@@ -1723,6 +1723,10 @@ export default {
       header: 'Buy crypto with Ninja',
       description: 'Ninja has some of the best prices around',
       common_packages: 'Common packages:',
+      payment_methods: {
+        bank_transfer: 'Bank Transfer',
+        cod: 'COD',
+      },
     },
   },
 };
