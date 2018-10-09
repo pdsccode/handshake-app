@@ -14,6 +14,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import InvestNavigation from './InvestNavigation';
 import HedgeFundAPI from './contracts/HedgeFundAPI';
 import { MasterWallet } from '../../services/Wallets/MasterWallet';
+import LoadingGif from './loading.svg';
 // Refer to FeedCreditCard.jsx
 const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
 const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
@@ -126,7 +127,10 @@ class FormInvestBlock extends Component {
           <Button disabled={this.state.iSubmitted} className="invest-submit-button" size="lg" onClick={this.onSubmitInvest}>Invest now</Button>{' '}
         </FormInvest>
         {this.state.isSubmitted && <ModalBlock>
-          {!this.state.estimateGasValue && `Loading...`}
+          {!this.state.estimateGasValue &&
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <img src={LoadingGif} style={{ width: '50px', height: '50px' }} />
+            </div>}
           {this.state.estimateGasValue && <div>
             <div style={{ textAlign: 'center' }}>{`Gas Fee: ${this.state.estimateGasValue}`}</div>
             <button disabled={this.state.isUserConfirmed} style={{ display: 'block', width: '100%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleConfirmTransaction}>Confirm</button>
