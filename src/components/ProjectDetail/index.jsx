@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 
 import { setLanguage } from '@/reducers/app/action';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -60,6 +61,21 @@ class Index extends React.PureComponent {
       window.location = URL.LANDING_BECOME_ATM;
     }
   }
+  scrollToFAQ() {
+    const faqNode = ReactDOM.findDOMNode(this.refs.faq)
+
+    if (faqNode && location.href.includes('#faq')) {
+      faqNode.scrollIntoView({
+          behaviour: 'smooth',
+          block: 'start',
+          inline: 'center',
+      });
+    }
+  }
+  componentDidMount() {
+    this.scrollToFAQ();
+  }
+
   renderDisclaim(name) {
     return (
       <div className="row">
@@ -68,7 +84,8 @@ class Index extends React.PureComponent {
           <div className="pd-small-content">
             <FormattedMessage id={`landing_page.${name}.disclaim`} />
           </div>
-          <p className="pd-small-content">Need more information? Check out our FAQ and <a href="http://ninja.org/pex/instructions">instructions</a> on how to play.</p>
+          <p className="pd-small-content">Need more information? Check out our <a href="#faq"
+          >FAQ</a> and <a href="http://ninja.org/pex/instructions">instructions</a> on how to play.</p>
         </div>
       </div>
     );
@@ -242,7 +259,7 @@ class Index extends React.PureComponent {
           }
           {
             faq && (
-              <div className="row mt-5" onRef={(ref) => { this.faqRef = ref; return null; }}>
+              <div className="row mt-5" id="faq" ref="faq" >
                 <div className="col">
                   <div className="pd-faq">
                     {messages.COIN_EXCHANGE_LP_FAQ_TITLE}
