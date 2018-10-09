@@ -293,6 +293,9 @@ export const API_URL = {
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
     GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
+  ID_VERIFICATION: {
+    GET_DOCUMENTS: 'id_verification/list',
+  },
 };
 
 export const HANDSHAKE_STATUS = {
