@@ -23,6 +23,7 @@ import { fieldAtmStatus, fieldTimePicker, fieldTypeAtm, mapField } from './redux
 import './CreateStoreATM.scss';
 import '../styles.scss';
 import Transaction from './components/Transaction';
+import { addressValidation } from './validation';
 
 export const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -296,10 +297,15 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = async (responseData, opt = {}) => {
-    const { intl: { messages }, closeModal } = this.props;
+    const { intl: { messages }, closeModal, onAtmCreated } = this.props;
     let text = messages.create.atm.text.createdAtmSuccess;
     opt.isUpdate && (text = messages.create.atm.text.updatedAtmSuccess);
     console.log('handleCreateOfferSuccess', responseData);
+
+    if (typeof onAtmCreated === 'function') {
+      // refresh new cash store data from server (for diplaying on map)
+      onAtmCreated();
+    }
 
     this.hideLoading();
     this.props.showAlert({
@@ -530,7 +536,7 @@ class Component extends React.Component {
                         className="form-control form-control-input"
                         placeholder={messages.create.atm.text.addressHint}
                         component={fieldInput}
-                        validate={[required]}
+                        validate={[required, addressValidation]}
                       />
                       <div className={`address-update-btn ${this.state.showMap && 'close-map'}`} onClick={this.toggleGoogleMap}>
                         <span>{ this.state.showMap ? 'Close Maps' : 'Open Maps' }</span>

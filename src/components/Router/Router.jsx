@@ -36,6 +36,7 @@ const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loa
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
+const RouterPaymentTransfer = createDynamicImport(() => import('@/components/Router/PaymentTransfer'), Loading);
 const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
@@ -64,6 +65,7 @@ const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
+const RouterInternalAdmin = createDynamicImport(() => import('@/components/Router/InternalAdmin'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
 
@@ -78,13 +80,14 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
+  { path: URL.HANDSHAKE_PAYMENT_TRANSFER, component: RouterPaymentTransfer },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
-  { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
+  // { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
 
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
@@ -131,6 +134,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
+    { path: URL.INTERNAL_ADMIN_URL, component: RouterInternalAdmin },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
@@ -207,7 +211,7 @@ class Router extends React.Component {
                         <ScrollToTop>
                           <Switch>
                             <Route exact path={URL.INDEX} render={() => {
-                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />
+                              return <Redirect to={{ pathname: URL.PRODUCT_PREDICTION_URL }} />
                             }}
                             />
                             {/*<Route*/}

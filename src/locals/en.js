@@ -940,6 +940,12 @@ export default {
               phone: 'A valid phone number would work better.',
               email: 'A valid email would work better.',
             },
+            idVerification: {
+              invalidDocument: 'Please choose a document type',
+              invalidFrontImage: 'Please upload front page of your document',
+              invalidBackImage: 'Please upload back page of your document',
+              invalidSelfieImage: 'Please upload a selife photo with your document',
+            },
           },
           require: {
             phone: 'Please enter your verify code.',
@@ -948,10 +954,12 @@ export default {
           success: {
             phone: 'Phone number securely saved.',
             email: 'Your email has been verified.',
+            idVerification: 'Your documents has been submitted',
           },
           cannot: {
             phone: 'Can\'t verify your phone, please check your code',
             email: 'Can\'t verify your email, please check your code.',
+            idVerification: 'Can\'t submit your documents, please try again',
           },
         },
       },
@@ -984,6 +992,21 @@ export default {
           button: {
             send: 'Send',
             submit: 'Verify your email',
+          },
+        },
+        id_verification: {
+          label: 'ID Verification',
+          desc1: 'Your account must be verified to comply with relevant anti-money laundering (AML) and counter-terrorism financing (CTF) laws and regulations',
+          desc2: '● All documents provided must be in Roman/Latin alphabet or a certified English translation is required.',
+          desc3: '● All files uploaded must be in png, jpg or jpeg.',
+          desc4: '● All fields in the following verification form are mandatory (NA for Non Applicable can be used).',
+          desc5: '● To avoid possible delays, please check the correctness before submitting documents, please double check you do not send the same document twice and possibly forget one.',
+          desc6: 'Select document type',
+          desc7: 'Document front page upload',
+          desc8: 'Document back page upload',
+          desc9: 'Selfie with document upload',
+          button: {
+            submit: 'Submit',
           },
         },
       },
@@ -1114,6 +1137,7 @@ export default {
         confirmUpdateAtm: 'Update your ATM?',
         createdAtmSuccess: 'Success! You have created an ATM on Ninja.',
         updatedAtmSuccess: 'Success!',
+        no_history: 'You do not have any order yet.',
       },
       button: {
         create: 'Create my ATM',
@@ -1251,6 +1275,17 @@ export default {
           }
         }
       },
+      redeem:{
+        title: "Redeem to coin",
+        your_code: "Reedem code",
+        giftcard: "Gift card",
+        value: "Value",
+        agree_text: "By clicking REDEEM, you agree to Gift Card & Promotional code {0} as applicable",
+        button_redeem: "Redeem now",
+        button_check: "Check redeem code",
+        swipe_button_redeem: "Swipe to redeem",
+        find_code: "How do find claim code?"
+      },
       remove: {
         title: 'Remove',
         header: 'Are you sure?',
@@ -1267,10 +1302,13 @@ export default {
         label: {
           from_wallet: 'From wallet',
           to_address: 'To wallet address',
+          to_address2: 'To address',
           amount: 'Amount',
           usd: 'USD',
           wallet_balance: 'Wallet balance',
           scan_qrcode: 'Scan QR code',
+          gas_limit: 'Gas Limit',
+          data: 'Data'
         },
         placeholder: {
           to_address: 'Wallet address...',
@@ -1656,7 +1694,8 @@ export default {
     payment_detail: 'Payment detail',
     order_will_expire_in: 'This order will expire in ',
     expired: 'Expired',
-    amount: 'AMOUNT',
+    customer_amount: 'CUSTOMER AMOUNT',
+    amount: 'YOUR AMOUNT',
     account_name: 'ACCOUNT NAME',
     account_number: 'ACCOUNT NUMBER',
     bank_name: 'BANK NAME',
@@ -1668,5 +1707,6 @@ export default {
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
     title: 'Payment detail',
+    amount_info: 'Profit = Customer Amount - Your Amount',
   },
 };

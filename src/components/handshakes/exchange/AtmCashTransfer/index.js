@@ -19,7 +19,8 @@ import { CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, API_URL, FIAT_CURRENCY } from '@
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Field, change } from 'redux-form';
-import { debounce, compact } from 'lodash';
+import debounce from '@/utils/debounce';
+import { compact } from '@/utils/array';
 import { getCashFromCrypto, sendAtmCashTransfer } from '@/reducers/exchange/action';
 import { showAlert, showScanQRCode } from '@/reducers/app/action';
 import { getErrorMessageFromCode, getCryptoFromAddress } from '@/components/handshakes/exchange/utils';
@@ -169,6 +170,7 @@ class AtmCashTransfer extends Component {
           type: 'success',
         });
         const receipt = {
+          customerAmount: parseFloat(res?.data?.fiat_amount) || 0,
           amount: parseFloat(res?.data?.fiat_amount - res?.data?.store_fee) || 0,
           fiatCurrency: res?.data?.fiat_currency,
           referenceCode: res?.data?.ref_code,

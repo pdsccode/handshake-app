@@ -200,6 +200,7 @@ export const API_URL = {
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    RELEVANT_EVENTS: 'cryptosign/match/relevant-event',
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
@@ -238,6 +239,7 @@ export const API_URL = {
     GET_USER_PROFILE: 'exchange/user/profile', // {path: '/user/profile', method: 'get'},
     GET_OFFER_PRICE: 'exchange/info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
     GET_LIST_OFFER_PRICE: 'exchange/info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
+    GET_LIST_OFFER_PRICE_CASH_ATM: 'exchange/cash/quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'exchange/user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'exchange/offers',
     SHAKE: 'shake',
@@ -290,6 +292,7 @@ export const API_URL = {
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+    GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
 };
 
@@ -563,8 +566,13 @@ export const URL = {
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
 
+  HANDSHAKE_PAYMENT_TRANSFER: '/payment/transfer',
+  HANDSHAKE_PAYMENT_TRANSFER_INDEX: '/payment/transfer',
+
   HANDSHAKE_PAYMENT: '/payment',
   HANDSHAKE_PAYMENT_INDEX: '/payment',
+
+
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
@@ -620,6 +628,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  INTERNAL_ADMIN_URL: '/d2l0aGRyYXdfZm9yX2dvZB/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
