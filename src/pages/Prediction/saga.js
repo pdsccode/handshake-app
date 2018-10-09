@@ -27,7 +27,6 @@ export function* handleLoadMatches({ cache = true, source }) {
 
 export function* handleLoadRelevantEvents({ cache = true, eventId }) {
   try {
-    console.log('handleLoadRelevantEvents EventId:', eventId);
     if (cache) {
       const events = yield select(relevantEventSelector);
       if (events && events.length) {
@@ -69,11 +68,9 @@ export function* handleCountReport() {
       PATH_URL: API_URL.CRYPTOSIGN.COUNT_REPORT,
       type: 'COUNT_REPORT',
     });
-    //console.log('handleCountReport', response.data);
     yield put(updateCountReport(response.data.length));
   } catch (e) {
-    console.log(e);
-    //return console.error('handleCountReport', e);
+    console.error(e);
   }
 }
 
