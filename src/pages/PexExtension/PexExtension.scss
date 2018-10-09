@@ -7,7 +7,7 @@
   display: flex;
   width: 100%;
   height: 100%;
-  min-width: 960px;
+  min-width: 1024px;
   min-height: 720px;
   overflow: hidden;
   background-color: #ffffff;
@@ -26,9 +26,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    h1 {
-      padding: 50px 0 30px;
-    }
+    // h1 {
+    //   padding: 50px 0 30px;
+    // }
     .Heading {
       padding: 50px 0 30px;
       width: 830px;
@@ -37,7 +37,7 @@
       justify-content: space-between;
       align-items: center;
       .LineText {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 700;
         @media screen and (max-width: 400px) {
           text-align: center;
@@ -73,56 +73,35 @@
       // width: 100%;
       // height: 100%;
       // z-index: 1;
-      position: absolute;
-      width: 100%;
+      // position: absolute;
+      // width: 100%;
       max-height: 100%;
-    }
-    @media screen and (min-width: 1160px) {
-      .FrameClip {
-        // width: 778px;
-        // height: 100%;
-        // width: 67.65%;
-        // margin: 0 auto;
-      }
+      // border: 5px solid yellow;
     }
     .FrameClip {
-      position: relative;
-      //top: 6.9%;
-      // top: 5px;
-      // bottom: 12.37%;
-      // width: 100%;
+      position: absolute;
       top: 0;
       left: 0;
+      bottom: 0;
       right: 0;
       z-index: 2;
       text-align: center;
-      // max-width: 1440px;
-      // max-height: 640px;
+      padding-left: 15.84%;
+      padding-right: 16.77%;
+      padding-top: 34px;
+      padding-bottom: 80px;
+      // border: 67px solid rgba(214, 214, 214, 0.8);
+      /* border-top-width: 12px; */
+      /* border-bottom-width: 80px; */
+      /* border-left-width: 192px; */
+      /* border-right-width: 204px; */
+      box-sizing: border-box;
       > img {
         width: 100%;
+        display: none;
       }
       .FrameContent {
-        position: absolute;
-        // width: 100%;
-        // height: 100%;
-        // overflow: hidden;
-        // border-top-left-radius: 30px;
-        // border-top-right-radius: 30px;
-        top: 7px;
-        left: -9px;
-        bottom: 0;
-        right: 0;
-        // padding: 0.7% 15.4% 0 14.5%;
-        @media screen and (max-width: 1159px) {
-          top: 0;
-          left: 0;
-          padding: 0.7% 15.4% 0 14.5%;
-        }
-        @media screen and (min-width: 1160px) {
-          top: 0;
-          left: 0;
-          padding: 0.7% 15.4% 0 14.5%;
-        }
+        height: 100%;
       }
       > img.GuideClip {
         height: 100%;
@@ -132,27 +111,23 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        max-height: 530px;
-        max-width: 810px;
-        margin: 0 auto;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        @media screen and (min-width: 1160px) {
-          border-top-left-radius: 35px;
-          border-top-right-radius: 35px;
-        }
-        @media screen and (min-width: 1598px) {
-          max-width: 1119px;
-          max-height: 700px;
-        }
+        // border-top-left-radius: 30px;
+        // border-top-right-radius: 30px;
       }
       .videoClip {
-        // position: absolute;
-        // top: 0;
-        // left: 0;
         width: 100%;
         height: 100%;
       }
+    }
+  }
+  .GuideClipAreaInner {
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    // border: 1px solid red;
+    @media screen and (max-width: 1569px) {
+      // height: auto;
     }
   }
   .Description {
