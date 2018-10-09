@@ -9,6 +9,7 @@ import {getFiatCurrency} from '@/reducers/exchange/action';
 import { bindActionCreators } from "redux";
 import Modal from '@/components/core/controls/Modal';
 import ModalDialog from '@/components/core/controls/ModalDialog';
+import Register from '@/components/Payment/PFDRegister';
 import Checkout from './Checkout';
 import ChooseCrypto from './ChooseCrypto';
 import Complete from './Complete';
@@ -43,6 +44,7 @@ class Payment extends React.Component {
       modalChooseCrypto: '',
       modalCheckout: '',
       modalComplete: '',
+      modalRegister: '',
       msgError: '',
       toAddresses: false,
       isCryptoCurrency: false,
@@ -59,8 +61,19 @@ class Payment extends React.Component {
   async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
-    let { order_id, to, amount, currency:currency, confirm_url } = this.querystringParsed;
+    let { order_id, to, amount, currency:currency, confirm_url, act } = this.querystringParsed;
 
+
+    if (act && act == "register") {
+      this.setState({
+        modalRegister: <Register
+        />
+        }, () => {
+          this.modalRegisterRef.open();
+        }
+      );
+      return;
+    }
 
     if (!order_id && !amount && !confirm_url) {
       this.setState({isShowInfo: true});
@@ -220,7 +233,7 @@ class Payment extends React.Component {
     return result;
   }
 
-  getRate(fiatCurrency, cryptoCurrency){console.log('getRate', fiatCurrency, cryptoCurrency);
+  getRate(fiatCurrency, cryptoCurrency){
     return new Promise((resolve, reject) => {
 
       this.props.getFiatCurrency({
@@ -388,6 +401,8 @@ class Payment extends React.Component {
 
   render = () => {
     const { messages } = this.props.intl;
+    const { modalRegister } = this.state;
+
     return (
 
       <div>
@@ -406,6 +421,10 @@ class Payment extends React.Component {
 
         <Modal title="Developer Documents" onRef={modal => this.modalDevDocRef = modal}>
           <DevDoc />
+        </Modal>
+
+        <Modal title="Register" onRef={modal => this.modalRegisterRef = modal}>
+          {modalRegister}
         </Modal>
 
         {
