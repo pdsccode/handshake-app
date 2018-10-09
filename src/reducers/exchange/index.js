@@ -153,6 +153,12 @@ function exchangeReducter(state = {
         cashStoreTransaction: list.filter(handshake => handshake.offerFeedType === 'cash_order'),
       };
     }
+    case `${EXCHANGE_ACTIONS.BUY_CRYPTO_COD}_SUCCESS`: {
+      // PLACEHOLDER BUY_CRYPTO_COD
+      return {
+        ...state,
+      };
+    }
     default:
       return state;
   }

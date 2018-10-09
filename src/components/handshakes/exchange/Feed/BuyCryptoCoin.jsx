@@ -14,8 +14,8 @@ import {
 import '../styles.scss';
 import {validateSpecificAmount} from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
-import {fieldDropdown, fieldInput} from '@/components/core/form/customField';
-import {required} from '@/components/core/form/validation';
+import { fieldDropdown, fieldInput, fieldTextArea } from '@/components/core/form/customField';
+import { required } from '@/components/core/form/validation';
 import {
   createCCOrder,
   getCcLimits,
@@ -23,6 +23,7 @@ import {
   getCryptoPriceForPackage,
   getUserCcLimit,
   initPaymentInstantBuy,
+  buyCryptoCod,
 } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import {MasterWallet} from '@/services/Wallets/MasterWallet';
@@ -43,6 +44,7 @@ import Modal from '@/components/core/controls/Modal/Modal';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
+import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 
 const adyenEncrypt = require('adyen-cse-web');
 
@@ -497,11 +499,63 @@ class FeedCreditCard extends React.Component {
     this.modalRef.close();
   }
 
+  onBuy = () => {
+    this.buyCryptoCod({
+      PATH_URL: API_URL.BUY_CRYPTO_COD,
+      successFn: this.handleBuyCryptoCodSuccess,
+      errorFn: this.handleBuyCryptoCodFailed,
+    });
+  }
+
+  handleBuyCryptoCodSuccess = (res) => {
+    console.log('handleBuyCryptoCodSuccess', res);
+  }
+
+  handleBuyCryptoCodFailed = (e) => {
+    console.log('handleBuyCryptoCodFailed', e);
+  }
+
+  renderCoD = () => {
+    const { messages } = this.props.intl;
+    return (
+      <div className="choose-coin-cod-form">
+        <div className="input-group mt-4">
+          <Field
+            type="text"
+            className="form-control input-field"
+            name="address"
+            placeholder={messages.create.cod_form.your_address}
+            component={fieldInput}
+            validate={[required]}
+          />
+        </div>
+        <div className="input-group mt-2">
+          <Field
+            type="text"
+            className="form-control input-field"
+            placeholder={messages.create.cod_form.time_note}
+            name="noteAndTime"
+            component={fieldTextArea}
+            validate={[required]}
+          />
+        </div>
+        <div className="input-group mt-2">
+          <ConfirmButton
+            label={messages.create.cod_form.buy_btn}
+            buttonClassName="buy-btn"
+            containerClassName="buy-btn-container"
+            onConfirm={this.onBuy}
+          />
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { hasSelectedCoin, wallets, walletSelected } = this.state;
     const { intl, isPopup } = this.props;
-    const { amount, cryptoPrice } = this.props;
+    const { amount, cryptoPrice, payment_method } = this.props;
     const { currency, allowBuy } = this.state;
     const { issuerUrl, paReq, md, termUrl } = this.state;
     const { modalContent, modalTitle } = this.state;
@@ -577,6 +631,7 @@ class FeedCreditCard extends React.Component {
                 <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
               </button>
             </div>
+            {payment_method === 'cod' && this.renderCoD()}
           </FormSpecificAmount>
         </div>
 
@@ -634,6 +689,7 @@ const mapStateToProps = (state) => ({
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
   cc_email: selectorFormCreditCard(state, 'cc_email'),
+  payment_method: selectorFormSpecificAmount(state, 'payment_method'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -645,6 +701,7 @@ const mapDispatchToProps = (dispatch) => ({
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   initPaymentInstantBuy: bindActionCreators(initPaymentInstantBuy, dispatch),
+  buyCryptoCod: bindActionCreators(buyCryptoCod, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

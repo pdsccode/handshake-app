@@ -261,6 +261,7 @@ export const API_URL = {
     SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
     CANCEL_ATM_CASH_TRANSFER: 'exchange/cash/order', // DELETE /cash/order/{id}
     GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
+    BUY_CRYPTO_COD: 'placeholer/buy_crypto_cod',
   },
   SEED: {
     BASE: 'seed',
