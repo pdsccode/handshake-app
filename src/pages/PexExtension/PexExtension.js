@@ -44,7 +44,7 @@ class PexExtension extends React.Component {
                   <div className="FrameBorder">
                     <iframe
                       title="Chrome Extension Instruction"
-                      src="https://www.youtube.com/embed/tb67Prx3wMs"
+                      src="https://www.youtube.com/embed/tb67Prx3wMs?rel=0&amp;autoplay=1&amp;loop=1&playlist=tb67Prx3wMs"
                       frameBorder="0"
                       allow="autoplay; encrypted-media"
                       allowFullScreen
