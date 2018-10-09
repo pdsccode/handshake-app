@@ -1,5 +1,8 @@
 export default {
-  prediction: {},
+  prediction: {
+    events:[],
+    relevantEvents:[],
+  },
   reports: {},
   categories: {},
   orderPlace: {},
