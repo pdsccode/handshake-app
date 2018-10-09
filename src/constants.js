@@ -296,6 +296,7 @@ export const API_URL = {
   },
   ID_VERIFICATION: {
     GET_DOCUMENTS: 'id_verification/list',
+    UPDATE_STATUS: 'id_verification/update',
   },
 };
 
@@ -535,6 +536,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  ADMIN_ID_VERIFICATION: '/admin/id-verification',
   REPORT: '/report',
   RESOLVE: '/resolve',
   LUCKY_POOL: '/lucky',

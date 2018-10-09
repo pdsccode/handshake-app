@@ -481,8 +481,25 @@ class Profile extends React.Component {
 
   render() {
     const {
-      countryCode, countries, sms, email, code,
+      countryCode, countries, sms, email, code, idVerified
     } = this.state;
+    let idVerificationStatusBadgeClass = '';
+    let idVerificationStatusText = '';
+    switch (idVerified) {
+      case -1:
+        idVerificationStatusBadgeClass = 'badge-danger';
+        idVerificationStatusText = 'Rejected';
+        break;
+      case 1:
+        idVerificationStatusBadgeClass = 'badge-success';
+        idVerificationStatusText = 'Verified';
+        break;
+      case 2:
+        idVerificationStatusBadgeClass = 'badge-warning';
+        idVerificationStatusText = 'Processing';
+        break;
+      default:
+    }
     const { UsernameForm, NumberPhoneForm, EmailForm, IDVerificationForm } = this;
     const { messages } = this.props.intl;
     return (
@@ -671,14 +688,16 @@ class Profile extends React.Component {
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({ idVerificationCollapse: !state.idVerificationCollapse }))}>
+              <div className="head" onClick={() => { if (this.state.idVerified < 1) this.setState(state => ({ idVerificationCollapse: !state.idVerificationCollapse })); }}>
                 <p className="label">
                   {messages.me.profile.text.id_verification.label}
                   <span>{messages.me.profile.text.id_verification.desc1}</span>
                 </p>
                 <div className="extend">
-                  <span className={`badge ${this.state.idVerified === 1 ? 'badge-sucess' : (this.state.idVerified === 2 ? 'badge-warning' : '')}`}>{this.state.idVerified === 1 ? 'Verified' : (this.state.idVerified === 2 ? 'Processing' : '')}</span>
-                  <Image className={this.state.idVerificationCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                  <span className={`badge ${idVerificationStatusBadgeClass}`}>{idVerificationStatusText}</span>
+                  {this.state.idVerified < 1 ? (
+                    <Image className={this.state.idVerificationCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                  ) : ''}
                 </div>
               </div>
               <div className={`content id-verification ${this.state.idVerificationCollapse ? '' : 'd-none'}`}>
@@ -856,7 +875,7 @@ class Profile extends React.Component {
             <p>{this.state.successMessage ? this.state.successMessage : 'Your authentication is verified'}</p>
           </div>
         </ModalDialog>
-      </Grid>
+      </Grid >
     );
   }
 }
