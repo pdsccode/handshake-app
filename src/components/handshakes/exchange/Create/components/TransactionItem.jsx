@@ -18,7 +18,7 @@ import CashStoreTransaction from "@/models/CashStoreTransaction";
 import cx from 'classnames';
 
 import icWarning from '@/assets/images/cash/ic-transaction-warning.svg';
-import ConfirmButton from './ConfirmButton';
+import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
