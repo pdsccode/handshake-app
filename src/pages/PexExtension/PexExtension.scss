@@ -7,11 +7,17 @@
   display: flex;
   width: 100%;
   height: 100%;
-  min-width: 980px;
-  min-height: 600px;
+  min-width: 960px;
+  min-height: 720px;
   overflow: hidden;
-  background: #ffffff url('../../assets/images/pex/ext-landing-page/background.svg');
-  background-size: cover;
+  background-color: #ffffff;
+  // background: #ffffff url('../../assets/images/pex/ext-landing-page/background.svg');
+  // background-size: cover;
+
+  @media screen and (max-width: 400px) {
+    min-width: unset;
+    min-height: unset;
+  }
 
   &Content {
     display: flex;
@@ -23,6 +29,29 @@
     h1 {
       padding: 50px 0 30px;
     }
+    .Heading {
+      padding: 50px 0 30px;
+      width: 830px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      .LineText {
+        font-size: 1.5rem;
+        font-weight: 700;
+        @media screen and (max-width: 400px) {
+          text-align: center;
+        }
+      }
+      @media screen and (max-width: 1160px) {
+        .LineText {
+          margin-bottom: 10px;
+        }
+        width: auto;
+        padding: 50px 15px 30px;
+        flex-direction: column;
+      }
+    }
   }
 
   .GuideClipArea {
@@ -31,28 +60,98 @@
     height: 0;
     width: 100%;
     flex: 1;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    align-content: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    // flex-direction: row;
+    // justify-content: center;
+    // align-items: stretch;
+    // align-content: stretch;
     .MacBook {
+      // position: absolute;
+      // top: 0;
+      // left: 0;
+      // width: 100%;
+      // height: 100%;
+      // z-index: 1;
       position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 100%;
-      z-index: 1;
+      max-height: 100%;
+    }
+    @media screen and (min-width: 1160px) {
+      .FrameClip {
+        // width: 778px;
+        // height: 100%;
+        // width: 67.65%;
+        // margin: 0 auto;
+      }
     }
     .FrameClip {
-      position: absolute;
-      top: 6.9%;
-      bottom: 12.37%;
-      width: 100%;
+      position: relative;
+      //top: 6.9%;
+      // top: 5px;
+      // bottom: 12.37%;
+      // width: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 2;
       text-align: center;
+      // max-width: 1440px;
+      // max-height: 640px;
+      > img {
+        width: 100%;
+      }
+      .FrameContent {
+        position: absolute;
+        // width: 100%;
+        // height: 100%;
+        // overflow: hidden;
+        // border-top-left-radius: 30px;
+        // border-top-right-radius: 30px;
+        top: 7px;
+        left: -9px;
+        bottom: 0;
+        right: 0;
+        // padding: 0.7% 15.4% 0 14.5%;
+        @media screen and (max-width: 1159px) {
+          top: 0;
+          left: 0;
+          padding: 0.7% 15.4% 0 14.5%;
+        }
+        @media screen and (min-width: 1160px) {
+          top: 0;
+          left: 0;
+          padding: 0.7% 15.4% 0 14.5%;
+        }
+      }
       > img.GuideClip {
         height: 100%;
         margin-right: 3px;
+      }
+      .FrameBorder {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        max-height: 530px;
+        max-width: 810px;
+        margin: 0 auto;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        @media screen and (min-width: 1160px) {
+          border-top-left-radius: 35px;
+          border-top-right-radius: 35px;
+        }
+        @media screen and (min-width: 1598px) {
+          max-width: 1119px;
+          max-height: 700px;
+        }
+      }
+      .videoClip {
+        // position: absolute;
+        // top: 0;
+        // left: 0;
+        width: 100%;
+        height: 100%;
       }
     }
   }
