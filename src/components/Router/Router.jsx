@@ -65,6 +65,7 @@ const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
+const RouterInternalAdmin = createDynamicImport(() => import('@/components/Router/InternalAdmin'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
 
@@ -86,7 +87,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
-  { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
+  // { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
 
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
@@ -133,6 +134,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
+    { path: URL.INTERNAL_ADMIN_URL, component: RouterInternalAdmin },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
@@ -209,7 +211,7 @@ class Router extends React.Component {
                         <ScrollToTop>
                           <Switch>
                             <Route exact path={URL.INDEX} render={() => {
-                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />
+                              return <Redirect to={{ pathname: URL.PRODUCT_PREDICTION_URL }} />
                             }}
                             />
                             {/*<Route*/}

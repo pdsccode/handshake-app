@@ -200,6 +200,7 @@ export const API_URL = {
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    RELEVANT_EVENTS: 'cryptosign/match/relevant-event',
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
@@ -291,6 +292,7 @@ export const API_URL = {
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+    GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
 };
 
@@ -626,6 +628,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  INTERNAL_ADMIN_URL: '/d2l0aGRyYXdfZm9yX2dvZB/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
