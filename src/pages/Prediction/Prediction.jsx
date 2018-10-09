@@ -312,7 +312,7 @@ class Prediction extends React.Component {
     console.log('renderRelevantEventList RelevantEvent: ', props.relevantEvents);
     return (
       <div className="RelevantEventList">
-        <div className="relevantTitle">Relevant events</div>
+        <div className="relevantTitle">Related events</div>
         {props.relevantEvents.map((event) => {
           return (
             <EventItem
