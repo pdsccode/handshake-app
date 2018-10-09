@@ -1664,10 +1664,6 @@ big.js@^3.1.3:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
 
-"bignumber.js-4.1.0@github:0xngoubou/bignumber.js-4.1.0":
-  version "4.1.0"
-  resolved "https://codeload.github.com/0xngoubou/bignumber.js-4.1.0/tar.gz/5380bd0a25617479212bfdbe612f00034c87f30e"
-
 "bignumber.js-4.1.0@https://github.com/0xngoubou/bignumber.js-4.1.0.git":
   version "4.1.0"
   resolved "https://github.com/0xngoubou/bignumber.js-4.1.0.git#5380bd0a25617479212bfdbe612f00034c87f30e"
@@ -4888,8 +4884,8 @@ handlebars@^4.0.11:
     uglify-js "^3.1.4"
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
-  version "0.0.1538965322"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/ce7cc696a3cbd62f94bfb4d6cd86a6bc7f63eab4"
+  version "0.0.1539059051"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/8baac18a37df677f10b51f89a1563cc733f42541"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
@@ -6808,10 +6804,6 @@ neo-async@^2.5.0:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.5.2.tgz#489105ce7bc54e709d736b195f82135048c50fcc"
 
-net@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/net/-/net-1.0.2.tgz#d1757ec9a7fb2371d83cf4755ce3e27e10829388"
-
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -8503,12 +8495,12 @@ react-dom@^16.4.0:
     prop-types "^15.6.2"
     schedule "^0.5.0"
 
-react-dropzone@^4.2.11:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-4.3.0.tgz#facdd7db16509772633c9f5200621ac01aa6706f"
+react-dropzone@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-6.0.2.tgz#53a9fdc7b9125c5f2aa9d985a75878b200ee241c"
   dependencies:
     attr-accept "^1.1.3"
-    prop-types "^15.5.7"
+    prop-types "^15.6.2"
 
 react-google-maps@^9.4.5:
   version "9.4.5"
@@ -9210,11 +9202,11 @@ ripple-binary-codec@^0.1.0, ripple-binary-codec@^0.1.13:
     lodash "^4.12.0"
     ripple-address-codec "^2.0.1"
 
-ripple-hashes@^0.3.1, "ripple-hashes@github:0xngoubou/ripple-hashes":
+ripple-hashes@^0.3.1:
   version "0.3.1"
   resolved "https://codeload.github.com/0xngoubou/ripple-hashes/tar.gz/d9157617b39e78890dd58bba6111443350bbc318"
   dependencies:
-    bignumber.js-4.1.0 "github:0xngoubou/bignumber.js-4.1.0"
+    bignumber.js-4.1.0 "https://github.com/0xngoubou/bignumber.js-4.1.0.git"
     create-hash "^1.1.2"
     ripple-address-codec "^2.0.1"
     ripple-binary-codec "^0.1.0"
@@ -9237,20 +9229,13 @@ ripple-lib-transactionparser@0.7.1:
     bignumber.js "^4.1.0"
     lodash "^4.17.4"
 
-"ripple-lib-transactionparser@github:0xngoubou/transactionparser":
-  version "0.7.2"
-  resolved "https://codeload.github.com/0xngoubou/transactionparser/tar.gz/da70802537823e4c0d3214d6db203fe7dea2d9fe"
-  dependencies:
-    bignumber.js-4.1.0 "github:0xngoubou/bignumber.js-4.1.0"
-    lodash "^4.17.4"
-
-"ripple-lib@github:0xngoubou/ripple-lib":
-  version "1.0.0-beta.5"
-  resolved "https://codeload.github.com/0xngoubou/ripple-lib/tar.gz/7d019f7537573699597a612cee6aa4c4d5ecb6e9"
+ripple-lib@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ripple-lib/-/ripple-lib-1.0.1.tgz#4fcd9904fa03c7366a76d54c5474a0111f4a4b53"
   dependencies:
     "@types/lodash" "^4.14.85"
     "@types/ws" "^3.2.0"
-    bignumber.js-4.1.0 "github:0xngoubou/bignumber.js-4.1.0"
+    bignumber.js "^4.1.0"
     https-proxy-agent "2.2.1"
     jsonschema "1.2.2"
     lodash "^4.17.4"
@@ -10301,10 +10286,6 @@ timers-browserify@^2.0.4:
 tinycolor2@^1.1.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
-
-tls@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/tls/-/tls-0.0.1.tgz#0ab2bf5968d71df2f8c0e1515d24a2240b98aac8"
 
 tmp@^0.0.33:
   version "0.0.33"
