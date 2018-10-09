@@ -121,7 +121,7 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 const DECIMAL_NUMBER = 2;
 
-export const fieldCheckBoxList = ({ input, name, titles, items }) => {
+export const fieldCheckBoxList = ({ input, name, titles, items, disabled = false }) => {
   const { onChange, value } = input;
   return (
     <div className="rf-type-atm-container d-table w-100" onChange={({ target }) => onChange(target.value)}>
@@ -137,6 +137,7 @@ export const fieldCheckBoxList = ({ input, name, titles, items }) => {
               name={name}
               checked={value === item_value}
               onChange={() => null}
+              disabled={disabled}
             />
             <span className="checkmark" />
             <span>{label}</span>
@@ -775,6 +776,7 @@ class FeedCreditCard extends React.Component {
     const { modalContent, modalTitle } = this.state;
 
     const packages = listPackages[currency];
+    const canChangePaymentMethods = false;
 
     return (<div>
       <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
@@ -830,12 +832,13 @@ class FeedCreditCard extends React.Component {
                 disabled
               />
             </div>
-            <div className="input-group item-info">
+            <div className="input-group item-info mt-2">
               <Field
                 component={fieldCheckBoxList}
                 titles={messages.buy_coin.label.payment_methods}
                 name="payment_method"
                 items={PAYMENT_METHODS}
+                disabled={!canChangePaymentMethods}
               />
             </div>
             <div className="mt-3 mb-3">
