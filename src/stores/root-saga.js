@@ -7,6 +7,6 @@ import orderPlaceSaga from '@/components/handshakes/betting/Feed/OrderPlace/saga
 export default function* rootSaga() {
   yield spawn(predictionSaga);
   yield spawn(createMarketSaga);
-  yield spawn(orderPlaceSaga);
   yield spawn(PexExtensionSaga);
+  yield spawn(orderPlaceSaga);
 }

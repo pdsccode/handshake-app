@@ -112,7 +112,6 @@ class Component extends React.Component {
       sellBalance: 0,
       modalFillContent: '',
     };
-    // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
   }
 
@@ -866,9 +865,6 @@ class Component extends React.Component {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       METHOD: 'POST',
       successFn: () => {
-        if (this.props.app.firechat) {
-          this.props.app.firechat.updateUserName(username);
-        }
       },
       errorFn: () => {
         // this.setState({ haveProfile: false });

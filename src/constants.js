@@ -200,6 +200,7 @@ export const API_URL = {
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    RELEVANT_EVENTS: 'cryptosign/match/relevant-event',
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
@@ -238,6 +239,7 @@ export const API_URL = {
     GET_USER_PROFILE: 'exchange/user/profile', // {path: '/user/profile', method: 'get'},
     GET_OFFER_PRICE: 'exchange/info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
     GET_LIST_OFFER_PRICE: 'exchange/info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
+    GET_LIST_OFFER_PRICE_CASH_ATM: 'exchange/cash/quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'exchange/user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'exchange/offers',
     SHAKE: 'shake',
@@ -255,6 +257,9 @@ export const API_URL = {
     WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
     CASH_ATM: 'exchange/cash',
     CASH_STORE_ATM: 'exchange/cash/store',
+    CRYPTO_TO_CASH: 'exchange/cash/price', // GET /cash/price?amount=1&currency=ETH
+    SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
+    GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
   },
   SEED: {
     BASE: 'seed',
@@ -287,6 +292,7 @@ export const API_URL = {
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+    GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
 };
 
@@ -501,11 +507,26 @@ export const LOCATION_METHODS = {
   IP: 'I',
 };
 
+export const ATM_TYPE = {
+  STORE: 'store',
+  PERSONAL: 'personal',
+};
+
+export const ATM_STATUS = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};
+
+export const TIME_FORMAT = 'HH:mm';
+export const TIME_FORMAT_AM_PM = 'hh:mm a';
+
 // API
 export const BASE_API = {
   BASE_URL: process.env.BASE_API_URL,
   TIMEOUT: 10000,
 };
+
+export const API_ENDPOINT = process.env.PUBLIC_URL;
 
 export const URL = {
   INDEX: '/',
@@ -545,8 +566,13 @@ export const URL = {
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
 
+  HANDSHAKE_PAYMENT_TRANSFER: '/payment/transfer',
+  HANDSHAKE_PAYMENT_TRANSFER_INDEX: '/payment/transfer',
+
   HANDSHAKE_PAYMENT: '/payment',
   HANDSHAKE_PAYMENT_INDEX: '/payment',
+
+
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
@@ -574,8 +600,10 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   PRODUCT_ATM_URL: '/atm',
   CASH_FOR_BUSINESS: '/cash-for-business',
+  ATM_FOR_BUSINESS: '/atm-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
-  PEX_INSTRUCTION_URL: '/pex/instruction',
+  PEX_INSTRUCTION_URL: '/pex/instructions',
+  PEX_LUCKY_DRAW_MECHANIC_URL: '/pex/luckydraw',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
   PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
@@ -593,8 +621,6 @@ export const URL = {
   CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
-  ESCROW_DEPOSIT: '/escrow/deposit',
-  ESCROW_WITHDRAW: '/escrow/withdraw',
   ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 
   SHOP_URL: '/shop',
@@ -603,6 +629,8 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  INTERNAL_ADMIN_URL: '/d2l0aGRyYXdfZm9yX2dvZB/:superKey',
+  CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
 
@@ -946,6 +974,8 @@ export const AUTONOMOUS_END_POINT = {
   CHECKOUT: '/order-api/order/cart/checkout',
   PRODUCTS: '/product-api/v2/products',
   PRODUCT: '/product-api/product',
+  CURRENT_COUNTRY: '/common-api/current-country',
+  CHANGE_COUNTRY: '/common-api/change-country',
 };
 export const COUNTRY_LIST = {
   "AD": "AD - Andorra",

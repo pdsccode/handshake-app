@@ -6,6 +6,27 @@ export const loadMatches = (payload = {}) => {
     ...payload,
   };
 };
+export const loadRelevantEvents = (payload = {}) => {
+  return {
+    type: 'PREDICTION:LOAD_RELEVANT_EVENTS',
+    ...payload,
+  };
+};
+export const updateEvents = (events=[]) => {
+  return SET_DATA({
+    type: 'PREDICTION:LOAD_MATCHES',
+    _path: 'prediction.events',
+    _value: events,
+  });
+}
+
+export const updateRelevantEvents = (events=[]) => {
+  return SET_DATA({
+    type: 'PREDICTION:LOAD_RELEVANT_EVENTS',
+    _path: 'prediction.relevantEvents',
+    _value: events,
+  });
+}
 
 export const removeExpiredEvent = (payload = {}) => {
   return {
@@ -71,6 +92,13 @@ export const checkExistSubcribeEmail = (value) => {
   return SET_DATA({
     type: 'PREDICTION:CHECK_SUBCRIBE_EMAIL',
     _path: 'ui.isExistEmail',
+    _value: value,
+  });
+};
+export const updateTotalBets = (value) => {
+  return SET_DATA({
+    type: 'PREDICTION:TOTAL_BETS',
+    _path: 'ui.totalBets',
     _value: value,
   });
 };

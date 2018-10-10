@@ -7,7 +7,6 @@ import { bindActionCreators } from "redux";
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import { showLoading, hideLoading } from '@/reducers/app/action';
-import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import iconQRCodeBlack from '@/assets/images/wallet/icons/icon-qrcode-black.svg';
 import iconQRCodeWhite from '@/assets/images/wallet/icons/icon-qrcode-white.svg';
 import iconSelected from '@/assets/images/pages/payment/check-circle-solid.svg';
@@ -38,38 +37,14 @@ class ListCoin extends React.Component {
     }
   }
 
-  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
-    this.props.showAlert({
-      message: <div className="textCenter">{icon}{msg}</div>,
-      timeOut,
-      type,
-      callBack: () => {},
-    });
-  }
-  showToast(mst) {
-    this.showAlert(mst, 'primary', 2000);
-  }
-  showError(mst) {
-    this.showAlert(mst, 'danger', 3000);
-  }
-  showSuccess(mst) {
-    this.showAlert(mst, 'success', 5000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
-  }
-  showLoading(status) {
-    this.props.showLoading({ message: '' });
-  }
-  hideLoading() {
-    this.props.hideLoading();
-  }
-
   async componentDidMount() {
     let { walletSelected, wallets, crypto } = this.props;
-    this.showLoading();
+    this.props.showLoading();
     if(!wallets){
       wallets = await this.getWallets();
     }
 
-    this.setState({wallets, walletSelected}, ()=> {this.hideLoading() });
+    this.setState({wallets, walletSelected}, ()=> {this.props.hideLoading() });
   }
 
   getWallets = () => {
@@ -98,20 +73,6 @@ class ListCoin extends React.Component {
     });
   }
 
-  getMessage(str){
-    const { messages } = this.props.intl;
-
-    let result = "";
-    try{
-      result = eval(str);
-    }
-    catch(e){
-      console.error(e);
-    }
-
-    return result;
-  }
-
   selectCoin = (wallet) => {
     const { onSelect } = this.props;
 
@@ -132,21 +93,21 @@ class ListCoin extends React.Component {
           <div className="div-qr-code">
             <QRCode size={250} value={wallet.address} />
           </div>
-          <Button className="btn-dark btn" block={true} onClick={()=> this.onClose() }>Close</Button>
+          <Button className="btn-dark" block={true} onClick={()=> this.onClose() }>Close</Button>
         </div>
       }, ()=> this.modalQRCodeRef.open());
   }
 
   get showListCoin(){
     const { wallets, walletSelected } = this.state;
-    if(wallets){console.log(wallets);
+    if(wallets){
       return wallets.map(e => {
         let icon = '';
         try{ icon = require("@/assets/images/icon/wallet/coins/" + e.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
         let isLive = e.network === MasterWallet.ListCoin[e.className].Network.Mainnet;
-        let isSelected = walletSelected && e.network == walletSelected.network && e.address == walletSelected.address;
+        let isSelected = walletSelected && e.network == walletSelected.network && e.address == walletSelected.address && e.name == walletSelected.name;
 
-        return <div className={"coinName " + (!isLive && " test") + (isSelected ? " selected" : "")} key={e.network+e.address}>
+        return <div className={"coinName " + (!isLive && " test") + (isSelected ? " selected" : "")} key={e.name+e.network+e.address}>
             <div className="row">
               <div className="col-2 icon" onClick={()=> this.selectCoin(e)}><img src={isSelected ? iconSelected : icon} /></div>
               <div className="col-5" onClick={()=> this.selectCoin(e)}>
@@ -154,8 +115,9 @@ class ListCoin extends React.Component {
                 <div className="address">{e.getShortAddress()}</div>
               </div>
               <div className="col-5 text-right pr-3">
-                <div className="balance">{e.balance} {e.name}</div>
-                <div className="qrcode" onClick={()=> this.openQRCode(e)}><img src={isSelected ? iconQRCodeWhite : iconQRCodeBlack} /></div>
+                <div className="balance" onClick={()=> this.selectCoin(e)}>{e.balance} {e.name}</div>
+                <div className="qrcode"><img src={isSelected ? iconQRCodeWhite : iconQRCodeBlack}  onClick={()=> this.openQRCode(e)} /></div>
+
               </div>
             </div>
           </div>

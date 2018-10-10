@@ -18,11 +18,13 @@ import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
+import { isJSON } from '@/utils/object';
+import qs from 'querystring';
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
-import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector, relevantEventSelector } from './selector';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail, loadRelevantEvents } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 
@@ -38,11 +40,13 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    relevantEvents:PropTypes.array,
     shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
+    totalBets: PropTypes.number,
     isExistEmail: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.number,
@@ -51,6 +55,7 @@ class Prediction extends React.Component {
 
   static defaultProps = {
     eventList: [],
+    relevantEvents: [],
     shareEvent: null,
     isExistEmail: 0,
   };
@@ -70,20 +75,46 @@ class Prediction extends React.Component {
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     this.props.dispatch(loadMatches());
+    this.receiverMessage(this.props); // @TODO: Extensions
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
+    const eventId = this.getEventId(this.props);
+    if (eventId) {
+      this.props.dispatch(loadRelevantEvents({eventId}));
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-
   onCountdownComplete = (eventId) => {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
+  }
+  getEventId = (props) => {
+    const querystring = window.location.search.replace('?', '');
+    const querystringParsed = qs.parse(querystring);
+    const { match } = querystringParsed;
+    return match || null;
+  }
+
+  // @TODO: Extensions
+  /* eslint no-useless-escape: 0 */
+  receiverMessage = (props) => {
+    const windowInfo = isJSON(window.name) ? JSON.parse(window.name) : null;
+    if (windowInfo) {
+      const { message } = windowInfo;
+      if (window.self !== window.top && message) {
+        const urlPattern = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)/i;
+        const { url } = message;
+        const matches = url.match(urlPattern);
+        const source = matches && matches[0];
+        props.dispatch(loadMatches({ source }));
+      }
+    }
   }
 
   handleScroll = () => {
@@ -92,7 +123,7 @@ class Prediction extends React.Component {
 
   didPlaceOrder = (isFree) => {
     this.closeOrderPlace();
-    if (!this.props.isExistEmail) {
+    if (!this.props.isExistEmail && isFree) {
       this.modalEmailPopupRef.open();
     } else {
       isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
@@ -102,7 +133,6 @@ class Prediction extends React.Component {
   checkFreeAvailabe(props) {
     const { freeBet = {} } = props;
     const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
-    //const { status } = lastItem;
     let isFreeAvailable = false;
 
     if (canFreeBet && freeAvailable > 0) {
@@ -266,10 +296,32 @@ class Prediction extends React.Component {
             />
           );
         })}
+        {this.renderRelevantEventList(props)}
         <Disclaimer />
       </div>
     );
   };
+
+  renderRelevantEventList = (props) => {
+    if (!props.isSharePage) return null;
+    if (!props.relevantEvents || !props.relevantEvents.length) return null;
+    return (
+      <div className="RelevantEventList">
+        <div className="relevantTitle">Related events</div>
+        {props.relevantEvents.map((event) => {
+          return (
+            <EventItem
+              key={event.id}
+              event={event}
+              onClickOutcome={this.handleClickEventItem}
+              onCountdownComplete={() => this.onCountdownComplete(event.id)}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
 
   renderBetMode = (props, state) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
@@ -301,10 +353,14 @@ class Prediction extends React.Component {
 
   renderLuckyReal = () => (
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-      <LuckyReal onButtonClick={() => {
-        this.modalLuckyReal.close();
-      }}
+      <LuckyReal
+        totalBets={this.props.totalBets}
+        isExistEmail={this.props.isExistEmail}
+        onButtonClick={() => {
+          this.modalLuckyReal.close();
+        }}
       />
+
     </ModalDialog>
   )
 
@@ -313,6 +369,8 @@ class Prediction extends React.Component {
       <LuckyFree onButtonClick={() => {
         this.modalLuckyFree.close();
       }}
+        totalBets={this.props.totalBets}
+
       />
     </ModalDialog>
   )
@@ -362,7 +420,7 @@ class Prediction extends React.Component {
           <div className="outtaMoneyMsg">
             To keep forecasting, you’ll need to top-up your wallet.
           </div>
-          <button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>
+          {/*<button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>*/}
         </div>
       </ModalDialog>
     );
@@ -389,7 +447,6 @@ class Prediction extends React.Component {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {/*<Banner />*/}
         <PexCreateBtn />
         {this.renderReport(props)}
         {this.renderEventList(props)}
@@ -417,12 +474,14 @@ export default injectIntl(connect(
     return {
       countReport: countReportSelector(state),
       eventList: eventSelector(state),
+      relevantEvents: relevantEventSelector(state),
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),
       freeBet: checkFreeBetSelector(state),
       isExistEmail: checkExistSubcribeEmailSelector(state),
       shareEvent: shareEventSelector(state),
+      totalBets: totalBetsSelector(state),
     };
   },
 )(Prediction));

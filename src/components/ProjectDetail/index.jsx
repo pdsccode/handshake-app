@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 
 import { setLanguage } from '@/reducers/app/action';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
@@ -15,7 +16,7 @@ import { Link } from 'react-router-dom';
 import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
-
+import { URL } from '@/constants';
 const nameFormSubscribeEmail = 'subscribeEmail';
 const FormSubscribeEmail = createForm({
   propsReduxForm: {
@@ -53,6 +54,44 @@ class Index extends React.PureComponent {
     window.open('https://t.me/ninja_org', '_blank');
   }
 
+  becomeAtm = () => {
+    const { name } = this.props;
+    if (name === 'cash') {
+      window.location = URL.ATM_FOR_BUSINESS;
+    } else if (name === 'cash-for-business') {
+      window.location = URL.LANDING_BECOME_ATM;
+    }
+  }
+  scrollToFAQ() {
+    const faqNode = ReactDOM.findDOMNode(this.refs.faq)
+
+    if (faqNode && location.href.includes('#faq')) {
+      faqNode.scrollIntoView({
+          behaviour: 'smooth',
+          block: 'start',
+          inline: 'center',
+      });
+    }
+  }
+  componentDidMount() {
+    this.scrollToFAQ();
+  }
+
+  renderDisclaim(name) {
+    return (
+      <div className="row">
+        <div className="col">
+          <div className="pd-disclaim">Disclaimer</div>
+          <div className="pd-small-content">
+            <FormattedMessage id={`landing_page.${name}.disclaim`} />
+          </div>
+          <p className="pd-small-content">Need more information? Check out our <a href="#faq"
+          >FAQ</a> and <a href="http://ninja.org/pex/instructions">instructions</a> on how to play.</p>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const { messages, locale } = this.props.intl;
     const {
@@ -69,6 +108,9 @@ class Index extends React.PureComponent {
       messages[`landing_page.${name}.btnSubmitEmail`] || 'Submit';
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     const faq = messages[`landing_page.${name}.faq`];
+    const disclaim = messages[`landing_page.${name}.disclaim`];
+    const btnBecomeAtm = messages[`landing_page.${name}.btnBecomeAtm`];
+    const btnJoinTelegram = messages[`landing_page.${name}.btnJoinTelegram`];
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
@@ -142,11 +184,21 @@ class Index extends React.PureComponent {
                           </div>
                           </div>
 
-                          <button className="btnTelegram"
-                          onClick={()=> {
-                            this.openTelegram();
-                          }}
-                          >Join the dojo on Telegram</button>
+                          {
+                            btnBecomeAtm ? (
+                              <button className="btnTelegram" type="button"
+                                      onClick={()=> {
+                                        this.becomeAtm();
+                                      }}
+                              ><FormattedHTMLMessage id={`landing_page.${name}.btnBecomeAtm`} /></button>
+                            ) : btnJoinTelegram ?  (
+                              <button className="btnTelegram"
+                                      onClick={()=> {
+                                        this.openTelegram();
+                                      }}
+                              >Join the dojo on Telegram</button>
+                            ) : null
+                          }
 
                         </div>
                         <div className="mt-4 text-email">
@@ -208,7 +260,7 @@ class Index extends React.PureComponent {
           }
           {
             faq && (
-              <div className="row">
+              <div className="row mt-5" id="faq" ref="faq" >
                 <div className="col">
                   <div className="pd-faq">
                     {messages.COIN_EXCHANGE_LP_FAQ_TITLE}
@@ -229,6 +281,7 @@ class Index extends React.PureComponent {
               </div>
             )
           }
+          {disclaim && this.renderDisclaim(name)}
         </div>
       </LandingWrapper>
     );

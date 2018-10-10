@@ -13,4 +13,4 @@ export const updateSubscribeResult = (result) => {
     _path: 'ui.subscribeExtension',
     _value: result,
   });
-}
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { URL } from '@/constants';
 import BrowserDetect from '@/services/browser-detect';
 import { updateModal } from '@/reducers/app/action';
 // components
@@ -11,6 +12,7 @@ import Alert from '@/components/core/presentation/Alert';
 import Loading from '@/components/core/controls/Loading';
 import WalletPasscode from '@/components/Wallet/WalletPasscode'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import QRCodeScan from '@/components/Wallet/QRCodeScan/QRCodeScan';
 
 class MainLayout extends React.Component {
   static propTypes = {
@@ -53,7 +55,7 @@ class MainLayout extends React.Component {
   renderNavigation = (props) => {
     const { isDesktop } = BrowserDetect;
     const { name } = (window.name !== '' && JSON.parse(window.name));
-    if (isDesktop || name) return null;
+    if (isDesktop || name || (props.location.pathname === URL.PEX_EXTENSION)) return null;
     return (
       <Navigation location={props.location} />
     );
@@ -73,6 +75,7 @@ class MainLayout extends React.Component {
         <Alert />
         <Loading />
         <WalletPasscode />
+        <QRCodeScan />
         <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
           {title && <ModalHeader toggle={this.handleToggleModal}>{title}</ModalHeader>}
           <ModalBody>
