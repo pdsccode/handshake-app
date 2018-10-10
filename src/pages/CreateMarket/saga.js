@@ -117,88 +117,54 @@ function* saveGenerateShareLinkToStore(data) {
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     yield put(updateCreateEventLoading(true));
-    const balanceInvalid = yield call(isBalanceInvalid);
-    if (balanceInvalid) {
-      yield put(showAlert({
-        message: MESSAGE.NOT_ENOUGH_GAS.replace('{{value}}', balanceInvalid),
-      }));
+
+    if (!isNew) {
+      // Add new outcomes
+      const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 1 }));
+      const { eventId } = values;
+      const addOutcomeResult = yield call(handleAddOutcomesSaga, {
+        eventId,
+        newOutcomeList,
+      });
+      if (!addOutcomeResult.error) {
+        const outcomeId = addOutcomeResult.data[0].id;
+        const eventName = addOutcomeResult.data[0].name;
+        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+      }
     } else {
-      const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-      if (!isNew) {
-        // Add new outcomes
-        const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 1 }));
-        const { eventId } = values;
-        const addOutcomeResult = yield call(handleAddOutcomesSaga, {
-          eventId,
-          newOutcomeList,
-        });
-        if (!addOutcomeResult.error) {
-          const inputData = addOutcomeResult.data.map(o => {
-            return {
-              fee: values.creatorFee,
-              source: `${values.reports || '-'}`,
-              closingTime: values.closingTime,
-              reportTime: values.reportingTime,
-              disputeTime: values.disputeTime,
-              offchain: o.id,
-              contractAddress: o.contract.contract_address,
-              contractName: o.contract.json_name,
-            };
-          });
-          const outcomeId = addOutcomeResult.data[0].id;
-          const eventName = addOutcomeResult.data[0].name;
-          yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-          betHandshakeHandler.createNewEvent(inputData);
-        }
-      } else {
-        // Create new event
-        const reportSource = {
-          source_id: selectedSource,
-          source: selectedSource ? undefined : {
-            name: '',
-            url: values.reports,
-          },
-        };
-        Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
-        const newEventData = {
-          homeTeamName: values.homeTeamName || '',
-          awayTeamName: values.awayTeamName || '',
-          homeTeamCode: values.homeTeamCode || '',
-          awayTeamCode: values.awayTeamCode || '',
-          homeTeamFlag: values.homeTeamFlag || '',
-          awayTeamFlag: values.awayTeamFlag || '',
-          name: values.eventName,
-          public: 1,
-          date: values.closingTime,
-          reportTime: values.reportingTime,
-          disputeTime: values.disputeTime,
-          market_fee: values.creatorFee,
-          outcomes: values.outcomes,
-          category_id: 7, // values.category.id, hard-code for now
-          ...reportSource,
-        };
-        const { data } = yield call(handleCreateNewEventSaga, { newEventData });
-        if (data && data.length) {
-          const eventData = data[0];
-          const { contract } = eventData;
-          console.log('Contract:', contract);
-          const inputData = eventData.outcomes.map(o => {
-            return {
-              fee: eventData.market_fee,
-              source: eventData.source_name,
-              closingTime: eventData.date,
-              reportTime: eventData.reportTime,
-              disputeTime: eventData.disputeTime,
-              offchain: o.id,
-              contractAddress: contract.contract_address,
-              contractName: contract.json_name,
-            };
-          });
-          const outcomeId = eventData.outcomes[0].id;
-          const eventName = eventData.name;
-          yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-          betHandshakeHandler.createNewEvent(inputData);
-        }
+      // Create new event
+      const reportSource = {
+        source_id: selectedSource,
+        source: selectedSource ? undefined : {
+          name: '',
+          url: values.reports,
+        },
+      };
+      Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
+      const newEventData = {
+        homeTeamName: values.homeTeamName || '',
+        awayTeamName: values.awayTeamName || '',
+        homeTeamCode: values.homeTeamCode || '',
+        awayTeamCode: values.awayTeamCode || '',
+        homeTeamFlag: values.homeTeamFlag || '',
+        awayTeamFlag: values.awayTeamFlag || '',
+        name: values.eventName,
+        public: 1,
+        date: values.closingTime,
+        reportTime: values.reportingTime,
+        disputeTime: values.disputeTime,
+        market_fee: values.creatorFee,
+        outcomes: values.outcomes,
+        category_id: 7, // values.category.id, hard-code for now
+        ...reportSource,
+      };
+      const { data } = yield call(handleCreateNewEventSaga, { newEventData });
+      if (data && data.length) {
+        const eventData = data[0];
+
+        const outcomeId = eventData.outcomes[0].id;
+        const eventName = eventData.name;
+        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
       }
     }
   } catch (e) {

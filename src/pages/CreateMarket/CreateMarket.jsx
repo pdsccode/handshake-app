@@ -91,7 +91,7 @@ class CreateMarket extends React.Component {
   renderComponent = (props, state) => {
     return (
       <React.Fragment>
-        <GasAlert insufficientGas={props.insufficientGas} />
+        {/*<GasAlert insufficientGas={props.insufficientGas} />*/}
         <div className={CreateMarket.displayName}>
           <Loading isLoading={props.isLoading} />
           {this.renderCreateEventForm(props, state)}
