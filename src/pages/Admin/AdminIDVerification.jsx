@@ -5,6 +5,7 @@ import { loadIDVerificationDocuments, updateIDVerificationDocument } from '@/red
 import Image from '@/components/core/presentation/Image';
 import { API_URL } from '@/constants';
 import Login from '@/components/handshakes/betting-event/Login';
+import moment from 'moment';
 
 import './Admin.scss';
 
@@ -115,6 +116,7 @@ class AdminIDVerification extends React.Component {
                 <th>Front Image</th>
                 <th>Back Image</th>
                 <th>Selfie Image</th>
+                <th>Upload Date</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -123,6 +125,7 @@ class AdminIDVerification extends React.Component {
                 const frontImage = `${IMAGE_BASE_URL}${item.front_image}`;
                 const backImage = `${IMAGE_BASE_URL}${item.back_image}`;
                 const selfieImage = `${IMAGE_BASE_URL}${item.selfie_image}`;
+                const uploadDate = moment(item.date_modified).format('MM/DD/YYYY');
 
                 return (
                   <tr key={`id_verification_item_${item.id}`} ref={(node) => { this.documentRef[item.id] = node; }}>
@@ -133,6 +136,7 @@ class AdminIDVerification extends React.Component {
                     <td><a href={frontImage} target="_blank" rel="noopener noreferrer">{item.front_image ? (<Image src={frontImage} />) : ''}</a></td>
                     <td><a href={backImage} target="_blank" rel="noopener noreferrer">{item.back_image ? (<Image src={backImage} />) : ''}</a></td>
                     <td><a href={selfieImage} target="_blank" rel="noopener noreferrer">{item.selfie_image ? (<Image src={selfieImage} />) : ''}</a></td>
+                    <td>{uploadDate}</td>
                     <td><a href="#" onClick={() => this.approve(item.id)}>Approve</a> / <a href="#" onClick={() => this.reject(item.id)}>Reject</a></td>
                   </tr>
                 );
