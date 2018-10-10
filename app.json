@@ -50,7 +50,10 @@
     },
     "WALLET_SECRET_KEY": {
       "required": true
-    }
+    },
+    "CDN_URL": {
+      "required": true
+    },
   },
   "formation": {
     "web": {
