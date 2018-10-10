@@ -97,7 +97,6 @@ class Prediction extends React.Component {
   getEventId = (props) => {
     const querystring = window.location.search.replace('?', '');
     const querystringParsed = qs.parse(querystring);
-    console.log('Query:', querystringParsed);
     const { match } = querystringParsed;
     return match || null;
   }
@@ -114,8 +113,6 @@ class Prediction extends React.Component {
         const matches = url.match(urlPattern);
         const source = matches && matches[0];
         props.dispatch(loadMatches({ source }));
-        //props.dispatch(loadRelevantEvents({ source }));
-
       }
     }
   }
@@ -136,7 +133,6 @@ class Prediction extends React.Component {
   checkFreeAvailabe(props) {
     const { freeBet = {} } = props;
     const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
-    //const { status } = lastItem;
     let isFreeAvailable = false;
 
     if (canFreeBet && freeAvailable > 0) {
@@ -309,7 +305,6 @@ class Prediction extends React.Component {
   renderRelevantEventList = (props) => {
     if (!props.isSharePage) return null;
     if (!props.relevantEvents || !props.relevantEvents.length) return null;
-    console.log('renderRelevantEventList RelevantEvent: ', props.relevantEvents);
     return (
       <div className="RelevantEventList">
         <div className="relevantTitle">Related events</div>
@@ -452,7 +447,6 @@ class Prediction extends React.Component {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {/*<Banner />*/}
         <PexCreateBtn />
         {this.renderReport(props)}
         {this.renderEventList(props)}
