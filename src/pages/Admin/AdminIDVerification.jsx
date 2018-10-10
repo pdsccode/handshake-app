@@ -8,7 +8,7 @@ import Login from '@/components/handshakes/betting-event/Login';
 
 import './Admin.scss';
 
-const IMAGE_BASE_URL = 'https://storage.googleapis.com/hoai-test/';
+const IMAGE_BASE_URL = 'https://cdn.ninja.org/';
 const DOCUMENT_TYPES = [
   'Passport',
   'Driver License',
@@ -50,6 +50,10 @@ class AdminIDVerification extends React.Component {
     }, () => {
       this.fetchDocuments();
     });
+  }
+
+  componentDidUpdate() {
+    this.token = this.getAdminHash() || '';
   }
 
   getAdminHash() {
