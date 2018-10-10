@@ -262,6 +262,7 @@ export const API_URL = {
     CANCEL_ATM_CASH_TRANSFER: 'exchange/cash/order', // DELETE /cash/order/{id}
     GET_CASH_CENTER_BANK: 'exchange/cash/center', // GET /cash/center/HK (HK === country code)
     BUY_CRYPTO_COD: 'placeholer/buy_crypto_cod',
+    BUY_CRYPTO_GET_COIN_INFO: 'exchange/coin/quote', // GET /coin/quote?amount=0.1&currency=ETH&fiat_currency=VND
   },
   SEED: {
     BASE: 'seed',
