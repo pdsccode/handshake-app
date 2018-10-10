@@ -49,12 +49,10 @@ class AdminIDVerification extends React.Component {
     this.setState({
       login: newLogin,
     }, () => {
-      this.fetchDocuments();
+      setTimeout(() => {
+        this.fetchDocuments();
+      }, 500);
     });
-  }
-
-  componentDidUpdate() {
-    this.token = this.getAdminHash() || '';
   }
 
   getAdminHash() {
@@ -65,6 +63,7 @@ class AdminIDVerification extends React.Component {
     if (!this.state.login) {
       return;
     }
+    this.token = this.token || this.getAdminHash() || '';
     this.props.loadIDVerificationDocuments({
       PATH_URL: `${API_URL.ID_VERIFICATION.GET_DOCUMENTS}`,
       headers: { AdminHash: this.token },
@@ -122,9 +121,9 @@ class AdminIDVerification extends React.Component {
             </thead>
             <tbody>
               {documents.map((item, i) => {
-                const frontImage = `${IMAGE_BASE_URL}${item.front_image}`;
-                const backImage = `${IMAGE_BASE_URL}${item.back_image}`;
-                const selfieImage = `${IMAGE_BASE_URL}${item.selfie_image}`;
+                const frontImage = `${IMAGE_BASE_URL}/${item.front_image}`;
+                const backImage = `${IMAGE_BASE_URL}/${item.back_image}`;
+                const selfieImage = `${IMAGE_BASE_URL}/${item.selfie_image}`;
                 const uploadDate = moment(item.date_modified).format('MM/DD/YYYY');
 
                 return (
