@@ -27,13 +27,15 @@ export const CRYPTO_ICONS = {
   '': iconUsd,
 };
 
-export const CASH_ORDER_STATUS = {
-  PROCESSING: 'processing',
-  SUCCESS: 'success',
-  TRANSFERRING: 'transferring',
-  CANCELLED: 'cancelled',
-  FAILED: 'transfer_failed',
+export const COIN_ORDER_STATUS = {
+  PENDING:           'pending',
+  PROCESSING:        'processing',
   FIAT_TRANSFERRING: 'fiat_transferring',
+  CANCELLED:         'cancelled',
+  EXPIRED:           'expired',
+  TRANSFERRING:      'transferring',
+  TRANSFER_FAILED:   'transfer_failed',
+  SUCCESS:           'success',
 };
 
 class TransactionItem extends React.Component {
@@ -127,7 +129,7 @@ class TransactionItem extends React.Component {
                 }
               </div>*/}
 
-              {status === CASH_ORDER_STATUS.PROCESSING && (
+              {status === COIN_ORDER_STATUS.PROCESSING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
                   <span className="transfer-now" onClick={() => this.props.onShowTransferInfo(this.state.transaction)}>{messages.create.atm.transactions.transferNow}</span>
@@ -180,7 +182,7 @@ class TransactionItem extends React.Component {
               </div>
             </div>
             {
-              status === CASH_ORDER_STATUS.PROCESSING && (
+              status === COIN_ORDER_STATUS.PROCESSING && (
                 <div className="d-table w-100" style={{ textAlign: 'center' }}>
                   <ConfirmButton
                     onConfirm={this.onCancelOrder}
