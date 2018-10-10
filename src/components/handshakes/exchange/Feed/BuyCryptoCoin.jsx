@@ -29,6 +29,7 @@ import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
+import WalletSelector from '@/components/handshakes/exchange/Feed/components/WalletSelector';
 import Modal from '@/components/core/controls/Modal/Modal';
 
 import '../styles.scss';
@@ -140,6 +141,7 @@ class BuyCryptoCoin extends React.Component {
       modalContent: null,
       modalTitle: null,
       fiatCurrency: null,
+      walletAddress: null,
     };
 
     this.modalRef = null;
@@ -290,6 +292,7 @@ class BuyCryptoCoin extends React.Component {
 
   makeOrder = (info = {}) => {
     const { coinInfo, paymentMethod, amount, currency, address, noteAndTime } = this.props;
+    const { walletAddress } = this.state;
     const data = {
       type: info.paymentMethod || paymentMethod,
       amount: String(info.amount || amount),
@@ -298,7 +301,7 @@ class BuyCryptoCoin extends React.Component {
       fiat_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
       fiat_local_amount: String(info.fiatLocalAmount || coinInfo.fiatLocalAmount),
       fiat_local_currency: info.fiatLocalCurrencyId || coinInfo.fiatLocalCurrency,
-      address: info.address || '0x94259932A5a454294D708785273A103a156338F3',
+      address: info.address || walletAddress,
     };
 
     if (data.type === PAYMENT_METHODS.COD) {
@@ -339,6 +342,10 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
+  onWalletChange = (walletAddress) => {
+    this.setState({ walletAddress });
+  }
+
   handleBuyViaTransfer = (order = {}) => {
     const { bankInfo, country } = this.props;
     let bankData = {};
@@ -369,6 +376,7 @@ class BuyCryptoCoin extends React.Component {
 
   handleBuyPackage = (item = {}) => {
     const { currency } = this.props;
+    const { walletAddress } = this.state;
     const data = {
       paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
       amount: String(this.getAmountFromFiatAmount(item.fiatAmount, currency.id)),
@@ -377,7 +385,7 @@ class BuyCryptoCoin extends React.Component {
       fiatCurrencyId: FIAT_CURRENCY.USD,
       fiatLocalAmount: String(item.fiatAmount),
       fiatLocalCurrencyId: FIAT_CURRENCY.USD,
-      address: '0x94259932A5a454294D708785273A103a156338F3',
+      address: walletAddress,
     };
     this.makeOrder(data);
   }
@@ -465,6 +473,7 @@ class BuyCryptoCoin extends React.Component {
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
+              <WalletSelector onWalletChange={this.onWalletChange} />
               <div className="input-group mt-4">
                 <Field
                   name="amount"
