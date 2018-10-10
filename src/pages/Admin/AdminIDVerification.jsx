@@ -8,7 +8,7 @@ import Login from '@/components/handshakes/betting-event/Login';
 
 import './Admin.scss';
 
-const IMAGE_BASE_URL = 'https://cdn.ninja.org/';
+const IMAGE_BASE_URL = process.env.CDN_URL;
 const DOCUMENT_TYPES = [
   'Passport',
   'Driver License',
