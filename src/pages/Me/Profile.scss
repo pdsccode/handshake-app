@@ -109,6 +109,10 @@
         }
         .progress {
           height: rem-calc(25px);
+          .progress-bar.active, .progress.active .progress-bar {
+            -webkit-animation: progress-bar-stripes 2s linear infinite;
+            animation: progress-bar-stripes 2s linear infinite;
+          }
         }
       }
     }

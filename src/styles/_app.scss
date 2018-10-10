@@ -226,8 +226,3 @@
     transform: translate(-50%, -50%);
   }
 }
-
-.progress-bar.active, .progress.active .progress-bar {
-  -webkit-animation: progress-bar-stripes 2s linear infinite;
-  animation: progress-bar-stripes 2s linear infinite;
-}
