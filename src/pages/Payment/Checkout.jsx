@@ -12,6 +12,8 @@ import { MasterWallet } from "@/services/Wallets/MasterWallet";
 import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
 import iconClock from '@/assets/images/icon/pay/clock.svg';
 import Countdown from '@/components/Countdown/Countdown';
+import { set, getJSON } from 'js-cookie';
+import { PAYMENT_REMIND } from '@/constants';
 
 // style
 import './Checkout.scss';
@@ -67,6 +69,11 @@ class Checkout extends React.Component {
     this.props.hideLoading();
 
     this.getBalanceWallets();
+    this.remindPayment();
+  }
+
+  remindPayment = () => {
+    set(PAYMENT_REMIND, JSON.stringify({url:window.location.href, time: new Date().getTime()}));
   }
 
   getBalanceWallets = async () => {

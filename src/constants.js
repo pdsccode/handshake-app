@@ -963,6 +963,7 @@ export const Country = {
   AN: 'ANG',
 };
 
+export const PAYMENT_REMIND = 'payment_remind';
 export const CUSTOMER_ADDRESS_INFO = 'CUSTOMER_ADDRESS_INFO';
 export const AUTONOMOUS_END_POINT = {
   BASE: 'https://www.autonomous.ai/api-v2',

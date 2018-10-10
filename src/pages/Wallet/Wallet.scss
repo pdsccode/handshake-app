@@ -109,6 +109,24 @@
     z-index: 1;
   }
 
+  .float-button-remind-payment{
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    z-index: 1;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight:400;
+    line-height: 1.5;
+    border-radius: 1.5rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    color: seashell;
+    background-color: #00a093;
+    border-color: #bae0dd;
+  }
+
   .modal-custom-header{
     img:first-child {
       margin-right: 15px;
@@ -201,6 +219,7 @@
   font-size: 18px;
 }
 
+
 .category-wrapper {
   margin-bottom: rem-calc(42px);
 }
@@ -292,6 +311,15 @@
 .col-sm-6 {
     flex: 0 0 50%;
     max-width: 50%;
+}
+
+.remind-checkout-wrapper{
+  margin:2rem 0;
+  padding:0 1rem;
+
+  .text{
+    padding-bottom: 1rem;
+  }
 }
 
 .sendwallet-wrapper{
@@ -909,6 +937,11 @@
   background :#c0c0c0;
   border-color: #c0c0c0;
   border: none;
+}
+
+.closeIcon{
+  padding-right:0.5rem;
+  padding-top:0.5rem;
 }
 
 @media (max-width: 374px) {

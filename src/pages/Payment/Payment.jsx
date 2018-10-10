@@ -20,7 +20,9 @@ import { showAlert, showLoading, hideLoading } from '@/reducers/app/action';
 import ReactBottomsheet from 'react-bottomsheet';
 import HeaderMore from './HeaderMore';
 import qs from 'querystring';
+import { set, getJSON } from 'js-cookie';
 import { ICON } from '@/styles/images';
+import { PAYMENT_REMIND } from '@/constants';
 
 // style
 import './Payment.scss';
@@ -300,6 +302,8 @@ class Payment extends React.Component {
   }
 
   closeCheckout = () => {
+    set(PAYMENT_REMIND, '');
+
     if(this.state.isCryptoCurrency){
       if(this.state.fullBackUrl && this.state.modalCheckout){
         window.location.href = this.state.fullBackUrl;
@@ -321,6 +325,7 @@ class Payment extends React.Component {
       modalCheckout: ''
       }, () => {
         this.modalCompleteRef.open();
+        set(PAYMENT_REMIND, "");
       }
     );
   }
