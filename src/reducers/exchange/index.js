@@ -153,6 +153,14 @@ function exchangeReducter(state = {
         cashStoreTransaction: list.filter(handshake => handshake.offerFeedType === 'cash_order'),
       };
     }
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_NINJA_COIN}_SUCCESS`: {
+      const list = handleListPayload(action.payload.data.handshakes);
+
+      return {
+        ...state,
+        cashStoreTransaction: list.filter(handshake => handshake.offerFeedType === 'coin'),
+      };
+    }
     case `${EXCHANGE_ACTIONS.BUY_CRYPTO_COD}_SUCCESS`: {
       // PLACEHOLDER BUY_CRYPTO_COD
       return {
