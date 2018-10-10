@@ -142,6 +142,7 @@ class BuyCryptoCoin extends React.Component {
       forcePaymentMethod: null,
       modalContent: null,
       modalTitle: null,
+      fiatCurrency: null,
     };
 
     this.modalRef = null;
@@ -185,15 +186,21 @@ class BuyCryptoCoin extends React.Component {
     }
 
     if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
+      // if fiatAmount over limit => force use USD
+      if (this.isOverLimit(coinInfo.fiatAmount)) {
+        this.updateFiatAmount(coinInfo.fiatAmount);
+        this.updateFiatCurrency(coinInfo.fiatCurrency);
+        return;
+      }
+
       // show fiatAmount for bank mode
       if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
         this.updateFiatAmount(coinInfo.fiatLocalAmount);
-        this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
       } else if (paymentMethod === PAYMENT_METHODS.COD) {
         // show fiatAmount for COD mode
         this.updateFiatAmount(coinInfo.fiatLocalAmountCod);
-        this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
       }
+      this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
     }
 
     this.setState({ ...state });
@@ -220,9 +227,19 @@ class BuyCryptoCoin extends React.Component {
 
   updateFiatAmount = (amount) => {
     this.setState({
-      fiatAmount: amount,
+      fiatAmount: Number.parseFloat(amount),
     });
     amount && this.props.rfChange(nameBuyCryptoForm, 'fiatAmount', Number.parseFloat(amount) || 0);
+  }
+
+  isOverLimit = (amountInUsd) => {
+    const { coinInfo } = this.props;
+    const amount = amountInUsd || coinInfo?.fiatAmount;
+    if (typeof amount === 'number' && typeof coinInfo.limit === 'number') {
+      return amount > coinInfo?.limit;
+    }
+    console.warn('Expected comparing between numbers!');
+    return false;
   }
 
   showLoading = () => {
@@ -322,9 +339,9 @@ class BuyCryptoCoin extends React.Component {
   }
 
   renderCoD = () => {
-    const { messages } = this.props.intl;
+    const { intl: { messages }, paymentMethod } = this.props;
     return (
-      <div className="choose-coin-cod-form">
+      <div className={`choose-coin-cod-form ${paymentMethod === PAYMENT_METHODS.COD ? 'show' : 'hidden'}`}>
         <div className="input-group mt-4">
           <Field
             type="text"
@@ -344,14 +361,6 @@ class BuyCryptoCoin extends React.Component {
             component={fieldTextArea}
             validate={[required]}
           />
-          <div className="input-group mt-2">
-            <ConfirmButton
-              label={messages.create.cod_form.buy_btn}
-              buttonClassName="buy-btn"
-              containerClassName="buy-btn-container"
-              onConfirm={this.onBuy}
-            />
-          </div>
         </div>
       </div>
     );
@@ -461,13 +470,14 @@ class BuyCryptoCoin extends React.Component {
                   disabled={forcePaymentMethod}
                 />
               </div>
-              {paymentMethod === PAYMENT_METHODS.COD ? this.renderCoD() : (
-                <div className="mt-3 mb-3">
-                  <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
-                    <img alt="" src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
-                  </button>
-                </div>
-              )}
+              {this.renderCoD()}
+              <div className="input-group mt-2">
+                <ConfirmButton
+                  label={`${messages.create.cod_form.buy_btn} ${amount} ${CRYPTO_CURRENCY_NAME[currency]}`}
+                  buttonClassName="buy-btn"
+                  containerClassName="buy-btn-container"
+                />
+              </div>
             </FormBuyCrypto>
           </div>
 

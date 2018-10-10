@@ -1,6 +1,16 @@
 .choose-coin {
   margin-bottom: 60px;
   background-color: #ffffff;
+  .buy-btn {
+    padding: 10px 30px;
+    font-size: 15px;
+    color: white;
+    width: 100%;
+  }
+  .buy-btn-container {
+    text-align: center;
+    width: 100%;
+  }
   .specific-amount {
     padding: 10px;
     background: linear-gradient(0deg, #85A1F8 0%, #617BFF 100%);
@@ -161,15 +171,16 @@
     }
   }
   .choose-coin-cod-form {
-    .buy-btn {
-      padding: 10px 30px;
-      font-size: 15px;
-      color: white;
-      width: 100%;
+    transition: height 300ms, opacity 300ms;
+    transition-timing-function: ease-in-out;
+    &.show {
+      height: 150px;
+      opacity: 1;
     }
-    .buy-btn-container {
-      text-align: center;
-      width: 100%;
+    &.hidden {
+      height: 0px;
+      opacity: 0;
+      overflow: hidden;
     }
   }
 }
