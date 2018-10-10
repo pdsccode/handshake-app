@@ -18,6 +18,7 @@ import {
   buyCryptoOrder,
   buyCryptoGetCoinInfo,
   buyCryptoGetBankInfo,
+  buyCryptoSaveRecipt
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
 import { showAlert } from '@/reducers/app/action';
@@ -263,8 +264,15 @@ class BuyCryptoCoin extends React.Component {
     this.setState({ isLoading: loadingState });
   }
 
-  onReceiptSaved = () => {
-    this.modalRef.close();
+  saveReceiptHandle = ({ data, successFn, errorFn }) => {
+    const { order } = this.props;
+    this.props.buyCryptoSaveRecipt({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_SAVE_RECEIPT}/${order?.id}`,
+      METHOD: 'POST',
+      data,
+      successFn,
+      errorFn,
+    });
   }
 
   getCoinInfo = ({ amount, fiatCurrencyId, currencyId, isGetBasePrice }) => {
@@ -367,7 +375,14 @@ class BuyCryptoCoin extends React.Component {
       receipt.fiatCurrency = order.fiatLocalCurrency;
     }
     this.setState({
-      modalContent: <AtmCashTransferInfo receipt={receipt} bankInfo={bankData} />,
+      modalContent: (
+        <AtmCashTransferInfo
+          receipt={receipt}
+          bankInfo={bankData}
+          saveReceiptHandle={this.saveReceiptHandle}
+          onDone={() => this.modalRef.close()}
+        />
+      ),
       modalTitle: 'Bank Transfer',
     }, () => {
       this.modalRef.open();
@@ -565,6 +580,7 @@ const mapDispatchToProps = (dispatch) => ({
   buyCryptoOrder: bindActionCreators(buyCryptoOrder, dispatch),
   buyCryptoGetCoinInfo: bindActionCreators(buyCryptoGetCoinInfo, dispatch),
   buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
+  buyCryptoSaveRecipt: bindActionCreators(buyCryptoSaveRecipt, dispatch),
 });
 
 BuyCryptoCoin.defaultProps = {
@@ -595,6 +611,7 @@ BuyCryptoCoin.propTypes = {
   address: PropTypes.string,
   noteAndTime: PropTypes.string,
   buyCryptoOrder: PropTypes.func.isRequired,
+  buyCryptoSaveRecipt: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));

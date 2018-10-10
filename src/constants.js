@@ -264,6 +264,7 @@ export const API_URL = {
     BUY_CRYPTO_ORDER: 'exchange/coin/order', // POST /coin/order
     BUY_CRYPTO_GET_COIN_INFO: 'exchange/coin/quote', // GET /coin/quote?amount=0.1&currency=ETH&fiat_currency=VND
     BUY_CRYPTO_GET_BANK_INFO: 'exchange/coin/center', // GET /coin/center/XX
+    BUY_CRYPTO_SAVE_RECEIPT: 'exchange/coin', // POST /coin/{id}
   },
   SEED: {
     BASE: 'seed',

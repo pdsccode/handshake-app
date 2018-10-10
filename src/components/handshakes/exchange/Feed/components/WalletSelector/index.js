@@ -17,19 +17,24 @@ export default class WalletSelector extends Component {
 
   onChange = (e) => {
     const address = e?.target?.value;
-    this.setState({ walletSelected: address }, () => {
-      const { onWalletChange } = this.props;
-      if (typeof onWalletChange === 'function') {
-        onWalletChange(address);
-      }
-    });
+    this.changeWalletAddress(address);
   }
 
   getListWallets = async () => {
     const currency = 'ETH';
     const walletDefault = await MasterWallet.getWalletDefault(currency);
     const wallets = MasterWallet.getMasterWallet();
-    this.setState({ wallets, walletSelected: walletDefault?.address });
+    this.changeWalletAddress(walletDefault?.address);
+    this.setState({ wallets });
+  }
+
+  changeWalletAddress = (address) => {
+    this.setState({ walletSelected: address }, () => {
+      const { onWalletChange } = this.props;
+      if (typeof onWalletChange === 'function') {
+        onWalletChange(address);
+      }
+    });
   }
 
   renderWallets = () => {
