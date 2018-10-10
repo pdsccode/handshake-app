@@ -64,6 +64,7 @@ const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), 
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
 const RouterBuyCryptoCoin = createDynamicImport(() => import('@/components/Router/BuyCryptoCoin'), Loading);
+const RouterBuyCryptoCoinTransaction = createDynamicImport(() => import('@/components/handshakes/exchange/BuyCoinTransaction/Transaction'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
@@ -91,6 +92,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   // { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
   { path: URL.BUY_COIN_URL, component: RouterBuyCryptoCoin },
+  { path: URL.BUY_COIN_TRANSACTION_URL, component: RouterBuyCryptoCoinTransaction },
 
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
