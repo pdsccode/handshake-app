@@ -60,6 +60,7 @@ const ContentForPayForDevsGetStarted = createDynamicImport(() => import('@/pages
 const ContentForWallet = createDynamicImport(() => import('@/pages/LandingPage/ContentForWallet'), Loading);
 const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPrediction'), Loading);
 const ContentForPexInstruction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPexInstruction'), Loading);
+const LuckyDrawMechanic = createDynamicImport(() => import('@/pages/LuckyDrawMechanic/LuckyDrawMechanic'), Loading);
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
@@ -103,6 +104,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CASH_STORE_URL, component: RouterCreateCashStore },
 
   { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
+  { path: URL.PEX_EXTENSION, component: PexExtension },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -137,6 +139,8 @@ if (BrowserDetect.isDesktop) {
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
     { path: URL.INTERNAL_ADMIN_URL, component: RouterInternalAdmin },
     { path: URL.ADMIN_ID_VERIFICATION, component: RouterAdminIDVerification },
+    { path: URL.PEX_LUCKY_DRAW_MECHANIC_URL, component: LuckyDrawMechanic },
+
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
@@ -196,6 +200,7 @@ class Router extends React.Component {
           }}
           />
           <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
+          <Route path={URL.PEX_LUCKY_DRAW_MECHANIC_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<LuckyDrawMechanic />} />} />
           <Route path={URL.LANDING_BECOME_ATM} render={() => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} />} />
           {routesUsingDesktopLayout}
 
