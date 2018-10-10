@@ -1,0 +1,63 @@
+@import './src/styles/style';
+
+.wrapperMechanicLuckyDraw {
+  font-family: $font-family-base;
+  font-size: rem-calc(14px);
+  color: #484848;
+  line-height: 30px;
+
+  .wrapperLuckyDraw {
+    display: flex;
+    .wrapperContent {
+      width: 70%;
+      margin-top: 35px;
+    }
+    .wrapperImage {
+      width: 30%;
+    }
+    .wrapperluckyDrawTitle {
+      position: relative;
+    }
+    .luckyDrawContent {
+      margin-top: 20px;
+    }
+
+    .yellowLine {
+      width: 198px;
+      height: 7px;
+      background-color: #F6DA25;
+      position: absolute;
+
+    }
+    .one {
+      top: -4px;
+      left: 0;
+    }
+    .two {
+      top: 9px;
+      left: 0;
+    }
+    .luckyDrawTitle {
+      font-size: rem-calc(35px);
+      font-weight: 800;
+    }
+  }
+  .wrapperTermCondition {
+    font-size: rem-calc(11px);
+
+  }
+  .wrapperMechanic {
+
+    .mechanicTitle {
+      font-size: rem-calc(20px);
+    }
+
+  }
+  .wrapperHeader {
+    margin-top: 20px;
+    .headerImage {
+      margin-bottom: 50px;
+    }
+  }
+
+}
