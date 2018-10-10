@@ -1730,7 +1730,7 @@ export default {
       description: 'Ninja has some of the best prices around',
       common_packages: 'Common packages:',
       payment_methods: {
-        bank_transfer: 'Bank Transfer',
+        bank: 'Bank Transfer',
         cod: 'COD',
       },
     },

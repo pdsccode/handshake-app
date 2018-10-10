@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import BuyCryptoCoinInfoModel from '@/models/BuyCryptoCoinInfo';
+import BuyCryptoCoinModel from '@/models/BuyCryptoCoin';
 import { BUY_COIN_ACTIONS } from './action';
 
 const initialState = {
@@ -29,12 +29,20 @@ const buyCoinReducter = (state = initialState, action) => {
       }
       return {
         ...state,
-        coinInfo: { ...BuyCryptoCoinInfoModel.parseRes(action?.payload?.data) },
+        coinInfo: { ...BuyCryptoCoinModel.parseCoinInfo(action?.payload?.data) },
       };
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_BANK_INFO}_SUCCESS`:
       return {
         ...state,
-        bankInfo: { ...action?.payload?.data[0] },
+        bankInfo: {
+          ...state.bankInfo,
+          [action?.payload?.data[0]?.country]: { ...action?.payload?.data[0]?.information },
+        },
+      };
+    case `${BUY_COIN_ACTIONS.BUY_CRYPTO_ORDER}_SUCCESS`:
+      return {
+        ...state,
+        order: { ...BuyCryptoCoinModel.parseOrder(action?.payload?.data) },
       };
     default:
       return state;
