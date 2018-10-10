@@ -405,6 +405,45 @@ export const showPopupGetGPSPermission = () => (dispatch) => {
   }
 }
 
+const continueAfterInitApp = (language, ref, dispatch, data) => {
+  const ipInfoRes = { language: 'en', bannedPrediction: false, bannedCash: false };
+  const languageSaved = local.get(APP.LOCALE);
+
+  if (!languageSaved) {
+    ipInfoRes.language = data.languages?.split(',')?.[0] || 'en';
+  } else {
+    ipInfoRes.language = languageSaved;
+  }
+
+  const completedLanguage = language || ipInfoRes.language;
+
+  if (APP.isSupportedLanguages.indexOf(completedLanguage) >= 0) {
+    dispatch(setLanguage(completedLanguage, !language));
+  }
+
+  if (process.env.isProduction) {
+    // should use country code: .country ISO 3166-1 alpha-2
+    // https://ipapi.co/api/#complete-location
+    if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {
+      ipInfoRes.bannedPrediction = true;
+      dispatch(setBannedPrediction());
+    }
+    if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
+      ipInfoRes.bannedCash = true;
+      dispatch(setBannedCash());
+    }
+  }
+
+  auth({ ref, dispatch })
+    .then(() => {
+      dispatch(setRootLoading(false));
+    })
+    .catch(() => {
+      // TO-DO: handle error
+      dispatch(setRootLoading(false));
+    });
+};
+
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
   try {
@@ -466,46 +505,47 @@ export const initApp = (language, ref) => (dispatch) => {
 
       dispatch(setIpInfo(ipInfo));
 
-      const ipInfoRes = { language: 'en', bannedPrediction: false, bannedCash: false };
-      const languageSaved = local.get(APP.LOCALE);
-
-      if (!languageSaved) {
-        ipInfoRes.language = data.languages.split(',')?.[0] || 'en';
-      } else {
-        ipInfoRes.language = languageSaved;
-      }
-
-      const completedLanguage = language || ipInfoRes.language;
-
-      if (APP.isSupportedLanguages.indexOf(completedLanguage) >= 0) {
-        dispatch(setLanguage(completedLanguage, !language));
-      }
-
-      if (process.env.isProduction) {
-        // should use country code: .country ISO 3166-1 alpha-2
-        // https://ipapi.co/api/#complete-location
-        if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {
-          ipInfoRes.bannedPrediction = true;
-          dispatch(setBannedPrediction());
-        }
-        if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
-          ipInfoRes.bannedCash = true;
-          dispatch(setBannedCash());
-        }
-      }
-
-      auth({ ref, dispatch, ipInfo })
-        .then(() => {
-          dispatch(setRootLoading(false));
-        })
-        .catch(() => {
-          // TO-DO: handle error
-          dispatch(setRootLoading(false));
-        });
+      // const ipInfoRes = { language: 'en', bannedPrediction: false, bannedCash: false };
+      // const languageSaved = local.get(APP.LOCALE);
+      //
+      // if (!languageSaved) {
+      //   ipInfoRes.language = data.languages.split(',')?.[0] || 'en';
+      // } else {
+      //   ipInfoRes.language = languageSaved;
+      // }
+      //
+      // const completedLanguage = language || ipInfoRes.language;
+      //
+      // if (APP.isSupportedLanguages.indexOf(completedLanguage) >= 0) {
+      //   dispatch(setLanguage(completedLanguage, !language));
+      // }
+      //
+      // if (process.env.isProduction) {
+      //   // should use country code: .country ISO 3166-1 alpha-2
+      //   // https://ipapi.co/api/#complete-location
+      //   if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {
+      //     ipInfoRes.bannedPrediction = true;
+      //     dispatch(setBannedPrediction());
+      //   }
+      //   if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
+      //     ipInfoRes.bannedCash = true;
+      //     dispatch(setBannedCash());
+      //   }
+      // }
+      //
+      // auth({ ref, dispatch, ipInfo })
+      //   .then(() => {
+      //     dispatch(setRootLoading(false));
+      //   })
+      //   .catch(() => {
+      //     // TO-DO: handle error
+      //     dispatch(setRootLoading(false));
+      //   });
+      continueAfterInitApp(language, ref, dispatch, data);
     }).catch((e) => {
       // TO-DO: handle error
-      console.log(e);
       dispatch(setRootLoading(false));
+      continueAfterInitApp(language, ref, dispatch, {});
     });
   } catch (e) {
     console.log(e);
