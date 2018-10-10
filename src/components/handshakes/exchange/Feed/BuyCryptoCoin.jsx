@@ -19,6 +19,7 @@ import { required } from '@/components/core/form/validation';
 import {
   buyCryptoCod,
   buyCryptoGetCoinInfo,
+  buyCryptoGetBankInfo,
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
 import { showAlert } from '@/reducers/app/action';
@@ -30,6 +31,9 @@ import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
+import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
+import Modal from '@/components/core/controls/Modal/Modal';
+
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 
@@ -136,12 +140,19 @@ class BuyCryptoCoin extends React.Component {
       allowBuy: true,
       isLoading: false,
       forcePaymentMethod: null,
+      modalContent: null,
+      modalTitle: null,
     };
+
+    this.modalRef = null;
   }
 
   componentDidMount() {
     this.getCoinInfo({ isGetBasePrice: true, amount: 1 });
     this.updateFiatCurrency(this.props.currencyByLocal);
+    this.props.buyCryptoGetBankInfo({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/XX`,
+    });
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -158,6 +169,9 @@ class BuyCryptoCoin extends React.Component {
 
     if (currencyByLocal !== this.props.currencyByLocal) {
       this.updateFiatCurrency(currencyByLocal);
+      this.props.buyCryptoGetBankInfo({
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${currencyByLocal}`,
+      });
     }
 
     // get price of coin if amount or currency was changed
@@ -266,6 +280,47 @@ class BuyCryptoCoin extends React.Component {
     console.log('handleBuyCryptoCodFailed', e);
   }
 
+  onSubmit = () => {
+    const { paymentMethod } = this.props;
+    if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
+      const { fiatCurrency, fiatAmount } = this.props;
+      const receipt = {
+        createdAt: new Date(),
+        amount: fiatAmount,
+        fiatCurrency: fiatCurrency.id,
+      };
+      this.handleBuyViaTransfer(receipt);
+    }
+  }
+
+  renderBankInfo = () => {
+    const { modalContent, modalTitle } = this.state;
+    return (
+      <Modal title={modalTitle} onRef={modal => { this.modalRef = modal; }} onClose={() => {}}>
+        {modalContent || ''}
+      </Modal>
+    );
+  }
+
+  handleBuyViaTransfer = (receipt = {}) => {
+    const { bankInfo } = this.props;
+    this.setState({
+      modalContent: <AtmCashTransferInfo receipt={receipt} bankInfo={bankInfo} />,
+      modalTitle: 'Bank Transfer',
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleBuyPackage = (item = {}) => {
+    const receipt = {
+      createdAt: new Date(),
+      amount: item.fiatAmount,
+      fiatCurrency: FIAT_CURRENCY.USD,
+    };
+    this.handleBuyViaTransfer(receipt);
+  }
+
   renderCoD = () => {
     const { messages } = this.props.intl;
     return (
@@ -328,7 +383,7 @@ class BuyCryptoCoin extends React.Component {
                       <div className="p-amount">{this.getAmountFromFiatAmount(fiatAmount, currency) || '---'} {currency}</div>
                     </div>
                     <div className="d-table-cell align-middle text-right">
-                      <button className="btn btn-p-buy-now" onClick={() => alert('Implement!')}><FormattedMessage id="cc.btn.buyNow" /></button>
+                      <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
                     </div>
                   </div>
                   { index < listPackages.length - 1 && <hr /> }
@@ -354,7 +409,7 @@ class BuyCryptoCoin extends React.Component {
         </div>
         <div className="choose-coin">
           <div className="specific-amount">
-            <FormBuyCrypto onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
+            <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
               <div className="input-group mt-4">
@@ -417,6 +472,7 @@ class BuyCryptoCoin extends React.Component {
           </div>
 
           {this.renderPackages()}
+          {this.renderBankInfo()}
         </div>
       </div>
     );
@@ -433,6 +489,7 @@ const mapStateToProps = (state) => ({
   paymentMethod: selectorFormSpecificAmount(state, 'paymentMethod'),
   coinInfo: state.buyCoin?.coinInfo || {},
   basePrice: state.buyCoin?.basePrice || {},
+  bankInfo: state.buyCoin?.bankInfo?.information,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -440,19 +497,22 @@ const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   buyCryptoCod: bindActionCreators(buyCryptoCod, dispatch),
   buyCryptoGetCoinInfo: bindActionCreators(buyCryptoGetCoinInfo, dispatch),
+  buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
 });
 
 BuyCryptoCoin.defaultProps = {
   amount: 0,
+  fiatAmount: 0,
   paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
   fiatCurrency: defaultFiatCurrency,
   currency: defaultCurrency,
+  bankInfo: null,
 };
 
 BuyCryptoCoin.propTypes = {
   intl: PropTypes.object.isRequired,
   paymentMethod: PropTypes.string,
-  amount: PropTypes.number,
+  amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
   currencyByLocal: PropTypes.string.isRequired,
   rfChange: PropTypes.func.isRequired,
@@ -460,6 +520,9 @@ BuyCryptoCoin.propTypes = {
   fiatCurrency: PropTypes.object,
   coinInfo: PropTypes.object.isRequired,
   basePrice: PropTypes.object.isRequired,
+  bankInfo: PropTypes.object,
+  buyCryptoGetBankInfo: PropTypes.func.isRequired,
+  fiatAmount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));

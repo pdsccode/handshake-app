@@ -6,6 +6,7 @@ import { BUY_COIN_ACTIONS } from './action';
 const initialState = {
   coinInfo: {},
   basePrice: {},
+  bankInfo: {},
 };
 
 const buyCoinReducter = (state = initialState, action) => {
@@ -29,6 +30,11 @@ const buyCoinReducter = (state = initialState, action) => {
       return {
         ...state,
         coinInfo: { ...BuyCryptoCoinInfoModel.parseRes(action?.payload?.data) },
+      };
+    case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_BANK_INFO}_SUCCESS`:
+      return {
+        ...state,
+        bankInfo: { ...action?.payload?.data[0] },
       };
     default:
       return state;
