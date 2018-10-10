@@ -6,15 +6,17 @@
   color: #484848;
   line-height: 30px;
 
-  .wrapperLuckyDraw {
+  .desktop {
     display: flex;
+
+  }
+  .wrapperLuckyDraw {
+
     .wrapperContent {
-      width: 70%;
+      width: 100%;
       margin-top: 35px;
     }
-    .wrapperImage {
-      width: 30%;
-    }
+
     .wrapperluckyDrawTitle {
       position: relative;
     }
@@ -47,11 +49,14 @@
 
   }
   .wrapperMechanic {
+    margin-top: 20px;
 
     .mechanicTitle {
-      font-size: rem-calc(20px);
+      font-size: rem-calc(25px);
     }
-
+    .mechanicContent {
+      margin-top: 20px;
+    }
   }
   .wrapperHeader {
     margin-top: 20px;

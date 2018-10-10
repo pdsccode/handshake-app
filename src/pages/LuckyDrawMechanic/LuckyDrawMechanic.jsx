@@ -1,5 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import BrowserDetect from '@/services/browser-detect';
+
 import Image from '@/components/core/presentation/Image';
 import LuckyDrawBanner from '@/assets/images/luckydraw/lucky_draw_banner.png';
 import LuckyDrawGuide from '@/assets/images/luckydraw/lucky_draw_mechanic.png';
@@ -26,8 +27,9 @@ class LuckyDrawMechanic extends React.Component {
     );
   }
   renderLuckyDraw() {
+    const luckyDrawClass = BrowserDetect.isDesktop ? 'wrapperLuckyDraw desktop' : 'wrapperLuckyDraw';
     return (
-      <div className="wrapperLuckyDraw">
+      <div className={luckyDrawClass}>
         <div className="wrapperContent">
           <div className="wrapperluckyDrawTitle">
             <div className="luckyDrawTitle">Lucky Draw</div>
@@ -42,7 +44,7 @@ class LuckyDrawMechanic extends React.Component {
           </div>
         </div>
         <div className="wrapperImage">
-          <Image src={LuckyDrawGuide} alt="LuckyDrawGuide" width="350" />
+          <Image src={LuckyDrawGuide} alt="LuckyDrawGuide" width="450" />
         </div>
       </div>
     );
@@ -54,7 +56,7 @@ class LuckyDrawMechanic extends React.Component {
         <div className="mechanicContent">
           <p>RANDOM.ORG will pick the 10x winners using true randomness. The drawing records will be ‘Entrant-accessible’ for transparency. This means that entrants who know their unique identifier (wallet address) can query the record to check to see that they were entered and whether they were picked as winners</p>
           <p>Wallet and email addresses will not appear publicly in any records of the lucky draw.</p>
-          <p>For more information about RANDOM.ORG and true randomness, visit www.random.org/faq/.</p>
+          <p>For more information about RANDOM.ORG and true randomness, visit <a href="https://www.random.org/faq/">www.random.org/faq</a>.</p>
         </div>
       </div>
     );
