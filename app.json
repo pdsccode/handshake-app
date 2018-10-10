@@ -53,7 +53,7 @@
     },
     "CDN_URL": {
       "required": true
-    },
+    }
   },
   "formation": {
     "web": {
