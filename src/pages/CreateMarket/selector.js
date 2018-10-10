@@ -9,13 +9,16 @@ export const uId = (state) => {
   return state.auth.profile.id;
 };
 
-export const eventSelector = (state) => state.prediction.events;
+export const eventDetailSelector = (state, props) => {
+  const { eventId } = props.match.params;
+  return state.predictionDetail[eventId] || {};
+};
 
 export const reportSelector = (state) => {
   return (state.reports.list || []).map(r => {
     return Object.assign({}, r, {
-      value: r.id,
-      label: `${r.name} - ${r.url}`,
+      value: r.id.toString(),
+      label: r.url,
     });
   });
 };
