@@ -104,9 +104,11 @@
             font-weight: normal;
           }
         }
-
         .hide_upload_zone {
           display: none;
+        }
+        .progress {
+          height: rem-calc(25px);
         }
       }
     }
