@@ -289,6 +289,14 @@ class BuyCryptoCoin extends React.Component {
             component={fieldTextArea}
             validate={[required]}
           />
+          <div className="input-group mt-2">
+            <ConfirmButton
+              label={messages.create.cod_form.buy_btn}
+              buttonClassName="buy-btn"
+              containerClassName="buy-btn-container"
+              onConfirm={this.onBuy}
+            />
+          </div>
         </div>
       </div>
     );
