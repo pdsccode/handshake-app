@@ -85,7 +85,7 @@ class Transfer extends React.Component {
     this.setState({inputSendAmountValue: 0, inputSendMoneyValue: 0, currency: currency ? currency : 'USD'});
   }
 
-   async componentDidMount() {
+  async componentDidMount() {
     this.props.showLoading();
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
@@ -113,7 +113,7 @@ class Transfer extends React.Component {
 
       try{
         if(data && data.hash){
-          let transactions = this.getSessionStore(this.state.walletSelected, TAgetb.Transaction);
+          let transactions = this.getSessionStore(this.state.walletSelected, TAB.Transaction);
           if(!transactions)
             transactions = [];
 
@@ -465,7 +465,7 @@ render() {
   if(!currency) currency = "USD";
   const { messages } = this.props.intl;
   let showDivAmount = this.state.walletSelected && this.state.rate;
-  const { walletNotFound, walletSelected } = this.state;
+  const { walletNotFound, walletSelected, wallets } = this.state;
 
   let amount = this.state.inputSendAmountValue;
   try {amount= parseFloat(amount).toFixed(8)}catch (e){}
@@ -549,7 +549,7 @@ render() {
 
             <div>
               <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
-              { walletSelected && <WalletSelected walletSelected={walletSelected} onSelect={wallet => { this.selectWallet(wallet); }}></WalletSelected> }
+              { walletSelected && <WalletSelected wallets={wallets} walletSelected={walletSelected} onSelect={wallet => { this.selectWallet(wallet); }}></WalletSelected> }
             </div>
 
             <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.transfer.button.transfer}</Button>
