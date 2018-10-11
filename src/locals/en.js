@@ -1496,6 +1496,7 @@ export default {
           success: 'success',
           error: 'Error',
           detail_etherscan: 'View detail on etherscan.io',
+          detail_blockchaininfo: 'View detail on blockchain.info',
           view_all_etherscan: 'Watch etherscan',
           self: 'Self',
           sent: 'Sent',
