@@ -4,7 +4,6 @@
 import React from 'react';
 import Select from 'react-select';
 import classNames from 'classnames';
-import AutoSuggestion from '@/components/AutoSuggestion/AutoSuggestion';
 import RangeSlider from '@/components/RangeSlider/RangeSlider';
 import CreatableSelect from 'react-select/lib/Creatable';
 
@@ -56,33 +55,6 @@ function inputControl(props) {
   );
 }
 
-function autoSuggestion(props) {
-  const { placeholder, source } = props;
-  const { name, value, onChange } = props.input;
-  let nextValue;
-  if (typeof value === 'number') {
-    nextValue = source.find(o => (o.name === value || o.id === value) || {}).name;
-  } else {
-    nextValue = value.toString();
-  }
-  const asProps = {
-    ...props,
-    input: {
-      ...props.input,
-      value: nextValue,
-    },
-  };
-  return (
-    <AutoSuggestion
-      {...asProps}
-      name={name}
-      placeholder={placeholder}
-      value={nextValue}
-      onChange={onChange}
-    />
-  );
-}
-
 function rangeSlider(props) {
   return (
     <RangeSlider
@@ -99,8 +71,6 @@ function renderByType(props) {
       return selectControl(props);
     case 'creatableSelect':
       return creatableSelect(props);
-    case 'autoSuggestion':
-      return autoSuggestion(props);
     case 'rangeSlider':
       return rangeSlider(props);
     default:
