@@ -609,7 +609,7 @@ class BuyCryptoCoin extends React.Component {
 
 const mapStateToProps = (state) => ({
   currencyByLocal: state.app.ipInfo.currency,
-  country: state.app.ipInfo.country,
+  country: state.app.ipInfo.country || 'VN',
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
   phone: selectorFormSpecificAmount(state, 'phone'),
