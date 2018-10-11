@@ -24,6 +24,7 @@ import {
   buyCryptoSaveRecipt,
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
+import debounce from '@/utils/debounce';
 import { showAlert } from '@/reducers/app/action';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
@@ -152,6 +153,8 @@ class BuyCryptoCoin extends React.Component {
     };
 
     this.modalRef = null;
+
+    this.getCoinInfo = debounce(::this.getCoinInfo, 1000);
   }
 
   componentDidMount() {
@@ -297,7 +300,8 @@ class BuyCryptoCoin extends React.Component {
     });
   }
 
-  getCoinInfo = ({ amount, currencyId, isGetBasePrice }) => {
+  getCoinInfo(data = {}) {
+    const { amount, currencyId, isGetBasePrice } = data;
     const { currency, currencyByLocal } = this.props;
     const fiatCurrencyId = isGetBasePrice ? FIAT_CURRENCY.USD : currencyByLocal;
     const _currencyId = currencyId || this.props.currency.id;
@@ -562,7 +566,6 @@ class BuyCryptoCoin extends React.Component {
                   className="form-control form-control-lg border-0 rounded-right form-control-cc"
                   type="text"
                   component={fieldInput}
-                  onChange={this.onAmountChange}
                   validate={[required]}
                   elementAppend={
                     <Field
@@ -571,7 +574,6 @@ class BuyCryptoCoin extends React.Component {
                       classNameDropdownToggle="dropdown-button"
                       list={listCurrency}
                       component={fieldDropdown}
-                      onChange={this.onCurrencyChange}
                     />
                   }
                 />
