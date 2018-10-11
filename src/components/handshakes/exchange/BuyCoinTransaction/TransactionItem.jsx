@@ -12,7 +12,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
-import { cancelAtmCashTransfer } from '@/reducers/exchange/action';
+import { cancelNinjaCoinTransaction } from '@/reducers/exchange/action';
 import './TransactionItem.scss';
 import cx from 'classnames';
 
@@ -57,8 +57,8 @@ class TransactionItem extends React.Component {
 
   onCancelOrder = () => {
     const { transaction } = this.state;
-    this.props.cancelAtmCashTransfer({
-      PATH_URL: `${API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER}/${transaction.id}`,
+    this.props.cancelNinjaCoinTransaction({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_SAVE_RECEIPT}/${transaction.id}`,
       METHOD: 'DELETE',
       successFn: (res) => {
         const { data } = res;
@@ -161,7 +161,7 @@ class TransactionItem extends React.Component {
               </div>
             </div>
             {
-              status === COIN_ORDER_STATUS.PROCESSING && (
+              status === COIN_ORDER_STATUS.PENDING && (
                 <div className="d-table w-100" style={{ textAlign: 'center' }}>
                   <ConfirmButton
                     onConfirm={this.onCancelOrder}
@@ -184,7 +184,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
-  cancelAtmCashTransfer: bindActionCreators(cancelAtmCashTransfer, dispatch),
+  cancelNinjaCoinTransaction: bindActionCreators(cancelNinjaCoinTransaction, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(TransactionItem));
