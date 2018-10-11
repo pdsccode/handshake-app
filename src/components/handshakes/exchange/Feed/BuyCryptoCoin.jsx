@@ -180,9 +180,9 @@ class BuyCryptoCoin extends React.Component {
     }
 
     // get price of coin if amount or currency was changed
-    // if (amount !== this.props.amount) {
-    //   this.getCoinInfo({ amount });
-    // }
+    if (amount !== this.props.amount) {
+      this.getCoinInfo({ amount });
+    }
     if (currency.id !== this.props.currency.id) {
       this.getCoinInfo({ currencyId: currency.id });
       this.getCoinInfo({ isGetBasePrice: true, amount: 1, currencyId: currency.id });
