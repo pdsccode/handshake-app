@@ -90,12 +90,15 @@ export class Bitcoin extends Wallet {
       console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
       console.log('server', this.network);
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
+      
+      amountToSend = parseFloat(amountToSend).toFixed(6)
+      console.log('amountToSend fixed', amountToSend);
 
       if (!balance || balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
 
-      // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
+      // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi      
       const amountBig = new BigNumber(amountToSend.toString());
       const satoShiRate = new BigNumber('100000000');
       amountToSend = amountBig.times(satoShiRate).toString();
@@ -127,6 +130,7 @@ export class Bitcoin extends Wallet {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
     } catch (error) {
+      console.log('error', error);
       return { status: 0, message: 'messages.bitcoin.error.insufficient' };
     }
   }
