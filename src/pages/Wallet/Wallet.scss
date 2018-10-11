@@ -111,8 +111,8 @@
 
   .float-button-remind-payment{
     position: absolute;
-    top: 25px;
-    left: 15px;
+    top: 10px;
+    left: 10px;
     z-index: 1;
     user-select: none;
     border: 1px solid transparent;
@@ -122,6 +122,7 @@
     line-height: 1.5;
     border-radius: 1.5rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     color: seashell;
     background-color: #00a093;
     border-color: #bae0dd;
