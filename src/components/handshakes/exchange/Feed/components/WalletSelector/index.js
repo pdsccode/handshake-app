@@ -18,6 +18,7 @@ export default class WalletSelector extends Component {
 
   componentDidMount() {
     this.getListWallets();
+    this.updateWalletDefault(this.props.walletSelectorType);
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps) {
@@ -36,15 +37,23 @@ export default class WalletSelector extends Component {
       const wallets = MasterWallet.getMasterWallet();
       this.setState({ wallets });
     } catch (e) {
-      console.warn('updateWalletDefault', e);
+      console.warn('getListWallets', e);
     }
+  }
+
+  getWalletFromName = (name) => {
+    return this.state.wallets?.find(wallet => wallet?.name === name);
   }
 
   updateWalletDefault = async (currency) => {
     try {
-      const walletDefault = await MasterWallet.getWalletDefault(currency);
-      console.log(walletDefault)
-      this.changeWalletAddress(walletDefault?.address);
+      let walletDefault = await MasterWallet.getWalletDefault(currency);
+      if (walletDefault) {
+        this.changeWalletAddress(walletDefault?.address);
+      } else {
+        walletDefault = this.getWalletFromName(currency);
+        this.changeWalletAddress(walletDefault?.address);
+      }
     } catch (e) {
       console.warn('updateWalletDefault', e);
     }

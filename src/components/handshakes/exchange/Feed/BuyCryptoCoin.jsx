@@ -1,10 +1,13 @@
 /* eslint react/sort-comp:0 */
+/* eslint camelcase: 0 */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import {
+  URL,
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_NAME,
@@ -18,7 +21,7 @@ import {
   buyCryptoOrder,
   buyCryptoGetCoinInfo,
   buyCryptoGetBankInfo,
-  buyCryptoSaveRecipt
+  buyCryptoSaveRecipt,
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
 import { showAlert } from '@/reducers/app/action';
@@ -335,6 +338,19 @@ class BuyCryptoCoin extends React.Component {
 
   onMakeOrderSuccess = () => {
     const { order } = this.props;
+    if (order.type === PAYMENT_METHODS.COD) {
+      this.props.showAlert({
+        message: <div className="text-center">Success!</div>,
+        timeOut: 3000,
+        type: 'success',
+        callBack: () => {
+          this.props.history.push(URL.HANDSHAKE_ME);
+        },
+      });
+      return;
+    }
+
+    // if payment is bank transfer => show BANK INFO
     this.handleBuyViaTransfer(order);
   }
 
@@ -598,6 +614,8 @@ BuyCryptoCoin.defaultProps = {
 
 BuyCryptoCoin.propTypes = {
   intl: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  country: PropTypes.string.isRequired,
   paymentMethod: PropTypes.string,
   amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
@@ -614,6 +632,7 @@ BuyCryptoCoin.propTypes = {
   noteAndTime: PropTypes.string,
   buyCryptoOrder: PropTypes.func.isRequired,
   buyCryptoSaveRecipt: PropTypes.func.isRequired,
+  showAlert: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));
