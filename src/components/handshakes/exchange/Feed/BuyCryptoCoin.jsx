@@ -177,9 +177,9 @@ class BuyCryptoCoin extends React.Component {
     }
 
     // get price of coin if amount or currency was changed
-    if (amount !== this.props.amount) {
-      this.getCoinInfo({ amount });
-    }
+    // if (amount !== this.props.amount) {
+    //   this.getCoinInfo({ amount });
+    // }
     if (currency.id !== this.props.currency.id) {
       this.getCoinInfo({ currencyId: currency.id });
       this.getCoinInfo({ isGetBasePrice: true, amount: 1, currencyId: currency.id });
@@ -519,6 +519,26 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
+  onAmountChange = (e, amount) => {
+    console.log('onAmountChange', amount);
+
+    // this.setState({ amount }, () => {
+      if (this.intervalCountdown) {
+        clearTimeout(this.intervalCountdown);
+      }
+
+      this.intervalCountdown = setTimeout(() => {
+        this.getCoinInfo({ amount });
+      }, 1000);
+    // });
+  }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearTimeout(this.intervalCountdown);
+    }
+  }
+
   render() {
     console.log('STATE', this.state);
     const { messages } = this.props.intl;
@@ -608,7 +628,7 @@ class BuyCryptoCoin extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  currencyByLocal: state.app.ipInfo.currency,
+  currencyByLocal: state.app.ipInfo.currency || 'VND',
   country: state.app.ipInfo.country || 'VN',
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
