@@ -68,6 +68,7 @@ class CreateMarket extends React.Component {
       closingTime: selectedEvent.date,
       reportingTime: selectedEvent.reportTime,
       disputeTime: selectedEvent.disputeTime,
+      grantPermission: selectedEvent.grant_permission,
     };
     return (
       <CreateEventForm

@@ -58,7 +58,7 @@ class CreateEventForm extends Component {
       reportingTime: props.initialValues.reportingTime,
       disputeTime: props.initialValues.disputeTime,
       selectedReportSource: {},
-      reportChecked: false,
+      reportChecked: props.initialValues.grantPermission,
     };
   }
 
@@ -147,19 +147,23 @@ class CreateEventForm extends Component {
   renderGroupNote = (text) => {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
   }
-  renderCheckReport = () => {
+  renderCheckReport = (props) => {
+    const { eventId } = props.initialValues;
+    const disabled = eventId ? true : false;
     return (
       <div className="wrapperCheckReport">
         <Checkbox
           name="checkreport"
           checked={this.state.reportChecked}
           onChange={() => {
-            this.setState({
-              reportChecked: !this.state.reportChecked,
-            });
+            if (!disabled) {
+              this.setState({
+                reportChecked: !this.state.reportChecked,
+              });
+            }
           }}
         />
-        <div className="checkReportTitle">I want to Autonomous help to report</div>
+        <div className="checkReportTitle">Ninja will report for me</div>
       </div>
     );
   }
@@ -400,7 +404,7 @@ class CreateEventForm extends Component {
         <div className="CreateEventFormBlock">
           {this.renderReport(props)}
           {this.renderTimeGroup(props, state)}
-          {this.renderCheckReport()}
+          {this.renderCheckReport(props)}
           <EmailVerification
             hasEmail={props.hasEmail}
             isValidEmailCode={props.isValidEmailCode}
