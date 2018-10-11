@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { eventSelector } from '@/pages/Prediction/selector';
 import Loading from '@/components/Loading';
 import GasAlert from '@/pages/CreateMarket/GasAlert';
-import { isValidEmailCode } from '@/pages/CreateMarket/selector';
+import { isValidEmailCode, eventDetailSelector } from '@/pages/CreateMarket/selector';
+import { eventSelector } from '@/pages/Prediction/selector';
+import { URL } from '@/constants';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
 import { reportSelector, categorySelector, shareEventSelector, isLoading, hasEmail, insufficientGas, uId } from './selector';
 import { createEventFormName } from './constants';
 
 import './CreateMarket.scss';
+import './ToggleSwitch.scss';
 
 class CreateMarket extends React.Component {
   static displayName = 'CreateMarket';
@@ -24,6 +26,7 @@ class CreateMarket extends React.Component {
     uId: PropTypes.any,
     insufficientGas: PropTypes.any,
     isValidEmailCode: PropTypes.bool,
+    eventDetail: PropTypes.object,
   };
 
   static defaultProps = {
@@ -31,6 +34,7 @@ class CreateMarket extends React.Component {
     reportList: [],
     categoryList: [],
     match: {},
+    eventDetail: {},
     insufficientGas: undefined,
     isValidEmailCode: undefined,
   };
@@ -40,30 +44,51 @@ class CreateMarket extends React.Component {
     const { eventId } = props.match.params;
     this.state = {
       eventId: eventId || 0,
+      selectedEvent: props.eventDetail,
     };
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if ((nextProps.eventDetail || {}).id !== (prevState.eventDetail || {}).id) {
+      return {
+        selectedEvent: nextProps.eventDetail,
+      };
+    }
+    return null;
+  }
+
   componentDidMount() {
-    this.props.dispatch(loadCreateEventData());
+    const { eventId } = this.props.match.params;
+    this.props.dispatch(loadCreateEventData({ eventId }));
   }
 
   onSelectEvent = (item) => {
     this.setState({
       eventId: item.id || 0,
+      selectedEvent: item,
     });
+    this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${item.id || ''}`); // eslint-disable-line
   }
 
   renderCreateEventForm = (props, state) => {
-    const selectedEvent = props.eventList.find(item => item.id.toString() === state.eventId.toString());
-    const initialValues = !selectedEvent ? {
+    const { selectedEvent } = state;
+    const selectedReport = props.reportList.find(i => i.id === selectedEvent.source_id);
+    // const selectedEvent = state.eventId ? props.eventList.find(item => item.id.toString() === state.eventId.toString()) : props.eventDetail;
+    const initialValues = (!selectedEvent || !selectedEvent.id) ? {
       outcomes: [{}],
       creatorFee: 0,
+      private: false,
     } : {
       eventId: selectedEvent.id,
-      eventName: selectedEvent.name,
+      eventName: {
+        value: selectedEvent.id.toString(),
+        label: selectedEvent.name,
+      },
+      private: !selectedEvent.public,
       outcomes: selectedEvent.outcomes.concat({}),
       creatorFee: selectedEvent.market_fee,
-      reports: selectedEvent.source_id,
+      reports: selectedReport,
+      // reports: selectedEvent.source_id,
       category: selectedEvent.category_id,
       closingTime: selectedEvent.date,
       reportingTime: selectedEvent.reportTime,
@@ -74,7 +99,7 @@ class CreateMarket extends React.Component {
         initialValues={initialValues}
         reportList={props.reportList}
         categoryList={props.categoryList}
-        isNew={!selectedEvent}
+        isNew={!selectedEvent.id}
         eventList={props.eventList}
         shareEvent={props.shareEvent}
         dispatch={props.dispatch}
@@ -106,9 +131,10 @@ class CreateMarket extends React.Component {
 }
 
 export default connect(
-  (state) => {
+  (state, props) => {
     return {
-      eventList: eventSelector(state),
+      eventList: eventSelector(state, props),
+      eventDetail: eventDetailSelector(state, props),
       isLoading: isLoading(state),
       isValidEmailCode: isValidEmailCode(state),
       reportList: reportSelector(state),

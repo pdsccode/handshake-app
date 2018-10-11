@@ -245,4 +245,6 @@ class Router extends React.Component {
   }
 }
 
-export default connect(state => ({ firebaseApp: state.firebase.data }))(Router);
+export default connect(state => ({
+  firebaseApp: state.firebase.data,
+}))(Router);
