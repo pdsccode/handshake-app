@@ -66,9 +66,8 @@ import WalletPreferences from '@/components/Wallet/WalletPreferences';
 import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
 import QRCodeContent from '@/components/Wallet/QRCodeContent';
 import Redeem from '@/components/Wallet/Redeem';
+import RemindPayment from '@/components/Payment/Remind';
 import { ICON } from '@/styles/images';
-import { set, getJSON } from 'js-cookie';
-import { PAYMENT_REMIND } from '@/constants';
 
 const QRCode = require('qrcode.react');
 
@@ -350,38 +349,6 @@ class Wallet extends React.Component {
         this.showReceive(wallet);
       }
     })
-
-    //const allowedWallets = ['BTC', 'ETH', 'BCH'];
-    // now hide buy coin:
-    // if (true && allowedWallets.includes(wallet.name)){
-    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
-    //   obj.push({
-    //     title: messages.create.cash.credit.title,
-    //     handler: () => {
-    //       this.setState({
-    //         walletSelected: wallet,
-    //         modalBuyCoin:
-    //           (
-    //             <FeedCreditCard
-    //               buttonTitle={messages.create.cash.credit.title}
-    //               currencyForced={wallet ? wallet.name : ''}
-    //               callbackSuccess={this.afterWalletFill}
-    //               addressForced={wallet ? wallet.address : ''}
-    //               isPopup
-    //             />
-    //           ),
-    //       }, () => {
-    //         this.toggleBottomSheet();
-    //         this.modalBuyCoin.open();
-
-    //         gtag.event({
-    //           category: taggingConfig.creditCard.category,
-    //           action: taggingConfig.creditCard.action.showPopupWallet
-    //         });
-    //       });
-    //     },
-    //   });
-    // }
 
     if (!wallet.protected) {
       obj.push({
@@ -917,48 +884,6 @@ class Wallet extends React.Component {
     this.setState({redeemContent: ''});
   }
 
-  openRemindCheckout=()=>{
-    const payment = getJSON(PAYMENT_REMIND);
-    console.log(payment);
-    this.setState({modalRemindCheckout: <div className="remind-checkout-wrapper">
-      <div className="text">You have a missing payment. Do you want to continue checkout?</div>
-      <div>
-        <Button className="mr-2" cssType="primary" onClick={this.removeWallet}>Checkout now</Button>
-        <Button className="float-right" cssType="secondary" onClick={this.removeRemindCheckout}>Remove</Button>
-      </div>
-
-    </div>}, ()=>{
-      this.modalRemindCheckoutRef.open();
-    })
-  }
-
-  removeRemindCheckout=()=>{
-    this.setState({modalRemindCheckout: ''}, ()=>{
-      set(PAYMENT_REMIND, "");
-      this.modalRemindCheckoutRef.close();
-    });
-  }
-
-  goRemindCheckout=()=>{
-    const payment = getJSON(PAYMENT_REMIND);
-    if(payment){
-      this.setState({modalRemindCheckout: ''}, ()=>{
-        window.location.href = payment.url;
-        this.modalRemindCheckoutRef.close();
-      });
-    }
-    
-  }
-
-  get remindCheckout(){
-    const payment = getJSON(PAYMENT_REMIND);
-    if(payment){
-      return (<div className="float-button-remind-payment" onClick={()=> this.openRemindCheckout()}>{ICON.ArrowLeft('#FFF', '1x')} Payment</div>);
-    }
-
-    return "";
-  }
-
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
@@ -971,10 +896,7 @@ class Wallet extends React.Component {
         <img onClick={()=> {this.props.showScanQRCode({onFinish: (data) => {this.onQRCodeScaned(data);}});}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
 
         {/* remind checkout */}
-        {this.remindCheckout}
-        <ModalDialog onRef={modal => this.modalRemindCheckoutRef = modal} close={true} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closePreferences}>
-          {modalRemindCheckout}
-        </ModalDialog>
+        <RemindPayment />
 
         {/* history modal */}
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
