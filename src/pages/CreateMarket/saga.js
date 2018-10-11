@@ -114,7 +114,7 @@ function* saveGenerateShareLinkToStore(data) {
   }));
 }
 
-function* handleCreateEventSaga({ values, isNew, selectedSource }) {
+function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission }) {
   try {
     yield put(updateCreateEventLoading(true));
 
@@ -155,6 +155,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         disputeTime: values.disputeTime,
         market_fee: values.creatorFee,
         outcomes: values.outcomes,
+        grant_permission: grantPermission,
         category_id: 7, // values.category.id, hard-code for now
         ...reportSource,
       };

@@ -408,8 +408,17 @@
       }
     }
   }
-  .wrapperCheckReport {
-    display: flex;
+
+}
+.wrapperCheckReport {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  .checkReportTitle {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #8A8A8F;
+
   }
 }
 
