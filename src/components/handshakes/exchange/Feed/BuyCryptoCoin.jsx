@@ -562,7 +562,6 @@ class BuyCryptoCoin extends React.Component {
                   className="form-control form-control-lg border-0 rounded-right form-control-cc"
                   type="text"
                   component={fieldInput}
-                  onChange={this.onAmountChange}
                   validate={[required]}
                   elementAppend={
                     <Field
@@ -571,7 +570,6 @@ class BuyCryptoCoin extends React.Component {
                       classNameDropdownToggle="dropdown-button"
                       list={listCurrency}
                       component={fieldDropdown}
-                      onChange={this.onCurrencyChange}
                     />
                   }
                 />
