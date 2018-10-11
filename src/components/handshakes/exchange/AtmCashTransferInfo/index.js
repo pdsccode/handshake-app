@@ -142,11 +142,26 @@ class AtmCashTransferInfo extends PureComponent {
 
   saveReceipt() {
     this.showLoading(true);
-    const { receipt } = this.props;
+    const { receipt, saveReceiptHandle } = this.props;
     const { imgUploaded } = this.state;
     const data = {
       receipt_url: imgUploaded.url,
     };
+
+    // override save receipt func
+    if (typeof saveReceiptHandle === 'function') {
+      saveReceiptHandle({
+        data,
+        successFn: () => {
+          this.showLoading(false);
+        },
+        errorFn: () => {
+          this.showLoading(false);
+        },
+      });
+      return;
+    }
+
     this.props.uploadReceipAtmCashTransfer({
       PATH_URL: `${API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER}/${receipt?.id}`,
       METHOD: 'PUT',
@@ -271,6 +286,8 @@ AtmCashTransferInfo.defaultProps = {
   /* eslint react/default-props-match-prop-types:0 */
   receipt: {},
   bankInfo: null,
+  saveReceiptUrl: null,
+  saveReceiptHandle: () => null,
 };
 
 AtmCashTransferInfo.propTypes = {
@@ -283,6 +300,7 @@ AtmCashTransferInfo.propTypes = {
   getCashCenterBankInfo: PropTypes.func.isRequired,
   ipInfo: PropTypes.object.isRequired,
   bankInfo: PropTypes.object,
+  saveReceiptHandle: PropTypes.func,
 };
 
 const mapState = (state) => {

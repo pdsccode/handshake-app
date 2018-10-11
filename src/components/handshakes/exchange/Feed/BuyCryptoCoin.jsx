@@ -18,6 +18,7 @@ import {
   buyCryptoOrder,
   buyCryptoGetCoinInfo,
   buyCryptoGetBankInfo,
+  buyCryptoSaveRecipt
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
 import { showAlert } from '@/reducers/app/action';
@@ -29,6 +30,7 @@ import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
+import WalletSelector from '@/components/handshakes/exchange/Feed/components/WalletSelector';
 import Modal from '@/components/core/controls/Modal/Modal';
 
 import '../styles.scss';
@@ -140,6 +142,8 @@ class BuyCryptoCoin extends React.Component {
       modalContent: null,
       modalTitle: null,
       fiatCurrency: null,
+      walletAddress: null,
+      walletSelectorType: CRYPTO_CURRENCY.BTC,
     };
 
     this.modalRef = null;
@@ -178,7 +182,7 @@ class BuyCryptoCoin extends React.Component {
     if (currency.id !== this.props.currency.id) {
       this.getCoinInfo({ currencyId: currency.id });
       this.getCoinInfo({ isGetBasePrice: true, amount: 1, currencyId: currency.id });
-      this.setState({ currency: currency.id });
+      this.setState({ currency: currency.id, walletSelectorType: currency.id });
     }
 
     if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
@@ -261,8 +265,15 @@ class BuyCryptoCoin extends React.Component {
     this.setState({ isLoading: loadingState });
   }
 
-  onReceiptSaved = () => {
-    this.modalRef.close();
+  saveReceiptHandle = ({ data, successFn, errorFn }) => {
+    const { order } = this.props;
+    this.props.buyCryptoSaveRecipt({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_SAVE_RECEIPT}/${order?.id}`,
+      METHOD: 'PUT',
+      data,
+      successFn,
+      errorFn,
+    });
   }
 
   getCoinInfo = ({ amount, fiatCurrencyId, currencyId, isGetBasePrice }) => {
@@ -290,6 +301,7 @@ class BuyCryptoCoin extends React.Component {
 
   makeOrder = (info = {}) => {
     const { coinInfo, paymentMethod, amount, currency, address, noteAndTime } = this.props;
+    const { walletAddress } = this.state;
     const data = {
       type: info.paymentMethod || paymentMethod,
       amount: String(info.amount || amount),
@@ -298,7 +310,7 @@ class BuyCryptoCoin extends React.Component {
       fiat_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
       fiat_local_amount: String(info.fiatLocalAmount || coinInfo.fiatLocalAmount),
       fiat_local_currency: info.fiatLocalCurrencyId || coinInfo.fiatLocalCurrency,
-      address: info.address || '0x94259932A5a454294D708785273A103a156338F3',
+      address: info.address || walletAddress,
     };
 
     if (data.type === PAYMENT_METHODS.COD) {
@@ -339,6 +351,10 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
+  onWalletChange = (walletAddress) => {
+    this.setState({ walletAddress });
+  }
+
   handleBuyViaTransfer = (order = {}) => {
     const { bankInfo, country } = this.props;
     let bankData = {};
@@ -360,7 +376,14 @@ class BuyCryptoCoin extends React.Component {
       receipt.fiatCurrency = order.fiatLocalCurrency;
     }
     this.setState({
-      modalContent: <AtmCashTransferInfo receipt={receipt} bankInfo={bankData} />,
+      modalContent: (
+        <AtmCashTransferInfo
+          receipt={receipt}
+          bankInfo={bankData}
+          saveReceiptHandle={this.saveReceiptHandle}
+          onDone={() => this.modalRef.close()}
+        />
+      ),
       modalTitle: 'Bank Transfer',
     }, () => {
       this.modalRef.open();
@@ -369,6 +392,7 @@ class BuyCryptoCoin extends React.Component {
 
   handleBuyPackage = (item = {}) => {
     const { currency } = this.props;
+    const { walletAddress } = this.state;
     const data = {
       paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
       amount: String(this.getAmountFromFiatAmount(item.fiatAmount, currency.id)),
@@ -377,7 +401,7 @@ class BuyCryptoCoin extends React.Component {
       fiatCurrencyId: FIAT_CURRENCY.USD,
       fiatLocalAmount: String(item.fiatAmount),
       fiatLocalCurrencyId: FIAT_CURRENCY.USD,
-      address: '0x94259932A5a454294D708785273A103a156338F3',
+      address: walletAddress,
     };
     this.makeOrder(data);
   }
@@ -453,7 +477,7 @@ class BuyCryptoCoin extends React.Component {
     console.log('STATE', this.state);
     const { messages } = this.props.intl;
     const { amount } = this.props;
-    const { currency, forcePaymentMethod } = this.state;
+    const { currency, forcePaymentMethod, walletSelectorType } = this.state;
 
     return (
       <div>
@@ -465,6 +489,7 @@ class BuyCryptoCoin extends React.Component {
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
+              <WalletSelector onWalletChange={this.onWalletChange} walletSelectorType={walletSelectorType} />
               <div className="input-group mt-4">
                 <Field
                   name="amount"
@@ -556,6 +581,7 @@ const mapDispatchToProps = (dispatch) => ({
   buyCryptoOrder: bindActionCreators(buyCryptoOrder, dispatch),
   buyCryptoGetCoinInfo: bindActionCreators(buyCryptoGetCoinInfo, dispatch),
   buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
+  buyCryptoSaveRecipt: bindActionCreators(buyCryptoSaveRecipt, dispatch),
 });
 
 BuyCryptoCoin.defaultProps = {
@@ -567,6 +593,7 @@ BuyCryptoCoin.defaultProps = {
   bankInfo: {},
   address: '',
   noteAndTime: '',
+  order: {},
 };
 
 BuyCryptoCoin.propTypes = {
@@ -578,14 +605,15 @@ BuyCryptoCoin.propTypes = {
   rfChange: PropTypes.func.isRequired,
   currency: PropTypes.object,
   fiatCurrency: PropTypes.object,
+  order: PropTypes.object,
   coinInfo: PropTypes.object.isRequired,
   basePrice: PropTypes.object.isRequired,
   bankInfo: PropTypes.object,
   buyCryptoGetBankInfo: PropTypes.func.isRequired,
-  fiatAmount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   address: PropTypes.string,
   noteAndTime: PropTypes.string,
   buyCryptoOrder: PropTypes.func.isRequired,
+  buyCryptoSaveRecipt: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));
