@@ -201,6 +201,7 @@
   font-size: 18px;
 }
 
+
 .category-wrapper {
   margin-bottom: rem-calc(42px);
 }
@@ -293,6 +294,7 @@
     flex: 0 0 50%;
     max-width: 50%;
 }
+
 
 .sendwallet-wrapper{
   margin-top: 20px;
@@ -813,6 +815,7 @@
       color:#6c757d;
       min-height: 30px;
       font-size: 14px;
+      text-transform: capitalize;
     }
   }
 }
@@ -909,6 +912,11 @@
   background :#c0c0c0;
   border-color: #c0c0c0;
   border: none;
+}
+
+.closeIcon{
+  padding-right:0.5rem;
+  padding-top:0.5rem;
 }
 
 @media (max-width: 374px) {

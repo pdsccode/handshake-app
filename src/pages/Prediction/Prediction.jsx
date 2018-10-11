@@ -72,7 +72,6 @@ class Prediction extends React.Component {
 
   componentDidMount() {
     this.receiverMessage(this.props); // @TODO: Extensions
-    this.props.dispatch(loadMatches({ isDetail: this.props.isSharePage }));
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
@@ -112,6 +111,8 @@ class Prediction extends React.Component {
         const source = matches && matches[0];
         props.dispatch(loadMatches({ source }));
       }
+    } else {
+      props.dispatch(loadMatches({ isDetail: props.isSharePage }));
     }
   }
 

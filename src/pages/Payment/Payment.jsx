@@ -9,6 +9,7 @@ import {getFiatCurrency} from '@/reducers/exchange/action';
 import { bindActionCreators } from "redux";
 import Modal from '@/components/core/controls/Modal';
 import ModalDialog from '@/components/core/controls/ModalDialog';
+import Register from '@/components/Payment/PFDRegister';
 import Checkout from './Checkout';
 import ChooseCrypto from './ChooseCrypto';
 import Complete from './Complete';
@@ -19,7 +20,9 @@ import { showAlert, showLoading, hideLoading } from '@/reducers/app/action';
 import ReactBottomsheet from 'react-bottomsheet';
 import HeaderMore from './HeaderMore';
 import qs from 'querystring';
+import { set, getJSON } from 'js-cookie';
 import { ICON } from '@/styles/images';
+import { PAYMENT_REMIND } from '@/constants';
 
 // style
 import './Payment.scss';
@@ -43,6 +46,7 @@ class Payment extends React.Component {
       modalChooseCrypto: '',
       modalCheckout: '',
       modalComplete: '',
+      modalRegister: '',
       msgError: '',
       toAddresses: false,
       isCryptoCurrency: false,
@@ -59,8 +63,19 @@ class Payment extends React.Component {
   async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
-    let { order_id, to, amount, currency:currency, confirm_url } = this.querystringParsed;
+    let { order_id, to, amount, currency:currency, confirm_url, act } = this.querystringParsed;
 
+
+    if (act && act == "register") {
+      this.setState({
+        modalRegister: <Register
+        />
+        }, () => {
+          this.modalRegisterRef.open();
+        }
+      );
+      return;
+    }
 
     if (!order_id && !amount && !confirm_url) {
       this.setState({isShowInfo: true});
@@ -220,7 +235,7 @@ class Payment extends React.Component {
     return result;
   }
 
-  getRate(fiatCurrency, cryptoCurrency){console.log('getRate', fiatCurrency, cryptoCurrency);
+  getRate(fiatCurrency, cryptoCurrency){
     return new Promise((resolve, reject) => {
 
       this.props.getFiatCurrency({
@@ -287,6 +302,8 @@ class Payment extends React.Component {
   }
 
   closeCheckout = () => {
+    set(PAYMENT_REMIND, '');
+
     if(this.state.isCryptoCurrency){
       if(this.state.fullBackUrl && this.state.modalCheckout){
         window.location.href = this.state.fullBackUrl;
@@ -308,6 +325,7 @@ class Payment extends React.Component {
       modalCheckout: ''
       }, () => {
         this.modalCompleteRef.open();
+        set(PAYMENT_REMIND, "");
       }
     );
   }
@@ -388,6 +406,8 @@ class Payment extends React.Component {
 
   render = () => {
     const { messages } = this.props.intl;
+    const { modalRegister } = this.state;
+
     return (
 
       <div>
@@ -406,6 +426,10 @@ class Payment extends React.Component {
 
         <Modal title="Developer Documents" onRef={modal => this.modalDevDocRef = modal}>
           <DevDoc />
+        </Modal>
+
+        <Modal title="Register" onRef={modal => this.modalRegisterRef = modal}>
+          {modalRegister}
         </Modal>
 
         {

@@ -66,6 +66,7 @@ import WalletPreferences from '@/components/Wallet/WalletPreferences';
 import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
 import QRCodeContent from '@/components/Wallet/QRCodeContent';
 import Redeem from '@/components/Wallet/Redeem';
+import RemindPayment from '@/components/Payment/Remind';
 import { ICON } from '@/styles/images';
 
 const QRCode = require('qrcode.react');
@@ -118,7 +119,7 @@ class Wallet extends React.Component {
       isRestoreLoading: false,
       // tranfer:
       listCoinTempToCreate: [],
-      countCheckCoinToCreate: 1,
+      countreCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
       // Qrcode
@@ -143,6 +144,7 @@ class Wallet extends React.Component {
       modalSetting: '',
       modalHistory: '',
       modalWalletPreferences: "",
+      modalRemindCheckout: '',
       backupWalletContent: "",
       restoreWalletContent: "",
       redeemContent: "",
@@ -236,7 +238,7 @@ class Wallet extends React.Component {
       let list = this.state.transactions;
       let data = await walletSelected.getTransactionHistory(pagenoTran);
 
-      if(data.length > 0){
+      if(data.lenreh > 0){
         let final_list = list.concat(data);
         this.setState({ transactions: final_list, pagenoTran: data.length < 20 ? 0 : pagenoTran, isLoadMore: false});
       }
@@ -347,38 +349,6 @@ class Wallet extends React.Component {
         this.showReceive(wallet);
       }
     })
-
-    //const allowedWallets = ['BTC', 'ETH', 'BCH'];
-    // now hide buy coin:
-    // if (true && allowedWallets.includes(wallet.name)){
-    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
-    //   obj.push({
-    //     title: messages.create.cash.credit.title,
-    //     handler: () => {
-    //       this.setState({
-    //         walletSelected: wallet,
-    //         modalBuyCoin:
-    //           (
-    //             <FeedCreditCard
-    //               buttonTitle={messages.create.cash.credit.title}
-    //               currencyForced={wallet ? wallet.name : ''}
-    //               callbackSuccess={this.afterWalletFill}
-    //               addressForced={wallet ? wallet.address : ''}
-    //               isPopup
-    //             />
-    //           ),
-    //       }, () => {
-    //         this.toggleBottomSheet();
-    //         this.modalBuyCoin.open();
-
-    //         gtag.event({
-    //           category: taggingConfig.creditCard.category,
-    //           action: taggingConfig.creditCard.action.showPopupWallet
-    //         });
-    //       });
-    //     },
-    //   });
-    // }
 
     if (!wallet.protected) {
       obj.push({
@@ -917,13 +887,16 @@ class Wallet extends React.Component {
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent} = this.state;
+      modalHistory, modalRemindCheckout, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent} = this.state;
 
     return (
       <div className="wallet-page">
 
         {/* float button qrcode */}
         <img onClick={()=> {this.props.showScanQRCode({onFinish: (data) => {this.onQRCodeScaned(data);}});}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
+
+        {/* remind checkout */}
+        <RemindPayment />
 
         {/* history modal */}
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
