@@ -178,7 +178,7 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.status}
               </div>
               <div className="d-table-cell text-right">
-                <span className={cx('text-normal', `${status}`)}>{messages.create.atm.transactions.statusValues[status] || '---'}</span>
+                <span className={cx('text-normal', `${status}`)}>{messages.buy_coin_transaction.statusValues[status] || '---'}</span>
               </div>
             </div>
             {

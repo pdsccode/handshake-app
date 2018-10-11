@@ -1735,4 +1735,16 @@ export default {
       },
     },
   },
+  buy_coin_transaction: {
+    statusValues: {
+      pending: 'Pending',
+      processing: 'Processing',
+      success: 'Success',
+      transferring: 'Sending coins...',
+      cancelled: 'Canceled',
+      fiat_transferring: 'Sending money...',
+      transfer_failed: 'Failed',
+      expired: 'Expired',
+    },
+  }
 };
