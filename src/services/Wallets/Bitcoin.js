@@ -28,6 +28,11 @@ export class Bitcoin extends Wallet {
     bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
   }
 
+  getAPIUrlTransaction(transaction_no) {
+    let url = "https://www.blockchain.com/btc/tx/"+transaction_no;
+    return url;
+  }
+
   createAddressPrivatekey() {
     this.setDefaultNetwork();
 
@@ -90,7 +95,7 @@ export class Bitcoin extends Wallet {
       console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
       console.log('server', this.network);
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
-      
+
       amountToSend = parseFloat(amountToSend).toFixed(8)
       console.log('amountToSend fixed', amountToSend);
 
@@ -98,7 +103,7 @@ export class Bitcoin extends Wallet {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
 
-      // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi      
+      // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
       const amountBig = new BigNumber(amountToSend.toString());
       const satoShiRate = new BigNumber('100000000');
       amountToSend = amountBig.times(satoShiRate).toString();
