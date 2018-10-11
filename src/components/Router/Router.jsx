@@ -107,6 +107,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CASH_STORE_URL, component: RouterCreateCashStore },
 
   { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
+  { path: URL.PEX_EXTENSION, component: PexExtension },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -248,4 +249,6 @@ class Router extends React.Component {
   }
 }
 
-export default connect(state => ({ firebaseApp: state.firebase.data }))(Router);
+export default connect(state => ({
+  firebaseApp: state.firebase.data,
+}))(Router);
