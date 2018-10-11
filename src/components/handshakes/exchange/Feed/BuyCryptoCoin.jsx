@@ -143,6 +143,7 @@ class BuyCryptoCoin extends React.Component {
       modalTitle: null,
       fiatCurrency: null,
       walletAddress: null,
+      walletSelectorType: CRYPTO_CURRENCY.BTC,
     };
 
     this.modalRef = null;
@@ -181,7 +182,7 @@ class BuyCryptoCoin extends React.Component {
     if (currency.id !== this.props.currency.id) {
       this.getCoinInfo({ currencyId: currency.id });
       this.getCoinInfo({ isGetBasePrice: true, amount: 1, currencyId: currency.id });
-      this.setState({ currency: currency.id });
+      this.setState({ currency: currency.id, walletSelectorType: currency.id });
     }
 
     if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
@@ -268,7 +269,7 @@ class BuyCryptoCoin extends React.Component {
     const { order } = this.props;
     this.props.buyCryptoSaveRecipt({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_SAVE_RECEIPT}/${order?.id}`,
-      METHOD: 'POST',
+      METHOD: 'PUT',
       data,
       successFn,
       errorFn,
@@ -476,7 +477,7 @@ class BuyCryptoCoin extends React.Component {
     console.log('STATE', this.state);
     const { messages } = this.props.intl;
     const { amount } = this.props;
-    const { currency, forcePaymentMethod } = this.state;
+    const { currency, forcePaymentMethod, walletSelectorType } = this.state;
 
     return (
       <div>
@@ -488,7 +489,7 @@ class BuyCryptoCoin extends React.Component {
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
-              <WalletSelector onWalletChange={this.onWalletChange} />
+              <WalletSelector onWalletChange={this.onWalletChange} walletSelectorType={walletSelectorType} />
               <div className="input-group mt-4">
                 <Field
                   name="amount"
@@ -592,6 +593,7 @@ BuyCryptoCoin.defaultProps = {
   bankInfo: {},
   address: '',
   noteAndTime: '',
+  order: {},
 };
 
 BuyCryptoCoin.propTypes = {
@@ -603,11 +605,11 @@ BuyCryptoCoin.propTypes = {
   rfChange: PropTypes.func.isRequired,
   currency: PropTypes.object,
   fiatCurrency: PropTypes.object,
+  order: PropTypes.object,
   coinInfo: PropTypes.object.isRequired,
   basePrice: PropTypes.object.isRequired,
   bankInfo: PropTypes.object,
   buyCryptoGetBankInfo: PropTypes.func.isRequired,
-  fiatAmount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   address: PropTypes.string,
   noteAndTime: PropTypes.string,
   buyCryptoOrder: PropTypes.func.isRequired,

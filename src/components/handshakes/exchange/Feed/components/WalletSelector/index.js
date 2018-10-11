@@ -1,18 +1,29 @@
+/* eslint camelcase:0 */
 import React, { Component } from 'react';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import PropTypes from 'prop-types';
+import {
+  CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_NAME,
+} from '@/constants';
 
 export default class WalletSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
       wallets: [],
-      walletSelected: null,
+      walletSelected: '',
     };
   }
 
   componentDidMount() {
     this.getListWallets();
+  }
+
+  async UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.walletSelectorType !== this.props.walletSelectorType) {
+      this.updateWalletDefault(nextProps.walletSelectorType);
+    }
   }
 
   onChange = (e) => {
@@ -21,11 +32,26 @@ export default class WalletSelector extends Component {
   }
 
   getListWallets = async () => {
-    const currency = 'ETH';
-    const walletDefault = await MasterWallet.getWalletDefault(currency);
-    const wallets = MasterWallet.getMasterWallet();
-    this.changeWalletAddress(walletDefault?.address);
-    this.setState({ wallets });
+    try {
+      const wallets = MasterWallet.getMasterWallet();
+      this.setState({ wallets });
+    } catch (e) {
+      console.warn('updateWalletDefault', e);
+    }
+  }
+
+  updateWalletDefault = async (currency) => {
+    try {
+      const walletDefault = await MasterWallet.getWalletDefault(currency);
+      console.log(walletDefault)
+      this.changeWalletAddress(walletDefault?.address);
+    } catch (e) {
+      console.warn('updateWalletDefault', e);
+    }
+  }
+
+  shortIt = (str = '') => {
+    return `${str.substr(3, 8)}...${str.substr(-10)}`;
   }
 
   changeWalletAddress = (address) => {
@@ -45,9 +71,10 @@ export default class WalletSelector extends Component {
           if (!wallet) return null;
           const { address, name } = wallet;
           return (
-            <option key={address} value={address}>{`${name} - ${address}`}</option>
+            <option key={address} value={address}>{`${name} - ${this.shortIt(address)}`}</option>
           );
         })}
+        {wallets.length === 0 && <option value="">You have no wallet yet.</option>}
       </React.Fragment>
     );
   }
@@ -57,7 +84,6 @@ export default class WalletSelector extends Component {
     return (
       <div>
         <select className="form-control" onChange={this.onChange} value={walletSelected}>
-          <option>Select wallet</option>
           {this.renderWallets()}
         </select>
       </div>
@@ -67,8 +93,10 @@ export default class WalletSelector extends Component {
 
 WalletSelector.defaultProps = {
   onWalletChange: () => {},
+  walletSelectorType: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC],
 };
 
 WalletSelector.propTypes = {
   onWalletChange: PropTypes.func,
+  walletSelectorType: PropTypes.string,
 };
