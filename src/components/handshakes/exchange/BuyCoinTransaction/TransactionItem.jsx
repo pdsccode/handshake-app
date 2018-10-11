@@ -1,12 +1,12 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 // action, mock
-import { CRYPTO_CURRENCY, FIAT_CURRENCY, API_URL } from '@/constants';
-import {FormattedDate, FormattedMessage, injectIntl} from 'react-intl';
+import { API_URL, CRYPTO_CURRENCY, FIAT_CURRENCY } from '@/constants';
+import { FormattedDate, injectIntl } from 'react-intl';
 // components
 // style
-import {change} from 'redux-form';
+import { change } from 'redux-form';
 
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
@@ -14,11 +14,11 @@ import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import { cancelAtmCashTransfer } from '@/reducers/exchange/action';
 import './TransactionItem.scss';
-import CashStoreTransaction from "@/models/CashStoreTransaction";
 import cx from 'classnames';
 
 import icWarning from '@/assets/images/cash/ic-transaction-warning.svg';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
+import NinjaCoinTransaction from '@/models/NinjaCoinTransaction';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -28,14 +28,14 @@ export const CRYPTO_ICONS = {
 };
 
 export const COIN_ORDER_STATUS = {
-  PENDING:           'pending',
-  PROCESSING:        'processing',
+  PENDING: 'pending',
+  PROCESSING: 'processing',
   FIAT_TRANSFERRING: 'fiat_transferring',
-  CANCELLED:         'cancelled',
-  EXPIRED:           'expired',
-  TRANSFERRING:      'transferring',
-  TRANSFER_FAILED:   'transfer_failed',
-  SUCCESS:           'success',
+  CANCELLED: 'cancelled',
+  EXPIRED: 'expired',
+  TRANSFERRING: 'transferring',
+  TRANSFER_FAILED: 'transfer_failed',
+  SUCCESS: 'success',
 };
 
 class TransactionItem extends React.Component {
@@ -62,7 +62,7 @@ class TransactionItem extends React.Component {
       METHOD: 'DELETE',
       successFn: (res) => {
         const { data } = res;
-        const updatedTransaction = data && CashStoreTransaction.cashStoreTransaction(data);
+        const updatedTransaction = data && NinjaCoinTransaction.transaction(data);
         updatedTransaction && this.setState({ transaction: updatedTransaction });
       },
     });
@@ -72,7 +72,7 @@ class TransactionItem extends React.Component {
     try {
       if (extraData && initAt) {
         let transaction = {};
-        transaction = CashStoreTransaction.cashStoreTransaction(JSON.parse(extraData));
+        transaction = NinjaCoinTransaction.transaction(JSON.parse(extraData));
         transaction.createdAt = new Date(initAt * 1000).toISOString();
         this.setState({ transaction });
       }
@@ -110,34 +110,13 @@ class TransactionItem extends React.Component {
         <div className="transaction-detail">
           {
             <div>
-              {/*<div className="d-table w-100">
-                <div className="d-table-cell font-weight-bold">
-                  <img src={CRYPTO_ICONS[currency]} width={19} />
-                  <span className="type-order ml-2">{feedType === CREDIT_FEED_TYPES.DEPOSIT ? messages.me.credit.transaction.deposit.title :
-                    feedType === CREDIT_FEED_TYPES.TRANSACTION ? messages.me.credit.transaction.transaction.title :
-                      feedType === CREDIT_FEED_TYPES.WITHDRAW ? messages.me.credit.transaction.withdraw.title :
-                        feedType === CREDIT_FEED_TYPES.INSTANT ? messages.me.credit.transaction.instant.title : ''
-                  }</span>
-                </div>
-                {
-                  subStatus === 'transferring' && (
-                    <div className="d-table-cell text-right">
-                      <img src={iconSpinner} width="14px" />
-                      <span className="status ml-2">{messages.me.credit.transaction.processing}</span>
-                    </div>
-                  )
-                }
-              </div>*/}
-
-              {status === COIN_ORDER_STATUS.PROCESSING && (
+              {status === COIN_ORDER_STATUS.PENDING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
                   <span className="transfer-now" onClick={() => this.props.onShowTransferInfo(this.state.transaction)}>{messages.create.atm.transactions.transferNow}</span>
                 </div>
               )
               }
-
-              {/*<hr />*/}
             </div>
           }
 
@@ -158,7 +137,7 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.needToTransfer}
               </div>
               <div className="d-table-cell text-right">
-                <img src={icWarning} width="16px" style={{ marginBottom: '4px' }}/>
+                <img src={icWarning} width="16px" style={{ marginBottom: '4px' }} />
                 &nbsp;&nbsp;
                 <span className="font-weight-bold">{fiatAmount}</span>
                 &nbsp;

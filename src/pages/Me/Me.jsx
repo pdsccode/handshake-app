@@ -59,6 +59,8 @@ import cx from "classnames";
 
 import NoDataImage from '@/assets/images/pages/Prediction/nodata.svg';
 
+import NinjaCoinTransaction from '@/components/handshakes/exchange/BuyCoinTransaction/Transaction';
+
 const TAG = 'Me';
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -75,15 +77,20 @@ const CASH_TAB = {
 
 const CATEGORIES = [
   {
-    value: HANDSHAKE_ID.CREDIT,
-    text: 'CC',
+    value: HANDSHAKE_ID.NINJA_COIN,
+    text: 'Ninja Coin',
     priority: 0,
   },
-  {
-    value: HANDSHAKE_ID.EXCHANGE,
-    text: 'ATM',
-    priority: 1,
-  },
+  // {
+  //   value: HANDSHAKE_ID.CREDIT,
+  //   text: 'CC',
+  //   priority: 0,
+  // },
+  // {
+  //   value: HANDSHAKE_ID.EXCHANGE,
+  //   text: 'ATM',
+  //   priority: 1,
+  // },
   {
     value: HANDSHAKE_ID.BETTING,
     text: 'Bet',
@@ -232,11 +239,11 @@ class Me extends React.Component {
     // @TODO: chrome-ext
     if (window.self === window.top) {
       if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-        && prevState.handshakeIdActive !== HANDSHAKE_ID.CREDIT && prevState.firstTime) {
-        rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.CREDIT);
+        && prevState.handshakeIdActive !== HANDSHAKE_ID.NINJA_COIN && prevState.firstTime) {
+        rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.NINJA_COIN);
         rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.DASHBOARD);
-        Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.CREDIT);
-        return { handshakeIdActive: HANDSHAKE_ID.CREDIT, firstTime: false };
+        Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.NINJA_COIN);
+        return { handshakeIdActive: HANDSHAKE_ID.NINJA_COIN, firstTime: false };
       }
      }
 
@@ -592,6 +599,11 @@ class Me extends React.Component {
                     </div>*/}
                     <div className="content">
                       {<Component history={this.props.history} setLoading={this.setLoading}></Component>}
+                    </div>
+                  </div>) : this.state.handshakeIdActive === HANDSHAKE_ID.NINJA_COIN ? (
+                  <div className="dashboard">
+                    <div className="content">
+                      <NinjaCoinTransaction />
                     </div>
                   </div>) : listFeed && listFeed.length > 0 ? (
                     listFeed.map((handshake) => {

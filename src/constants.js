@@ -46,9 +46,10 @@ export const HANDSHAKE_ID = { // important
   WALLET_RECEIVE: 8,
   CREATE_EVENT: 9,
   CREDIT: 10,
+  NINJA_COIN: 22,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 3;
+export const HANDSHAKE_ID_DEFAULT = HANDSHAKE_ID.BETTING;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
