@@ -70,7 +70,7 @@ class Profile extends React.Component {
       idVerificationBackImage: null,
       idVerificationSelfieImage: null,
       idVerified: props.auth.profile.idVerified,
-      isUploadingIDVerificationDocuments: false,
+      idVerficationUploadingProgress: 0,
     };
     // bind
     this.onSubmitVerifyPhone = :: this.onSubmitVerifyPhone;
@@ -213,14 +213,17 @@ class Profile extends React.Component {
     data.append('back_image', idVerificationBackImage);
     data.append('selfie_image', idVerificationSelfieImage);
     this.setState({
-      isUploadingIDVerificationDocuments: true,
+      idVerficationUploadingProgress: 1,
     });
     this.props.verifyID({
       PATH_URL: 'user/id_verification',
       data,
       METHOD: 'POST',
+      onUploadProgress: (progressEvent) => {
+        this.setState({ idVerficationUploadingProgress: Math.round((progressEvent.loaded / progressEvent.total) * 100) });
+      },
       successFn: () => {
-        this.setState({ idVerified: 2, idVerificationCollapse: false, isUploadingIDVerificationDocuments: false });
+        this.setState({ idVerified: 2, idVerificationCollapse: false, idVerficationUploadingProgress: 0 });
         this.props.showAlert({
           message: <div className="text-center">{messages.me.profile.verify.alert.success.idVerification}</div>,
           timeOut: 3000,
@@ -228,7 +231,7 @@ class Profile extends React.Component {
         });
       },
       errorFn: () => {
-        this.setState({ isUploadingIDVerificationDocuments: false });
+        this.setState({ idVerficationUploadingProgress: 0 });
         this.props.showAlert({
           message: <div className="text-center">{messages.me.profile.verify.alert.cannot.idVerification}</div>,
           timeOut: 3000,
@@ -486,7 +489,7 @@ class Profile extends React.Component {
 
   render() {
     const {
-      countryCode, countries, sms, email, code, idVerified, isUploadingIDVerificationDocuments
+      countryCode, countries, sms, email, code, idVerified, idVerficationUploadingProgress,
     } = this.state;
     let idVerificationStatusBadgeClass = '';
     let idVerificationStatusText = '';
@@ -706,14 +709,17 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className={`content id-verification ${this.state.idVerificationCollapse ? '' : 'd-none'}`}>
-                <div style={isUploadingIDVerificationDocuments ? {} : { display: 'none' }}>
+                <div style={idVerficationUploadingProgress > 0 ? {} : { display: 'none' }}>
                   <Row>
                     <div className="col-12">
-                      <ProgressBar active now={100} label="Uploading" />
+                      <p className="text label">
+                        {messages.me.profile.text.id_verification.uploading}
+                      </p>
+                      <ProgressBar now={idVerficationUploadingProgress} />
                     </div>
                   </Row>
                 </div>
-                <div style={!isUploadingIDVerificationDocuments ? {} : { display: 'none' }}>
+                <div style={idVerficationUploadingProgress === 0 ? {} : { display: 'none' }}>
                   <IDVerificationForm onSubmit={this.onSubmitIDVerification}>
                     <div>
                       <Row>

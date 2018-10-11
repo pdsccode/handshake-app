@@ -1007,6 +1007,7 @@ export default {
           desc7: 'Identity Card Back Side',
           desc8: 'Identity Card Front Side With Ninja Background',
           desc9: 'Please make sure that the photo is complete and clearly visible, in JPG format And make sure the text in the paper exactly is  ‘Ninja.org MMDDYY’',
+          uploading: 'Uploading',
           button: {
             upload: 'Upload file',
             submit: 'Submit',
