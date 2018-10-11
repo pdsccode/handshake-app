@@ -35,7 +35,8 @@ import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmBu
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import WalletSelector from '@/components/handshakes/exchange/Feed/components/WalletSelector';
 import Modal from '@/components/core/controls/Modal/Modal';
-import { formatMoney, formatMoneyByLocale } from '@/services/offer-util';
+import { formatMoney } from '@/services/offer-util';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
@@ -246,6 +247,10 @@ class BuyCryptoCoin extends React.Component {
     this.props.rfChange(nameBuyCryptoForm, 'paymentMethod', method);
   }
 
+  updateAmount= (amount) => {
+    this.props.rfChange(nameBuyCryptoForm, 'amount', Number.parseFloat(amount) || 0);
+  }
+
   updateFiatAmount = (amount) => {
     this.setState({
       fiatAmount: Number.parseFloat(amount),
@@ -283,6 +288,15 @@ class BuyCryptoCoin extends React.Component {
     });
   }
 
+  onGetCoinInfoError = (e) => {
+    this.updateAmount(0);
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+    });
+  }
+
   getCoinInfo = ({ amount, currencyId, isGetBasePrice }) => {
     const { currency, currencyByLocal } = this.props;
     const fiatCurrencyId = isGetBasePrice ? FIAT_CURRENCY.USD : currencyByLocal;
@@ -290,8 +304,9 @@ class BuyCryptoCoin extends React.Component {
     const parsedAmount = Number.parseFloat(amount || this.props.amount) || null;
     if (parsedAmount && currency && fiatCurrencyId) {
       this.props.buyCryptoGetCoinInfo({
-        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice && '&check=1'}`,
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice ? '&check=1' : ''}`,
         more: isGetBasePrice && { isGetBasePrice, amount: parsedAmount, currencyId: _currencyId, fiatCurrencyId },
+        errorFn: this.onGetCoinInfoError,
       });
     }
   }
@@ -307,7 +322,7 @@ class BuyCryptoCoin extends React.Component {
   };
 
   makeOrder = (info = {}) => {
-    const { coinInfo, paymentMethod, amount, currency, address, noteAndTime } = this.props;
+    const { coinInfo, paymentMethod, amount, currency, address, noteAndTime, phone } = this.props;
     const { walletAddress } = this.state;
     const data = {
       type: info.paymentMethod || paymentMethod,
@@ -328,6 +343,7 @@ class BuyCryptoCoin extends React.Component {
       data.user_info = info.userInfo || {
         address,
         noteAndTime,
+        phone,
       };
     }
 
@@ -596,6 +612,7 @@ const mapStateToProps = (state) => ({
   country: state.app.ipInfo.country,
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
+  phone: selectorFormSpecificAmount(state, 'phone'),
   fiatAmount: selectorFormSpecificAmount(state, 'fiatAmount'),
   currency: selectorFormSpecificAmount(state, 'currency'),
   fiatCurrency: selectorFormSpecificAmount(state, 'fiatCurrency'),
@@ -627,19 +644,20 @@ BuyCryptoCoin.defaultProps = {
   address: '',
   noteAndTime: '',
   order: {},
+  phone: '',
 };
 
 BuyCryptoCoin.propTypes = {
   intl: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   country: PropTypes.string.isRequired,
+  authProfile: PropTypes.object.isRequired,
   paymentMethod: PropTypes.string,
   amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
   currencyByLocal: PropTypes.string.isRequired,
   rfChange: PropTypes.func.isRequired,
   currency: PropTypes.object,
-  fiatCurrency: PropTypes.object,
   order: PropTypes.object,
   coinInfo: PropTypes.object.isRequired,
   basePrice: PropTypes.object.isRequired,
@@ -650,6 +668,7 @@ BuyCryptoCoin.propTypes = {
   buyCryptoOrder: PropTypes.func.isRequired,
   buyCryptoSaveRecipt: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
+  phone: PropTypes.string,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));
