@@ -35,9 +35,6 @@ class Transaction extends React.Component {
   componentDidMount() {
     const { country } = this.props;
     this.getTransactionNinjaCoin();
-
-    this.getBankInfoFromCountry(); // global bank by default
-    this.getBankInfoFromCountry(country);
   }
 
   getTransactionNinjaCoin = () => {
@@ -46,12 +43,6 @@ class Transaction extends React.Component {
       qs: {
         type: HANDSHAKE_ID.EXCHANGE,
       },
-    });
-  }
-
-  getBankInfoFromCountry = (country = 'XX') => {
-    this.props.buyCryptoGetBankInfo({
-      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${country}`,
     });
   }
 
@@ -66,40 +57,50 @@ class Transaction extends React.Component {
   }
 
   openNewTransaction = (transaction = {}) => {
-    const { messages } = this.props.intl;
-    const { bankInfo, country } = this.props;
-    let bankData = {};
-    const receipt = {
-      createdAt: transaction.createdAt,
-      amount: transaction.fiatAmount || 0,
-      // customerAmount: +transaction.fiatAmount,
-      // amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
-      fiatCurrency: transaction.fiatCurrency,
-      referenceCode: transaction.refCode,
-      status: transaction.status,
-      id: transaction.id,
-    };
+    const { center } = transaction;
 
-    // if fiatAmount over limit => use global bank, else local bank
-    if (this.isOverLimit(receipt.amount)) {
-      bankData = bankInfo.XX; // global bank
-    } else {
-      bankData = bankInfo[country] || bankInfo.XX;
-      receipt.amount = transaction.fiatLocalAmount;
-      receipt.fiatCurrency = transaction.fiatLocalCurrency;
-    }
-    this.setState({
-      modalTitle: messages.atm_cash_transfer_info.title,
-      modalContent: (
-        <AtmCashTransferInfo
-          receipt={receipt}
-          bankInfo={bankData}
-          saveReceiptHandle={this.saveReceiptHandle}
-          onDone={this.onReceiptSaved}
-        />
-      ),
-    }, () => {
-      this.modalRef.open();
+    const { messages } = this.props.intl;
+
+    this.props.buyCryptoGetBankInfo({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${center}`,
+      successFn: (res) => {
+        const bankInfo = res.data[0].information;
+
+        // let bankData = {};
+        const receipt = {
+          createdAt: transaction.createdAt,
+          amount: transaction.fiatAmount || 0,
+          // customerAmount: +transaction.fiatAmount,
+          // amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
+          fiatCurrency: transaction.fiatCurrency,
+          referenceCode: transaction.refCode,
+          status: transaction.status,
+          id: transaction.id,
+        };
+
+        const bankData = bankInfo;
+        // if fiatAmount over limit => use global bank, else local bank
+        if (this.isOverLimit(receipt.amount)) {
+          // bankData = bankInfo.XX; // global bank
+        } else {
+          // bankData = bankInfo[country] || bankInfo.XX;
+          receipt.amount = transaction.fiatLocalAmount;
+          receipt.fiatCurrency = transaction.fiatLocalCurrency;
+        }
+        this.setState({
+          modalTitle: messages.atm_cash_transfer_info.title,
+          modalContent: (
+            <AtmCashTransferInfo
+              receipt={receipt}
+              bankInfo={bankData}
+              saveReceiptHandle={this.saveReceiptHandle}
+              onDone={this.onReceiptSaved}
+            />
+          ),
+        }, () => {
+          this.modalRef.open();
+        });
+      },
     });
   }
 
@@ -135,7 +136,6 @@ class Transaction extends React.Component {
   }
 
   render() {
-    const { buyCoinTransaction } = this.props;
     const { modalContent, modalTitle } = this.state;
 
     return (
