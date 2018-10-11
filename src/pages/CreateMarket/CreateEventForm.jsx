@@ -6,6 +6,8 @@ import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
+import Checkbox from '@/components/core/controls/Checkbox';
+
 import { renderField } from './form';
 import { required, urlValidator } from './validate';
 import { createEvent } from './action';
@@ -143,6 +145,14 @@ class CreateEventForm extends Component {
   renderGroupNote = (text) => {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
   }
+  renderCheckReport = () => {
+    return (
+      <div className="wrapperCheckReport">
+        <Checkbox />
+        <div>I want Autonomous help me report outcomes.</div>
+      </div>
+    );
+  }
 
   renderEventSuggest = (props) => {
     return (
@@ -276,6 +286,7 @@ class CreateEventForm extends Component {
           validate={validate}
           component={renderField}
         />
+        {this.renderCheckReport()}
       </React.Fragment>
     );
   }
