@@ -93,7 +93,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address } = this.state.transaction;
+    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address, type } = this.state.transaction;
 
     return (
       <div className="transaction">
@@ -110,7 +110,7 @@ class TransactionItem extends React.Component {
         <div className="transaction-detail">
           {
             <div>
-              {status === COIN_ORDER_STATUS.PENDING && (
+              {type === 'bank' && status === COIN_ORDER_STATUS.PENDING && (
                 <div className="text-normal mt-2">
                   {messages.create.atm.transactions.messageTransfer}
                   <span className="transfer-now" onClick={() => this.props.onShowTransferInfo(this.state.transaction)}>{messages.create.atm.transactions.transferNow}</span>
