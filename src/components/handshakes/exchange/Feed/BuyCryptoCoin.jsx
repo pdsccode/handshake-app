@@ -326,6 +326,7 @@ class BuyCryptoCoin extends React.Component {
   };
 
   makeOrder = (info = {}) => {
+    const { country } = this.props;
     const { coinInfo, paymentMethod, amount, currency, address, noteAndTime, phone } = this.props;
     const { walletAddress } = this.state;
     const fiatAmount = info.fiatAmount || coinInfo.fiatAmount;
@@ -347,6 +348,13 @@ class BuyCryptoCoin extends React.Component {
 
     if (data.type === PAYMENT_METHODS.COD) {
       data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);
+    } else {
+      const globalBank = 'XX';
+      if (this.isOverLimit(fiatAmount)) {
+        data.center = globalBank; // global bank
+      } else {
+        data.center = country || globalBank;
+      }
     }
 
     if (paymentMethod === PAYMENT_METHODS.COD) {
