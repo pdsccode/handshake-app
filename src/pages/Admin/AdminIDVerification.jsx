@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { showAlert } from '@/reducers/app/action';
 import { loadIDVerificationDocuments, updateIDVerificationDocument } from '@/reducers/admin/action';
 import Image from '@/components/core/presentation/Image';
 import { API_URL } from '@/constants';
 import Login from '@/components/handshakes/betting-event/Login';
 import moment from 'moment';
+import { Table, Button } from 'react-bootstrap';
 
 import './Admin.scss';
 
@@ -21,6 +23,7 @@ class AdminIDVerification extends React.Component {
     loadIDVerificationDocuments: PropTypes.func.isRequired,
     updateIDVerificationDocument: PropTypes.func.isRequired,
     login: PropTypes.bool,
+    showAlert: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -33,6 +36,7 @@ class AdminIDVerification extends React.Component {
     this.state = {
       documents: [],
       login: this.token.length > 0,
+      actions: {},
     };
     this.documentRef = {};
   }
@@ -76,11 +80,38 @@ class AdminIDVerification extends React.Component {
   }
 
   approve(itemId) {
-    this.updateStatus(itemId, 1);
+    this.setState((prevState) => {
+      prevState.actions[itemId] = 1;
+      return {
+        actions: prevState.actions,
+      };
+    });
   }
 
   reject(itemId) {
-    this.updateStatus(itemId, -1);
+    this.setState((prevState) => {
+      prevState.actions[itemId] = -1;
+      return {
+        actions: prevState.actions,
+      };
+    });
+  }
+
+  confirm(itemId) {
+    const { actions } = this.state;
+    const status = actions[itemId];
+    if (status) {
+      this.updateStatus(itemId, status);
+    }
+  }
+
+  cancel(itemId) {
+    this.setState((prevState) => {
+      prevState.actions[itemId] = undefined;
+      return {
+        actions: prevState.actions,
+      };
+    });
   }
 
   updateStatus(itemId, status) {
@@ -95,7 +126,27 @@ class AdminIDVerification extends React.Component {
       successFn: (response) => {
         if (response.status === 1) {
           this.documentRef[itemId].style.display = 'none';
+          this.props.showAlert({
+            message: <div className="text-center">Successfully {status === 1 ? 'Approved' : 'Rejected'}</div>,
+            timeOut: 3000,
+            type: 'success',
+          });
+        } else {
+          this.props.showAlert({
+            message: <div className="text-center">Cannot {status === 1 ? 'Approve' : 'Rejecte'}. Please try again</div>,
+            timeOut: 3000,
+            type: 'danger',
+          });
         }
+        this.cancel(itemId);
+      },
+      errorFn: () => {
+        this.props.showAlert({
+          message: <div className="text-center">Cannot {status === 1 ? 'Approve' : 'Rejecte'}. Please try again</div>,
+          timeOut: 3000,
+          type: 'danger',
+        });
+        this.cancel(itemId);
       },
     });
   }
@@ -105,10 +156,11 @@ class AdminIDVerification extends React.Component {
     return !login ?
       (<Login />) : (
         <div className="admin-id-verification">
-          <table>
+          <Table striped condensed hover>
             <thead>
               <tr>
                 <th>#</th>
+                <th>UID</th>
                 <th>Full Name</th>
                 <th>Document Number</th>
                 <th>Document Type</th>
@@ -128,7 +180,8 @@ class AdminIDVerification extends React.Component {
 
                 return (
                   <tr key={`id_verification_item_${item.id}`} ref={(node) => { this.documentRef[item.id] = node; }}>
-                    <td>{i + 1}</td>
+                    <td>{item.id}</td>
+                    <td>{item.user_id}</td>
                     <td>{item.name}</td>
                     <td>{item.id_number}</td>
                     <td>{DOCUMENT_TYPES[item.id_type]}</td>
@@ -136,12 +189,19 @@ class AdminIDVerification extends React.Component {
                     <td><a href={backImage} target="_blank" rel="noopener noreferrer">{item.back_image ? (<Image src={backImage} />) : ''}</a></td>
                     <td><a href={selfieImage} target="_blank" rel="noopener noreferrer">{item.selfie_image ? (<Image src={selfieImage} />) : ''}</a></td>
                     <td>{uploadDate}</td>
-                    <td><a href="#" onClick={() => this.approve(item.id)}>Approve</a> / <a href="#" onClick={() => this.reject(item.id)}>Reject</a></td>
+                    <td>
+                      <div style={this.state.actions[item.id] ? { display: 'none' } : {}}>
+                        <Button bsSize="small" bsStyle="success" onClick={() => this.approve(item.id)}>Approve</Button> <Button bsSize="small" bsStyle="danger" onClick={() => this.reject(item.id)}>Reject</Button>
+                      </div>
+                      <div style={!this.state.actions[item.id] ? { display: 'none' } : {}}>
+                        <Button bsSize="small" bsStyle="info" onClick={() => this.confirm(item.id)}>{this.state.actions[item.id] === 1 ? 'Approve' : 'Reject'} ?</Button> <Button bsSize="small" bsStyle="info" onClick={() => this.cancel(item.id)}>Cancel</Button>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
-          </table>
+          </Table>
         </div>
       );
   }
@@ -154,6 +214,7 @@ const mapState = state => ({
 const mapDispatch = ({
   loadIDVerificationDocuments,
   updateIDVerificationDocument,
+  showAlert,
 });
 
 export default connect(mapState, mapDispatch)(AdminIDVerification);
