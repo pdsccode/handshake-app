@@ -35,6 +35,7 @@ import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmBu
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import WalletSelector from '@/components/handshakes/exchange/Feed/components/WalletSelector';
 import Modal from '@/components/core/controls/Modal/Modal';
+import { formatMoney, formatMoneyByLocale } from '@/services/offer-util';
 
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
@@ -124,8 +125,8 @@ export const fieldCheckBoxList = ({ input, name, titles, items, disabled = false
               onChange={() => null}
               disabled={disabled}
             />
-            <span className="checkmark" />
-            <span>{label}</span>
+            <span className={`checkmark ${disabled && value !== itemValue && 'disabled'}`} />
+            <span className={`${disabled && value !== itemValue && 'disabled'}`}>{label}</span>
           </label>
         );
       })}
@@ -156,6 +157,7 @@ class BuyCryptoCoin extends React.Component {
     const { country } = this.props;
     this.getCoinInfo({ isGetBasePrice: true, amount: 1 });
     this.updateFiatCurrency(this.props.currencyByLocal);
+    this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
     this.getBankInfoFromCountry(); // global bank by default
@@ -163,19 +165,14 @@ class BuyCryptoCoin extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { currencyByLocal, amount, coinInfo, currency, paymentMethod, country } = nextProps;
-    const state = {};
-
-    // check force payment method, if fiatAmount > limit => force to bank transfer & fiatCurrency must be USD
-    if (coinInfo && (coinInfo.fiatAmount >= coinInfo.limit)) {
-      state.forcePaymentMethod = PAYMENT_METHODS.BANK_TRANSFER;
-      this.updatePaymentMethod(PAYMENT_METHODS.BANK_TRANSFER);
-    } else {
-      state.forcePaymentMethod = null;
-    }
-
+    const { currencyByLocal, amount, coinInfo, currency, paymentMethod, country, authProfile } = nextProps;
     if (currencyByLocal !== this.props.currencyByLocal) {
       this.updateFiatCurrency(currencyByLocal);
+    }
+
+    // update phone number from props
+    if (authProfile?.phone !== this.props.authProfile?.phone) {
+      this.updatePhoneNumber(authProfile?.phone);
     }
 
     // get price of coin if amount or currency was changed
@@ -189,29 +186,31 @@ class BuyCryptoCoin extends React.Component {
     }
 
     if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
-      // if fiatAmount over limit => force use USD
-      if (this.isOverLimit(coinInfo.fiatAmount)) {
+      // if fiatAmount over limit => force use USD and bank transfer
+      if (this.isOverLimit(coinInfo.fiatAmount, coinInfo.limit)) {
         this.updateFiatAmount(coinInfo.fiatAmount);
         this.updateFiatCurrency(coinInfo.fiatCurrency);
-        return;
-      }
+        this.setState({ forcePaymentMethod: PAYMENT_METHODS.BANK_TRANSFER }, () => {
+          this.updatePaymentMethod(this.state.forcePaymentMethod);
+        });
+      } else {
+        // show fiatAmount for bank mode
+        if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
+          this.updateFiatAmount(coinInfo.fiatLocalAmount);
+        } else if (paymentMethod === PAYMENT_METHODS.COD) {
+          // show fiatAmount for COD mode
+          this.updateFiatAmount(coinInfo.fiatLocalAmountCod);
+        }
+        this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
 
-      // show fiatAmount for bank mode
-      if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
-        this.updateFiatAmount(coinInfo.fiatLocalAmount);
-      } else if (paymentMethod === PAYMENT_METHODS.COD) {
-        // show fiatAmount for COD mode
-        this.updateFiatAmount(coinInfo.fiatLocalAmountCod);
+        this.setState({ forcePaymentMethod: null });
       }
-      this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
     }
 
     // get bank info if country change
     if (country !== this.props.country) {
       this.getBankInfoFromCountry(country);
     }
-
-    this.setState({ ...state });
   }
 
   onCountryChange = (country) => {
@@ -232,6 +231,10 @@ class BuyCryptoCoin extends React.Component {
     fiatCurrency && this.props.rfChange(nameBuyCryptoForm, 'fiatCurrency', fiatCurrency);
   }
 
+  updatePhoneNumber = (phone) => {
+    phone && this.props.rfChange(nameBuyCryptoForm, 'phone', phone);
+  }
+
   updatePaymentMethod = (method) => {
     if (Object.values(PAYMENT_METHODS).indexOf(method) === -1) {
       return;
@@ -250,10 +253,11 @@ class BuyCryptoCoin extends React.Component {
     amount && this.props.rfChange(nameBuyCryptoForm, 'fiatAmount', Number.parseFloat(amount) || 0);
   }
 
-  isOverLimit = (amountInUsd) => {
+  isOverLimit = (amountInUsd, limit) => {
     const { coinInfo } = this.props;
-    const amount = amountInUsd || coinInfo?.fiatAmount;
-    return Number.parseFloat(amount) > Number.parseFloat(coinInfo?.limit);
+    const amount = Number.parseFloat(amountInUsd || coinInfo?.fiatAmount) || 0;
+    const limitAmount = Number.parseFloat(limit || coinInfo?.limit) || 0;
+    return amount > limitAmount;
   }
 
   showLoading = () => {
@@ -279,15 +283,15 @@ class BuyCryptoCoin extends React.Component {
     });
   }
 
-  getCoinInfo = ({ amount, fiatCurrencyId, currencyId, isGetBasePrice }) => {
-    const { currency } = this.props;
-    const _fiatCurrencyId = fiatCurrencyId || this.props.fiatCurrency.id;
+  getCoinInfo = ({ amount, currencyId, isGetBasePrice }) => {
+    const { currency, currencyByLocal } = this.props;
+    const fiatCurrencyId = isGetBasePrice ? FIAT_CURRENCY.USD : currencyByLocal;
     const _currencyId = currencyId || this.props.currency.id;
     const parsedAmount = Number.parseFloat(amount || this.props.amount) || null;
-    if (parsedAmount && currency && _fiatCurrencyId) {
+    if (parsedAmount && currency && fiatCurrencyId) {
       this.props.buyCryptoGetCoinInfo({
-        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${_fiatCurrencyId}`,
-        more: isGetBasePrice && { isGetBasePrice, amount: parsedAmount, currencyId: _currencyId, fiatCurrencyId: _fiatCurrencyId },
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice && '&check=1'}`,
+        more: isGetBasePrice && { isGetBasePrice, amount: parsedAmount, currencyId: _currencyId, fiatCurrencyId },
       });
     }
   }
@@ -440,7 +444,17 @@ class BuyCryptoCoin extends React.Component {
           <Field
             type="text"
             className="form-control input-field"
-            placeholder={messages.create.cod_form.time_note}
+            name="phone"
+            placeholder={messages.create.cod_form.your_phone}
+            component={fieldInput}
+            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+          />
+        </div>
+        <div className="input-group mt-2">
+          <Field
+            type="text"
+            className="form-control input-field"
+            placeholder={messages.create.cod_form.time}
             name="noteAndTime"
             component={fieldTextArea}
             validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
@@ -533,6 +547,9 @@ class BuyCryptoCoin extends React.Component {
                   type="text"
                   component={fieldInput}
                   validate={[required]}
+                  format={value => {
+                    return this.props.amount ? formatMoney(value) : 0;
+                  }}
                   elementAppend={
                     <Field
                       name="fiatCurrency"

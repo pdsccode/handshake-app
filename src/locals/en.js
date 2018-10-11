@@ -1109,7 +1109,8 @@ export default {
     cod_form: {
       cod: 'Cash on Delivery',
       your_address: 'Your address',
-      time_note: 'Time and note',
+      your_phone: 'Your phone number',
+      time: 'Time to delivery',
       buy_btn: 'Buy',
     },
     cash: {
