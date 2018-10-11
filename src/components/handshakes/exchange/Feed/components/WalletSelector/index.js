@@ -35,7 +35,13 @@ export default class WalletSelector extends Component {
   getListWallets = async () => {
     try {
       const wallets = MasterWallet.getMasterWallet();
-      this.setState({ wallets });
+      const supportWallet = [];
+      wallets.forEach(wallet => {
+        if (Object.values(CRYPTO_CURRENCY_NAME).indexOf(wallet.name) !== -1) {
+          supportWallet.push(wallet);
+        }
+      });
+      this.setState({ wallets: supportWallet });
     } catch (e) {
       console.warn('getListWallets', e);
     }
