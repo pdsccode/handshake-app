@@ -467,11 +467,14 @@ render() {
   let showDivAmount = this.state.walletSelected && this.state.rate;
   const { walletNotFound, walletSelected } = this.state;
 
+  let amount = this.state.inputSendAmountValue;
+  try {amount= parseFloat(amount).toFixed(8)}catch (e){}
+
   return (
     <div>
         {/* Dialog confirm transfer coin */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmTranferRef = modal}>
-        <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
+        <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {amount} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
         <div className="bodyConfirm">
             <Button className="left" cssType="danger" onClick={this.submitSendCoin} >{messages.wallet.action.transfer.button.confirm}</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmTranferRef.close(); }}>Cancel</Button>
