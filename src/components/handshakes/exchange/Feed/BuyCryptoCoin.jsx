@@ -328,16 +328,22 @@ class BuyCryptoCoin extends React.Component {
   makeOrder = (info = {}) => {
     const { coinInfo, paymentMethod, amount, currency, address, noteAndTime, phone } = this.props;
     const { walletAddress } = this.state;
+    const fiatAmount = info.fiatAmount || coinInfo.fiatAmount;
     const data = {
       type: info.paymentMethod || paymentMethod,
       amount: String(info.amount || amount),
       currency: info.currencyId || currency.id,
-      fiat_amount: String(info.fiatAmount || coinInfo.fiatAmount),
+      fiat_amount: String(fiatAmount),
       fiat_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
-      fiat_local_amount: String(info.fiatLocalAmount || coinInfo.fiatLocalAmount),
-      fiat_local_currency: info.fiatLocalCurrencyId || coinInfo.fiatLocalCurrency,
+      fiat_local_amount: String(fiatAmount),
+      fiat_local_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
       address: info.address || walletAddress,
     };
+
+    if (!this.isOverLimit(fiatAmount)) {
+      data.fiat_local_amount = String(info.fiatLocalAmount || coinInfo.fiatLocalAmount);
+      data.fiat_local_currency = info.fiatLocalCurrencyId || coinInfo.fiatLocalCurrency;
+    }
 
     if (data.type === PAYMENT_METHODS.COD) {
       data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);

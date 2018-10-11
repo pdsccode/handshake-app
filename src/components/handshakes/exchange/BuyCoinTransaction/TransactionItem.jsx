@@ -93,7 +93,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatAmount, status, address } = this.state.transaction;
+    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address } = this.state.transaction;
 
     return (
       <div className="transaction">
@@ -139,9 +139,9 @@ class TransactionItem extends React.Component {
               <div className="d-table-cell text-right">
                 <img src={icWarning} width="16px" style={{ marginBottom: '4px' }} />
                 &nbsp;&nbsp;
-                <span className="font-weight-bold">{fiatAmount}</span>
+                <span className="font-weight-bold">{fiatLocalAmount}</span>
                 &nbsp;
-                <span className="text-normal">{FIAT_CURRENCY.USD}</span>
+                <span className="text-normal">{fiatLocalCurrency}</span>
               </div>
             </div>
             <div className="d-table w-100">
