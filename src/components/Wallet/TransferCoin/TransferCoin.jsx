@@ -468,7 +468,7 @@ render() {
   const { walletNotFound, walletSelected } = this.state;
 
   let amount = this.state.inputSendAmountValue;
-  try {amount= parseFloat(amount).toFixed(6)}catch (e){}
+  try {amount= parseFloat(amount).toFixed(8)}catch (e){}
 
   return (
     <div>

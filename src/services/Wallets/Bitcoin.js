@@ -91,7 +91,7 @@ export class Bitcoin extends Wallet {
       console.log('server', this.network);
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
       
-      amountToSend = parseFloat(amountToSend).toFixed(6)
+      amountToSend = parseFloat(amountToSend).toFixed(8)
       console.log('amountToSend fixed', amountToSend);
 
       if (!balance || balance == 0 || balance <= amountToSend) {
