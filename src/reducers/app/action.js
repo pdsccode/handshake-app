@@ -277,7 +277,7 @@ function getCountry(addrComponents) {
 export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
   try {
     $http({
-      url: 'http://ipfind.co/me',
+      url: 'https://ipfind.co/me',
       qs: { auth: process.env.ipfindKey },
     }).then((res) => {
       const { data } = res;
@@ -448,7 +448,7 @@ const continueAfterInitApp = (language, ref, dispatch, data) => {
 export const initApp = (language, ref) => (dispatch) => {
   try {
     $http({
-      url: 'http://ipfind.co/me',
+      url: 'https://ipfind.co/me',
       qs: { auth: process.env.ipfindKey },
     }).then((res) => {
       const { data } = res;
