@@ -165,7 +165,7 @@
     .OutcomeItem {
       font-family: $font-family-base;
       font-size: rem-calc(20px);
-      color: white;
+      color: #4d598a;
       border-radius: rem-calc(6px);
       padding: rem-calc(10px 15px);
       margin-right: rem-calc(5px);
@@ -175,6 +175,8 @@
       flex-direction: column;
       justify-content: center;
       height: 100%;
+      background-color: #f2f5fc;
+      border: 1px solid #ebeeff;
 
       &.AddMoreOutcome {
         background-color: transparent !important;
