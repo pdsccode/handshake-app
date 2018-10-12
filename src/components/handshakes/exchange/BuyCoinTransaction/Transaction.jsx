@@ -13,7 +13,7 @@ import TransactionItem from './TransactionItem';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
 import { getTransactionNinjaCoin } from '@/reducers/exchange/action';
-import { buyCryptoGetBankInfo } from '@/reducers/buyCoin/action';
+import { buyCryptoGetBankInfo, buyCryptoSaveRecipt } from '@/reducers/buyCoin/action';
 
 const nameFormTransaction = 'formTransaction';
 const FormTransaction = createForm({
@@ -29,6 +29,7 @@ class Transaction extends React.Component {
     this.state = {
       modalContent: '',
       modalTitle: '',
+      selectedTransaction: {},
     };
   }
 
@@ -57,50 +58,63 @@ class Transaction extends React.Component {
   }
 
   openNewTransaction = (transaction = {}) => {
-    const { center } = transaction;
+    this.setState({ selectedTransaction: transaction }, () => {
+      const { center } = transaction;
 
-    const { messages } = this.props.intl;
+      const { messages } = this.props.intl;
 
-    this.props.buyCryptoGetBankInfo({
-      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${center}`,
-      successFn: (res) => {
-        const bankInfo = res.data[0].information;
+      this.props.buyCryptoGetBankInfo({
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${center}`,
+        successFn: (res) => {
+          const bankInfo = res.data[0].information;
 
-        // let bankData = {};
-        const receipt = {
-          createdAt: transaction.createdAt,
-          amount: transaction.fiatAmount || 0,
-          // customerAmount: +transaction.fiatAmount,
-          // amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
-          fiatCurrency: transaction.fiatCurrency,
-          referenceCode: transaction.refCode,
-          status: transaction.status,
-          id: transaction.id,
-        };
+          // let bankData = {};
+          const receipt = {
+            createdAt: transaction.createdAt,
+            amount: transaction.fiatAmount || 0,
+            // customerAmount: +transaction.fiatAmount,
+            // amount: (+transaction.fiatAmount - +transaction.storeFee) || 0,
+            fiatCurrency: transaction.fiatCurrency,
+            referenceCode: transaction.refCode,
+            status: transaction.status,
+            id: transaction.id,
+          };
 
-        const bankData = bankInfo;
-        // if fiatAmount over limit => use global bank, else local bank
-        if (this.isOverLimit(receipt.amount)) {
-          // bankData = bankInfo.XX; // global bank
-        } else {
-          // bankData = bankInfo[country] || bankInfo.XX;
-          receipt.amount = transaction.fiatLocalAmount;
-          receipt.fiatCurrency = transaction.fiatLocalCurrency;
-        }
-        this.setState({
-          modalTitle: messages.atm_cash_transfer_info.title,
-          modalContent: (
-            <AtmCashTransferInfo
-              receipt={receipt}
-              bankInfo={bankData}
-              saveReceiptHandle={this.saveReceiptHandle}
-              onDone={this.onReceiptSaved}
-            />
-          ),
-        }, () => {
-          this.modalRef.open();
-        });
-      },
+          const bankData = bankInfo;
+          // if fiatAmount over limit => use global bank, else local bank
+          if (this.isOverLimit(receipt.amount)) {
+            // bankData = bankInfo.XX; // global bank
+          } else {
+            // bankData = bankInfo[country] || bankInfo.XX;
+            receipt.amount = transaction.fiatLocalAmount;
+            receipt.fiatCurrency = transaction.fiatLocalCurrency;
+          }
+          this.setState({
+            modalTitle: messages.atm_cash_transfer_info.title,
+            modalContent: (
+              <AtmCashTransferInfo
+                receipt={receipt}
+                bankInfo={bankData}
+                saveReceiptHandle={this.saveReceiptHandle}
+                onDone={this.onReceiptSaved}
+              />
+            ),
+          }, () => {
+            this.modalRef.open();
+          });
+        },
+      });
+    });
+  }
+
+  saveReceiptHandle = ({ data, successFn, errorFn }) => {
+    const { selectedTransaction } = this.state;
+    this.props.buyCryptoSaveRecipt({
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_SAVE_RECEIPT}/${selectedTransaction?.id}`,
+      METHOD: 'PUT',
+      data,
+      successFn,
+      errorFn,
     });
   }
 
@@ -160,6 +174,7 @@ const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
   getTransactionNinjaCoin: bindActionCreators(getTransactionNinjaCoin, dispatch),
   buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
+  buyCryptoSaveRecipt: bindActionCreators(buyCryptoSaveRecipt, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Transaction));
