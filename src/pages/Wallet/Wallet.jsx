@@ -258,11 +258,12 @@ class Wallet extends React.Component {
   }
 
   componentWillUnmount() {
-    this.detachScrollListener();
+    try{document.querySelector(".app").style.backgroundColor = '#ffffff';} catch (e){};
+    this.detachScrollListener();        
   }
 
   async componentDidMount() {
-
+    try{document.querySelector(".app").style.backgroundColor = '#f4f4fb';} catch (e){};
     this.getSetting();
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
