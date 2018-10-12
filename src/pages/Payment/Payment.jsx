@@ -103,23 +103,29 @@ class Payment extends React.Component {
     return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
   }
 
-  async componentDidMount() {console.log(1);
-    await this.addShop();console.log(2);
-    let listShop = await this.getShops();console.log(3);
+  async componentDidMount() {
+    //await this.addShop();
+    let listShop = await this.getShops();
+    this.setState({listShop});
   }
 
-  getShops = () => {
-    this.props.storeList({
-      PATH_URL: `store/list`,
-      METHOD: 'GET',
-      successFn: (data) => {
-        if (data.status) {
-          console.log(data);
-        }
-      },
-      errorFn: (e) => {
-        this.showError(`Error ${e && e.message}`);
-      },
+  getShops(){
+    return new Promise((resolve, reject) => {
+
+      this.props.storeList({
+        PATH_URL: `store/list`,
+        METHOD: 'GET',
+        successFn: (data) => {
+          if (data.status) {
+            console.log(data.data);
+            resolve(data.data);
+          }
+        },
+        errorFn: (e) => {
+          this.showError(`Error ${e && e.message}`);
+          resolve(false);
+        },
+      });
     });
   }
 
@@ -146,6 +152,10 @@ class Payment extends React.Component {
     });
   }
 
+  get showListShops() {
+    return this.state.listShops.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+  }
+
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
@@ -163,9 +173,7 @@ class Payment extends React.Component {
             <Header icon2={iconAlignJust} onIcon2Click={this.updateSortableForCoin} icon={iconAddPlus} title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
           </Row>
           <Row className="list">
-            { this.state.listShop.length > 0 &&
-              <SortableComponent onSortableSuccess={items => this.onSortableCoinSuccess(items)} onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)}  isSortable={this.state.listSortable.coin} items={this.state.listMainWalletBalance} />
-            }
+            {this.showListShops}
           </Row>
         </Row>
       </div>
