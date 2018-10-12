@@ -279,6 +279,7 @@ export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
     $http({
       url: 'https://ipfind.co/me',
       qs: { auth: process.env.ipfindKey },
+      headers: { 'Content-Type': 'text/plain' },
     }).then((res) => {
       const { data } = res;
 
@@ -450,6 +451,7 @@ export const initApp = (language, ref) => (dispatch) => {
     $http({
       url: 'https://ipfind.co/me',
       qs: { auth: process.env.ipfindKey },
+      headers: { 'Content-Type': 'text/plain' },
     }).then((res) => {
       const { data } = res;
       const ipInfo = IpInfo.ipFind(data);
