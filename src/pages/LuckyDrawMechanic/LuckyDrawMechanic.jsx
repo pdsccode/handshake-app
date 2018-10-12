@@ -11,7 +11,11 @@ class LuckyDrawMechanic extends React.Component {
   renderHeader() {
     return (
       <div className="wrapperHeader">
-        <div className="headerLink">Product/Lucky Draw</div>
+        <div className="pd-breadcrumb">
+          <a href="/product">Product</a>
+          <span className="mx-2">/</span>
+          <span>Lucky Draw</span>
+        </div>
         <div className="headerImage">
           <Image src={LuckyDrawBanner} alt="LuckyDrawBanner" />
         </div>
