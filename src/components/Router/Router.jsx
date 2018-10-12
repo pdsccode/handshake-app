@@ -64,7 +64,6 @@ const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), 
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
 const RouterBuyCryptoCoin = createDynamicImport(() => import('@/components/Router/BuyCryptoCoin'), Loading);
-const RouterBuyCryptoCoinTransaction = createDynamicImport(() => import('@/components/handshakes/exchange/BuyCoinTransaction/Transaction'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
@@ -80,19 +79,18 @@ const configRoutesUsingMobileLayout = [
   { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
 
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
-  { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
+  // { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
+  // { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_PAYMENT_TRANSFER, component: RouterPaymentTransfer },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
-  { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
+  // { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
-  { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
+  // { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   // { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
   { path: URL.BUY_COIN_URL, component: RouterBuyCryptoCoin },
-  { path: URL.BUY_COIN_TRANSACTION_URL, component: RouterBuyCryptoCoinTransaction },
 
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
