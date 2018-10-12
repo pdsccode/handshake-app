@@ -35,6 +35,7 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 import { Link } from 'react-router-dom';
+import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -161,7 +162,7 @@ class BuyCryptoCoin extends React.Component {
     this.getBankInfoFromCountry(); // global bank by default
     this.getBankInfoFromCountry(country);
 
-    this.checkUserVerified();
+    // this.checkUserVerified();
   }
 
   checkUserVerified = () => {
@@ -589,9 +590,12 @@ class BuyCryptoCoin extends React.Component {
 
   render() {
     console.log('STATE', this.state);
+    const { authProfile: { idVerified } } = this.props;
     const { messages } = this.props.intl;
     const { amount } = this.props;
     const { currency, forcePaymentMethod, walletSelectorType } = this.state;
+
+    const showState = [-1, 0, 2];
 
     return (
       <div>
@@ -599,6 +603,9 @@ class BuyCryptoCoin extends React.Component {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <div className="choose-coin">
+          {
+            showState.indexOf(idVerified) > 0 && <IdVerifyBtn dispatch={this.props.dispatch} idVerified={idVerified} />
+          }
           <div className="specific-amount">
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
