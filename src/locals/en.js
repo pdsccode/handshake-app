@@ -19,7 +19,7 @@ export default {
       bet: 'Bet',
       credit: 'CC',
       shop: 'Shop',
-      ninjaCoin: 'Ninja Coin',
+      ninjaCoin: 'Coin',
     },
   },
   buy: 'Buy',
