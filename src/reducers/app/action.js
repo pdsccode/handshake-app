@@ -277,12 +277,13 @@ function getCountry(addrComponents) {
 export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
   try {
     $http({
-      url: 'https://ipapi.co/json',
-      qs: { key: process.env.ipapiKey },
+      url: 'https://ipfind.co/me',
+      qs: { auth: process.env.ipfindKey },
+      headers: { 'Content-Type': 'text/plain' },
     }).then((res) => {
       const { data } = res;
 
-      const ipInfo = IpInfo.ipInfo(data);
+      const ipInfo = IpInfo.ipFind(data);
       ipInfo.locationMethod = LOCATION_METHODS.IP;
       // get currency base on GPS
       navigator.geolocation.getCurrentPosition((location) => {
@@ -448,11 +449,12 @@ const continueAfterInitApp = (language, ref, dispatch, data) => {
 export const initApp = (language, ref) => (dispatch) => {
   try {
     $http({
-      url: 'https://ipapi.co/json',
-      qs: { key: process.env.ipapiKey },
+      url: 'https://ipfind.co/me',
+      qs: { auth: process.env.ipfindKey },
+      headers: { 'Content-Type': 'text/plain' },
     }).then((res) => {
       const { data } = res;
-      const ipInfo = IpInfo.ipInfo(data);
+      const ipInfo = IpInfo.ipFind(data);
 
       // show popup to get GPS permission
       // if (!BrowserDetect.isDesktop) {
