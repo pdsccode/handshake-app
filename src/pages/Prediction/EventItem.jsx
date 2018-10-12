@@ -4,11 +4,22 @@ import Countdown from '@/components/Countdown/Countdown';
 import CopyLink from '@/assets/images/share/link.svg';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import { URL } from '@/constants';
+import Image from '@/components/core/presentation/Image';
 import { randomArrayItem } from '@/utils/array';
 import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
 import { socialSharedMsg } from './constants';
 
+function renderEventSource({ event }) {
+  return (
+    <div className="SourceLogo">
+      <div className="LogoImage">
+        <Image src="https://www.google.com/s2/favicons?domain=www.espn.com" alt="sourceLogo" />
+      </div>
+      <div className="SourceTitle">ESPN</div>
+    </div>
+  );
+}
 function renderEventName({ event }) {
   return (
     <div className="EventName">
@@ -85,6 +96,7 @@ function renderShareSocial(props) {
 function EventItem(props) {
   return (
     <div className="EventItem">
+      {renderEventSource(props)}
       {renderEventName(props)}
       {renderEventNumberOfPlayers(props)}
       {renderOutcomeList(props)}

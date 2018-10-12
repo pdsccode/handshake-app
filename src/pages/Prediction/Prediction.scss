@@ -326,3 +326,12 @@
     display: inline-block;
   }
 }
+.SourceLogo {
+  display: flex;
+  align-items: center;
+  .SourceTitle {
+    color: #8A8A8F;
+    font-size: rem-calc(14px);
+    margin-left: 7px;
+  }
+}
