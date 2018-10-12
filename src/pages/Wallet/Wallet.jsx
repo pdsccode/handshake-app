@@ -693,7 +693,7 @@ class Wallet extends React.Component {
   }
   onExportPrivateKeyClick = (wallet) => {
     const { messages } = this.props.intl;
-    alert(this.state.walletSelected.privateKey);
+    
     this.props.requestWalletPasscode({
       onSuccess: () => {        
         this.setState({
