@@ -26,6 +26,7 @@ module.exports = function webpackConfig(env, argv = {}) {
     modules: false,
     children: false,
     chunks: false,
+    assets: false,
   };
 
   let appEnvConfig = {
