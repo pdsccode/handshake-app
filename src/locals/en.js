@@ -1271,6 +1271,7 @@ export default {
           wallet_name: 'Wallet Name',
           hide_balance: 'Hide Balance',
           backup_wallet: 'Backup Wallet',
+          export_private_key: 'Export Private Key',
           delete_wallet: 'Delete Wallet',
         },
         update_name: {
@@ -1351,6 +1352,10 @@ export default {
           restore: 'Restore now',
         },
         description: 'Please enter your top secret recovery data to restore your wallet.',
+      },
+      export_private_key: {
+        title: "Export at your risk!",
+        desc: "Anyone with your Private Key will have FULL access to your wallet!!!"
       },
       setting: {
         title: 'Settings',
