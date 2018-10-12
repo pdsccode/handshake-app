@@ -13,16 +13,16 @@ import {APP} from '@/constants';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import ListCoin from '@/components/Wallet/ListCoin';
-import './PFDRegister.scss';
+import './Register.scss';
 import '../../Wallet/WalletPreferences/WalletPreferences.scss';
 import iconRemove from '@/assets/images/icon/comment/delete-icon.svg';
-import { verifyPhone, submitPhone, verifyEmail, checkUsernameExist, authUpdate, submitEmail, verifyID } from '@/reducers/auth/action';
+import { storeList, storeUpdate, storeDetail, storeCreate } from '@/reducers/auth/action';
 import { ICON } from '@/styles/images';
 import valid from '@/services/validate';
 
 const supportWallets = ['BTC', 'ETH', 'BCH', 'XRP', 'EOS'];
 
-class PFDRegister extends React.Component {
+class Register extends React.Component {
   static propTypes = {
     setLanguage: PropTypes.func.isRequired,
   }
@@ -210,7 +210,7 @@ class PFDRegister extends React.Component {
           if (!res.data) {console.log(3, inputShopID);
             const params = new URLSearchParams();
             params.append('username', inputShopID);
-            this.props.authUpdate({
+            this.props.storeUpdate({
               PATH_URL: 'user/profile',
               data: params,
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -476,9 +476,10 @@ const mapDispatch = ({
   showAlert,
   showLoading,
   hideLoading,
-  authUpdate,
-  checkUsernameExist,
+  storeUpdate,
+  storeDetail,
+  storeCreate
 });
 
 
-export default injectIntl(connect(mapStateToProps, mapDispatch)(PFDRegister));
+export default injectIntl(connect(mapStateToProps, mapDispatch)(Register));

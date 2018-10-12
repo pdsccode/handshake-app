@@ -19,6 +19,10 @@ export const ACTIONS = {
   COMPLETE_PROFILE: 'COMPLETE_PROFILE',
   SUBMIT_EMAIL_SUBCRIBE: 'SUBMIT_EMAIL_SUBCRIBE',
   VERIFY_REDEEM_CODE: 'VERIFY_REDEEM_CODE',
+  STORE_CREATE: 'STORE_CREATE',
+  STORE_UPDATE: 'STORE_UPDATE',
+  STORE_LIST: 'STORE_LIST',
+  STORE_DETAIL: 'STORE_DETAIL',
 };
 
 export const fetchProfile = createAPI(ACTIONS.AUTH_FETCH);
@@ -43,3 +47,9 @@ export const checkFollowTwitter = createAPI(ACTIONS.CHECK_FOLLOW_TWITTER);
 export const referredInfo = createAPI(ACTIONS.REFERRED_INFO);
 export const completeProfile = createAPI(ACTIONS.COMPLETE_PROFILE);
 export const verifyRedeemCode = createAPI(ACTIONS.VERIFY_REDEEM_CODE);
+
+// pay for devs:
+export const storeDetail = createAPI(ACTIONS.STORE_DETAIL);
+export const storeList = createAPI(ACTIONS.STORE_LIST);
+export const storeUpdate = createAPI(ACTIONS.STORE_UPDATE);
+export const storeCreate = createAPI(ACTIONS.STORE_CREATE);
