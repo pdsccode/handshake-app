@@ -3,29 +3,22 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import {
-  URL,
-  API_URL,
-  CRYPTO_CURRENCY,
-  CRYPTO_CURRENCY_NAME,
-  FIAT_CURRENCY,
-  FIAT_CURRENCY_NAME,
-} from '@/constants';
+import { API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { fieldDropdown, fieldInput, fieldTextArea } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
 import {
-  buyCryptoOrder,
-  buyCryptoGetCoinInfo,
   buyCryptoGetBankInfo,
+  buyCryptoGetCoinInfo,
+  buyCryptoOrder,
   buyCryptoSaveRecipt,
 } from '@/reducers/buyCoin/action';
 import { bindActionCreators } from 'redux';
 import debounce from '@/utils/debounce';
-import { showAlert } from '@/reducers/app/action';
+import { hideAlert, showAlert } from '@/reducers/app/action';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
@@ -41,6 +34,7 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
+import { Link } from 'react-router-dom';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -166,6 +160,46 @@ class BuyCryptoCoin extends React.Component {
     // need to get bank info in user country, global bank also
     this.getBankInfoFromCountry(); // global bank by default
     this.getBankInfoFromCountry(country);
+
+    this.checkUserVerified();
+  }
+
+  checkUserVerified = () => {
+    let timeShow = 0;
+    let idVerificationStatusText = 'Rejected';
+    const { authProfile: { idVerified } } = this.props;
+
+    switch (idVerified) {
+      case 0: {
+        idVerificationStatusText = <span>Not verified yet. <Link to={URL.HANDSHAKE_ME_PROFILE}>Verify now</Link></span>;
+        timeShow = 24 * 60 * 60 * 1000;
+        break;
+      }
+      case -1: {
+        idVerificationStatusText = 'Rejected';
+        break;
+      }
+      case 1: {
+        idVerificationStatusText = 'Verified';
+        break;
+      }
+      case 2: {
+        idVerificationStatusText = 'Processing';
+        break;
+      }
+      default: {
+        idVerificationStatusText = 'Default';
+      }
+    }
+    this.props.showAlert({
+      message: <div className="text-center">
+        {idVerificationStatusText}
+      </div>,
+      timeOut: timeShow,
+      type: 'danger',
+      callBack: () => {
+      },
+    });
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -542,24 +576,8 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
-  onAmountChange = (e, amount) => {
-    console.log('onAmountChange', amount);
-
-    // this.setState({ amount }, () => {
-      if (this.intervalCountdown) {
-        clearTimeout(this.intervalCountdown);
-      }
-
-      this.intervalCountdown = setTimeout(() => {
-        this.getCoinInfo({ amount });
-      }, 1000);
-    // });
-  }
-
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearTimeout(this.intervalCountdown);
-    }
+    this.props.hideAlert();
   }
 
   render() {
@@ -669,6 +687,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
+  hideAlert: bindActionCreators(hideAlert, dispatch),
   buyCryptoOrder: bindActionCreators(buyCryptoOrder, dispatch),
   buyCryptoGetCoinInfo: bindActionCreators(buyCryptoGetCoinInfo, dispatch),
   buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
@@ -709,6 +728,7 @@ BuyCryptoCoin.propTypes = {
   buyCryptoOrder: PropTypes.func.isRequired,
   buyCryptoSaveRecipt: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
+  hideAlert: PropTypes.func,
   phone: PropTypes.string,
 };
 
