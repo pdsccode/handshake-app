@@ -435,13 +435,18 @@ class BuyCryptoCoin extends React.Component {
           receipt={receipt}
           bankInfo={bankData}
           saveReceiptHandle={this.saveReceiptHandle}
-          onDone={() => this.modalRef.close()}
+          onDone={this.onReceiptSaved}
         />
       ),
       modalTitle: 'Bank Transfer',
     }, () => {
       this.modalRef.open();
     });
+  }
+
+  onReceiptSaved = () => {
+    this.modalRef.close();
+    this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   handleBuyPackage = (item = {}) => {
