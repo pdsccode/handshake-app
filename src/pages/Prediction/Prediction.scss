@@ -176,12 +176,12 @@
       justify-content: center;
       height: 100%;
       background-color: #f2f5fc;
-      border: 1px solid #ebeeff;
+      border: 2px solid #ebeeff;
 
       &.AddMoreOutcome {
         background-color: transparent !important;
-        border: 2px dashed #CECECE;
-        color: #615c5c;
+        border: 2px dashed #ebeeff;
+        color: #4d598a;
         font-size: 30px;
       }
 
@@ -223,6 +223,7 @@
       line-height: rem-calc(24px);
       font-weight: $medium;
       margin-bottom: rem-calc(2px);
+      margin-top: rem-calc(10px);
     }
 
     .EventNumberOfPlayer {

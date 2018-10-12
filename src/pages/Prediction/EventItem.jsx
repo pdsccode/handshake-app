@@ -98,12 +98,12 @@ function EventItem(props) {
     <div className="EventItem">
       {renderEventSource(props)}
       {renderEventName(props)}
-      {renderEventNumberOfPlayers(props)}
       {renderOutcomeList(props)}
       <div className="EventDetails">
         <div className="EvenFirstGroup">
           {renderEvenTimeLeft(props)}
           {renderEventTotalBets(props)}
+          {renderEventNumberOfPlayers(props)}
         </div>
         {renderShareSocial(props)}
       </div>
