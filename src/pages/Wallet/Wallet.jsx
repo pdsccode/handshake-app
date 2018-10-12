@@ -146,6 +146,7 @@ class Wallet extends React.Component {
       modalWalletPreferences: "",
       modalRemindCheckout: '',
       backupWalletContent: "",
+      exportPrivateContent: "",
       restoreWalletContent: "",
       redeemContent: "",
 
@@ -690,6 +691,29 @@ class Wallet extends React.Component {
 
     // }
   }
+  onExportPrivateKeyClick = (wallet) => {
+    const { messages } = this.props.intl;
+    alert(this.state.walletSelected.privateKey);
+    this.props.requestWalletPasscode({
+      onSuccess: () => {        
+        this.setState({
+          exportPrivateContent: (
+              <div className="export-private-key">
+                <div className="ex-title">{messages.wallet.action.export_private_key.title}</div>
+                <QRCode size={230} value={this.state.walletSelected.privateKey} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.copy.success);}} />
+                <div className="ex-desc">{messages.wallet.action.export_private_key.desc} </div>
+                <Button onClick={()=> {Clipboard.copy(this.state.walletSelected.privateKey); this.showToast(messages.wallet.action.copy.success);}}>Copy</Button>
+              </div>
+          )
+        }, ()=>{
+          this.modalExportPrivateKeyRef.open();
+        })        
+      }
+    })
+  }
+  onCloseExportPrivateKey =()=>{
+    this.setState({exportPrivateContent: ''});
+  }
   onWalletItemClick = (wallet, callUpdate) =>{
     this.setState({walletSelected: wallet,
       modalHistory:
@@ -717,7 +741,7 @@ class Wallet extends React.Component {
 
   onOpenWalletPreferences = (wallet) =>{
     this.setState({
-      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.props.requestWalletPasscode({onSuccess: () => { this.modalRemoveRef.open();}});}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
+      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.props.requestWalletPasscode({onSuccess: () => { this.modalRemoveRef.open();}});}} onWarningClick={()=>{this.onWarningClick(wallet);}} onExportPrivateKeyClick={()=>{this.onExportPrivateKeyClick(wallet);}}  onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
     }, ()=>{
       this.modalWalletReferencesRef.open();
     });
@@ -888,7 +912,7 @@ class Wallet extends React.Component {
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalRemindCheckout, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent} = this.state;
+      modalHistory, modalRemindCheckout, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent, exportPrivateContent} = this.state;
 
     return (
       <div className="wallet-page">
@@ -970,6 +994,13 @@ class Wallet extends React.Component {
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal} onClose={this.closeRestoreWalletAccount}>
             {restoreWalletContent}
           </Modal>
+
+          {/* Modal for Export Private key : */}
+          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.preferecens.list_item.export_private_key} onRef={modal => this.modalExportPrivateKeyRef = modal} onClose={this.onCloseExportPrivateKey}>
+            {exportPrivateContent}
+          </Modal>
+
+          
 
           {/* Modal for Copy address : */}
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}   title={messages.wallet.action.receive.title} onRef={modal => this.modalReceiveCoinRef = modal} onClose={()=> {this.setState({modalReceiveCoin: false})}}>
