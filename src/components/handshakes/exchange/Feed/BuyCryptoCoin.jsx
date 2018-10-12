@@ -165,18 +165,21 @@ class BuyCryptoCoin extends React.Component {
   }
 
   checkUserVerified = () => {
+    const { messages } = this.props.intl;
+    const { authProfile: { idVerified } } = this.props;
+
     let timeShow = 0;
     let idVerificationStatusText = 'Rejected';
-    const { authProfile: { idVerified } } = this.props;
 
     switch (idVerified) {
       case 0: {
-        idVerificationStatusText = <span>Not verified yet. <Link to={URL.HANDSHAKE_ME_PROFILE}>Verify now</Link></span>;
+        idVerificationStatusText = <span>{messages.buy_coin.label.verify.notYet.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.notYet.action}</Link></span>;
         timeShow = 24 * 60 * 60 * 1000;
         break;
       }
       case -1: {
-        idVerificationStatusText = 'Rejected';
+        idVerificationStatusText = <span>{messages.buy_coin.label.verify.rejected.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.rejected.action}</Link></span>;
+        timeShow = 24 * 60 * 60 * 1000;
         break;
       }
       case 1: {
@@ -184,22 +187,26 @@ class BuyCryptoCoin extends React.Component {
         break;
       }
       case 2: {
-        idVerificationStatusText = 'Processing';
+        idVerificationStatusText = <span>{messages.buy_coin.label.verify.processing.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.processing.action}</Link></span>;
+        timeShow = 24 * 60 * 60 * 1000;
         break;
       }
       default: {
         idVerificationStatusText = 'Default';
       }
     }
-    this.props.showAlert({
-      message: <div className="text-center">
-        {idVerificationStatusText}
-      </div>,
-      timeOut: timeShow,
-      type: 'danger',
-      callBack: () => {
-      },
-    });
+
+    if (timeShow > 0) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          {idVerificationStatusText}
+        </div>,
+        timeOut: timeShow,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

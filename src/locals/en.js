@@ -1741,6 +1741,20 @@ export default {
         bank: 'Bank Transfer',
         cod: 'COD',
       },
+      verify: {
+        notYet: {
+          title: 'Not verify yet.',
+          action: 'Verify now',
+        },
+        rejected: {
+          title: 'You are rejected.',
+          action: 'Verify now',
+        },
+        processing: {
+          title: 'Verifying.',
+          action: 'Please wait',
+        },
+      },
     },
   },
   buy_coin_transaction: {
