@@ -110,6 +110,10 @@
         .progress {
             height: rem-calc(25px);
         }
+        .btn-primary {
+          background-color: $blue;
+          border-color: $blue;
+        }
       }
     }
   }
