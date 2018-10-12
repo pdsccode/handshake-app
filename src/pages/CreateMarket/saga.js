@@ -2,7 +2,7 @@ import { takeLatest, call, put, select, all } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { handleLoadMatches } from '@/pages/Prediction/saga';
+import { handleLoadMatches, handleLoadMatchDetail } from '@/pages/Prediction/saga';
 import { isBalanceInvalid } from '@/stores/common-saga';
 import { showAlert } from '@/stores/common-action';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
@@ -30,6 +30,7 @@ function* handleLoadReportsSaga({ cache = true }) {
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
       type: 'LOAD_REPORTS',
       _path: 'reports',
+      _key: 'list',
     });
   } catch (e) {
     return console.error('handleLoadReportsSaga', e);
@@ -49,13 +50,14 @@ function* handleLoadCategories() {
   }
 }
 
-function* handleLoadCreateEventData() {
+function* handleLoadCreateEventData({ eventId }) {
   try {
     yield put(updateCreateEventLoading(true));
     yield all([
       call(handleLoadReportsSaga, {}),
+      eventId && call(handleLoadMatchDetail, { eventId }),
       call(handleLoadMatches, {}),
-      call(handleLoadCategories, {}),
+      // call(handleLoadCategories, {}),
       call(isBalanceInvalid, {}),
     ]);
     yield put(updateCreateEventLoading(false));
@@ -109,7 +111,7 @@ function* saveGenerateShareLinkToStore(data) {
   const { outcomeId, eventName } = data;
   const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
   return yield put(shareEvent({
-    url: `${window.location.origin}${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
+    url: `${window.location.origin}${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug}`,
     name: eventName,
   }));
 }
@@ -166,6 +168,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         const outcomeId = eventData.outcomes[0].id;
         const eventName = eventData.name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+
       }
     }
   } catch (e) {

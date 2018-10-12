@@ -130,6 +130,25 @@
   .react-select__control--is-disabled {
     background-color: #e9ecef;
   }
+
+  .PrivateOption {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .text {
+      padding: 0 5px;
+    }
+
+    label {
+      margin-bottom: 0;
+    }
+
+    img {
+      width: 20px;
+    }
+  }
 }
 
 .TimeGroup {
@@ -307,9 +326,11 @@
   margin: 0 -15px 5px -15px;
   padding: 15px;
   background-color: #ffffff;
-  > .CreateEventFormGroupTitle:first-child {
+
+  .CreateEventFormGroupTitle {
     font-size: rem-calc(16px);
   }
+
   button.AddMoreOutCome {
     color: #2456FB;
     font-size: rem-calc(16px);
