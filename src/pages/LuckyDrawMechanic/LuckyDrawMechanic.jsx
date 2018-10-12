@@ -26,7 +26,7 @@ class LuckyDrawMechanic extends React.Component {
     return (
       <div className="wrapperTermCondition">
         <div>Terms & Conditions</div>
-        <div>Only entrants with a valid email associated with their account will be entered into the prize draw. One entry per real bet. 10x prizes of 1ETH to be won. The draw will take place when we reach 1000 real bets.</div>
+        <div>Only entrants with a valid email associated with their account will be entered into the prize draw. One entry per bet. 10x prizes of 1ETH to be won. The draw will take place when we reach 1000 bets.</div>
       </div>
     );
   }
@@ -42,8 +42,8 @@ class LuckyDrawMechanic extends React.Component {
     <span className="yellowLine two" />*/}
           </div>
           <div className={luckyDrawContent}>
-            <p>Every ‘real’ bet will enter that Ninja into the prize draw once. Ninjas may earn multiple prize draw entries by betting multiple times.</p>
-            <p>When we reach 1000 real bets, we will draw 10 winners using a true random number generator (TRNG) and drop 1ETH into each of their wallets.</p>
+            <p>Every bet will enter that Ninja into the prize draw once. Ninjas may earn multiple prize draw entries by betting multiple times.</p>
+            <p>When we reach 1000 bets, we will draw 10 winners using a true random number generator (TRNG) and drop 1ETH into each of their wallets.</p>
             <p>To be eligible, participants must associate their email address with their Ninja profile in order to be notified about winnings. We can’t let you know that you’ve won if we can’t contact you! Only entrants with a valid email address associated with their accounts will be entered into the prize draw.</p>
           </div>
         </div>
