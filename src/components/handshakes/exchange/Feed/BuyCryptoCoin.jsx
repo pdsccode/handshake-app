@@ -38,7 +38,7 @@ import WalletSelector from '@/components/handshakes/exchange/Feed/components/Wal
 import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
-
+import walletSelectorField from './reduxFormFields/walletSelector';
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 
@@ -578,7 +578,16 @@ class BuyCryptoCoin extends React.Component {
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
-              <WalletSelector onWalletChange={this.onWalletChange} walletSelectorType={walletSelectorType} />
+              {/* <WalletSelector onWalletChange={this.onWalletChange} walletSelectorType={walletSelectorType} /> */}
+              <div className="input-group mt-4">
+                <Field
+                  name="amount"
+                  className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                  type="text"
+                  component={walletSelectorField}
+                  validate={[required]}
+                />
+              </div>
               <div className="input-group mt-4">
                 <Field
                   name="amount"
