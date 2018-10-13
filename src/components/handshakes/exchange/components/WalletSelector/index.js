@@ -67,6 +67,7 @@ class WalletSelector extends Component {
   componentDidMount() {
     this.initSampleCrypto();
     this.getUserListWallets();
+    this.componentCallbackHandler();
   }
 
   initSampleCrypto() {
@@ -219,12 +220,13 @@ class WalletSelector extends Component {
 
   renderUserListWallet() {
     const { userWallets, shouldShowUserWallet } = this.state;
+    const { messages } = this.props.intl;
     if (userWallets?.length === 0) {
       return null;
     }
     return (
       <ul className={`${scopedCss('list-user-wallet')} ${shouldShowUserWallet ? 'show' : ''}`}>
-        <li>Your wallets: </li>
+        <li>{messages.wallet_selector.your_wallet}:</li>
         {userWallets.map(wallet => (
           wallet && <li key={wallet?.address} onClick={() => this.onUserWalletSelected(wallet)}>{`${wallet?.name} - ${this.shortIt(wallet?.address)}`}</li>
         ))}
@@ -233,7 +235,6 @@ class WalletSelector extends Component {
   }
 
   render() {
-    console.log('STATE', this.state);
     const { currency, walletAddressError, walletAddress } = this.state;
     return (
       <div className={scopedCss('input-with-trailing')}>
