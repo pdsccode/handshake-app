@@ -128,7 +128,6 @@ class Wallet extends React.Component {
       walletsData: false,
       isNewCCOpen: false,
       stepProtected: 1,
-      activeProtected: false,
       formAddTokenIsActive: false,
       formAddCollectibleIsActive: false,
       isHistory: false,
@@ -144,6 +143,7 @@ class Wallet extends React.Component {
       modalSetting: '',
       modalHistory: '',
       modalWalletPreferences: "",
+      modalSecure: "",
       modalRemindCheckout: '',
       backupWalletContent: "",
       exportPrivateContent: "",
@@ -262,7 +262,7 @@ class Wallet extends React.Component {
 
   componentWillUnmount() {
     try{document.querySelector(".app").style.backgroundColor = '#ffffff';} catch (e){};
-    this.detachScrollListener();        
+    this.detachScrollListener();
   }
 
   async componentDidMount() {
@@ -356,9 +356,16 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.wallet.action.protect.title,
         handler: () => {
-          this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
-          this.toggleBottomSheet();
-          this.modalProtectRef.open();
+          this.setState({ walletSelected: wallet,
+          modalSecure: <WalletProtect onCopy={this.onCopyProtected}
+            step={1}
+            wallet={this.state.walletSelected}
+            callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }}
+            />
+          }, ()=> {
+            this.toggleBottomSheet();
+            this.modalProtectRef.open();
+          });
         },
       });
     }
@@ -682,8 +689,16 @@ class Wallet extends React.Component {
     // if (!wallet.protected) {
       this.props.requestWalletPasscode({
         onSuccess: () => {
-          this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
-          this.modalProtectRef.open();
+          this.setState({ walletSelected: wallet,
+            modalSecure: <WalletProtect onCopy={this.onCopyProtected}
+              step={1}
+              wallet={wallet}
+              callbackSuccess={() => { this.successWalletProtect(wallet); }}
+              />
+            }, ()=> {
+              this.modalProtectRef.open();
+            }
+          );
         }
       })
 
@@ -693,9 +708,9 @@ class Wallet extends React.Component {
   }
   onExportPrivateKeyClick = (wallet) => {
     const { messages } = this.props.intl;
-    
+
     this.props.requestWalletPasscode({
-      onSuccess: () => {        
+      onSuccess: () => {
         this.setState({
           exportPrivateContent: (
               <div className="export-private-key">
@@ -707,7 +722,7 @@ class Wallet extends React.Component {
           )
         }, ()=>{
           this.modalExportPrivateKeyRef.open();
-        })        
+        })
       }
     })
   }
@@ -804,10 +819,6 @@ class Wallet extends React.Component {
     this.modalBuyCoin.close();
   }
 
-  closeProtected = () => {
-    this.setState({ activeProtected: false });
-  }
-
   closeTransfer = () => {
     this.setState({ modalTransferCoin: '' });
     console.log("closeTransfer");
@@ -821,9 +832,14 @@ class Wallet extends React.Component {
     this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
 
+  closeSecure = () => {
+    this.setState({modalSecure: ''});
+  }
+
   closeHistory = () => {
     this.setState({modalHistory: ''});
   }
+
   closePreferences=()=>{
     this.setState({modalWalletPreferences: ""});
   }
@@ -912,7 +928,7 @@ class Wallet extends React.Component {
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalRemindCheckout, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent, exportPrivateContent} = this.state;
+      modalHistory, modalSecure, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent, exportPrivateContent} = this.state;
 
     return (
       <div className="wallet-page">
@@ -976,8 +992,8 @@ class Wallet extends React.Component {
             {modalBuyCoin}
           </Modal>
 
-          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
-            <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
+          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.protect.header} onRef={modal => this.modalProtectRef = modal} onClose={this.closeSecure}>
+            {modalSecure}
           </Modal>
 
           {/* Modal for Setting wallets : */}
@@ -1000,7 +1016,7 @@ class Wallet extends React.Component {
             {exportPrivateContent}
           </Modal>
 
-          
+
 
           {/* Modal for Copy address : */}
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}   title={messages.wallet.action.receive.title} onRef={modal => this.modalReceiveCoinRef = modal} onClose={()=> {this.setState({modalReceiveCoin: false})}}>
