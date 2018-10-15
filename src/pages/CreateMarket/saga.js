@@ -4,6 +4,7 @@ import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches, handleLoadMatchDetail } from '@/pages/Prediction/saga';
 import { isBalanceInvalid } from '@/stores/common-saga';
+import { getAddress } from '@/components/handshakes/betting/utils.js';
 import { showAlert } from '@/stores/common-action';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { reportSelector } from './selector';
@@ -158,6 +159,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         market_fee: values.creatorFee,
         outcomes: values.outcomes,
         grant_permission: grantPermission,
+        creator_wallet_address: getAddress(),
         category_id: 7, // values.category.id, hard-code for now
         ...reportSource,
       };
