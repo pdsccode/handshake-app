@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const autoprefixer = require('autoprefixer');
+// const packageConfig = require('./package.json');
 
 const xPath = filepath => path.resolve(__dirname, filepath);
 
@@ -26,7 +26,6 @@ module.exports = function webpackConfig(env, argv = {}) {
     modules: false,
     children: false,
     chunks: false,
-    assets: false,
   };
 
   let appEnvConfig = {
@@ -47,6 +46,39 @@ module.exports = function webpackConfig(env, argv = {}) {
       hot: true,
       host: '0.0.0.0',
     },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
+            'sass-loader',
+          ],
+        },
+      ],
+    },
   };
 
   const production = {
@@ -66,6 +98,41 @@ module.exports = function webpackConfig(env, argv = {}) {
         chunks: 'all',
       },
       noEmitOnErrors: true,
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            // MiniCssExtractPlugin.loader, TO-DO
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            // MiniCssExtractPlugin.loader, TO-DO
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
+            'sass-loader',
+          ],
+        },
+      ],
     },
     plugins: [
       new CleanWebpackPlugin(['dist']),
@@ -109,7 +176,6 @@ module.exports = function webpackConfig(env, argv = {}) {
   // common config
   const finalConfig = merge(
     {
-      mode: isProduction ? 'production' : 'development',
       entry: {
         main: xPath('src/index.js'),
         'app-sw': xPath('src/sw.js'),
@@ -160,29 +226,6 @@ module.exports = function webpackConfig(env, argv = {}) {
               {
                 loader: 'babel-loader',
               },
-            ],
-          },
-          {
-            test: /\.(sa|sc|c)ss$/,
-            use: [
-              !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
-              { loader: 'css-loader', options: { importLoaders: 1, sourceMap: !isProduction } },
-
-              {
-                loader: 'postcss-loader',
-                options: {
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({ // React doesn't support IE8 anyway
-                      browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                  sourceMap: !isProduction,
-                },
-              },
-              { loader: 'sass-loader', options: { sourceMap: !isProduction } },
             ],
           },
           {
