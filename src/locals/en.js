@@ -1757,11 +1757,11 @@ export default {
           action: 'Verify now',
         },
         rejected: {
-          title: 'You are rejected.',
+          title: 'Your verification is rejected. Please try again',
           action: 'Verify now',
         },
         processing: {
-          title: 'Verifying.',
+          title: 'We are verifying your account. Please kindly wait',
           action: 'Please wait',
         },
       },

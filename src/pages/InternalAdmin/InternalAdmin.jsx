@@ -165,14 +165,14 @@ class InternalAdmin extends Component {
   process(order = {}) {
     this.props.sendCashOrder({
       PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/pick`,
-      METHOD: 'POST',
+      METHOD: 'PUT',
     });
   }
 
   reject(order = {}) {
     this.props.sendCashOrder({
       PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/reject`,
-      METHOD: 'POST',
+      METHOD: 'PUT',
     });
   }
 
@@ -202,6 +202,7 @@ class InternalAdmin extends Component {
               <button onClick={() => this.send(order)} className="btn btn-primary">
                 Send
               </button>
+              &nbsp;&nbsp;&nbsp;
               <button onClick={() => this.reject(order)} className="btn btn-primary">
                 Reject
               </button>
