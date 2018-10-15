@@ -1113,10 +1113,10 @@ export default {
   create: {
     cod_form: {
       cod: 'Cash on Delivery',
-      your_address: 'Your address',
-      your_phone: 'Your phone number',
-      time: 'Time to delivery',
       buy_btn: 'Buy',
+      your_address: 'Meet up address',
+      your_phone: 'Phone number',
+      time: 'Time to delivery & Note',
     },
     cash: {
       credit: {
@@ -1781,6 +1781,10 @@ export default {
   },
   'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/buy-coin">create one now!</a></strong>`,
   wallet_selector: {
-    your_wallet: 'Your wallet',
+    your_wallet: 'Your wallets',
+    wallet_dont_match_error: 'The address and type of crypto don’t match. Please check',
   },
+  'buy_coin_confirm_popup.msg': 'Buy {amount} {currency} with {fiatAmount} {fiatCurrency}?',
+  'buy_coin_confirm_popup.confirm_text': 'Confirm',
+  'buy_coin_confirm_popup.cancel_text': 'Cancel',
 };

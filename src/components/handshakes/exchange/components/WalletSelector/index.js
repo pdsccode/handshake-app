@@ -99,6 +99,7 @@ class WalletSelector extends Component {
   }
 
   validateWallet(walletAddressFromInput, currencyFromInput) {
+    const { intl: { messages } } = this.props;
     const { currency, walletAddress } = this.state;
     const _walletAddress = walletAddressFromInput || walletAddress;
     const _currency = currencyFromInput || currency;
@@ -115,7 +116,7 @@ class WalletSelector extends Component {
 
     const error = _walletAddress && wallet?.checkAddressValid(_walletAddress);
     if (typeof error === 'string' && error !== '') {
-      walletAddressError = error;
+      walletAddressError = messages.wallet_selector.wallet_dont_match_error;
     } else {
       walletAddressError = null;
     }

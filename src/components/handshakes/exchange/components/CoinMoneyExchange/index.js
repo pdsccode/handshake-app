@@ -75,24 +75,24 @@ class CoinMoneyExchange extends Component {
       } else if (!isCurrencyChanged) {
         // apply new exchange data to state
         if (coinInfo.fiatAmount && coinInfo.limit && isOverLimit({ amount: coinInfo.fiatAmount, limit: coinInfo.limit })) {
-          newState.fiatAmount = coinInfo.fiatAmount;
+          newState.fiatAmount = Math.round(coinInfo.fiatAmount);
           newState.fiatCurrency = coinInfo.fiatCurrency;
           if (paymentMethod === PAYMENT_METHODS.COD) {
-            coinInfo.fiatAmountCod && (newState.fiatAmount = coinInfo.fiatAmountCod);
+            coinInfo.fiatAmountCod && (newState.fiatAmount = Math.round(coinInfo.fiatAmountCod));
           }
         } else {
-          newState.fiatAmount = coinInfo.fiatLocalAmount;
+          newState.fiatAmount = Math.round(coinInfo.fiatLocalAmount);
           newState.fiatCurrency = coinInfo.fiatLocalCurrency;
           if (paymentMethod === PAYMENT_METHODS.COD) {
-            coinInfo.fiatLocalAmountCod && (newState.fiatAmount = coinInfo.fiatLocalAmountCod);
+            coinInfo.fiatLocalAmountCod && (newState.fiatAmount = Math.round(coinInfo.fiatLocalAmountCod));
           }
         }
-        newState.fiatAmountInUsd = coinInfo.fiatAmount;
+        newState.fiatAmountInUsd = Math.round(coinInfo.fiatAmount);
       }
     } else if (exchangeType === EXCHANGE_TYPE.MONEY_TO_AMOUNT) {
-      newState.fiatAmount = fiatAmount;
+      newState.fiatAmount = Math.round(fiatAmount);
       newState.amount = quoteReverse.amount;
-      newState.fiatAmountInUsd = quoteReverse.fiatAmount;
+      newState.fiatAmountInUsd = Math.round(quoteReverse.fiatAmount);
 
       if (isPaymentMethodChanged) {
         newState.amount = null;
@@ -149,10 +149,10 @@ class CoinMoneyExchange extends Component {
   onChangeCallbackHandler(data) {
     const { onChange } = this.props;
     const _data = {
-      amount: this.state.amount,
-      fiatAmount: this.state.fiatAmount,
+      amount: Number.parseFloat(this.state.amount) || 0,
+      fiatAmount: Math.round(this.state.fiatAmount),
       fiatCurrency: this.state.fiatCurrency,
-      fiatAmountInUsd: this.state.fiatAmountInUsd,
+      fiatAmountInUsd: Math.round(this.state.fiatAmountInUsd),
       ...data,
     };
     if (typeof onChange === 'function') {
@@ -228,7 +228,7 @@ class CoinMoneyExchange extends Component {
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
           placeholder="Fiat amount"
-          value={formatMoney(fiatAmount)}
+          value={fiatAmount}
           options={{
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',

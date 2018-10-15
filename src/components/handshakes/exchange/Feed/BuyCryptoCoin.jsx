@@ -28,10 +28,12 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
+import { formatMoney } from '@/services/offer-util';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
 import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
 import coinMoneyExchangeValidator from './reduxFormFields/coinMoneyExchangeField/validator';
+import walletSelectorValidator from './reduxFormFields/walletSelector/validator';
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 import { Link } from 'react-router-dom';
@@ -591,7 +593,7 @@ class BuyCryptoCoin extends React.Component {
                   className="form-control form-control-lg border-0 rounded-right form-control-cc"
                   type="text"
                   component={walletSelectorField}
-                  validate={[required]}
+                  validate={[walletSelectorValidator]}
                 />
               </div>
               <div className="input-group mt-4">
@@ -620,6 +622,17 @@ class BuyCryptoCoin extends React.Component {
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
                   buttonClassName="buy-btn"
                   containerClassName="buy-btn-container"
+                  message={
+                    <FormattedMessage
+                      id="buy_coin_confirm_popup.msg"
+                      values={{
+                        amount: coinMoneyExchange.amount,
+                        currency,
+                        fiatAmount: formatMoney(coinMoneyExchange.fiatAmount),
+                        fiatCurrency: coinMoneyExchange.fiatCurrency,
+                      }}
+                    />
+                  }
                 />
               </div>
             </FormBuyCrypto>
