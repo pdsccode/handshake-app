@@ -38,6 +38,7 @@ import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
+import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 
@@ -596,7 +597,17 @@ class BuyCryptoCoin extends React.Component {
                   validate={[required]}
                 />
               </div>
-              <div className="input-group mt-4 group-amount-fiatamount">
+              <div className="input-group mt-4">
+                <Field
+                  name="coinMoneyExchange"
+                  className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                  type="text"
+                  component={coinMoneyExchangeField}
+                  currency={currency}
+                  validate={[required]}
+                />
+              </div>
+              {/* <div className="input-group mt-4 group-amount-fiatamount">
                 <Field
                   name="amount"
                   className="form-control form-control-lg"
@@ -624,7 +635,7 @@ class BuyCryptoCoin extends React.Component {
                     />
                   }
                 />
-              </div>
+              </div> */}
               <div className="input-group item-info mt-2">
                 <Field
                   component={fieldCheckBoxList}
