@@ -228,6 +228,10 @@
 
     .EventNumberOfPlayer {
       font-size: rem-calc(14px);
+      .NumberOfPlayerTitle {
+        color: #636363;
+
+      }
     }
 
     .EventDetails {
@@ -254,7 +258,10 @@
 
     .EventTotalBetValue {
       color: #D0021B;
-      font-weight: $normal;
+      font-weight: 400;
+    }
+    .EventTimeLeftValue {
+      font-weight: 300;
     }
 
     .EventTimeLeftText, .EventTotalBetText {
@@ -265,6 +272,10 @@
 
     .EventTimeLeftValue, .EventTotalBetValue {
       font-size: rem-calc(16px);
+    }
+    .NumberOfPlayerTitle, .EventTimeLeftValue, .EventTotalBetValue {
+      margin-left: 10px;
+      padding-top: 3px;
     }
 
     .EventTimeLeft, .EventTotalBet {
@@ -277,10 +288,10 @@
     }
   }
   .share-social  {
-    margin-top: 10px;
+    margin-top: 25px;
     img {
-      width: 30px;
-      margin-right: 8px;
+      width: 35px;
+      margin-right: 10px;
     }
   }
 
