@@ -26,13 +26,13 @@ const STATUS = {
     id: 'transferring',
     name: 'Sending',
   },
-  cancelled: {
-    id: 'cancelled',
-    name: 'Canceled',
-  },
   success: {
     id: 'success',
     name: 'Sent',
+  },
+  cancelled: {
+    id: 'cancelled',
+    name: 'Canceled',
   },
   transfer_failed: {
     id: 'transfer_failed',
