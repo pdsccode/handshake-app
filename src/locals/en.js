@@ -1769,5 +1769,8 @@ export default {
       transfer_failed: 'Failed',
       expired: 'Expired',
     },
-  }
+  },
+  wallet_selector: {
+    your_wallet: 'Your wallet',
+  },
 };

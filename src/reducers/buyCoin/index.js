@@ -7,6 +7,7 @@ const initialState = {
   coinInfo: {},
   basePrice: {},
   bankInfo: {},
+  quoteReverse: {},
 };
 
 const buyCoinReducter = (state = initialState, action) => {
@@ -43,6 +44,11 @@ const buyCoinReducter = (state = initialState, action) => {
       return {
         ...state,
         order: { ...BuyCryptoCoinModel.parseOrder(action?.payload?.data) },
+      };
+    case `${BUY_COIN_ACTIONS.BUY_CRYPTO_QUOTE_REVERSE}_SUCCESS`:
+      return {
+        ...state,
+        quoteReverse: { ...BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data) },
       };
     default:
       return state;

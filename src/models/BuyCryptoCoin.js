@@ -35,6 +35,20 @@ class BuyCryptoCoin {
       createdAt: data.created_at,
     };
   }
+
+  static parseQuoteReverse(data = {}) {
+    return {
+      type: data.type,
+      amount: Number.parseFloat(data.amount) || 0,
+      currency: data.currency,
+      fiatCurrency: data.fiat_currency,
+      fiatLocalCurrency: data.fiat_local_currency,
+      fiatAmount: Number.parseFloat(data.fiat_amount) || 0,
+      fiatLocalAmount: Number.parseFloat(data.fiat_local_amount) || 0,
+      fiatLocalAmountCod: Number.parseFloat(data.fiat_local_amount_cod) || 0,
+      limit: Number.parseFloat(data.limit) || 0,
+    };
+  }
 }
 
 export default BuyCryptoCoin;
