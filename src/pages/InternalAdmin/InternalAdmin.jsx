@@ -251,7 +251,7 @@ class InternalAdmin extends Component {
                   <td>{order?.user_info?.phone || '---'}</td>
                   <td>{this.getAmount(order)?.full}</td>
                   <td>{this.getCoin(order)}</td>
-                  <td>{order.ref_code}</td>
+                  <td>{order.type === 'bank' ? order.ref_code : ''}</td>
                   <td>{this.getStatus(order)}</td>
                   <td>{order.type}</td>
                   <td>{this.renderActionBtn(order)}</td>
