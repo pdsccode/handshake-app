@@ -277,6 +277,9 @@
       margin-left: 10px;
       padding-top: 3px;
     }
+    .EventNumberOfPlayer, .EventTimeLeft, .EventTotalBet {
+      display: flex;
+    }
 
     .EventTimeLeft, .EventTotalBet {
       display: flex;
