@@ -130,7 +130,7 @@ class Transaction extends React.Component {
     if (buyCoinTransaction && buyCoinTransaction.length === 0) {
       return (
         <div className="empty-list">
-          <span>{messages.create.atm.text.no_history}</span>
+          <span>{messages.buy_coin_transaction.text.no_history}</span>
         </div>
       );
     }

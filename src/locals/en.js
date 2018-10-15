@@ -1778,6 +1778,9 @@ export default {
       transfer_failed: 'Failed',
       expired: 'Expired',
     },
+    text: {
+      no_history: 'No order yet. Don\'t miss our good price and create one now!',
+    },
   },
   wallet_selector: {
     your_wallet: 'Your wallet',

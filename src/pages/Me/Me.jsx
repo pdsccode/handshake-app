@@ -78,7 +78,7 @@ const CASH_TAB = {
 const CATEGORIES = [
   {
     value: HANDSHAKE_ID.NINJA_COIN,
-    text: 'Ninja Coin',
+    text: 'Coin',
     priority: 0,
   },
   // {
