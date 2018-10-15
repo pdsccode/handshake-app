@@ -55,14 +55,6 @@
           margin-bottom: 10px;
         }
       }
-      //@media screen and (max-width: 1160px) {
-      //  .LineText {
-      //    margin-bottom: 10px;
-      //  }
-      //  width: auto;
-      //  padding: 50px 15px 30px;
-      //  flex-direction: column;
-      //}
       .LineText {
         font-size: 1.4rem;
         font-weight: 700;
@@ -126,23 +118,18 @@
       z-index: 2;
       text-align: center;
       margin: 0 auto;
-      padding: 34px 0 80px;
-      box-sizing: border-box;
+      padding-top: 5px;
       @media screen and (max-width: 420px) {
-        padding: 8px 16.77% 0 15.84%;
-        max-height: 180px;
+        padding-top: 2px;
       }
       .FrameContent {
-        height: 100%;
-        margin-left: -80px;
-        margin-right: -70px;
-        @media screen and (min-width: 1310px) and (max-width: 1509px) {
-          margin-left: -100px;
-          margin-right: -90px;
-        }
-        @media screen and (min-width: 1510px) {
-          margin-left: -120px;
-          margin-right: -110px;
+        height: 92%;
+        width: 135.7%;
+        overflow: hidden;
+        transform: translateX(-13.75%);
+        border-radius: 40px 40px 7px 7px;
+        @media screen and (max-width: 420px) {
+          border-radius: 15px 15px 7px 7px;
         }
       }
       > img.GuideClip {
@@ -153,7 +140,6 @@
       .videoClip {
         width: 100%;
         height: 100%;
-        border: 1px solid #1d1d1dbf;
       }
     }
   }
