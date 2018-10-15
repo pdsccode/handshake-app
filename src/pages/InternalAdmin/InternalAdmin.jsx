@@ -54,6 +54,7 @@ class InternalAdmin extends Component {
       type: DEFAULT_TYPE,
       isFinished: false,
       page: null,
+      type_order: '',
     };
 
     this.send = :: this.send;
@@ -69,7 +70,10 @@ class InternalAdmin extends Component {
     //   window.location.pathname = '/';
     //   return null;
     // }
-    this.loadOrderList();
+    this.setState({ type_order: this.props?.match?.params?.type }, () => {
+      this.loadOrderList();
+    });
+
     this.setupInitifyLoad();
     return null;
   }
@@ -140,6 +144,10 @@ class InternalAdmin extends Component {
     const qs = { status };
     if (this.state.page) {
       qs.page = this.state.page;
+    }
+
+    if (this.state.type_order) {
+      qs.type = this.state.type_order;
     }
 
     this.props.loadCashOrderList({
