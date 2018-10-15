@@ -10,6 +10,8 @@ import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHan
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
+import { Tooltip } from 'reactstrap';
+import IconInfo from '@/assets/images/icon/icons8-info_filled.svg';
 
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
@@ -43,7 +45,7 @@ const regexReplace = /\[|\]/g;
 const TAG = 'BETTING_CREATE';
 
 const item = {
-  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount"}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number"}]',
+  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount", "tooltip": ""}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number", "tooltip": "Odds is abc"}]',
 };
 
 class BettingCreate extends React.Component {
@@ -66,6 +68,7 @@ class BettingCreate extends React.Component {
       winValue: 0,
       disable: false,
       balance: 0,
+      openTooltip: false,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -254,21 +257,20 @@ class BettingCreate extends React.Component {
   </label>)
 
   renderItem(field, index) {
+    const { openTooltip } = this.state;
     const item = JSON.parse(field.replace(regexReplace, ''));
     const {
-      key, placeholder, type, label, className, prefix,
+      placeholder, type, label, tooltip,
     } = item;
     let itemRender = null;// this.renderInput(item, index);
     const { isChangeOdds } = this.state;
-    let suffix = item.suffix;
+    let { suffix } = item;
     if (item.key === 'event_odds') {
       suffix = isChangeOdds ? 'Your Odds' : 'Market Odds';
     }
 
     switch (type) {
-      // case 'date':
-      //   itemRender = this.renderDate(item, index);
-      //   break;
+
       case 'number':
         itemRender = this.renderNumber(item);
         break;
@@ -278,7 +280,26 @@ class BettingCreate extends React.Component {
     const classNameSuffix = `cryptoCurrency${item.className} ${(isChangeOdds && item.key === 'event_odds') ? 'cryptoCurrencyYourOdds' : ''}`;
     return (
       <div className="rowWrapper" key={index + 1} >
-        <label>{label || placeholder}</label>
+        <label>{label || placeholder}
+          {tooltip.length > 0 &&
+            <span>
+              <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
+              <Tooltip
+                placement="right"
+                isOpen={openTooltip}
+                target="TooltipPrivate"
+                toggle={() => {
+                  this.setState({
+                    openTooltip: !openTooltip,
+                  });
+              }}
+              >
+                This event will only be available for those who have the URL shared.
+              </Tooltip>
+            </span>
+        }
+        </label>
+
         {itemRender}
         {suffix && <div className={classNameSuffix}>{suffix}</div>}
       </div>
