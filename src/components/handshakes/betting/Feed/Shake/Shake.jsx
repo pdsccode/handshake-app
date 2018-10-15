@@ -10,6 +10,8 @@ import GA from '@/services/googleAnalytics';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { getGasPrice } from '@/utils/gasPrice';
 import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
+import IconInfo from '@/assets/images/icon/question-circle.svg';
+import { Tooltip } from 'reactstrap';
 
 // components
 import { showAlert } from '@/reducers/app/action';
@@ -65,6 +67,7 @@ class BetingShake extends React.Component {
       amountValue: 0,
       winValue: 0,
       balance: 0,
+      openTooltip: false,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -272,6 +275,26 @@ class BetingShake extends React.Component {
       </form>
     );
   }
+  renderToolTip = (tooltip, openTooltip) => {
+    if (tooltip.length === 0) return null;
+    return (
+      <span className="wrapperTooltip">
+        <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
+        <Tooltip
+          placement="right"
+          isOpen={openTooltip}
+          target="TooltipPrivate"
+          toggle={() => {
+            this.setState({
+              openTooltip: !openTooltip,
+            });
+        }}
+        >
+          {tooltip}
+        </Tooltip>
+      </span>
+    );
+  }
 
   renderInputField = (props) => {
     const {
@@ -284,12 +307,14 @@ class BetingShake extends React.Component {
       value,
       defaultValue,
       isInput = true,
+      tooltip = '',
       ...newProps
     } = props;
-    const { oddValue, amountValue } = this.state;
+    const { oddValue, amountValue, openTooltip } = this.state;
     return (
       <div className="rowWrapper">
         <label className="label" htmlFor={id}>{label}</label>
+        {this.renderToolTip(tooltip, openTooltip)}
         {
           isInput ? (
             <input

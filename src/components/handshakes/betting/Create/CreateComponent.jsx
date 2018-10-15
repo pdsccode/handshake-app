@@ -11,7 +11,7 @@ import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
 import { Tooltip } from 'reactstrap';
-import IconInfo from '@/assets/images/icon/icons8-info_filled.svg';
+import IconInfo from '@/assets/images/icon/question-circle.svg';
 
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
@@ -45,7 +45,7 @@ const regexReplace = /\[|\]/g;
 const TAG = 'BETTING_CREATE';
 
 const item = {
-  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount", "tooltip": ""}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number", "tooltip": "Odds is abc"}]',
+  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount", "tooltip": ""}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number", "tooltip": "Ninja uses decimal odds. Multiply your stake by the decimal shown, and that’s your winnings!"}]',
 };
 
 class BettingCreate extends React.Component {
@@ -256,6 +256,27 @@ class BettingCreate extends React.Component {
     }}>{text}
   </label>)
 
+  renderToolTip = (tooltip, openTooltip) => {
+    if (tooltip.length === 0) return null;
+    return (
+      <span className="wrapperTooltip">
+        <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
+        <Tooltip
+          placement="right"
+          isOpen={openTooltip}
+          target="TooltipPrivate"
+          toggle={() => {
+            this.setState({
+              openTooltip: !openTooltip,
+            });
+        }}
+        >
+          {tooltip}
+        </Tooltip>
+      </span>
+    );
+  }
+
   renderItem(field, index) {
     const { openTooltip } = this.state;
     const item = JSON.parse(field.replace(regexReplace, ''));
@@ -281,23 +302,7 @@ class BettingCreate extends React.Component {
     return (
       <div className="rowWrapper" key={index + 1} >
         <label>{label || placeholder}
-          {tooltip.length > 0 &&
-            <span>
-              <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
-              <Tooltip
-                placement="right"
-                isOpen={openTooltip}
-                target="TooltipPrivate"
-                toggle={() => {
-                  this.setState({
-                    openTooltip: !openTooltip,
-                  });
-              }}
-              >
-                This event will only be available for those who have the URL shared.
-              </Tooltip>
-            </span>
-        }
+          {this.renderToolTip(tooltip, openTooltip)}
         </label>
 
         {itemRender}

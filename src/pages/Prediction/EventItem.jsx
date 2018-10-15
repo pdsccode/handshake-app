@@ -17,12 +17,11 @@ import { socialSharedMsg } from './constants';
 
 function renderEventSource({ event }) {
   const { source } = event;
-  const { name, domain } = source;
-  const link = `https://www.google.com/s2/favicons?domain=www.${domain}`;
+  const { name, url_icon: url } = source;
   return (
     <div className="SourceLogo">
       <div className="LogoImage">
-        <Image src={link} alt="sourceLogo" width="23" />
+        <Image src={url} alt="sourceLogo" width="23" />
       </div>
       <div className="SourceTitle">{name}</div>
     </div>
