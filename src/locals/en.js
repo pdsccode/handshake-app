@@ -1778,10 +1778,8 @@ export default {
       transfer_failed: 'Failed',
       expired: 'Expired',
     },
-    text: {
-      no_history: 'No order yet. Don\'t miss our good price and create one now!',
-    },
   },
+  'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/buy-coin">create one now!</a></strong>`,
   wallet_selector: {
     your_wallet: 'Your wallet',
   },

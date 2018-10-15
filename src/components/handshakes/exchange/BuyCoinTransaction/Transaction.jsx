@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // action, mock
-import { injectIntl } from 'react-intl';
+import { FormattedHTMLMessage, injectIntl } from 'react-intl';
 // components
 // style
 import createForm from '@/components/core/form/createForm';
@@ -130,7 +130,7 @@ class Transaction extends React.Component {
     if (buyCoinTransaction && buyCoinTransaction.length === 0) {
       return (
         <div className="empty-list">
-          <span>{messages.buy_coin_transaction.text.no_history}</span>
+          <FormattedHTMLMessage id="buy_coin_transaction.text.no_history" />
         </div>
       );
     }
