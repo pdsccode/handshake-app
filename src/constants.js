@@ -302,6 +302,10 @@ export const API_URL = {
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
     GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
+  ID_VERIFICATION: {
+    GET_DOCUMENTS: 'id_verification/list',
+    UPDATE_STATUS: 'id_verification/update',
+  },
 };
 
 export const HANDSHAKE_STATUS = {
@@ -540,6 +544,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  ADMIN_ID_VERIFICATION: '/admin/id-verification',
   REPORT: '/report',
   RESOLVE: '/resolve',
   LUCKY_POOL: '/lucky',

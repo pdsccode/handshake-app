@@ -40,6 +40,7 @@ const RouterPaymentTransfer = createDynamicImport(() => import('@/components/Rou
 const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
+const RouterAdminIDVerification = createDynamicImport(() => import('@/components/Router/AdminIDVerification'), Loading);
 const RouterReport = createDynamicImport(() => import('@/components/Router/Report'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
@@ -139,6 +140,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
     { path: URL.INTERNAL_ADMIN_URL, component: RouterInternalAdmin },
+    { path: URL.ADMIN_ID_VERIFICATION, component: RouterAdminIDVerification },
     { path: URL.PEX_LUCKY_DRAW_MECHANIC_URL, component: LuckyDrawMechanic },
 
   ];

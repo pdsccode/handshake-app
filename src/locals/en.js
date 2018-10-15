@@ -942,6 +942,8 @@ export default {
               email: 'A valid email would work better.',
             },
             idVerification: {
+              invalidFullName: 'Please enter your full name',
+              invalidIDNumber: 'Please enter valid document ID number',
               invalidDocument: 'Please choose a document type',
               invalidFrontImage: 'Please upload front page of your document',
               invalidBackImage: 'Please upload back page of your document',
@@ -998,15 +1000,17 @@ export default {
         id_verification: {
           label: 'ID Verification',
           desc1: 'Your account must be verified to comply with relevant anti-money laundering (AML) and counter-terrorism financing (CTF) laws and regulations',
-          desc2: '● All documents provided must be in Roman/Latin alphabet or a certified English translation is required.',
-          desc3: '● All files uploaded must be in png, jpg or jpeg.',
-          desc4: '● All fields in the following verification form are mandatory (NA for Non Applicable can be used).',
-          desc5: '● To avoid possible delays, please check the correctness before submitting documents, please double check you do not send the same document twice and possibly forget one.',
-          desc6: 'Select document type',
-          desc7: 'Document front page upload',
-          desc8: 'Document back page upload',
-          desc9: 'Selfie with document upload',
+          desc2: 'Name',
+          desc3: 'Valid Document Number',
+          desc4: 'Document type',
+          desc5: 'Identity Card Front Side',
+          desc6: 'Please make sure that the photo is complete and clearly visible, in JPG or PNG format. Id card must be in the valid period.',
+          desc7: 'Identity Card Back Side',
+          desc8: 'Identity Card Front Side With Ninja Background',
+          desc9: 'Please make sure that the photo is complete and clearly visible, in JPG format And make sure the text in the paper exactly is  ‘Ninja.org MMDDYY’',
+          uploading: 'Uploading',
           button: {
+            upload: 'Upload file',
             submit: 'Submit',
           },
         },
@@ -1288,6 +1292,7 @@ export default {
           wallet_name: 'Wallet Name',
           hide_balance: 'Hide Balance',
           backup_wallet: 'Backup Wallet',
+          export_private_key: 'Export Private Key',
           delete_wallet: 'Delete Wallet',
         },
         update_name: {
@@ -1368,6 +1373,10 @@ export default {
           restore: 'Restore now',
         },
         description: 'Please enter your top secret recovery data to restore your wallet.',
+      },
+      export_private_key: {
+        title: "Export at your risk!",
+        desc: "Anyone with your Private Key will have FULL access to your wallet!!!"
       },
       setting: {
         title: 'Settings',

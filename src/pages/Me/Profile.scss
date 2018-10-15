@@ -92,6 +92,25 @@
           width: 20%;
         }
       }
+
+      &.id-verification {
+        .label {
+          display: block;
+          font-weight: 400;
+          span {
+            display: block;
+            font-size: rem-calc(14px);
+            color: $oslo-gray;
+            font-weight: normal;
+          }
+        }
+        .hide_upload_zone {
+          display: none;
+        }
+        .progress {
+            height: rem-calc(25px);
+        }
+      }
     }
   }
   .modal-verify {

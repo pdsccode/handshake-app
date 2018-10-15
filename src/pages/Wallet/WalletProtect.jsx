@@ -22,13 +22,12 @@ class WalletProtect extends React.Component {
       step: this.props.step,
       arr_random: [],
       arr_confirm: [],
-      active: this.props.active
     };
   }
 
-  componentWillReceiveProps() {
-    if (!this.props.active)
-      this.setState({step1_confirm: false, step: this.props.step, arr_confirm: []});
+  componentDidMount() {
+    //this.setState({step1_confirm: false, step: this.props.step, arr_confirm: []});
+    console.log(this.state.step);
   }
 
   get showStep1() {
@@ -197,7 +196,6 @@ class WalletProtect extends React.Component {
 
 	render(){
     const { messages } = this.props.intl;
-
 		return (
       <div>
         {this.showStep1}
@@ -217,7 +215,6 @@ class WalletProtect extends React.Component {
 WalletProtect.propTypes = {
   wallet: PropTypes.any,
   step: PropTypes.any,
-  active: PropTypes.bool,
   onCopy: PropTypes.func
 };
 
