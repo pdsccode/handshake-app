@@ -10,6 +10,14 @@ import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/actio
 import './InternalAdmin.scss';
 
 const STATUS = {
+  pending: {
+    id: 'pending',
+    name: 'Created',
+  },
+  processing: {
+    id: 'processing',
+    name: 'Processing',
+  },
   fiat_transferring: {
     id: 'fiat_transferring',
     name: 'Fiat transferring',
@@ -18,6 +26,10 @@ const STATUS = {
     id: 'transferring',
     name: 'Sending',
   },
+  cancelled: {
+    id: 'cancelled',
+    name: 'Canceled',
+  },
   success: {
     id: 'success',
     name: 'Sent',
@@ -25,6 +37,10 @@ const STATUS = {
   transfer_failed: {
     id: 'transfer_failed',
     name: 'Failed',
+  },
+  expired: {
+    id: 'expired',
+    name: 'Expired',
   },
 };
 
@@ -127,7 +143,7 @@ class InternalAdmin extends Component {
     }
 
     this.props.loadCashOrderList({
-      PATH_URL: API_URL.INTERNAL.GET_CASH_ORDER,
+      PATH_URL: API_URL.INTERNAL.GET_COIN_ORDER,
       qs,
       successFn: this.onSuccess,
     });
@@ -141,21 +157,66 @@ class InternalAdmin extends Component {
 
   send(order = {}) {
     this.props.sendCashOrder({
-      PATH_URL: `${API_URL.INTERNAL.GET_CASH_ORDER}/${order.ref_code}/${this.getAmount(order)?.amount}`,
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}`,
+      METHOD: 'POST',
+    });
+  }
+
+  process(order = {}) {
+    this.props.sendCashOrder({
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/pick`,
+      METHOD: 'POST',
+    });
+  }
+
+  reject(order = {}) {
+    this.props.sendCashOrder({
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/reject`,
       METHOD: 'POST',
     });
   }
 
   renderActionBtn(order = {}) {
-    if (order.status !== STATUS.fiat_transferring.id) {
-      return null;
+    let result = null;
+    switch (order.type) {
+      case 'bank': {
+        if (order.status === STATUS.fiat_transferring.id) {
+          result = (
+            <button onClick={() => this.send(order)} className="btn btn-primary">
+              Send
+            </button>
+          );
+        }
+        break;
+      }
+      case 'cod': {
+        if (order.status === STATUS.pending.id) {
+          result = (
+            <button onClick={() => this.process(order)} className="btn btn-primary">
+              Process
+            </button>
+          );
+        } else if (order.status === STATUS.processing.id) {
+          result = (
+            <div>
+              <button onClick={() => this.send(order)} className="btn btn-primary">
+                Send
+              </button>
+              <button onClick={() => this.reject(order)} className="btn btn-primary">
+                Reject
+              </button>
+            </div>
+          );
+        }
+
+        break;
+      }
+      default: {
+
+      }
     }
 
-    return (
-      <button onClick={() => this.send(order)} className="btn btn-primary">
-        Send
-      </button>
-    );
+    return result;
   }
 
   render() {
@@ -172,6 +233,7 @@ class InternalAdmin extends Component {
               <th>Coin</th>
               <th>Code</th>
               <th>Status</th>
+              <th>Type</th>
               <th />
             </tr>
           </thead>
@@ -190,6 +252,7 @@ class InternalAdmin extends Component {
                   <td>{this.getCoin(order)}</td>
                   <td>{order.ref_code}</td>
                   <td>{this.getStatus(order)}</td>
+                  <td>{order.type}</td>
                   <td>{this.renderActionBtn(order)}</td>
                 </tr>
               ))

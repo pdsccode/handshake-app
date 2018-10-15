@@ -301,6 +301,7 @@ export const API_URL = {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
     GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
+    GET_COIN_ORDER: 'exchange/coin/order', // `GET /cash/order?status=processing|tranferring|success`
   },
   ID_VERIFICATION: {
     GET_DOCUMENTS: 'id_verification/list',
