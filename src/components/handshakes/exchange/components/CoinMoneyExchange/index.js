@@ -7,7 +7,6 @@ import { buyCryptoGetCoinInfo, buyCryptoQuoteReverse } from '@/reducers/buyCoin/
 import { API_URL, FIAT_CURRENCY } from '@/constants';
 import debounce from '@/utils/debounce';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
-import { formatMoney } from '@/services/offer-util';
 import Cleave from 'cleave.js/react';
 import { showAlert } from '@/reducers/app/action';
 import { PAYMENT_METHODS } from '@/components/handshakes/exchange/Feed/BuyCryptoCoin';
@@ -147,12 +146,13 @@ class CoinMoneyExchange extends Component {
   }
 
   onChangeCallbackHandler(data) {
-    const { onChange } = this.props;
+    const { onChange, coinInfo } = this.props;
     const _data = {
       amount: Number.parseFloat(this.state.amount) || 0,
       fiatAmount: Math.round(this.state.fiatAmount),
       fiatCurrency: this.state.fiatCurrency,
       fiatAmountInUsd: Math.round(this.state.fiatAmountInUsd),
+      isOverLimit: isOverLimit({ amount: this.state.fiatAmountInUsd || 0, limit: coinInfo?.limit || 0 }),
       ...data,
     };
     if (typeof onChange === 'function') {

@@ -45,6 +45,8 @@ export const CRYPTO_ICONS = {
   BCH: iconBitcoinCash,
 };
 
+export const GLOBAL_BANK = 'XX';
+
 const listPackages = [
   { name: 'basic', fiatAmount: 1000, amount: 0, show: true },
   { name: 'pro', fiatAmount: 2000, amount: 0, show: true },
@@ -124,12 +126,10 @@ class BuyCryptoCoin extends React.Component {
 
     this.state = {
       currency: CRYPTO_CURRENCY.BTC,
-      allowBuy: true,
       isLoading: false,
       forcePaymentMethod: null,
       modalContent: null,
       modalTitle: null,
-      fiatCurrency: null,
       walletAddress: null,
     };
 
@@ -138,12 +138,13 @@ class BuyCryptoCoin extends React.Component {
     this.getCoinInfoNoBounce = ::this.getCoinInfoNoBounce;
     this.getCoinInfo = debounce(::this.getCoinInfoNoBounce, 1000);
     this.getBasePrice = :: this.getBasePrice;
+    this.getBankDataByCountry = :: this.getBankDataByCountry;
+    this.renderBankInfo = :: this.renderBankInfo;
   }
 
   componentDidMount() {
     const { country } = this.props;
     this.getBasePrice(this.props.wallet?.currency);
-    this.updateFiatCurrency(this.props.currencyByLocal);
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
@@ -199,10 +200,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { currencyByLocal, coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
-    if (currencyByLocal !== this.props.currencyByLocal) {
-      this.updateFiatCurrency(currencyByLocal);
-    }
+    const { coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
 
     // update phone number from props
     if (authProfile?.phone !== this.props.authProfile?.phone) {
@@ -239,16 +237,9 @@ class BuyCryptoCoin extends React.Component {
     this.getBankInfoFromCountry(country);
   }
 
-  getBankInfoFromCountry = (country = 'XX') => {
+  getBankInfoFromCountry = (country = GLOBAL_BANK) => {
     this.props.buyCryptoGetBankInfo({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${country}`,
-    });
-  }
-
-  updateFiatCurrency = (fiatCurrencyId) => {
-    const fiatCurrency = getFiatCurrency(fiatCurrencyId);
-    this.setState({
-      fiatCurrency,
     });
   }
 
@@ -260,17 +251,7 @@ class BuyCryptoCoin extends React.Component {
     if (Object.values(PAYMENT_METHODS).indexOf(method) === -1) {
       return;
     }
-
-    this.setState({
-      paymentMethod: method,
-    });
     this.props.rfChange(nameBuyCryptoForm, 'paymentMethod', method);
-  }
-
-  updateFiatAmount = (amount) => {
-    this.setState({
-      fiatAmount: Number.parseFloat(amount),
-    });
   }
 
   isOverLimit = (amountInUsd, limit) => {
@@ -373,7 +354,7 @@ class BuyCryptoCoin extends React.Component {
     if (data.type === PAYMENT_METHODS.COD) {
       data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);
     } else {
-      const globalBank = 'XX';
+      const globalBank = GLOBAL_BANK;
       if (this.isOverLimit(fiatAmount)) {
         data.center = globalBank; // global bank
       } else {
@@ -420,7 +401,7 @@ class BuyCryptoCoin extends React.Component {
     this.makeOrder();
   }
 
-  renderBankInfo = () => {
+  renderOrderInfo = () => {
     const { modalContent, modalTitle } = this.state;
     return (
       <Modal title={modalTitle} onRef={modal => { this.modalRef = modal; }} onClose={() => {}}>
@@ -430,7 +411,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   handleBuyViaTransfer = (order = {}) => {
-    const { bankInfo, country } = this.props;
+    const { country } = this.props;
     let bankData = {};
     const receipt = {
       createdAt: order.createdAt,
@@ -443,9 +424,9 @@ class BuyCryptoCoin extends React.Component {
 
     // if fiatAmount over limit => use global bank, else local bank
     if (this.isOverLimit(receipt.amount)) {
-      bankData = bankInfo.XX; // global bank
+      bankData = this.getBankDataByCountry(); // global bank
     } else {
-      bankData = bankInfo[country] || bankInfo.XX;
+      bankData = this.getBankDataByCountry(country);
       receipt.amount = order.fiatLocalAmount;
       receipt.fiatCurrency = order.fiatLocalCurrency;
     }
@@ -469,6 +450,14 @@ class BuyCryptoCoin extends React.Component {
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
+  getBankDataByCountry(country = GLOBAL_BANK) {
+    const { bankInfo } = this.props;
+    if (country in bankInfo) {
+      return bankInfo[country];
+    }
+    return null;
+  }
+
   handleBuyPackage = (item = {}) => {
     const { walletAddress, currency } = this.state;
     const data = {
@@ -487,7 +476,7 @@ class BuyCryptoCoin extends React.Component {
   renderCoD = () => {
     const { intl: { messages }, paymentMethod } = this.props;
     return (
-      <div className={`choose-coin-cod-form ${paymentMethod === PAYMENT_METHODS.COD ? 'show' : 'hidden'}`}>
+      <React.Fragment>
         <div className="input-group mt-4">
           <Field
             type="text"
@@ -518,6 +507,38 @@ class BuyCryptoCoin extends React.Component {
             validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
           />
         </div>
+      </React.Fragment>
+    );
+  }
+
+  renderBankInfo() {
+    const { coinMoneyExchange, country, intl: { messages } } = this.props;
+    const overLimit = coinMoneyExchange?.isOverLimit;
+    const bankData = overLimit ? this.getBankDataByCountry() : this.getBankDataByCountry(country);
+
+    if (!bankData) return null;
+    return (
+      <React.Fragment>
+        <ul className="bank-info-container">
+          {bankData && Object.entries(bankData).map(([key, value]) => {
+            return (
+              <li key={key}>
+                <div><span>{messages.bank_info[key]}</span></div>
+                <div><span>{value}</span></div>
+              </li>
+            );
+          })}
+        </ul>
+      </React.Fragment>
+    );
+  }
+
+  renderPaymentMethodInfo() {
+    const { paymentMethod } = this.props;
+    return (
+      <div className={`choose-coin-payment-method-container ${paymentMethod === PAYMENT_METHODS.COD ? 'cod' : 'bank'}`}>
+        {paymentMethod === PAYMENT_METHODS.COD && this.renderCoD()}
+        {paymentMethod === PAYMENT_METHODS.BANK_TRANSFER && this.renderBankInfo()}
       </div>
     );
   }
@@ -616,7 +637,7 @@ class BuyCryptoCoin extends React.Component {
                   disabled={forcePaymentMethod}
                 />
               </div>
-              {this.renderCoD()}
+              {this.renderPaymentMethodInfo()}
               <div className="input-group mt-2">
                 <ConfirmButton
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
@@ -639,7 +660,7 @@ class BuyCryptoCoin extends React.Component {
           </div>
 
           {this.renderPackages()}
-          {this.renderBankInfo()}
+          {this.renderOrderInfo()}
         </div>
       </div>
     );

@@ -1767,6 +1767,12 @@ export default {
       },
     },
   },
+  bank_info: {
+    account_name: 'Account name',
+    account_number: 'Account number',
+    bank_id: 'Bank ID',
+    bank_name: 'Bank name',
+  },
   buy_coin_transaction: {
     statusValues: {
       pending: 'Created',
