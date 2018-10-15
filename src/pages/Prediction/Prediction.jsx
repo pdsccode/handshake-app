@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { push } from 'connected-react-router';
 import BetMode from '@/components/handshakes/betting/Feed/OrderPlace/BetMode';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
@@ -19,11 +20,12 @@ import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
 import { isJSON } from '@/utils/object';
+import qs from 'querystring';
 
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector } from './selector';
-import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector, totalBetsSelector, relevantEventSelector } from './selector';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail, loadRelevantEvents } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 
@@ -39,20 +41,19 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    relevantEvents:PropTypes.array,
     shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
-    isSharePage: PropTypes.bool,
+    isSharePage: PropTypes.any,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
+    isExistEmail: PropTypes.any,
     totalBets: PropTypes.number,
-    isExistEmail: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.number,
-    ]),
   };
 
   static defaultProps = {
     eventList: [],
+    relevantEvents: [],
     shareEvent: null,
     isExistEmail: 0,
   };
@@ -70,12 +71,15 @@ class Prediction extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.props.dispatch(loadMatches());
     this.receiverMessage(this.props); // @TODO: Extensions
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
     this.props.dispatch(checkExistSubcribeEmail());
+    window.addEventListener('scroll', this.handleScroll);
+    const eventId = this.getEventId(this.props);
+    if (eventId) {
+      this.props.dispatch(loadRelevantEvents({eventId}));
+    }
   }
 
   componentWillUnmount() {
@@ -86,6 +90,12 @@ class Prediction extends React.Component {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
+  }
+  getEventId = () => {
+    const querystring = window.location.search.replace('?', '');
+    const querystringParsed = qs.parse(querystring);
+    const { match } = querystringParsed;
+    return match || null;
   }
 
   // @TODO: Extensions
@@ -101,6 +111,8 @@ class Prediction extends React.Component {
         const source = matches && matches[0];
         props.dispatch(loadMatches({ source }));
       }
+    } else {
+      props.dispatch(loadMatches({ isDetail: props.isSharePage }));
     }
   }
 
@@ -117,10 +129,9 @@ class Prediction extends React.Component {
     }
   }
 
-  checkFreeAvailabe(props) {
+  checkFreeAvailabe = (props) => {
     const { freeBet = {} } = props;
     const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
-    //const { status } = lastItem;
     let isFreeAvailable = false;
 
     if (canFreeBet && freeAvailable > 0) {
@@ -157,7 +168,7 @@ class Prediction extends React.Component {
     }, 2 * 1000);
   }
 
-  checkShowFreeBetPopup(props) {
+  checkShowFreeBetPopup = (props) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
@@ -189,10 +200,12 @@ class Prediction extends React.Component {
     const { event } = itemProps;
     const { shareEvent } = this.props;
     if (itemData.id === URL.HANDSHAKE_PEX_CREATOR) {
-      this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`);
       if (shareEvent) {
         this.props.dispatch(removeShareEvent(['shareEvent']));
       }
+      const redirectURL = `${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`;
+      this.props.dispatch(push(redirectURL));
+      this.props.history.push(redirectURL);
     } else {
       const selectedOutcome = {
         hid: itemData.hid,
@@ -271,7 +284,11 @@ class Prediction extends React.Component {
   }
 
   renderEventList = (props) => {
-    if (!props.eventList || !props.eventList.length) return null;
+    if (props.isLoading) return null;
+    if (!props.eventList || !props.eventList.length) {
+      return (<p className="NoMsg">No event found</p>);
+    }
+
     return (
       <div className="EventList">
         {props.eventList.map((event) => {
@@ -284,10 +301,32 @@ class Prediction extends React.Component {
             />
           );
         })}
+        {this.renderRelevantEventList(props)}
         <Disclaimer />
       </div>
     );
   };
+
+  renderRelevantEventList = (props) => {
+    if (!props.isSharePage) return null;
+    if (!props.relevantEvents || !props.relevantEvents.length) return null;
+    return (
+      <div className="RelevantEventList">
+        <div className="relevantTitle">Related events</div>
+        {props.relevantEvents.map((event) => {
+          return (
+            <EventItem
+              key={event.id}
+              event={event}
+              onClickOutcome={this.handleClickEventItem}
+              onCountdownComplete={() => this.onCountdownComplete(event.id)}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
 
   renderBetMode = (props, state) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
@@ -311,7 +350,7 @@ class Prediction extends React.Component {
   renderViewAllEvent = (props) => {
     if (!props.isSharePage) return null;
     return (
-      <a href={URL.HANDSHAKE_PREDICTION} onClick="location.reload()" className="ViewAllEvent">
+      <a href={URL.HANDSHAKE_PREDICTION} className="ViewAllEvent">
         View All Events
       </a>
     );
@@ -386,7 +425,7 @@ class Prediction extends React.Component {
           <div className="outtaMoneyMsg">
             To keep forecasting, you’ll need to top-up your wallet.
           </div>
-          <button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>
+          {/*<button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>*/}
         </div>
       </ModalDialog>
     );
@@ -414,7 +453,7 @@ class Prediction extends React.Component {
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
         {/*<Banner />*/}
-        <PexCreateBtn />
+        <PexCreateBtn dispath={props.dispatch} />
         {this.renderReport(props)}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
@@ -441,6 +480,7 @@ export default injectIntl(connect(
     return {
       countReport: countReportSelector(state),
       eventList: eventSelector(state),
+      relevantEvents: relevantEventSelector(state),
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),

@@ -10,18 +10,21 @@ export const eventSelector = (state) => {
   const urlParams = qs.parse(queryString.slice(1));
   const { match } = urlParams;
   const { events } = state.prediction;
+  if (!events || !events.length) return [];
   if (isEmpty(urlParams) || isEmpty(events)) {
     return state.prediction.events;
   }
   return events.filter(event => (event.id === parseInt(match, 10)));
 };
+export const relevantEventSelector = (state) => {
+  return state.prediction.relevantEvents;
+}
 
 export const countReportSelector = (state) => {
   const { countReport } = state.ui;
   return countReport || 0;
 };
 export const checkFreeBetSelector = (state) => {
-
   const { freeBet = {} } = state.ui;
   return freeBet;
 };
@@ -29,11 +32,11 @@ export const checkFreeBetSelector = (state) => {
 export const isSharePage = (state) => {
   const queryString = queryStringSelector(state);
   const urlParams = qs.parse(queryString.slice(1));
-  return !!urlParams.match;
+  return urlParams.match || false;
 };
 
 export const isLoading = (state) => {
-  if (!state.prediction._meta) return true;
+  if (!state.prediction._meta) return false;
   return state.prediction._meta.isFetching;
 };
 
@@ -49,6 +52,7 @@ export const checkExistSubcribeEmailSelector = (state) => {
   const { isExistEmail = false } = state.ui;
   return isExistEmail;
 };
+
 export const totalBetsSelector = (state) => {
   return (1000 - state.ui.totalBets || 0);
 };

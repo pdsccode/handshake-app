@@ -200,6 +200,8 @@ export const API_URL = {
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    LOAD_MATCHES_DETAIL: 'cryptosign/match',
+    RELEVANT_EVENTS: 'cryptosign/match/relevant-event',
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
@@ -291,6 +293,7 @@ export const API_URL = {
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+    GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
   },
 };
 
@@ -601,6 +604,7 @@ export const URL = {
   ATM_FOR_BUSINESS: '/atm-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
   PEX_INSTRUCTION_URL: '/pex/instructions',
+  PEX_LUCKY_DRAW_MECHANIC_URL: '/pex/luckydraw',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
   PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
@@ -626,6 +630,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  INTERNAL_ADMIN_URL: '/d2l0aGRyYXdfZm9yX2dvZB/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
@@ -960,6 +965,7 @@ export const Country = {
   AN: 'ANG',
 };
 
+export const PAYMENT_REMIND = 'payment_remind';
 export const CUSTOMER_ADDRESS_INFO = 'CUSTOMER_ADDRESS_INFO';
 export const AUTONOMOUS_END_POINT = {
   BASE: 'https://www.autonomous.ai/api-v2',
@@ -1220,4 +1226,9 @@ export const COUNTRY_LIST = {
   "ZM": "ZM - Zambia",
   "ZR": "ZR - Zaire",
   "ZW": "ZW - Zimbabwe"
+}
+
+export const EXT = {
+  URL: 'https://chrome.google.com/webstore/detail/ninja-prediction/lmbfnjfjefcjgbddmaijlmkkpfipbjhb',
+  CLIP_SOURCE: 'https://www.youtube.com/embed/Cpswr7hGtiA?rel=0&amp;autoplay=1&amp;loop=1&playlist=Cpswr7hGtiA'
 }

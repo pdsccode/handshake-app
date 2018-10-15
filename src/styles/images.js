@@ -12,6 +12,12 @@ export const ICON = {
     </path>
     </svg>
   },
+  ArrowLeft: (color='#000', css='fa-2x') => {
+    return <svg aria-hidden="true" data-prefix="fal" data-icon="angle-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" className={"svg-inline--fa fa-angle-up fa-w-8 " + css}>
+    <path fill={color} d="M238.475 475.535l7.071-7.07c4.686-4.686 4.686-12.284 0-16.971L50.053 256 245.546 60.506c4.686-4.686 4.686-12.284 0-16.971l-7.071-7.07c-4.686-4.686-12.284-4.686-16.97 0L10.454 247.515c-4.686 4.686-4.686 12.284 0 16.971l211.051 211.05c4.686 4.686 12.284 4.686 16.97-.001z" className={"svg-inline--fa fa-angle-up fa-w-8 " + css}>
+    </path>
+    </svg>
+  },
   QRCode: (color='#8A8A8F') => {
     return <svg width="31px" height="18px" viewBox="0 0 31 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <g id="App--Wallet" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -21,6 +27,23 @@ export const ICON = {
               </g>
           </g>
       </g>
+    </svg>
+  },
+  SuccessChecked: () => {
+    return <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <g id="App--Wallet" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+        <g id="Discover-first-sight-Copy-14" transform="translate(-101.000000, -74.000000)">
+          <g id="Group-11" transform="translate(102.000000, 75.000000)">
+            <circle id="Oval-3" stroke="#155724" cx="8" cy="8" r="8"></circle>
+            <path d="M10.7088916,4.0102581 C10.6032949,4.02767796 10.514371,4.08574295 10.4421199,4.19606605 L6.95185681,9.60772263 L5.30676465,7.91222507 C5.165042,7.68867507 4.89271291,7.6712552 4.75099027,7.8193211 L4.10629198,8.49287492 C3.96456934,8.71642493 3.96456934,9.01836285 4.10629198,9.16642874 L6.59616121,11.7677401 C6.73788386,11.8432249 6.93796263,12 7.15193559,12 C7.29365824,12 7.52152538,11.9216121 7.66324802,11.6980621 L11.9315953,5.1483318 C12.0733179,4.92478179 11.9927308,4.71574785 11.7092855,4.56768195 L10.9978943,4.03348409 C10.925644,3.99574204 10.8144891,3.99283897 10.7088916,4.0102581 Z" id="Path" fill="#155724"></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  },
+  Close: (color='#000', css='fa-2x') => {
+    return <svg aria-hidden="true" data-prefix="fal" data-icon="angle-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" className={"svg-inline--fa fa-angle-up fa-w-8 " + css}>
+    <path fill={color} d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"  className={"svg-inline--fa fa-angle-up fa-w-8 " + css}></path>
     </svg>
   }
 };

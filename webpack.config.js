@@ -14,7 +14,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const OfflinePlugin = require('offline-plugin');
 
 // configs
@@ -165,11 +164,6 @@ module.exports = function webpackConfig(env, argv = {}) {
         { from: 'src/google59d0f1640e2aac21.html', to: '.' },
         { from: 'src/jvigd6c7cfuubxogy2yu32dnm1g1at.html', to: '.' },
       ]),
-      // new OfflinePlugin({
-      //   appShell: '/',
-      //   responseStrategy: 'network-first',
-      //   autoUpdate: true,
-      // }),
     ],
     performance: { hints: false },
     devtool: false,
@@ -222,7 +216,6 @@ module.exports = function webpackConfig(env, argv = {}) {
           env: appEnvConfig,
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        // new BundleAnalyzerPlugin(),
       ],
       module: {
         rules: [

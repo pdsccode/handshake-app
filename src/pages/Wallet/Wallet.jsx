@@ -22,21 +22,11 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
-import {required} from '@/components/core/form/validation';
 import {change, Field, formValueSelector, clearFields} from 'redux-form';
-import {bindActionCreators} from 'redux';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 import Dropdown from '@/components/core/controls/Dropdown';
 import createForm from '@/components/core/form/createForm';
-
-import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
-import iconSafe from '@/assets/images/icon/icon-safe.svg';
-import iconWarning from '@/assets/images/icon/icon-warning.svg';
-import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
-import iconLoading from '@/assets/images/icon/loading.svg.raw';
-import iconQRCodeBlack from '@/assets/images/icon/scan-qr-code.svg';
-import bgAddImg from '@/assets/images/pages/wallet/add-wallet.svg';
 
 import Header from './Header';
 import HeaderMore from './HeaderMore';
@@ -46,11 +36,7 @@ import WalletHistory from './WalletHistory';
 import TransferCoin from '@/components/Wallet/TransferCoin';
 import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 import ReactBottomsheet from 'react-bottomsheet';
-import { setHeaderRight } from '@/reducers/app/action';
-import QrReader from 'react-qr-reader';
-import { showAlert } from '@/reducers/app/action';
-import { showLoading, hideLoading } from '@/reducers/app/action';
-import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
+import { showLoading, hideLoading, showAlert, setHeaderRight } from '@/reducers/app/action';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
 
@@ -64,12 +50,8 @@ import CoinTemp from '@/pages/Wallet/CoinTemp';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
 import SettingWallet from '@/components/Wallet/SettingWallet/SettingWallet';
-import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
-import * as gtag from '@/services/ga-utils';
-import taggingConfig from '@/services/tagging-config';
 
 // new layout:
-
 import logoWallet from '@/assets/images/wallet/images/logo-wallet.svg';
 import iconMoreSettings from '@/assets/images/wallet/icons/icon-more-settings.svg';
 import SortableComponent from "./SortableComponent";
@@ -84,7 +66,8 @@ import WalletPreferences from '@/components/Wallet/WalletPreferences';
 import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
 import QRCodeContent from '@/components/Wallet/QRCodeContent';
 import Redeem from '@/components/Wallet/Redeem';
-
+import RemindPayment from '@/components/Payment/Remind';
+import { ICON } from '@/styles/images';
 
 const QRCode = require('qrcode.react');
 
@@ -96,29 +79,15 @@ window.Clipboard = (function (window, document, navigator) {
   } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy };
 }(window, document, navigator));
 
-const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-
 const nameFormSendWallet = 'sendWallet';
-//const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
-
 const nameFormCreditCard = 'creditCard';
-const FormCreditCard = createForm({
-  propsReduxForm: {
-    form: nameFormCreditCard,
-    initialValues: { currency: 'ETH' },
-  },
-});
-const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
-
-const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
-
 const defaultOffset = 500;
 
 var topOfElement = function(element) {
-    if (!element) {
-        return 0;
-    }
-    return element.offsetTop + topOfElement(element.offsetParent);
+  if (!element) {
+      return 0;
+  }
+  return element.offsetTop + topOfElement(element.offsetParent);
 };
 
 class Wallet extends React.Component {
@@ -150,7 +119,7 @@ class Wallet extends React.Component {
       isRestoreLoading: false,
       // tranfer:
       listCoinTempToCreate: [],
-      countCheckCoinToCreate: 1,
+      countreCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
       // Qrcode
@@ -159,7 +128,6 @@ class Wallet extends React.Component {
       walletsData: false,
       isNewCCOpen: false,
       stepProtected: 1,
-      activeProtected: false,
       formAddTokenIsActive: false,
       formAddCollectibleIsActive: false,
       isHistory: false,
@@ -175,9 +143,11 @@ class Wallet extends React.Component {
       modalSetting: '',
       modalHistory: '',
       modalWalletPreferences: "",
+      modalSecure: "",
+      modalRemindCheckout: '',
       backupWalletContent: "",
+      exportPrivateContent: "",
       restoreWalletContent: "",
-
       redeemContent: "",
 
       // sortable:
@@ -203,13 +173,7 @@ class Wallet extends React.Component {
     this.showAlert(mst, 'danger', 3000);
   }
   showSuccess(mst) {
-    this.showAlert(mst, 'success', 4000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
-  }
-  showLoading(status) {
-    this.props.showLoading({ message: '' });
-  }
-  hideLoading() {
-    this.props.hideLoading();
+    this.showAlert(mst, 'success', 4000, ICON.SuccessChecked());
   }
   headerRight() {
     return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
@@ -275,7 +239,7 @@ class Wallet extends React.Component {
       let list = this.state.transactions;
       let data = await walletSelected.getTransactionHistory(pagenoTran);
 
-      if(data.length > 0){
+      if(data.lenreh > 0){
         let final_list = list.concat(data);
         this.setState({ transactions: final_list, pagenoTran: data.length < 20 ? 0 : pagenoTran, isLoadMore: false});
       }
@@ -297,11 +261,12 @@ class Wallet extends React.Component {
   }
 
   componentWillUnmount() {
+    try{document.querySelector(".app").style.backgroundColor = '#ffffff';} catch (e){};
     this.detachScrollListener();
   }
 
-  async componentDidMount() {    
-    
+  async componentDidMount() {
+    try{document.querySelector(".app").style.backgroundColor = '#f4f4fb';} catch (e){};
     this.getSetting();
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
@@ -387,45 +352,20 @@ class Wallet extends React.Component {
       }
     })
 
-    //const allowedWallets = ['BTC', 'ETH', 'BCH'];
-    // now hide buy coin:
-    // if (true && allowedWallets.includes(wallet.name)){
-    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
-    //   obj.push({
-    //     title: messages.create.cash.credit.title,
-    //     handler: () => {
-    //       this.setState({
-    //         walletSelected: wallet,
-    //         modalBuyCoin:
-    //           (
-    //             <FeedCreditCard
-    //               buttonTitle={messages.create.cash.credit.title}
-    //               currencyForced={wallet ? wallet.name : ''}
-    //               callbackSuccess={this.afterWalletFill}
-    //               addressForced={wallet ? wallet.address : ''}
-    //               isPopup
-    //             />
-    //           ),
-    //       }, () => {
-    //         this.toggleBottomSheet();
-    //         this.modalBuyCoin.open();
-
-    //         gtag.event({
-    //           category: taggingConfig.creditCard.category,
-    //           action: taggingConfig.creditCard.action.showPopupWallet
-    //         });
-    //       });
-    //     },
-    //   });
-    // }
-
     if (!wallet.protected) {
       obj.push({
         title: messages.wallet.action.protect.title,
         handler: () => {
-          this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
-          this.toggleBottomSheet();
-          this.modalProtectRef.open();
+          this.setState({ walletSelected: wallet,
+          modalSecure: <WalletProtect onCopy={this.onCopyProtected}
+            step={1}
+            wallet={this.state.walletSelected}
+            callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }}
+            />
+          }, ()=> {
+            this.toggleBottomSheet();
+            this.modalProtectRef.open();
+          });
         },
       });
     }
@@ -591,16 +531,16 @@ class Wallet extends React.Component {
           });
       }
 
-    });    
+    });
   }
-  showTransferFromQRCode=(dataAddress)=>{        
-    this.props.requestWalletPasscode({      
-      onSuccess: () => {        
+  showTransferFromQRCode=(dataAddress)=>{
+    this.props.requestWalletPasscode({
+      onSuccess: () => {
           this.setState({
             modalTransferCoin:
               (
-                <TransferCoin                  
-                  onFinish={(result) => { 
+                <TransferCoin
+                  onFinish={(result) => {
                     this.modalSendRef.close();
                     // this.autoCheckBalance(dataAddress.address, amount);
                    }}
@@ -614,7 +554,7 @@ class Wallet extends React.Component {
             this.modalSendRef.open();
           });
       }
-    });    
+    });
   }
 
   showReceive(wallet){
@@ -749,14 +689,45 @@ class Wallet extends React.Component {
     // if (!wallet.protected) {
       this.props.requestWalletPasscode({
         onSuccess: () => {
-          this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
-          this.modalProtectRef.open();
+          this.setState({ walletSelected: wallet,
+            modalSecure: <WalletProtect onCopy={this.onCopyProtected}
+              step={1}
+              wallet={wallet}
+              callbackSuccess={() => { this.successWalletProtect(wallet); }}
+              />
+            }, ()=> {
+              this.modalProtectRef.open();
+            }
+          );
         }
       })
 
     // } else {
 
     // }
+  }
+  onExportPrivateKeyClick = (wallet) => {
+    const { messages } = this.props.intl;
+
+    this.props.requestWalletPasscode({
+      onSuccess: () => {
+        this.setState({
+          exportPrivateContent: (
+              <div className="export-private-key">
+                <div className="ex-title">{messages.wallet.action.export_private_key.title}</div>
+                <QRCode size={230} value={this.state.walletSelected.privateKey} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.copy.success);}} />
+                <div className="ex-desc">{messages.wallet.action.export_private_key.desc} </div>
+                <Button onClick={()=> {Clipboard.copy(this.state.walletSelected.privateKey); this.showToast(messages.wallet.action.copy.success);}}>Copy</Button>
+              </div>
+          )
+        }, ()=>{
+          this.modalExportPrivateKeyRef.open();
+        })
+      }
+    })
+  }
+  onCloseExportPrivateKey =()=>{
+    this.setState({exportPrivateContent: ''});
   }
   onWalletItemClick = (wallet, callUpdate) =>{
     this.setState({walletSelected: wallet,
@@ -785,7 +756,7 @@ class Wallet extends React.Component {
 
   onOpenWalletPreferences = (wallet) =>{
     this.setState({
-      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.props.requestWalletPasscode({onSuccess: () => { this.modalRemoveRef.open();}});}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
+      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.props.requestWalletPasscode({onSuccess: () => { this.modalRemoveRef.open();}});}} onWarningClick={()=>{this.onWarningClick(wallet);}} onExportPrivateKeyClick={()=>{this.onExportPrivateKeyClick(wallet);}}  onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
     }, ()=>{
       this.modalWalletReferencesRef.open();
     });
@@ -848,10 +819,6 @@ class Wallet extends React.Component {
     this.modalBuyCoin.close();
   }
 
-  closeProtected = () => {
-    this.setState({ activeProtected: false });
-  }
-
   closeTransfer = () => {
     this.setState({ modalTransferCoin: '' });
     console.log("closeTransfer");
@@ -865,9 +832,14 @@ class Wallet extends React.Component {
     this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
 
+  closeSecure = () => {
+    this.setState({modalSecure: ''});
+  }
+
   closeHistory = () => {
     this.setState({modalHistory: ''});
   }
+
   closePreferences=()=>{
     this.setState({modalWalletPreferences: ""});
   }
@@ -920,16 +892,16 @@ class Wallet extends React.Component {
     window.open('https://www.rinkeby.io/#faucet', '_blank');
     // let data="ninja-redeem:NINJA101F8DC?value=234";
     // let result = MasterWallet.getQRCodeDetail(data);
-    // this.props.showQRCodeContent({   
-    //   data: result      
-    // });    
+    // this.props.showQRCodeContent({
+    //   data: result
+    // });
   }
 
-  onQRCodeScaned=(data)=>{    
-    let result = MasterWallet.getQRCodeDetail(data);        
-    this.props.showQRCodeContent({   
-      data: result      
-    });    
+  onQRCodeScaned=(data)=>{
+    let result = MasterWallet.getQRCodeDetail(data);
+    this.props.showQRCodeContent({
+      data: result
+    });
   }
 
   // redeem:
@@ -937,11 +909,11 @@ class Wallet extends React.Component {
     this.setState({
       redeemContent:
         (
-          <Redeem                  
+          <Redeem
             data={data}
-            onFinish={(result) => { 
+            onFinish={(result) => {
               this.modalRedeemRef.close();
-             }}            
+             }}
           />
         ),
       }, ()=>{
@@ -952,17 +924,20 @@ class Wallet extends React.Component {
   closeModalRedeem=(data)=>{
     this.setState({redeemContent: ''});
   }
-  
+
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent} = this.state;
+      modalHistory, modalSecure, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent, exportPrivateContent} = this.state;
 
     return (
       <div className="wallet-page">
 
         {/* float button qrcode */}
         <img onClick={()=> {this.props.showScanQRCode({onFinish: (data) => {this.onQRCodeScaned(data);}});}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
+
+        {/* remind checkout */}
+        <RemindPayment />
 
         {/* history modal */}
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
@@ -1017,8 +992,8 @@ class Wallet extends React.Component {
             {modalBuyCoin}
           </Modal>
 
-          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
-            <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
+          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.protect.header} onRef={modal => this.modalProtectRef = modal} onClose={this.closeSecure}>
+            {modalSecure}
           </Modal>
 
           {/* Modal for Setting wallets : */}
@@ -1035,6 +1010,13 @@ class Wallet extends React.Component {
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal} onClose={this.closeRestoreWalletAccount}>
             {restoreWalletContent}
           </Modal>
+
+          {/* Modal for Export Private key : */}
+          <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.preferecens.list_item.export_private_key} onRef={modal => this.modalExportPrivateKeyRef = modal} onClose={this.onCloseExportPrivateKey}>
+            {exportPrivateContent}
+          </Modal>
+
+
 
           {/* Modal for Copy address : */}
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}   title={messages.wallet.action.receive.title} onRef={modal => this.modalReceiveCoinRef = modal} onClose={()=> {this.setState({modalReceiveCoin: false})}}>
@@ -1086,7 +1068,7 @@ class Wallet extends React.Component {
               {messages.wallet.action.create.button.create}
             </Button>
             <Header />
-          </Modal>          
+          </Modal>
 
           <Grid>
 

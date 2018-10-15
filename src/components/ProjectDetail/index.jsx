@@ -11,12 +11,11 @@ import createForm from '@/components/core/form/createForm';
 import { fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
-import { BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import { Link } from 'react-router-dom';
+import { URL, BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
-import { URL } from '@/constants';
 const nameFormSubscribeEmail = 'subscribeEmail';
 const FormSubscribeEmail = createForm({
   propsReduxForm: {
@@ -61,6 +60,21 @@ class Index extends React.PureComponent {
       window.location = URL.LANDING_BECOME_ATM;
     }
   }
+  scrollToFAQ() {
+    const faqNode = ReactDOM.findDOMNode(this.refs.faq)
+
+    if (faqNode && location.href.includes('#faq')) {
+      faqNode.scrollIntoView({
+          behaviour: 'smooth',
+          block: 'start',
+          inline: 'center',
+      });
+    }
+  }
+  componentDidMount() {
+    this.scrollToFAQ();
+  }
+
   renderDisclaim(name) {
     return (
       <div className="row">
@@ -244,7 +258,7 @@ class Index extends React.PureComponent {
           }
           {
             faq && (
-              <div className="row mt-5" id="faq" ref={ re => { this.faqRef = re }} >
+              <div className="row mt-5" id="faq" ref="faq" >
                 <div className="col">
                   <div className="pd-faq">
                     {messages.COIN_EXCHANGE_LP_FAQ_TITLE}
