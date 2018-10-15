@@ -25,6 +25,7 @@ class WalletSelected extends React.Component {
 
     this.state = {
       walletSelected: this.props.walletSelected,
+      wallets: this.props.wallets,
       modalListCoin: ''
     }
   }

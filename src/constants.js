@@ -200,6 +200,7 @@ export const API_URL = {
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    LOAD_MATCHES_DETAIL: 'cryptosign/match',
     RELEVANT_EVENTS: 'cryptosign/match/relevant-event',
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
@@ -964,6 +965,7 @@ export const Country = {
   AN: 'ANG',
 };
 
+export const PAYMENT_REMIND = 'payment_remind';
 export const CUSTOMER_ADDRESS_INFO = 'CUSTOMER_ADDRESS_INFO';
 export const AUTONOMOUS_END_POINT = {
   BASE: 'https://www.autonomous.ai/api-v2',
@@ -1224,4 +1226,9 @@ export const COUNTRY_LIST = {
   "ZM": "ZM - Zambia",
   "ZR": "ZR - Zaire",
   "ZW": "ZW - Zimbabwe"
+}
+
+export const EXT = {
+  URL: 'https://chrome.google.com/webstore/detail/ninja-prediction/lmbfnjfjefcjgbddmaijlmkkpfipbjhb',
+  CLIP_SOURCE: 'https://www.youtube.com/embed/Cpswr7hGtiA?rel=0&amp;autoplay=1&amp;loop=1&playlist=Cpswr7hGtiA'
 }

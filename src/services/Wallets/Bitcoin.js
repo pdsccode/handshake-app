@@ -28,6 +28,11 @@ export class Bitcoin extends Wallet {
     bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
   }
 
+  getAPIUrlTransaction(transaction_no) {
+    let url = "https://www.blockchain.com/btc/tx/"+transaction_no;
+    return url;
+  }
+
   createAddressPrivatekey() {
     this.setDefaultNetwork();
 
@@ -91,6 +96,9 @@ export class Bitcoin extends Wallet {
       console.log('server', this.network);
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
+      amountToSend = parseFloat(amountToSend).toFixed(8)
+      console.log('amountToSend fixed', amountToSend);
+
       if (!balance || balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
@@ -127,6 +135,7 @@ export class Bitcoin extends Wallet {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
     } catch (error) {
+      console.log('error', error);
       return { status: 0, message: 'messages.bitcoin.error.insufficient' };
     }
   }
