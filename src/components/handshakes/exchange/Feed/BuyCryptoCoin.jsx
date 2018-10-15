@@ -376,6 +376,15 @@ class BuyCryptoCoin extends React.Component {
       METHOD: 'POST',
       data,
       successFn: this.onMakeOrderSuccess,
+      errorFn: this.onMakeOrderFailed,
+    });
+  }
+
+  onMakeOrderFailed = (e) => {
+    this.props.showAlert({
+      message: getErrorMessageFromCode(e),
+      timeOut: 3000,
+      type: 'danger',
     });
   }
 

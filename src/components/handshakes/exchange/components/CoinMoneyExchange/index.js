@@ -227,7 +227,6 @@ class CoinMoneyExchange extends Component {
         />
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
-          placeholder="Fiat amount"
           value={fiatAmount}
           options={{
             numeral: true,
