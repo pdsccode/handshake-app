@@ -4,10 +4,14 @@ import React from 'react';
 import CoinMoneyExchange from '../../../components/CoinMoneyExchange';
 import './styles.scss';
 
-const coinMoneyExchangeField = ({ input, currency }) => {
-  // const { onChange } = input;
+const coinMoneyExchangeField = ({ input, currency, paymentMethod, meta }) => {
+  const error = meta?.error?.coinMoneyExchange;
+  const { onChange } = input;
   return (
-    <CoinMoneyExchange currency={currency} onChange={console.log} />
+    <div style={{ width: '100%' }}>
+      <CoinMoneyExchange currency={currency} paymentMethod={paymentMethod} onChange={data => { console.log(data);onChange(data)}} />
+      { error && <span style={{ color: 'red' }}>{error}</span>}
+    </div>
   );
 };
 
