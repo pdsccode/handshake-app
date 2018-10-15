@@ -1753,7 +1753,7 @@ export default {
       },
       verify: {
         notYet: {
-          title: 'Not verify yet.',
+          title: 'You are not verified yet! Verify now to start trading with good price',
           action: 'Verify now',
         },
         rejected: {
