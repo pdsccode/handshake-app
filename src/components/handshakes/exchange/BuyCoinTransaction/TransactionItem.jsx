@@ -95,7 +95,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address, type } = this.state.transaction;
+    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address, type, refCode } = this.state.transaction;
 
     return (
       <div className="transaction">
@@ -150,6 +150,14 @@ class TransactionItem extends React.Component {
                 <span className="font-weight-bold">{formatMoneyByLocale(fiatLocalAmount, fiatLocalCurrency, 2)}</span>
                 &nbsp;
                 <span className="text-normal">{fiatLocalCurrency}</span>
+              </div>
+            </div>
+            <div className="d-table w-100">
+              <div className="d-table-cell text-normal">
+                {messages.buy_coin_transaction.code}
+              </div>
+              <div className="d-table-cell text-right">
+                <span className="font-weight-bold">{refCode}</span>
               </div>
             </div>
             <div className="d-table w-100">

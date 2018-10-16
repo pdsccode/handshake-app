@@ -1774,6 +1774,7 @@ export default {
     bank_name: 'Bank name',
   },
   buy_coin_transaction: {
+    code: 'Code',
     statusValues: {
       pending: 'Created',
       processing: 'Processing',
