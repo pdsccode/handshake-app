@@ -470,38 +470,32 @@ class BuyCryptoCoin extends React.Component {
   renderCoD = () => {
     const { intl: { messages }, paymentMethod } = this.props;
     return (
-      <React.Fragment>
-        <div className="input-group mt-4">
-          <Field
-            type="text"
-            className="form-control input-field"
-            name="address"
-            placeholder={messages.create.cod_form.your_address}
-            component={fieldInput}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-        <div className="input-group mt-2">
-          <Field
-            type="text"
-            className="form-control input-field"
-            name="phone"
-            placeholder={messages.create.cod_form.your_phone}
-            component={fieldInput}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-        <div className="input-group mt-2">
-          <Field
-            type="text"
-            className="form-control input-field"
-            placeholder={messages.create.cod_form.time}
-            name="noteAndTime"
-            component={fieldTextArea}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-      </React.Fragment>
+      <div className="cod-form-container">
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          name="address"
+          placeholder={messages.create.cod_form.your_address}
+          component={fieldInput}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          name="phone"
+          placeholder={messages.create.cod_form.your_phone}
+          component={fieldInput}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          placeholder={messages.create.cod_form.time}
+          name="noteAndTime"
+          component={fieldTextArea}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+      </div>
     );
   }
 
@@ -514,6 +508,9 @@ class BuyCryptoCoin extends React.Component {
     return (
       <React.Fragment>
         <ul className="bank-info-container">
+          <li>
+            <div><span>TRANSFER DETAIL</span></div>
+          </li>
           {bankData && Object.entries(bankData).map(([key, value]) => {
             return (
               <li key={key}>
@@ -538,40 +535,27 @@ class BuyCryptoCoin extends React.Component {
   }
 
   renderPackages = () => {
-    const { messages } = this.props.intl;
     const { currency } = this.state;
     return (
-      <div className="by-package">
-        <div className="my-3 p-label-choose">{messages.buy_coin.label.common_packages}</div>
-        <div className="mb-5">
-          {
-            listPackages && listPackages.map((item, index) => {
-              const {
-                name, fiatAmount, show,
-              } = item;
+      <div className="package-container">
+        {
+          listPackages && listPackages.map((item) => {
+            const {
+              name, fiatAmount, show,
+            } = item;
 
-              return show && (
-                <div key={name}>
-                  <div className="d-table w-100">
-                    <div className="d-table-cell align-middle" style={{ width: '80px' }}>
-                      <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
-                    </div>
-                    <div className="d-table-cell align-middle pl-3">
-                      <div className="p-price">
-                        {fiatAmount} {FIAT_CURRENCY.USD}
-                      </div>
-                      <div className="p-amount">{this.getAmountFromFiatAmount(fiatAmount, currency) || '---'} {currency}</div>
-                    </div>
-                    <div className="d-table-cell align-middle text-right">
-                      <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
-                    </div>
-                  </div>
-                  { index < listPackages.length - 1 && <hr /> }
+            return show && (
+              <div key={name} className={`package-item ${name}`}>
+                <span className="name"><FormattedMessage id={`cc.label.${name}`} /></span>
+                <div className="price-amount-group">
+                  <span className="fiat-amount">{formatMoney(fiatAmount)}</span>
+                  <span className="amount">{this.getAmountFromFiatAmount(fiatAmount, currency) || '---'} {currency}</span>
                 </div>
-              );
-            })
-          }
-        </div>
+                <button className="btn package-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
+              </div>
+            );
+          })
+        }
       </div>
     );
   }
@@ -600,8 +584,10 @@ class BuyCryptoCoin extends React.Component {
           }
           <div className="specific-amount">
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.validateForm}>
-              <div className="label-1">{messages.buy_coin.label.header}</div>
-              <div className="label-2">{messages.buy_coin.label.description}</div>
+              <div className="label-1">
+                <span>{messages.buy_coin.label.header.buy_crypto}</span>
+                <span>{messages.buy_coin.label.header.with_ninja_coin}</span>
+              </div>
               <div className="input-group mt-4">
                 <Field
                   name="wallet"

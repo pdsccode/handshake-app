@@ -229,6 +229,7 @@ class CoinMoneyExchange extends Component {
           value={amount || ''}
           onChange={this.onAmountChange}
           className={`form-control ${scopedCss('amount-input')}`}
+          placeholder="0.0"
         />
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
@@ -237,6 +238,7 @@ class CoinMoneyExchange extends Component {
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
           }}
+          placeholder="0.0"
           onChange={this.onFiatAmountChange}
         />
         <UncontrolledButtonDropdown className={scopedCss('fiat-amount-selector-container')}>

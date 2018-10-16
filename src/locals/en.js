@@ -1744,7 +1744,10 @@ export default {
   },
   buy_coin: {
     label: {
-      header: 'Buy crypto with Ninja Coin',
+      header: {
+        buy_crypto: 'Buy crypto',
+        with_ninja_coin: ' with Ninja Coin',
+      },
       description: 'Ninja has some of the best prices around',
       common_packages: 'Common packages:',
       payment_methods: {

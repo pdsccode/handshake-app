@@ -12,9 +12,7 @@ import { connect } from 'react-redux';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { BitcoinCash } from '@/services/Wallets/BitcoinCash';
-import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
-import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
-import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import arrowDownIcon from '@/assets/images/icon/expand-arrow.svg';
 import debounce from '@/utils/debounce';
 import { getCryptoFromAddress } from '@/components/handshakes/exchange/utils';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -26,14 +24,8 @@ const CRYPTO_CURRENCY_SUPPORT = {
   ...CRYPTO_CURRENCY, BCH: 'BCH',
 };
 
-const CRYPTO_ICONS = {
-  [CRYPTO_CURRENCY.ETH]: iconEthereum,
-  [CRYPTO_CURRENCY.BTC]: iconBitcoin,
-  BCH: iconBitcoinCash,
-};
-
 const listCurrency = Object.values(CRYPTO_CURRENCY_SUPPORT).map((item) => {
-  return { id: item, text: <span><img alt={item} src={CRYPTO_ICONS[item]} width={24} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
+  return { id: item, text: <span>{CRYPTO_CURRENCY_NAME[item]}</span> };
 });
 
 
@@ -253,7 +245,7 @@ class WalletSelector extends Component {
           />
           <UncontrolledButtonDropdown>
             <DropdownToggle className={scopedCss('wallet-selector')} color="light" block disabled={this.shouldLockCurrencySelector()}>
-              {currency.text}
+              <img style={{ opacity: 0.5, margin: '0px 5px' }} alt="" src={arrowDownIcon} width={12} /> {currency.text}
             </DropdownToggle>
             <DropdownMenu>
               {this.renderCurrencyList()}
