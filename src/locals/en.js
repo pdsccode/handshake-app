@@ -1765,6 +1765,7 @@ export default {
           action: 'Please wait',
         },
       },
+      success: 'Succesful!',
     },
   },
   bank_info: {

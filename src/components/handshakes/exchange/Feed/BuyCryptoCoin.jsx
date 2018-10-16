@@ -392,14 +392,15 @@ class BuyCryptoCoin extends React.Component {
   }
 
   onMakeOrderSuccess = () => {
+    const { messages } = this.props.intl;
     const { order } = this.props;
     if (order.type === PAYMENT_METHODS.COD) {
       this.props.showAlert({
-        message: <div className="text-center">Success!</div>,
+        message: <div className="text-center">{messages.buy_coin.label.success}</div>,
         timeOut: 3000,
         type: 'success',
         callBack: () => {
-          this.props.history.push(URL.HANDSHAKE_ME);
+          this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.NINJA_COIN}`);
         },
       });
       return;
