@@ -1183,7 +1183,7 @@ export default {
           transfer_failed: 'Failed',
         },
         messageTransfer: 'You haven\'t transferred yet.',
-        transferNow: 'View detail',
+        transferNow: ' View detail',
         cancel_order: 'Cancel',
       },
     },
