@@ -232,6 +232,15 @@ class InternalAdmin extends Component {
     return result;
   }
 
+  ellipsisText(text = '') {
+    let newText = '';
+    if (text.length >= 20) {
+      newText = `${text.substr(0, 4)}...${text.substr(-6)}`;
+    }
+
+    return newText;
+  }
+
   render() {
     const { orderList } = this.props;
     const { isFinished } = this.state;
@@ -240,13 +249,12 @@ class InternalAdmin extends Component {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Wallet Address</th>
               <th>Phone</th>
               <th>Amount</th>
               <th>Coin</th>
               <th>Code</th>
               <th>Status</th>
-              <th>Type</th>
               <th />
             </tr>
           </thead>
@@ -259,13 +267,12 @@ class InternalAdmin extends Component {
             {
               orderList.map(order => (
                 <tr key={order.id}>
-                  <td>{order?.user_info?.name || '---'}</td>
+                  <td>{this.ellipsisText(order.address)}</td>
                   <td>{order?.user_info?.phone || '---'}</td>
                   <td>{this.getAmount(order)?.full}</td>
                   <td>{this.getCoin(order)}</td>
-                  <td>{order.type === 'bank' ? order.ref_code : ''}</td>
+                  <td>{order.ref_code}</td>
                   <td>{this.getStatus(order)}</td>
-                  <td>{order.type}</td>
                   <td>{this.renderActionBtn(order)}</td>
                 </tr>
               ))
