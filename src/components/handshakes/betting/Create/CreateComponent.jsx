@@ -45,7 +45,7 @@ const regexReplace = /\[|\]/g;
 const TAG = 'BETTING_CREATE';
 
 const item = {
-  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount", "tooltip": ""}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number", "tooltip": "Ninja uses decimal odds. Multiply your stake by the decimal shown, and that’s your winnings!"}]',
+  desc: `[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount", "tooltip": ""}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number", "tooltip": "${MESSAGE.ODDS_TOOLTIP}"}]`,
 };
 
 class BettingCreate extends React.Component {
@@ -260,11 +260,11 @@ class BettingCreate extends React.Component {
     if (tooltip.length === 0) return null;
     return (
       <span className="wrapperTooltip">
-        <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
+        <img src={IconInfo} alt="" id="TooltipCreate" width="12" />
         <Tooltip
           placement="right"
           isOpen={openTooltip}
-          target="TooltipPrivate"
+          target="TooltipCreate"
           toggle={() => {
             this.setState({
               openTooltip: !openTooltip,

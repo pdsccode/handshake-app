@@ -74,6 +74,7 @@ export const MESSAGE = {
   WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
   DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`,
   DISPUTE_CONFIRM: 'Results will be reviewed if over 50% of players dispute it.',
+  ODDS_TOOLTIP: 'Ninja uses decimal odds. Multiply your stake by the decimal shown, and that’s your winnings!',
 };
 
 export const BETTING_STATUS_LABEL =

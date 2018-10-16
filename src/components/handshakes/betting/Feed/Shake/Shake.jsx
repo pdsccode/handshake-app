@@ -250,6 +250,7 @@ class BetingShake extends React.Component {
       className: 'amount',
       placeholder: '0.00',
       type: 'text',
+      tooltip: '',
     };
     const oddsField = {
       id: 'odds',
@@ -262,6 +263,7 @@ class BetingShake extends React.Component {
       infoText: isChangeOdds ? 'Your Odds' : 'Market Odds',
       isShowInfoText: true,
       type: 'text',
+      tooltip: MESSAGE.ODDS_TOOLTIP,
     };
 
     return (
@@ -276,15 +278,17 @@ class BetingShake extends React.Component {
     );
   }
   renderToolTip = (tooltip, openTooltip) => {
+    console.log('Open tooltip:', openTooltip);
     if (tooltip.length === 0) return null;
     return (
-      <span className="wrapperTooltip">
-        <img src={IconInfo} alt="" id="TooltipPrivate" width="15" />
+      <span className="wrapperTooltipShake">
+        <img src={IconInfo} alt="" id="TooltipShake" width="12" />
         <Tooltip
           placement="right"
           isOpen={openTooltip}
-          target="TooltipPrivate"
+          target="TooltipShake"
           toggle={() => {
+            console.log('Toggle:');
             this.setState({
               openTooltip: !openTooltip,
             });
@@ -307,14 +311,17 @@ class BetingShake extends React.Component {
       value,
       defaultValue,
       isInput = true,
-      tooltip = '',
+      tooltip,
       ...newProps
     } = props;
     const { oddValue, amountValue, openTooltip } = this.state;
     return (
       <div className="rowWrapper">
-        <label className="label" htmlFor={id}>{label}</label>
-        {this.renderToolTip(tooltip, openTooltip)}
+        <div className="titleLable">
+          <label className="label" htmlFor={id}>{label}
+          </label>
+          {this.renderToolTip(tooltip, openTooltip)}
+        </div>
         {
           isInput ? (
             <input
