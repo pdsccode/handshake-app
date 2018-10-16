@@ -262,7 +262,7 @@ class WalletSelector extends Component {
         </div>
         <img onClick={this.openQrScanner} className="prepend" src={qrCodeIcon} alt="" />
         {this.renderUserListWallet()}
-        {walletAddressError && <span className="error-msg">{this.getUnsafeIntlMsg(walletAddressError)}</span>}
+        {walletAddressError && <span className="error-msg">{walletAddressError}</span>}
       </div>
     );
   }

@@ -32,15 +32,16 @@ import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmBu
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
+import { Link } from 'react-router-dom';
+import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
 import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
 import coinMoneyExchangeValidator from './reduxFormFields/coinMoneyExchangeField/validator';
 import walletSelectorValidator from './reduxFormFields/walletSelector/validator';
+
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
-import { Link } from 'react-router-dom';
-import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -63,16 +64,6 @@ const defaultFiatCurrency = {
 const defaultCurrency = {
   id: CRYPTO_CURRENCY.BTC,
   text: <span><img alt="" src={iconBitcoin} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span>,
-};
-
-const getFiatCurrency = (currency) => {
-  if (FIAT_CURRENCY[currency]) {
-    return {
-      id: FIAT_CURRENCY[currency],
-      text: <span><img alt="" src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY[currency]]}</span>,
-    };
-  }
-  return defaultFiatCurrency;
 };
 
 export const PAYMENT_METHODS = {
@@ -133,6 +124,7 @@ class BuyCryptoCoin extends React.Component {
       forcePaymentMethod: null,
       modalContent: null,
       modalTitle: null,
+      isValidToSubmit: false,
       walletAddress: null,
     };
 
@@ -195,9 +187,10 @@ class BuyCryptoCoin extends React.Component {
 
     if (timeShow > 0) {
       this.props.showAlert({
-        message: <div className="text-center">
-          {idVerificationStatusText}
-        </div>,
+        message: (
+          <div className="text-center">
+            {idVerificationStatusText}
+          </div>),
         timeOut: timeShow,
         type: 'danger',
         callBack: () => {
@@ -489,6 +482,22 @@ class BuyCryptoCoin extends React.Component {
     this.makeOrder(data);
   }
 
+  validateForm = (values) => {
+    const { coinMoneyExchange, paymentMethod, wallet, address, noteAndTime, phone } = values;
+    const { amount, fiatAmount, fiatCurrency } = coinMoneyExchange || {};
+    const { currency, walletAddress, hasError } = wallet || {};
+
+    if (paymentMethod && amount && fiatAmount && fiatCurrency && currency && walletAddress && !hasError) {
+      if (paymentMethod === PAYMENT_METHODS.COD && (!address || !noteAndTime || !phone)) {
+        this.setState({ isValidToSubmit: false });
+        return;
+      }
+      this.setState({ isValidToSubmit: true });
+    } else {
+      this.setState({ isValidToSubmit: false });
+    }
+  }
+
   renderCoD = () => {
     const { intl: { messages }, paymentMethod } = this.props;
     return (
@@ -607,7 +616,7 @@ class BuyCryptoCoin extends React.Component {
     const { authProfile: { idVerified } } = this.props;
     const { messages } = this.props.intl;
     const { coinMoneyExchange, paymentMethod } = this.props;
-    const { currency, forcePaymentMethod } = this.state;
+    const { currency, forcePaymentMethod, isValidToSubmit } = this.state;
 
     const showState = [-1, 0, 2];
 
@@ -621,7 +630,7 @@ class BuyCryptoCoin extends React.Component {
             showState.indexOf(idVerified) > 0 && <IdVerifyBtn dispatch={this.props.dispatch} idVerified={idVerified} />
           }
           <div className="specific-amount">
-            <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
+            <FormBuyCrypto onSubmit={this.onSubmit} validate={this.validateForm}>
               <div className="label-1">{messages.buy_coin.label.header}</div>
               <div className="label-2">{messages.buy_coin.label.description}</div>
               <div className="input-group mt-4">
@@ -656,6 +665,7 @@ class BuyCryptoCoin extends React.Component {
               {this.renderPaymentMethodInfo()}
               <div className="input-group mt-2">
                 <ConfirmButton
+                  disabled={!isValidToSubmit}
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
                   buttonClassName="buy-btn"
                   containerClassName="buy-btn-container"
@@ -747,9 +757,11 @@ BuyCryptoCoin.propTypes = {
   buyCryptoOrder: PropTypes.func.isRequired,
   buyCryptoSaveRecipt: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
-  hideAlert: PropTypes.func,
+  hideAlert: PropTypes.func.isRequired,
   phone: PropTypes.string,
   wallet: PropTypes.object,
+  fiatAmountOverLimit: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));

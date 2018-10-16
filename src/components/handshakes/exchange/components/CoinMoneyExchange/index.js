@@ -164,7 +164,7 @@ class CoinMoneyExchange extends Component {
   }
 
   onGetCoinInfoError(e) {
-    this.setState({ amount: 0 }, this.exchangeAmount.call(this, this.state.amount));
+    this.setState({ amount: 0 }, this.exchangeAmount.call(this, { amount: this.state.amount }));
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
@@ -185,16 +185,19 @@ class CoinMoneyExchange extends Component {
     const { fiatAmount, fiatCurrency, currency } = this.state;
     const { paymentMethod } = this.props;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency;
-    this.props.buyCryptoQuoteReverse({
-      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
-      errorFn: this.ongetQuoteReverseError,
-    });
+    const _fiatAmount = Number.parseFloat(data.fiatAmount ? data.fiatAmount : fiatAmount) || 0;
+    if (_fiatAmount >= 0 && _fiatCurrency && currency && paymentMethod) {
+      this.props.buyCryptoQuoteReverse({
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
+        errorFn: this.ongetQuoteReverseError,
+      });
+    }
   }
 
   getCoinInfo(data = {}) {
     const { amount, currency, fiatCurrency } = this.state;
     const { currencyByLocal } = this.props;
-    const parsedAmount = Number.parseFloat(amount);
+    const parsedAmount = Number.parseFloat(amount) || 0;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency || currencyByLocal;
     if (parsedAmount >= 0 && currency && currencyByLocal) {
       this.props.buyCryptoGetCoinInfo({
@@ -205,7 +208,7 @@ class CoinMoneyExchange extends Component {
   }
 
   onFiatCurrencyChange(fiatCurrency) {
-    this.setState({ fiatCurrency }, () => this.exchangeAmount({ fiatCurrency }));
+    this.setState({ fiatCurrency }, () => this.exchangeAmount({ amount: this.state.amount, fiatCurrency }));
   }
 
   renderFiatCurrencyList() {
@@ -223,13 +226,13 @@ class CoinMoneyExchange extends Component {
     return (
       <div className={scopedCss('container')}>
         <input
-          value={amount || 0}
+          value={amount || ''}
           onChange={this.onAmountChange}
           className={`form-control ${scopedCss('amount-input')}`}
         />
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
-          value={fiatAmount || 0}
+          value={fiatAmount || ''}
           options={{
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
