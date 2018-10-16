@@ -99,10 +99,6 @@ class PexExtension extends React.Component {
               </div>
             </div>
           </div>
-          {/* <div className="Description">
-            <span>Bet on anything, against anyone on the Internet.</span>
-            <a href={URL_EXT} target="blank" title="Add to chrome" className="btn btn-warning">Add to chrome</a>
-          </div> */}
         </div>
       </React.Fragment>
     );
