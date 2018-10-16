@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_projects } from '@/reducers/invest/action';
+import { fetch_project_detail, getNumberOfFund } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -15,6 +15,7 @@ import InvestNavigation from './InvestNavigation';
 import HedgeFundAPI from './contracts/HedgeFundAPI';
 import { MasterWallet } from '../../services/Wallets/MasterWallet';
 import LoadingGif from './loading.svg';
+import { wrapBoundary } from '../../components/ErrorBoundary';
 // Refer to FeedCreditCard.jsx
 const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
 const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
@@ -61,7 +62,7 @@ class FormInvestBlock extends Component {
       estimateGasValue: null,
       txHashs: [],
     }
-    this.hedgeFundApi = new  HedgeFundAPI('v1', false);
+    this.hedgeFundApi = new  HedgeFundAPI('latest', false);
     this.runTrx = null;
   }
 
@@ -98,7 +99,7 @@ class FormInvestBlock extends Component {
     }
     // const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
     console.log(investAmount)
-    const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x1001') || {};
+    const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
     // console.log('estimateGas', await estimateGas());
     const estimateGasValue = await estimateGas();
     console.log(estimateGasValue);
@@ -156,13 +157,41 @@ class FormInvestBlock extends Component {
   }
 }
 
+class NumberInvestorComp extends React.Component {
+  state = {
+    loading: true,
+    data: null
+  }
+  componentDidMount() {
+    getNumberOfFund(this.props.pid).then(data => this.setState({ loading: false, data }));
+  }
+  render() {
+    if (this.state.loading) return <div><img src={LoadingGif} style={{ width: '50px', height: '50px' }} /></div>
+    return <div>{this.state.data}</div>
+  }
+}
+const NumberInvestor = wrapBoundary(NumberInvestorComp);
 
 class ProjectDetail extends Component {
-  componentDidMount() {
-    this.props.fetch_projects();
+  constructor(props) {
+    super(props);
+    console.log('projectDetail', this.props);
+    console.log('match', this.props.match.params.projectID)
+    this.state = {
+      loading: true,
+    }
+    // this.getProjectDetail();
+  }
+  getProjectDetail = () => {
+    this.props.fetch_project_detail(this.props.match.params.projectID).then(r => this.setState({ loading: false })).catch(err => console.log(err));
+  }
+  componentWillMount = () => {
+    console.log('component will mount');
+    this.getProjectDetail();
   }
   renderProjects() {
-    const project= this.props.projects[0];
+    const { project } = this.props;
+    console.log(project);
       return (
         <div key={project.id} style={{ marginTop: '1em' }} >
           <div className="projectItem">
@@ -202,7 +231,7 @@ class ProjectDetail extends Component {
                 <label htmlFor="" className="fund-label">Inv. Period</label>
                 <label htmlFor="" className="fund-label">Progress</label>
                 <label htmlFor="" className="fund-label">Deadline</label>
-                <label htmlFor="" className="fund-label">Target Earning</label>
+                {/* <label htmlFor="" className="fund-label">Target Earning</label> */}
                 <label htmlFor="" className="fund-label">Number of investor</label>
               </div>
 
@@ -213,16 +242,16 @@ class ProjectDetail extends Component {
                   {project.target} {project.currency}
                 </label>
                 <label htmlFor="" className="fund-item-value">
-                  {project.target} {project.currency}
+                  {project.lifeTime} {'days'}
                 </label>
                 <label htmlFor="" className="fund-item-value">
-                  {project.target} {project.currency}
+                  {Number(project.fundingAmount)/Number(project.target) * 100} %
                 </label>
                 <label htmlFor="" className="fund-item-value">
-                  {project.target} {project.currency}
+                  {new Date(project.deadline).toDateString()}
                 </label>
                 <label htmlFor="" className="fund-item-value">
-                  {project.target} {project.currency}
+                  <NumberInvestor pid={project.id} />
                 </label>
               </div>
               </div>
@@ -234,20 +263,19 @@ class ProjectDetail extends Component {
   }
 
   render() {
+    if (this.state.loading) return <div>loading...</div>
     return (
       <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
         <InvestNavigation header="Project" history={this.props.history} />
-        {this.props.projects && this.props.projects.length > 0 && this.renderProjects()}
+        {this.renderProjects()}
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
-  if (!state.invest) {
-    return { projects: [] };
-  }
-  return { projects: state.invest.projects };
-}
+const mapState = (state, ownProps) => ({
+  project: state.invest && state.invest.project ? state.invest.project : {},
+  ...ownProps
+})
 
-export default connect(mapStateToProps, { fetch_projects })(ProjectDetail);
+export default connect(mapState, { fetch_project_detail })(ProjectDetail);

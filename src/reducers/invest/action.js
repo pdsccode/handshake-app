@@ -1,12 +1,16 @@
  import { axiosInstance } from '@/reducers/action';
  import { MasterWallet } from '../../services/Wallets/MasterWallet';
+ import HedgeFundAPI from '../../pages/Invest/contracts/HedgeFundAPI';
+ const hedgeFundApi = new HedgeFundAPI('latest', false);
 export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
+  FETCH_PROJECT_DETAIL: 'FETCH_PROJECT_DETAIL',
   FETCH_TRADERS: 'FETCH_TRADERS',
   SYNC_WALLET: 'SYNC_WALLET',
   SYNCED_INFO: 'SYNCED_INFO',
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
+const PROJECT_DETAIL_URL = '/projects';
 const LIST_TRADER_URL = '/users/list-trader';
 const LINK_WALLET_URL = '/link-to-wallet';
 
@@ -15,6 +19,18 @@ export const fetch_projects = () => dispatch => new Promise((resolve, reject) =>
   .then(({ status, data: payload }) => {
     if (status === 200) {
       dispatch({ type: ACTIONS.FETCH_PROJECTS, payload })
+      resolve(payload)
+    }
+    reject(`Response return status is not success ${status}`);
+  })
+  .catch(err => reject(err));
+})
+
+export const fetch_project_detail = (id) => dispatch => new Promise((resolve, reject) => {
+  axiosInstance.get(`${PROJECT_DETAIL_URL}/${id}`)
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_PROJECT_DETAIL, payload })
       resolve(payload)
     }
     reject(`Response return status is not success ${status}`);
@@ -33,6 +49,14 @@ export const fetch_traders = () => dispatch => new Promise((resolve, reject) => 
   })
   .catch(err => reject(err));
 })
+
+export const getNumberOfFund = async (pid)  => {
+  // debugger
+  console.log('pid is', pid);
+  const numberFund = await hedgeFundApi.getProjectInfo('0x' +pid);
+  console.log(numberFund);
+  return numberFund.numFunder;
+}
 
 export const eth_sendTransaction = ({
   privateKey,
