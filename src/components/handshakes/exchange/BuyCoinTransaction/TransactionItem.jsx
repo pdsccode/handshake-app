@@ -123,6 +123,14 @@ class TransactionItem extends React.Component {
           <div className="mt-3">
             <div className="d-table w-100">
               <div className="d-table-cell text-normal">
+                {messages.create.atm.transactions.to_wallet}
+              </div>
+              <div className="d-table-cell text-right">
+                <span className="font-weight-bold">{this.ellipsisText(address)}</span>
+              </div>
+            </div>
+            <div className="d-table w-100">
+              <div className="d-table-cell text-normal">
                 {messages.create.atm.transactions.amount}
               </div>
               <div className="d-table-cell text-right">
@@ -142,14 +150,6 @@ class TransactionItem extends React.Component {
                 <span className="font-weight-bold">{fiatLocalAmount}</span>
                 &nbsp;
                 <span className="text-normal">{fiatLocalCurrency}</span>
-              </div>
-            </div>
-            <div className="d-table w-100">
-              <div className="d-table-cell text-normal">
-                {messages.create.atm.transactions.to_wallet}
-              </div>
-              <div className="d-table-cell text-right">
-                <span className="font-weight-bold">{this.ellipsisText(address)}</span>
               </div>
             </div>
             <div className="d-table w-100">
