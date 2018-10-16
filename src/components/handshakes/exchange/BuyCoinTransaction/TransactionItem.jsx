@@ -19,6 +19,7 @@ import cx from 'classnames';
 import icWarning from '@/assets/images/cash/ic-transaction-warning.svg';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import NinjaCoinTransaction from '@/models/NinjaCoinTransaction';
+import { formatMoneyByLocale } from '@/services/offer-util';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -146,7 +147,7 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.needToTransfer}
               </div>
               <div className="d-table-cell text-right">
-                <span className="font-weight-bold">{fiatLocalAmount}</span>
+                <span className="font-weight-bold">{formatMoneyByLocale(fiatLocalAmount, fiatLocalCurrency, 2)}</span>
                 &nbsp;
                 <span className="text-normal">{fiatLocalCurrency}</span>
               </div>
