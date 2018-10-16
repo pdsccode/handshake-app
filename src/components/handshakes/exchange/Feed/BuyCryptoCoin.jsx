@@ -37,6 +37,7 @@ import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVeri
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
 import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
+import fieldCheckBoxList from './reduxFormFields/paymentMethodCheckbox';
 import coinMoneyExchangeValidator from './reduxFormFields/coinMoneyExchangeField/validator';
 import walletSelectorValidator from './reduxFormFields/walletSelector/validator';
 
@@ -55,11 +56,6 @@ const listPackages = [
   { name: 'basic', fiatAmount: 1000, amount: 0, show: true },
   { name: 'pro', fiatAmount: 2000, amount: 0, show: true },
 ];
-
-const defaultFiatCurrency = {
-  id: FIAT_CURRENCY.USD,
-  text: <span><img alt="" src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD]}</span>,
-};
 
 const defaultCurrency = {
   id: CRYPTO_CURRENCY.BTC,
@@ -86,33 +82,6 @@ const FormBuyCrypto = createForm({
   },
 });
 const selectorFormSpecificAmount = formValueSelector(nameBuyCryptoForm);
-
-export const fieldCheckBoxList = ({ input, name, titles, items, disabled = false }) => {
-  const { onChange, value } = input;
-  return (
-    <div className="rf-type-atm-container d-table w-100" onChange={({ target }) => onChange(target.value)}>
-      {Object.entries(items).map(([key, itemValue]) => {
-        console.log('key, item_value ', key, itemValue);
-        const label = titles[itemValue];
-        console.log('titels', titles, label);
-        return (
-          <label key={key} className="radio-inline rf-type-atm-radio-container d-table-cell w-50">
-            <input
-              value={itemValue}
-              type="radio"
-              name={name}
-              checked={value === itemValue}
-              onChange={() => null}
-              disabled={disabled}
-            />
-            <span className={`checkmark ${disabled && value !== itemValue && 'disabled'}`} />
-            <span className={`${disabled && value !== itemValue && 'disabled'}`}>{label}</span>
-          </label>
-        );
-      })}
-    </div>
-  );
-};
 
 class BuyCryptoCoin extends React.Component {
   constructor(props) {
@@ -697,10 +666,7 @@ const mapStateToProps = (state) => ({
   currencyByLocal: state.app.ipInfo.currency || 'VND',
   country: state.app.ipInfo.country || 'VN',
   authProfile: state.auth.profile,
-  amount: selectorFormSpecificAmount(state, 'amount'),
   phone: selectorFormSpecificAmount(state, 'phone'),
-  currency: selectorFormSpecificAmount(state, 'currency'),
-  fiatCurrency: selectorFormSpecificAmount(state, 'fiatCurrency'),
   paymentMethod: selectorFormSpecificAmount(state, 'paymentMethod'),
   address: selectorFormSpecificAmount(state, 'address'),
   noteAndTime: selectorFormSpecificAmount(state, 'noteAndTime'),
@@ -726,7 +692,6 @@ const mapDispatchToProps = (dispatch) => ({
 BuyCryptoCoin.defaultProps = {
   amount: 0,
   paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
-  fiatCurrency: defaultFiatCurrency,
   bankInfo: {},
   address: '',
   noteAndTime: '',
@@ -734,6 +699,8 @@ BuyCryptoCoin.defaultProps = {
   phone: '',
   wallet: {},
   coinMoneyExchange: {},
+  coinInfo: {},
+  basePrice: {},
 };
 
 BuyCryptoCoin.propTypes = {
@@ -741,15 +708,15 @@ BuyCryptoCoin.propTypes = {
   history: PropTypes.object.isRequired,
   country: PropTypes.string.isRequired,
   authProfile: PropTypes.object.isRequired,
-  coinMoneyExchange: PropTypes.object.isRequired,
+  coinMoneyExchange: PropTypes.object,
   paymentMethod: PropTypes.string,
   amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
   currencyByLocal: PropTypes.string.isRequired,
   rfChange: PropTypes.func.isRequired,
   order: PropTypes.object,
-  coinInfo: PropTypes.object.isRequired,
-  basePrice: PropTypes.object.isRequired,
+  coinInfo: PropTypes.object,
+  basePrice: PropTypes.object,
   bankInfo: PropTypes.object,
   buyCryptoGetBankInfo: PropTypes.func.isRequired,
   address: PropTypes.string,
