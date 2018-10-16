@@ -96,15 +96,16 @@ export class Ethereum extends Wallet {
       })
       .catch((error) => {
         console.log('Failed to get data from ethGasStation: ', error);
-        axios
-          .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`)
-          .then(({ data }) => {
-            const gasPrice = Number(data.result).toString();
-            window.gasPrice = Web3.utils.fromWei(gasPrice, 'gwei');
-          })
-          .catch((error) => {
-            resolve(41);
-          });
+        resolve(41);
+        // axios
+        //   .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`)
+        //   .then(({ data }) => {
+        //     const gasPrice = Number(data.result).toString();
+        //     resolve(Web3.utils.fromWei(gasPrice, 'gwei'));
+        //   })
+        //   .catch((error) => {
+        //     resolve(41);
+        //   });
       });
     })
   }
