@@ -74,6 +74,42 @@ export class Ethereum extends Wallet {
     }
   }
 
+  async getBalancePending() {
+    try {
+      const web3 = this.getWeb3();
+      const balance = await web3.eth.getBalance(this.address);      
+
+      // var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
+      //   if (!error){
+      //       console.log("subscription result=> ", result);
+      //     }
+      //   else{
+      //     console.log("subscription error=> ", error);
+      //   }
+      //   })
+      //   .on("data", function(transaction){            
+      //       console.log("transaction=>", transaction);
+      //   });
+      console.log("check pending ...");
+      web3.eth.filter("pending").watch(
+        function(error, result){
+            if (!error) {
+                var transaction = web3.eth.getTransaction(result);
+                console.log("transaction", transaction);
+                // save the transaction somewhere (e.g. DB)
+            }
+            else{
+              console.log("error", error);
+            }
+        }
+    )
+
+      return Web3.utils.fromWei(balance.toString());
+    } catch (error) {      
+      return this.balance;
+    }
+  }
+
   async getFee() {
     await getGasPrice();
     return await getEstimateGas();
