@@ -6,8 +6,11 @@
 
 .payment-page{
 
+  max-width:720px;
+  display: table;
+  margin: 0 auto;
   margin-bottom: 7px;
-  padding: rem-calc(10px 5px 10px 0);
+  padding: rem-calc(10px 15px 10px 15px);
   min-height: 75px;
   position: relative;
 
@@ -23,6 +26,49 @@
     border-radius: 4px;
     margin: auto;
     margin-bottom: 25px;
+
+    .shop-list{
+      width: 100%;
+      padding: 20px;
+
+      .item{
+        border-bottom: 1px #f4f4f4 solid;
+        margin-bottom: 13px;
+        padding-bottom: 13px;
+        position: relative;
+        width: 100%;
+        display: flex;
+
+        .item-left{
+          width: 80%;
+          .store-id{
+            font-size: 0.9375rem;
+            font-weight: 400;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+
+        .item-right{
+          text-align: right;
+
+          img{
+            width: 25px;
+            border: solid 2px white;
+          }
+        }
+      }
+
+      .item:active:hover {
+        box-shadow: 0px 1px 0px 0 rgba(1, 1, 0, 0.1);
+      }
+      .item:last-child {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
   }
 
   .modal-custom-header{

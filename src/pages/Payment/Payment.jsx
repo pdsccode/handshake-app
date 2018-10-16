@@ -44,7 +44,7 @@ import iconAddPlus from '@/assets/images/wallet/icons/icon-add-plus.svg';
 import iconAlignJust from '@/assets/images/wallet/icons/icon-align-just.svg';
 import { hideHeader } from '@/reducers/app/action';
 
-import WalletPreferences from '@/components/Wallet/WalletPreferences';
+import Register from '@/components/Payment/Register';
 import { requestWalletPasscode, showScanQRCode, showQRCodeContent  } from '@/reducers/app/action';
 import QRCodeContent from '@/components/Wallet/QRCodeContent';
 import Redeem from '@/components/Wallet/Redeem';
@@ -75,7 +75,8 @@ class Payment extends React.Component {
     this.modalBodyStyle = {padding: 0};
 
     this.state = {
-      listShop: []
+      listShop: [],
+      modalRegister: ''
     };
 
     this.props.setHeaderRight(this.headerRight());
@@ -104,12 +105,26 @@ class Payment extends React.Component {
   }
 
   async componentDidMount() {
-    //await this.addShop();
-    let listShop = await this.getShops();
+    // await this.updateShop(7, 1, "http://www.autonomous.ai", "jason", "Son Durex Shop");
+    // await this.updateShop(6, 1, "http://www.autonomous.ai", "phuong", "Phuong Nepture OK");
+    // await this.addShop("http://www.autonomous.ai", "sam", "Sam Kim Chi", "sam@autonomous.ai");
+    this.props.showLoading();
+    let listShop = await this.getShop();
     this.setState({listShop});
+    this.props.hideLoading();
   }
 
-  getShops(){
+  showAddShop = () =>{
+    this.setState({
+      modalRegister: <Register
+      />
+      }, () => {
+        this.modalRegisterRef.open();
+      }
+    );
+  }
+
+  getShop(){
     return new Promise((resolve, reject) => {
 
       this.props.storeList({
@@ -117,7 +132,6 @@ class Payment extends React.Component {
         METHOD: 'GET',
         successFn: (data) => {
           if (data.status) {
-            console.log(data.data);
             resolve(data.data);
           }
         },
@@ -129,11 +143,12 @@ class Payment extends React.Component {
     });
   }
 
-  addShop = (confirmUrl, storeId, storeName) => {
+  addShop = (confirmUrl, storeId, storeName, receive_email) => {
     const params = new URLSearchParams();
-    params.append('wallets_receive', JSON.stringify([{BTC: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {ETH: '0x1c0abE5b12257451DDcbe51f53f3F888dde32842'}]));
+    params.append('wallets_receive', JSON.stringify([{name: 'BTC', address: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {name: 'ETH', address: '0x1c0abE5b12257451DDcbe51f53f3F888dde32842'}]));params.append('wallet_receive', JSON.stringify([{name: 'BTC', address: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {name: 'ETH', address: '0x1c0abE5b12257451DDcbe51f53f3F888dde32842'}]));
     params.append('confirm_url', confirmUrl);
     params.append('store_id', storeId);
+    params.append('receive_email', receive_email);
     params.append('store_name', storeName);
 
     this.props.storeCreate({
@@ -152,14 +167,66 @@ class Payment extends React.Component {
     });
   }
 
-  get showListShops() {
-    return this.state.listShops.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+  updateShop = (id, status, confirmUrl, storeId, storeName, receive_email) => {
+    const params = new URLSearchParams();
+    params.append('wallets_receive', JSON.stringify([{name: 'BTC', address: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {name: 'XRP', address: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {name: 'BCH', address: 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr'}, {name: 'ETH', address: '0x1c0abE5b12257451DDcbe51f53f3F888dde32842'}]));
+    params.append('confirm_url', confirmUrl);
+    params.append('store_id', storeId);
+    params.append('store_name', storeName);
+    params.append('status', status);
+    params.append('id', id);
+
+    this.props.storeCreate({
+      PATH_URL: `store/update`,
+      data: params,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      METHOD: 'POST',
+      successFn: (data) => {
+        if (data.status) {
+          console.log(data);
+        }
+      },
+      errorFn: (e) => {
+        this.showError(`Error ${e && e.message}`);
+      },
+    });
+  }
+
+  get showListShop() {
+    const listShop = this.state.listShop;//console.log('showListShop', listShop)
+    return listShop && listShop.map(shop => {
+      let wallets = [];
+      try{
+        if(shop.wallets_receive)
+          wallets = JSON.parse(shop.wallets_receive);
+      }
+      catch(e){
+        console.log('showListShop', e)
+      }
+
+      return (<div className="item" key={shop.id}>
+        <div className="item-left">
+          <div className="store-id">{shop.store_id}</div>
+          <span className="store-name">{shop.store_name}</span>
+        </div>
+        <div className="item-right">
+          {
+            wallets && wallets.map(wallet => {
+              let icon = '';
+              try{ icon = wallet.name && require("@/assets/images/icon/wallet/coins/" + wallet.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
+
+              return (<img src={icon} key={wallet.name} />)
+            })
+          }
+          {/* {ICON.ExternalLink("Silver", "1x")} */}
+        </div>
+      </div>)
+    });
   }
 
   render = () => {
     const { messages } = this.props.intl;
-    const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalRemindCheckout, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData, backupWalletContent, restoreWalletContent} = this.state;
+    const { modalRegister } = this.state;
 
     return (
       <div className="payment-page">
@@ -170,12 +237,16 @@ class Payment extends React.Component {
 
         <Row className="payment-box">
           <Row className="list">
-            <Header icon2={iconAlignJust} onIcon2Click={this.updateSortableForCoin} icon={iconAddPlus} title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+            <Header icon2={iconAlignJust} onIcon2Click={this.updateSortableForCoin} icon={iconAddPlus} title={messages.wallet.action.payment.label.shops} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showAddShop} />
           </Row>
-          <Row className="list">
-            {this.showListShops}
+          <Row className="list shop-list">
+            {this.showListShop}
           </Row>
         </Row>
+
+         <Modal title="Register" onRef={modal => this.modalRegisterRef = modal} onClose={() => this.setState({modalRegister: ''})}>
+            {modalRegister}
+          </Modal>
       </div>
     );
   }

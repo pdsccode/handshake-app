@@ -1247,11 +1247,12 @@ export default {
           to_address: 'To address',
           wallet_balance: 'Wallet balance',
           email: 'Email',
-          shop_id: 'Shop ID',
+          store_id: 'Store ID',
           confirm_url: 'Confirm URL',
           shop_name: 'Shop/App name',
           note: 'Note',
-          crypto_currency: 'Crypto Currencies'
+          crypto_currency: 'Crypto Currencies',
+          shops: 'Shops'
         },
         placeholder: {
           to_address: 'Wallet address...',

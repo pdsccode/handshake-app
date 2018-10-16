@@ -31,17 +31,17 @@ class Register extends React.Component {
     super(props);
 
     this.state = {
-      currencies: [],
-      alternateCurrency: '',
       switchContent: '',
       listCurrenciesContent: '',
 
       inputEmail: '',
+      inputStoreId: '',
       modalEmail: '',
-      modalShopID: '',
+      modalStoreID: '',
       modalConfirmURL: '',
       modalListCoin: '',
-      shop: false,
+      wallets: false,
+      store: this.props.store,
     }
   }
 
@@ -66,41 +66,39 @@ class Register extends React.Component {
 
   componentDidMount(){
     this.props.showLoading();
-    this.loadShopData();
+    this.loadStore();
     this.props.hideLoading();
   }
 
-  loadShopData = () => {
-    //sample data
-    let shop = {email: 'khoa.trinh@autonomous.nyc', shop_id: 'khoatrinh', confirm_url: 'http://www.autonomous.ai/confirm',
-      wallets: [{name: 'ETH', address: '0xx'}, {name: 'BTC', address: '1xxx'}]};
+  loadStore = () => {
+    const store = this.state.store;
 
-    const profile = local.get(APP.AUTH_PROFILE);
-    if(profile){
-      shop.shop_id = profile.username;
-      shop.email = profile.email;
-    }
+    // const profile = local.get(APP.AUTH_PROFILE);
+    // if(profile){
+    //   Store.Store_id = profile.username;
+    //   Store.email = profile.email;
+    // }
 
-    let wallets = [];
-    supportWallets.map(e => {
-      let arr = shop.wallets.filter(w => {
-        return w.name == e;
-      });
+    // let wallets = [];
+    // supportWallets.map(e => {
+    //   let arr = Store.wallets.filter(w => {
+    //     return w.name == e;
+    //   });
 
-      if(arr && arr.length){
-        wallets.push(arr[0]);
-      }
-      else{
-        wallets.push({name: e, address: ''});
-      }
-    });
+    //   if(arr && arr.length){
+    //     wallets.push(arr[0]);
+    //   }
+    //   else{
+    //     wallets.push({name: e, address: ''});
+    //   }
+    // });
 
-    shop.wallets = wallets;
-    this.setState({shop});
+    // Store.wallets = wallets;
+    // this.setState({Store});
   }
 
   selectWallet=(w)=>{
-    let { wallets } = this.state.shop;
+    let { wallets } = this.state.store;
 
     this.setState({modalListCoin:
       <ListCoin
@@ -127,7 +125,7 @@ class Register extends React.Component {
   }
 
   deleteWallet=(w)=>{
-    let { wallets } = this.state.shop;
+    let { wallets } = this.state.store;
 
     if(wallets){
       wallets.some((wallet) => {
@@ -152,8 +150,8 @@ class Register extends React.Component {
 
     this.setState({modalEmail: (
         <div className="update-name">
-          <label>Shop email to receive customer payment, new updates...</label>
-          <Input required placeholder="Shop email" maxLength="40" value={this.state.shop.email} onChange={(value) => {this.changeEmail(value)}} />
+          <label>Email to receive customer payment, new updates...</label>
+          <Input required placeholder="Email" maxLength="40" value={this.state.Store.email} onChange={(value) => {this.changeEmail(value)}} />
           <Button type="button" onClick={()=> {this.updateEmail();}} block={true} className="button-wallet-cpn">Save</Button>
         </div>
       )
@@ -162,17 +160,17 @@ class Register extends React.Component {
     });
   }
 
-  openFormShopID=()=>{
+  openFormStoreID=()=>{
 
-    this.setState({modalShopID: (
+    this.setState({modalStoreID: (
         <div className="update-name">
-          <label>Shop ID</label>
-          <Input required placeholder="Shop ID" maxLength="40" value={this.state.shop.shop_id} onChange={(value) => {this.changeShopID(value)}} />
-          <Button onClick={()=> {this.updateShopID();}} block={true} className="button-wallet-cpn">Save</Button>
+          <label>Store ID</label>
+          <Input required placeholder="Store ID" maxLength="40" value={this.state.inputStoreId} onChange={(value) => {this.changeStoreID(value)}} />
+          <Button onClick={()=> {this.updateStoreID();}} block={true} className="button-wallet-cpn">Save</Button>
         </div>
       )
     }, ()=>{
-      this.modalShopIDRef.open();
+      this.modalStoreIDRef.open();
     });
   }
 
@@ -181,7 +179,7 @@ class Register extends React.Component {
     this.setState({modalConfirmURL: (
         <div className="update-name">
           <label>Link used for redirect after complete order</label>
-          <Input required placeholder="Confirm URL" maxLength="40" value={this.state.shop.confirm_url} onChange={(value) => {this.changeEmail(value)}} />
+          <Input required placeholder="Confirm URL" maxLength="40" value={this.state.Store.confirm_url} onChange={(value) => {this.changeEmail(value)}} />
           <Button onClick={(value)=> {this.updateConfirmURL(value);}} block={true} className="button-wallet-cpn">Save</Button>
         </div>
       )
@@ -194,55 +192,55 @@ class Register extends React.Component {
     this.setState({inputEmail: value});
   }
 
-  changeShopID=(value) => {
-    this.setState({inputShopID: value});
+  changeStoreID=(value) => {
+    this.setState({inputStoreID: value});
   }
 
-  updateShopID() {
+  updateStoreID() {
     const { messages } = this.props.intl;
-    let {inputShopID, shop} = this.state;
+    let {inputStoreID, store} = this.state;
 
-    if (inputShopID) {console.log(1, inputShopID);
+    if (inputStoreID) {console.log(1, inputStoreID);
       this.props.checkUsernameExist({
         PATH_URL: 'user/username-exist',
-        qs: { username: inputShopID },
-        successFn: (res) => {console.log(2, inputShopID);
-          if (!res.data) {console.log(3, inputShopID);
+        qs: { username: inputStoreID },
+        successFn: (res) => {console.log(2, inputStoreID);
+          if (!res.data) {console.log(3, inputStoreID);
             const params = new URLSearchParams();
-            params.append('username', inputShopID);
+            params.append('username', inputStoreID);
             this.props.storeUpdate({
               PATH_URL: 'user/profile',
               data: params,
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               METHOD: 'POST',
-              successFn: () => {console.log('showSuccess', inputShopID);
+              successFn: () => {console.log('showSuccess', inputStoreID);
                 this.showSuccess(messages.me.profile.username.success);
-                shop.shop_id = inputShopID;
-                this.setState({shop}, ()=>{
-                  this.modalShopIDRef.close();
+                store.store_id = inputStoreID;
+                this.setState({Store}, ()=>{
+                  this.modalStoreIDRef.close();
                 });
               },
             });
-          } else {console.log('showError', inputShopID);
+          } else {console.log('showError', inputStoreID);
             this.showError(messages.me.profile.username.exist);
           }
         },
       });
-    } else {console.log('showToast', inputShopID);
+    } else {console.log('showToast', inputStoreID);
       this.showToast(messages.me.profile.username.required);
     }
   }
 
   updateEmail2 = (value) => {
     const { messages } = this.props.intl;
-    let {inputEmail, shop} = this.state;
+    let {inputEmail, store} = this.state;
 
-    if (!shop){
+    if (!store){
       return;
     }
 
-    shop.email = inputEmail;
-    this.setState({shop}, ()=>{
+    store.email = inputEmail;
+    this.setState({store}, ()=>{
       this.modalEmailRef.close();
     });
   }
@@ -251,7 +249,7 @@ class Register extends React.Component {
     const { messages } = this.props.intl;
     const inputEmail = this.state.inputEmail || this.localEmail;
     const { emailStart, code } = this.state;
-console.log(inputEmail);
+
     if (inputEmail) {
       if (valid.email(inputEmail)) {
         this.showError(messages.me.profile.verify.alert.notValid.client.email);
@@ -317,14 +315,14 @@ console.log(inputEmail);
 
   updateConfirmURL = (value) => {
     const { messages } = this.props.intl;
-    let {inputConfirmURL, shop} = this.state;
+    let {inputConfirmURL, store} = this.state;
 
-    if (!shop){
+    if (!store){
       return;
     }
 
-    shop.confirm_url = inputConfirmURL;
-    this.setState({shop}, ()=>{
+    store.confirm_url = inputConfirmURL;
+    this.setState({store}, ()=>{
       this.modalConfirmURLRef.close();
     });
   }
@@ -339,7 +337,7 @@ console.log(inputEmail);
 
   get listCryptoCurrency() {
     const { messages } = this.props.intl;
-    const { wallets, email, shop_id } = this.state.shop;
+    const { wallets, email, store_id } = this.state;
 
 
     if(wallets){
@@ -349,7 +347,7 @@ console.log(inputEmail);
       </div>
 
       {
-        email && shop_id ?
+        email && store_id ?
           wallets.map(wallet => {
             let icon = '';
             try{ icon = require("@/assets/images/icon/wallet/coins/" + wallet.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
@@ -371,7 +369,7 @@ console.log(inputEmail);
               </div>
             })
           :
-          <div className="verify-first">Please verify <strong>shop ID</strong> and <strong>email</strong> first.</div>
+          <div className="verify-first">Please verify <strong>Store ID</strong> and <strong>email</strong> first.</div>
       }
 
 
@@ -409,7 +407,7 @@ console.log(inputEmail);
 
   render() {
     const { messages } = this.props.intl;
-    const { settings, shop, modalEmail, modalShopID, modalConfirmURL, modalListCoin } = this.state;
+    const { store, modalEmail, modalStoreID, modalConfirmURL, modalListCoin } = this.state;
 
     return (
 
@@ -426,8 +424,8 @@ console.log(inputEmail);
             {modalEmail}
           </Modal>
 
-          <Modal onClose={()=>{this.setState({modalShopID: ""})}} title="Shop ID" onRef={modal => this.modalShopIDRef = modal}>
-            {modalShopID}
+          <Modal onClose={()=>{this.setState({modalStoreID: ""})}} title="Store ID" onRef={modal => this.modalStoreIDRef = modal}>
+            {modalStoreID}
           </Modal>
 
           <Modal onClose={()=>{this.setState({modalConfirmURL: ""})}} title="Confirm URL" onRef={modal => this.modalConfirmURLRef = modal}>
@@ -440,24 +438,24 @@ console.log(inputEmail);
             </Modal>
           </div>
 
-          <div className="item1" onClick={()=> {this.openFormShopID();}}>
-            <div className="name">{messages.wallet.action.payment.label.shop_id}</div>
+          <div className="item1" onClick={()=> {this.openFormStoreID();}}>
+            <div className="name">{messages.wallet.action.payment.label.store_id}</div>
             <div className="value">
-              <span className="text">{shop && shop.shop_id}</span>
+              <span className="text">{store && store.store_id}</span>
             </div>
           </div>
 
           <div className="item1" onClick={()=> {this.openFormEmail();}}>
             <div className="name">{messages.wallet.action.payment.label.email}</div>
             <div className="value">
-            <span className="text">{shop && shop.email}</span>
+            <span className="text">{store && store.email}</span>
             </div>
           </div>
 
           <div className="item1" onClick={()=> {this.openFormConfirmURL();}}>
             <div className="name">{messages.wallet.action.payment.label.confirm_url}</div>
             <div className="value">
-              <span className="text">{shop && this.formatUrl(shop.confirm_url)}</span>
+              <span className="text">{store && this.formatUrl(store.confirm_url)}</span>
             </div>
           </div>
           {this.listCryptoCurrency}

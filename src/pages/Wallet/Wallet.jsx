@@ -741,13 +741,6 @@ class Wallet extends React.Component {
     });
   }
 
-  get listMainWalletBalance() {
-    let setting = local.get(APP.SETTING);
-    setting = setting ? setting.wallet : false;
-
-    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
-  }
-
   get listTokenWalletBalance() {
     let setting = local.get(APP.SETTING);
     setting = setting ? setting.wallet : false;
@@ -1046,7 +1039,6 @@ class Wallet extends React.Component {
               </Row>
             :""}
             <Row className="list">
-              {/* {this.listMainWalletBalance} */}
               { this.state.listMainWalletBalance.length > 0 ?
                 <SortableComponent onSortableSuccess={items => this.onSortableCoinSuccess(items)} onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)}  isSortable={this.state.listSortable.coin} items={this.state.listMainWalletBalance} />
               : ''}
