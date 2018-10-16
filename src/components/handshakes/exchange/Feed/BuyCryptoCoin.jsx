@@ -6,7 +6,10 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, URL } from '@/constants';
+import {
+  API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, HANDSHAKE_ID,
+  URL
+} from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { fieldInput, fieldTextArea } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
@@ -456,7 +459,7 @@ class BuyCryptoCoin extends React.Component {
 
   onReceiptSaved = () => {
     this.modalRef.close();
-    this.props.history.push(URL.HANDSHAKE_ME);
+    this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.NINJA_COIN}`);
   }
 
   getBankDataByCountry(country = GLOBAL_BANK) {
