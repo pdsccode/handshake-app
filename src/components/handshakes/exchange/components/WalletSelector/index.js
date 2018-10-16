@@ -70,6 +70,10 @@ class WalletSelector extends Component {
     this.componentCallbackHandler();
   }
 
+  componentDidCatch(e) {
+    console.warn(e);
+  }
+
   initSampleCrypto() {
     this.sampleCrypto = {
       ETH: new Ethereum(),

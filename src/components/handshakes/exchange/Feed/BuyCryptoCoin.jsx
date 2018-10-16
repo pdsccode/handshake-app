@@ -145,6 +145,10 @@ class BuyCryptoCoin extends React.Component {
     this.renderBankInfo = :: this.renderBankInfo;
   }
 
+  componentDidCatch(e) {
+    console.warn(e);
+  }
+
   componentDidMount() {
     const { country } = this.props;
     this.getBasePrice(this.props.wallet?.currency);
@@ -203,7 +207,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
+    const { country, authProfile, wallet, fiatAmountOverLimit } = nextProps;
 
     // update phone number from props
     if (authProfile?.phone !== this.props.authProfile?.phone) {
@@ -215,9 +219,8 @@ class BuyCryptoCoin extends React.Component {
       this.setState({ currency: wallet?.currency });
     }
 
-    if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
-      // if fiatAmount over limit => force use USD and bank transfer
-      if (this.isOverLimit(coinInfo.fiatAmount, coinInfo.limit)) {
+    if (fiatAmountOverLimit !== this.props.fiatAmountOverLimit) {
+      if (fiatAmountOverLimit) {
         this.setState({ forcePaymentMethod: PAYMENT_METHODS.BANK_TRANSFER }, () => {
           this.updatePaymentMethod(this.state.forcePaymentMethod);
         });
@@ -693,6 +696,7 @@ const mapStateToProps = (state) => ({
   noteAndTime: selectorFormSpecificAmount(state, 'noteAndTime'),
   wallet: selectorFormSpecificAmount(state, 'wallet'),
   coinMoneyExchange: selectorFormSpecificAmount(state, 'coinMoneyExchange'),
+  fiatAmountOverLimit: state.buyCoin?.fiatAmountOverLimit,
   coinInfo: state.buyCoin?.coinInfo || {},
   basePrice: state.buyCoin?.basePrice || {},
   bankInfo: state.buyCoin?.bankInfo,
