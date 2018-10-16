@@ -1171,7 +1171,7 @@ export default {
       },
       transactions: {
         amount: 'Amount',
-        needToTransfer: 'Need to transfer',
+        needToTransfer: 'Cost',
         status: 'Status',
         to_wallet: 'To Wallet',
         statusValues: {
@@ -1783,6 +1783,7 @@ export default {
       fiat_transferring: 'Transferring money',
       transfer_failed: 'Failed',
       expired: 'Expired',
+      rejected: 'Rejected',
     },
   },
   'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/buy-coin">create one now!</a></strong>`,

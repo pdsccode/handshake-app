@@ -36,6 +36,7 @@ export const COIN_ORDER_STATUS = {
   TRANSFERRING: 'transferring',
   TRANSFER_FAILED: 'transfer_failed',
   SUCCESS: 'success',
+  REJECTED: 'rejected',
 };
 
 class TransactionItem extends React.Component {
@@ -145,8 +146,6 @@ class TransactionItem extends React.Component {
                 {messages.create.atm.transactions.needToTransfer}
               </div>
               <div className="d-table-cell text-right">
-                <img src={icWarning} width="16px" style={{ marginBottom: '4px' }} />
-                &nbsp;&nbsp;
                 <span className="font-weight-bold">{fiatLocalAmount}</span>
                 &nbsp;
                 <span className="text-normal">{fiatLocalCurrency}</span>

@@ -34,6 +34,10 @@ const STATUS = {
     id: 'cancelled',
     name: 'Canceled',
   },
+  rejected: {
+    id: 'rejected',
+    name: 'Rejected',
+  },
   transfer_failed: {
     id: 'transfer_failed',
     name: 'Failed',
