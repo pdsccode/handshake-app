@@ -39,16 +39,16 @@ class ConfirmButton extends PureComponent {
   }
 
   render() {
-    const { containerClassName, buttonClassName, label, intl: { messages } } = this.props;
+    const { message, confirmText, cancelText, containerClassName, buttonClassName, label, intl: { messages } } = this.props;
     return (
       <div className={`confirm-btn-container ${containerClassName}`}>
         <button className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
         <ModalDialog onRef={modal => { this.modal = modal; }}>
           <div className="confirm-btn-content">
-            <span className="confirm-btn-desc">{messages.create.atm.confirm_button.desc}</span>
+            <span className="confirm-btn-desc">{message || messages.create.atm.confirm_button.desc}</span>
             <div className="confirm-btn-container">
-              <button onClick={this.onCancel} className="confirm-btn-cancel">{messages.create.atm.confirm_button.cancel}</button>
-              <button onClick={this.onConfirm} className="confirm-btn-ok">{messages.create.atm.confirm_button.confirm}</button>
+              <button onClick={this.onCancel} className="confirm-btn-cancel">{cancelText || messages.create.atm.confirm_button.cancel}</button>
+              <button onClick={this.onConfirm} className="confirm-btn-ok">{confirmText || messages.create.atm.confirm_button.confirm}</button>
             </div>
           </div>
         </ModalDialog>
@@ -62,6 +62,9 @@ ConfirmButton.defaultProps = {
   onConfirm: () => {},
   containerClassName: '',
   buttonClassName: '',
+  message: null,
+  confirmText: null,
+  cancelText: null,
 };
 
 ConfirmButton.propTypes = {
@@ -71,6 +74,18 @@ ConfirmButton.propTypes = {
   intl: PropTypes.object.isRequired,
   buttonClassName: PropTypes.string,
   containerClassName: PropTypes.string,
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
+  confirmText: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
+  cancelText: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
 };
 
 export default injectIntl(ConfirmButton);

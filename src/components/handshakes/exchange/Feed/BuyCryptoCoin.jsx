@@ -8,7 +8,7 @@ import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
-import { fieldDropdown, fieldInput, fieldTextArea } from '@/components/core/form/customField';
+import { fieldInput, fieldTextArea } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
 import {
   buyCryptoGetBankInfo,
@@ -32,6 +32,8 @@ import { formatMoney } from '@/services/offer-util';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
 import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
+import coinMoneyExchangeValidator from './reduxFormFields/coinMoneyExchangeField/validator';
+import walletSelectorValidator from './reduxFormFields/walletSelector/validator';
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
 import { Link } from 'react-router-dom';
@@ -43,20 +45,7 @@ export const CRYPTO_ICONS = {
   BCH: iconBitcoinCash,
 };
 
-const CRYPTO_CURRENCY_CREDIT_CARD = {
-  ...CRYPTO_CURRENCY, BCH: 'BCH',
-};
-
-const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
-  return { id: item, text: <span><img alt="" src={CRYPTO_ICONS[item]} width={24} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
-});
-
-const listFiatCurrency = Object.values(FIAT_CURRENCY).map((item) => {
-  return {
-    id: item,
-    text: <span>{FIAT_CURRENCY_NAME[item]}</span>,
-  };
-});
+export const GLOBAL_BANK = 'XX';
 
 const listPackages = [
   { name: 'basic', fiatAmount: 1000, amount: 0, show: true },
@@ -137,12 +126,10 @@ class BuyCryptoCoin extends React.Component {
 
     this.state = {
       currency: CRYPTO_CURRENCY.BTC,
-      allowBuy: true,
       isLoading: false,
       forcePaymentMethod: null,
       modalContent: null,
       modalTitle: null,
-      fiatCurrency: null,
       walletAddress: null,
     };
 
@@ -151,12 +138,13 @@ class BuyCryptoCoin extends React.Component {
     this.getCoinInfoNoBounce = ::this.getCoinInfoNoBounce;
     this.getCoinInfo = debounce(::this.getCoinInfoNoBounce, 1000);
     this.getBasePrice = :: this.getBasePrice;
+    this.getBankDataByCountry = :: this.getBankDataByCountry;
+    this.renderBankInfo = :: this.renderBankInfo;
   }
 
   componentDidMount() {
     const { country } = this.props;
     this.getBasePrice(this.props.wallet?.currency);
-    this.updateFiatCurrency(this.props.currencyByLocal);
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
@@ -212,22 +200,14 @@ class BuyCryptoCoin extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { currencyByLocal, amount, coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
-    if (currencyByLocal !== this.props.currencyByLocal) {
-      this.updateFiatCurrency(currencyByLocal);
-    }
+    const { coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
 
     // update phone number from props
     if (authProfile?.phone !== this.props.authProfile?.phone) {
       this.updatePhoneNumber(authProfile?.phone);
     }
 
-    // get price of coin if amount or currency was changed
-    if (amount !== this.props.amount) {
-      this.getCoinInfo({ amount });
-    }
     if (wallet?.currency !== this.props.wallet?.currency) {
-      this.getCoinInfo({ currencyId: wallet?.currency });
       this.getBasePrice(wallet?.currency);
       this.setState({ currency: wallet?.currency });
     }
@@ -235,21 +215,10 @@ class BuyCryptoCoin extends React.Component {
     if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
       // if fiatAmount over limit => force use USD and bank transfer
       if (this.isOverLimit(coinInfo.fiatAmount, coinInfo.limit)) {
-        this.updateFiatAmount(coinInfo.fiatAmount);
-        this.updateFiatCurrency(coinInfo.fiatCurrency);
         this.setState({ forcePaymentMethod: PAYMENT_METHODS.BANK_TRANSFER }, () => {
           this.updatePaymentMethod(this.state.forcePaymentMethod);
         });
       } else {
-        // show fiatAmount for bank mode
-        if (paymentMethod === PAYMENT_METHODS.BANK_TRANSFER) {
-          this.updateFiatAmount(coinInfo.fiatLocalAmount);
-        } else if (paymentMethod === PAYMENT_METHODS.COD) {
-          // show fiatAmount for COD mode
-          this.updateFiatAmount(coinInfo.fiatLocalAmountCod);
-        }
-        this.updateFiatCurrency(coinInfo.fiatLocalCurrency);
-
         this.setState({ forcePaymentMethod: null });
       }
     }
@@ -268,18 +237,10 @@ class BuyCryptoCoin extends React.Component {
     this.getBankInfoFromCountry(country);
   }
 
-  getBankInfoFromCountry = (country = 'XX') => {
+  getBankInfoFromCountry = (country = GLOBAL_BANK) => {
     this.props.buyCryptoGetBankInfo({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${country}`,
     });
-  }
-
-  updateFiatCurrency = (fiatCurrencyId) => {
-    const fiatCurrency = getFiatCurrency(fiatCurrencyId);
-    this.setState({
-      fiatCurrency,
-    });
-    fiatCurrency && this.props.rfChange(nameBuyCryptoForm, 'fiatCurrency', fiatCurrency);
   }
 
   updatePhoneNumber = (phone) => {
@@ -290,28 +251,15 @@ class BuyCryptoCoin extends React.Component {
     if (Object.values(PAYMENT_METHODS).indexOf(method) === -1) {
       return;
     }
-
-    this.setState({
-      paymentMethod: method,
-    });
     this.props.rfChange(nameBuyCryptoForm, 'paymentMethod', method);
-  }
-
-  updateAmount= (amount) => {
-    this.props.rfChange(nameBuyCryptoForm, 'amount', Number.parseFloat(amount) || 0);
-  }
-
-  updateFiatAmount = (amount) => {
-    this.setState({
-      fiatAmount: Number.parseFloat(amount),
-    });
-    amount && this.props.rfChange(nameBuyCryptoForm, 'fiatAmount', Number.parseFloat(amount) || 0);
   }
 
   isOverLimit = (amountInUsd, limit) => {
     const { coinInfo } = this.props;
-    const amount = Number.parseFloat(amountInUsd || coinInfo?.fiatAmount) || 0;
-    const limitAmount = Number.parseFloat(limit || coinInfo?.limit) || 0;
+    let amount = Number.parseFloat(amountInUsd);
+    let limitAmount = Number.parseFloat(limit);
+    amount = !Number.isNaN(amount) ? amount : coinInfo.fiatAmount;
+    limitAmount = !Number.isNaN(limitAmount) ? limitAmount : coinInfo.limit;
     return amount > limitAmount;
   }
 
@@ -384,17 +332,17 @@ class BuyCryptoCoin extends React.Component {
 
   makeOrder = (info = {}) => {
     const { country } = this.props;
-    const { coinInfo, paymentMethod, amount, address, noteAndTime, phone } = this.props;
+    const { coinInfo, paymentMethod, address, noteAndTime, phone, coinMoneyExchange } = this.props;
     const { walletAddress, currency } = this.state;
-    const fiatAmount = info.fiatAmount || coinInfo.fiatAmount;
+    const fiatAmount = info.fiatAmount || coinMoneyExchange.fiatAmount;
     const data = {
       type: info.paymentMethod || paymentMethod,
-      amount: String(info.amount || amount),
+      amount: String(info.amount || coinMoneyExchange.amount),
       currency: info.currencyId || currency,
-      fiat_amount: String(fiatAmount),
-      fiat_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
+      fiat_amount: String(coinMoneyExchange.fiatAmountInUsd),
+      fiat_currency: FIAT_CURRENCY.USD,
       fiat_local_amount: String(fiatAmount),
-      fiat_local_currency: info.fiatCurrencyId || coinInfo.fiatCurrency,
+      fiat_local_currency: info.fiatCurrencyId || coinMoneyExchange.fiatCurrency,
       address: info.address || walletAddress,
     };
 
@@ -406,7 +354,7 @@ class BuyCryptoCoin extends React.Component {
     if (data.type === PAYMENT_METHODS.COD) {
       data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);
     } else {
-      const globalBank = 'XX';
+      const globalBank = GLOBAL_BANK;
       if (this.isOverLimit(fiatAmount)) {
         data.center = globalBank; // global bank
       } else {
@@ -428,6 +376,15 @@ class BuyCryptoCoin extends React.Component {
       METHOD: 'POST',
       data,
       successFn: this.onMakeOrderSuccess,
+      errorFn: this.onMakeOrderFailed,
+    });
+  }
+
+  onMakeOrderFailed = (e) => {
+    this.props.showAlert({
+      message: getErrorMessageFromCode(e),
+      timeOut: 3000,
+      type: 'danger',
     });
   }
 
@@ -453,7 +410,7 @@ class BuyCryptoCoin extends React.Component {
     this.makeOrder();
   }
 
-  renderBankInfo = () => {
+  renderOrderInfo = () => {
     const { modalContent, modalTitle } = this.state;
     return (
       <Modal title={modalTitle} onRef={modal => { this.modalRef = modal; }} onClose={() => {}}>
@@ -463,7 +420,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   handleBuyViaTransfer = (order = {}) => {
-    const { bankInfo, country } = this.props;
+    const { country } = this.props;
     let bankData = {};
     const receipt = {
       createdAt: order.createdAt,
@@ -476,9 +433,9 @@ class BuyCryptoCoin extends React.Component {
 
     // if fiatAmount over limit => use global bank, else local bank
     if (this.isOverLimit(receipt.amount)) {
-      bankData = bankInfo.XX; // global bank
+      bankData = this.getBankDataByCountry(); // global bank
     } else {
-      bankData = bankInfo[country] || bankInfo.XX;
+      bankData = this.getBankDataByCountry(country);
       receipt.amount = order.fiatLocalAmount;
       receipt.fiatCurrency = order.fiatLocalCurrency;
     }
@@ -502,6 +459,14 @@ class BuyCryptoCoin extends React.Component {
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
+  getBankDataByCountry(country = GLOBAL_BANK) {
+    const { bankInfo } = this.props;
+    if (country in bankInfo) {
+      return bankInfo[country];
+    }
+    return null;
+  }
+
   handleBuyPackage = (item = {}) => {
     const { walletAddress, currency } = this.state;
     const data = {
@@ -520,7 +485,7 @@ class BuyCryptoCoin extends React.Component {
   renderCoD = () => {
     const { intl: { messages }, paymentMethod } = this.props;
     return (
-      <div className={`choose-coin-cod-form ${paymentMethod === PAYMENT_METHODS.COD ? 'show' : 'hidden'}`}>
+      <React.Fragment>
         <div className="input-group mt-4">
           <Field
             type="text"
@@ -551,6 +516,38 @@ class BuyCryptoCoin extends React.Component {
             validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
           />
         </div>
+      </React.Fragment>
+    );
+  }
+
+  renderBankInfo() {
+    const { coinMoneyExchange, country, intl: { messages } } = this.props;
+    const overLimit = coinMoneyExchange?.isOverLimit;
+    const bankData = overLimit ? this.getBankDataByCountry() : this.getBankDataByCountry(country);
+
+    if (!bankData) return null;
+    return (
+      <React.Fragment>
+        <ul className="bank-info-container">
+          {bankData && Object.entries(bankData).map(([key, value]) => {
+            return (
+              <li key={key}>
+                <div><span>{messages.bank_info[key]}</span></div>
+                <div><span>{value}</span></div>
+              </li>
+            );
+          })}
+        </ul>
+      </React.Fragment>
+    );
+  }
+
+  renderPaymentMethodInfo() {
+    const { paymentMethod } = this.props;
+    return (
+      <div className={`choose-coin-payment-method-container ${paymentMethod === PAYMENT_METHODS.COD ? 'cod' : 'bank'}`}>
+        {paymentMethod === PAYMENT_METHODS.COD && this.renderCoD()}
+        {paymentMethod === PAYMENT_METHODS.BANK_TRANSFER && this.renderBankInfo()}
       </div>
     );
   }
@@ -602,7 +599,7 @@ class BuyCryptoCoin extends React.Component {
     console.log('STATE', this.state);
     const { authProfile: { idVerified } } = this.props;
     const { messages } = this.props.intl;
-    const { amount } = this.props;
+    const { coinMoneyExchange, paymentMethod } = this.props;
     const { currency, forcePaymentMethod } = this.state;
 
     const showState = [-1, 0, 2];
@@ -626,7 +623,7 @@ class BuyCryptoCoin extends React.Component {
                   className="form-control form-control-lg border-0 rounded-right form-control-cc"
                   type="text"
                   component={walletSelectorField}
-                  validate={[required]}
+                  validate={[walletSelectorValidator]}
                 />
               </div>
               <div className="input-group mt-4">
@@ -636,38 +633,10 @@ class BuyCryptoCoin extends React.Component {
                   type="text"
                   component={coinMoneyExchangeField}
                   currency={currency}
-                  validate={[required]}
+                  paymentMethod={paymentMethod}
+                  validate={[coinMoneyExchangeValidator]}
                 />
               </div>
-              {/* <div className="input-group mt-4 group-amount-fiatamount">
-                <Field
-                  name="amount"
-                  className="form-control form-control-lg"
-                  type="text"
-                  component={fieldInput}
-                  validate={[required]}
-                />
-                <Field
-                  name="fiatAmount"
-                  className="form-control form-control-lg"
-                  type="text"
-                  component={fieldInput}
-                  validate={[required]}
-                  format={value => {
-                    return this.props.amount ? formatMoney(value) : 0;
-                  }}
-                  elementAppend={
-                    <Field
-                      name="fiatCurrency"
-                      classNameWrapper=""
-                      classNameDropdownToggle="dropdown-button"
-                      list={listFiatCurrency}
-                      component={fieldDropdown}
-                      caret={false}
-                    />
-                  }
-                />
-              </div> */}
               <div className="input-group item-info mt-2">
                 <Field
                   component={fieldCheckBoxList}
@@ -677,19 +646,30 @@ class BuyCryptoCoin extends React.Component {
                   disabled={forcePaymentMethod}
                 />
               </div>
-              {this.renderCoD()}
+              {this.renderPaymentMethodInfo()}
               <div className="input-group mt-2">
                 <ConfirmButton
-                  label={`${messages.create.cod_form.buy_btn} ${amount} ${CRYPTO_CURRENCY_NAME[currency]}`}
+                  label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
                   buttonClassName="buy-btn"
                   containerClassName="buy-btn-container"
+                  message={
+                    <FormattedMessage
+                      id="buy_coin_confirm_popup.msg"
+                      values={{
+                        amount: coinMoneyExchange.amount,
+                        currency,
+                        fiatAmount: formatMoney(coinMoneyExchange.fiatAmount),
+                        fiatCurrency: coinMoneyExchange.fiatCurrency,
+                      }}
+                    />
+                  }
                 />
               </div>
             </FormBuyCrypto>
           </div>
 
           {this.renderPackages()}
-          {this.renderBankInfo()}
+          {this.renderOrderInfo()}
         </div>
       </div>
     );
@@ -702,13 +682,13 @@ const mapStateToProps = (state) => ({
   authProfile: state.auth.profile,
   amount: selectorFormSpecificAmount(state, 'amount'),
   phone: selectorFormSpecificAmount(state, 'phone'),
-  fiatAmount: selectorFormSpecificAmount(state, 'fiatAmount'),
   currency: selectorFormSpecificAmount(state, 'currency'),
   fiatCurrency: selectorFormSpecificAmount(state, 'fiatCurrency'),
   paymentMethod: selectorFormSpecificAmount(state, 'paymentMethod'),
   address: selectorFormSpecificAmount(state, 'address'),
   noteAndTime: selectorFormSpecificAmount(state, 'noteAndTime'),
   wallet: selectorFormSpecificAmount(state, 'wallet'),
+  coinMoneyExchange: selectorFormSpecificAmount(state, 'coinMoneyExchange'),
   coinInfo: state.buyCoin?.coinInfo || {},
   basePrice: state.buyCoin?.basePrice || {},
   bankInfo: state.buyCoin?.bankInfo,
@@ -727,7 +707,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 BuyCryptoCoin.defaultProps = {
   amount: 0,
-  fiatAmount: 0,
   paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
   fiatCurrency: defaultFiatCurrency,
   bankInfo: {},
@@ -736,6 +715,7 @@ BuyCryptoCoin.defaultProps = {
   order: {},
   phone: '',
   wallet: {},
+  coinMoneyExchange: {},
 };
 
 BuyCryptoCoin.propTypes = {
@@ -743,6 +723,7 @@ BuyCryptoCoin.propTypes = {
   history: PropTypes.object.isRequired,
   country: PropTypes.string.isRequired,
   authProfile: PropTypes.object.isRequired,
+  coinMoneyExchange: PropTypes.object.isRequired,
   paymentMethod: PropTypes.string,
   amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,

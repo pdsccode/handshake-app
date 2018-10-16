@@ -2,12 +2,15 @@
 
 import React from 'react';
 import CoinMoneyExchange from '../../../components/CoinMoneyExchange';
-import './styles.scss';
 
-const coinMoneyExchangeField = ({ input, currency }) => {
-  // const { onChange } = input;
+const coinMoneyExchangeField = ({ input, currency, paymentMethod, meta }) => {
+  const error = meta?.error;
+  const { onChange } = input;
   return (
-    <CoinMoneyExchange currency={currency} onChange={console.log} />
+    <div style={{ width: '100%' }}>
+      <CoinMoneyExchange currency={currency} paymentMethod={paymentMethod} onChange={data => { onChange(data); }} />
+      { error && <span className="text-danger">{error}</span>}
+    </div>
   );
 };
 

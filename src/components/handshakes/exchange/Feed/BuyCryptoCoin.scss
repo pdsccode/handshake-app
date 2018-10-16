@@ -178,20 +178,53 @@
       }
     }
   }
-  .choose-coin-cod-form {
-    transition: height 300ms, opacity 300ms;
+  .choose-coin-payment-method-container {
+    transition: max-height 300ms, opacity 200ms, height 300ms;
     transition-timing-function: ease-in-out;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    &.show {
+    max-height: 0px;
+    height: 0px;
+    &.cod {
+      max-height: 230px;
+      opacity: 1;
       height: 230px;
+    }
+    &.bank {
+      height: 190px;
+      max-height: 300px;
       opacity: 1;
     }
-    &.hidden {
-      height: 0px;
-      opacity: 0;
-      overflow: hidden;
+  }
+
+  ul.bank-info-container {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    border: solid rgba(255, 255, 255, 0.5) 1px;
+    > li {
+      list-style: none;
+      display: flex;
+      padding: 5px 0px;
+      >:nth-child(1) {
+        width: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        > span {
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+      }
+      >:nth-child(2) {
+        width: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        > span {
+          font-weight: 300;
+        }
+      }
     }
   }
 
