@@ -136,13 +136,16 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
       }
     } else {
       // Create new event
+      const { name, url, id } = values.reports;
+
       const reportSource = {
-        source_id: selectedSource,
+        source_id: id,
         source: selectedSource ? undefined : {
-          name: '',
-          url: values.reports,
+          name,
+          url,
         },
       };
+
       Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
       const newEventData = {
         homeTeamName: values.homeTeamName || '',
@@ -151,7 +154,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         awayTeamCode: values.awayTeamCode || '',
         homeTeamFlag: values.homeTeamFlag || '',
         awayTeamFlag: values.awayTeamFlag || '',
-        name: values.eventName,
+        name: values.eventName.value,
         public: 1,
         date: values.closingTime,
         reportTime: values.reportingTime,
