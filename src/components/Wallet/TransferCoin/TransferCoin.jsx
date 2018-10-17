@@ -22,6 +22,9 @@ import './TransferCoin.scss';
 import { ICON } from '@/styles/images';
 import BrowserDetect from '@/services/browser-detect';
 import WalletSelected from '@/components/Wallet/WalletSelected';
+import Slider from 'react-rangeslider'
+
+
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
@@ -59,7 +62,8 @@ class Transfer extends React.Component {
       inputSendAmountValue: 0,
       inputSendMoneyValue: 0,
       legacyMode: false,
-      walletNotFound: ''
+      walletNotFound: '',
+      volume: 0
     }
   }
 
@@ -460,6 +464,12 @@ selectWallet = async (walletSelected) => {
   }
 }
 
+handleOnChange = (value) => {
+  this.setState({
+    volume: value
+  })
+}
+
 render() {
   let { currency } = this.props;
   if(!currency) currency = "USD";
@@ -471,7 +481,8 @@ render() {
   try {amount= parseFloat(amount).toFixed(8)}catch (e){}
 
   return (
-    <div>
+    <div>        
+
         {/* Dialog confirm transfer coin */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmTranferRef = modal}>
         <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {amount} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
@@ -547,10 +558,22 @@ render() {
               </div>
             }
 
+            <p className="labelText">{messages.wallet.action.transfer.label.feel_level}</p>
+            <div className="fee-level-box">
+              <Slider
+                min={0}
+                max={3}
+                tooltip={false}
+                labels={{0: "Low", 3: 'Urgent', 2: 'Priority', 1: 'Normal', }}
+                value={this.state.volume}                
+                onChange={this.handleOnChange}
+              />
+            </div>
+
             <div>
               <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
               { walletSelected && <WalletSelected wallets={wallets} walletSelected={walletSelected} onSelect={wallet => { this.selectWallet(wallet); }}></WalletSelected> }
-            </div>
+            </div>            
 
             <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.transfer.button.transfer}</Button>
           </div>

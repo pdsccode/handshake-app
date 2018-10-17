@@ -5,6 +5,13 @@
 }
 
 .sendwallet-wrapper{
+  
+  ul.rangeslider__labels .rangeslider__label-item:first-child {
+    padding-right: 20px;
+  }
+  .fee-level-box{
+    height: 45px;
+  }
 
   margin: auto;
   width: 100%;
