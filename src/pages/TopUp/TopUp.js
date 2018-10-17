@@ -7,11 +7,13 @@ import './TopUp.scss';
 
 class TopUp extends React.Component {
   static propTypes = {
+    address: PropTypes.string,
     balance: PropTypes.number,
     name: PropTypes.string,
   };
 
   static defaultProps = {
+    address: null,
     balance: null,
     name: null,
   };
@@ -24,6 +26,20 @@ class TopUp extends React.Component {
     const wallets = MasterWallet.getMasterWallet();
     this.setState({ wallets });
   }
+
+  copyToClipboard = (str) => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style = {
+      position: 'absolute',
+      left: '-9999px'
+    };
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  };
 
   balance = (props) => {
     const { balance, name } = props || { balance: 0, name: 'ETH'};
@@ -38,14 +54,15 @@ class TopUp extends React.Component {
     );
   };
 
-  howTo = () => {
+  howTo = (props) => {
+    const { address } = props || { address: ''};
     return (
       <div className="TopUpCard HowToCard">
         <div className="Quest">How to top up?</div>
         <div className="Describe">Send ETH to your ninja prediction wallet address</div>
         <div className="WalletAddress">
-          <span className="Address">0xc0ffee254729296a45a3885639</span>
-          <span className="HelpIcon">?</span>
+          <span className="Address">{address}</span>
+          <span className="HelpIcon" title="Copy to clipboard" onClick={this.copyToClipboard(address)}>?</span>
         </div>
       </div>
     );
@@ -57,7 +74,7 @@ class TopUp extends React.Component {
     return (
       <div className="TopUpContainer">
         { this.balance(walletProps) }
-        { this.howTo() }
+        { this.howTo(walletProps) }
       </div>
     );
   }

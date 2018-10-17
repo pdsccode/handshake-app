@@ -45,8 +45,12 @@
       .Address {
         color: rgba(77, 89, 138, 0.6);
         font-size: 0.85rem;
+        max-width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .HelpIcon {
+        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
