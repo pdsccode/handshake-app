@@ -88,7 +88,7 @@ class InternalAdmin extends Component {
 
       this.setupInitifyLoad();
     } else {
-      this.props.history.push(`${URL.ADMIN_ID_VERIFICATION}`);
+      this.props.history.push(`${URL.ADMIN_ID_VERIFICATION}?redirect=${window.location.pathname}`);
     }
 
     return null;
