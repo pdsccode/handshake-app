@@ -391,22 +391,24 @@ class Transfer extends React.Component {
 submitSendCoin=()=>{
   this.setState({isRestoreLoading: true});
   this.modalConfirmTranferRef.close();
-    this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+  let fee = this.state.listFeeObject ? this.state.listFeeObject.listFee[this.state.volume].value : 0;
+  let option = {"fee": fee};
+  this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue, option).then(success => {
 
-        this.setState({isRestoreLoading: false});
-        if (success.hasOwnProperty('status')){
-          if (success.status == 1){
-            this.showSuccess(this.getMessage(success.message));
-            this.onFinish(success.data);
-            MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
-            // start cron get balance auto ...
-            // todo hanlde it ...
-          }
-          else{
-            this.showError(this.getMessage(success.message));
-          }
+      this.setState({isRestoreLoading: false});
+      if (success.hasOwnProperty('status')){
+        if (success.status == 1){
+          this.showSuccess(this.getMessage(success.message));
+          this.onFinish(success.data);
+          MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
+          // start cron get balance auto ...
+          // todo hanlde it ...
         }
-    });
+        else{
+          this.showError(this.getMessage(success.message));
+        }
+      }
+  });
 }
 
 // For Qrcode:

@@ -183,7 +183,14 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-  async transfer(toAddress, amountToSend, data="", gasLimit=defaultGasLimit, gasPrice=0) {
+  async transfer(toAddress, amountToSend, option) {
+    
+    let data = option.data || "";
+    let fee = option.fee || 0
+    let gasLimit = option.gasLimit || defaultGasLimit;
+    
+    console.log('data:', data, 'gasLimit:', gasLimit, 'fee:', fee);    
+
     const web3 = this.getWeb3();
     if (!web3.utils.isAddress(toAddress)) {
       return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
@@ -198,10 +205,10 @@ export class Ethereum extends Wallet {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
 
-      if(!gasPrice){
-        gasPrice = await this.getGasPrice(3);
+      if(!fee){
+        fee = await this.getGasPrice(3);
       }
-      gasPrice = new BN(gasPrice * 1000000000);// converts the gwei price to wei;
+      let gasPrice = new BN(Number(fee) * 1000000000);// converts the gwei price to wei;
 
       const estimateGas = new BN(balance).div(gasPrice);
       const limitedGas = gasLimit;
