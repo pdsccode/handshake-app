@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_project_detail, getNumberOfFund } from '@/reducers/invest/action';
+import { fetch_project_detail, getNumberOfFund, getSMProjectInfo } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -172,6 +172,21 @@ class NumberInvestorComp extends React.Component {
 }
 const NumberInvestor = wrapBoundary(NumberInvestorComp);
 
+class ProjectInfoComp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.props.getSMProjectInfo(props.project.id).catch(err => console.log('err', err))
+  }
+  render() {
+    if (!this.props.smProject) return (<div><img src={LoadingGif} style={{ width: '50px', height: '50px' }} /></div>);
+    return <div>{this.props.smProject.numFunder}</div>
+  }
+}
+const projectMapState = (state) => ({
+  smProject: state.invest && state.invest.smProject ? state.invest.smProject : null
+})
+const ProjectInfo = connect(projectMapState, { getSMProjectInfo })(ProjectInfoComp)
+
 class ProjectDetail extends Component {
   constructor(props) {
     super(props);
@@ -251,7 +266,7 @@ class ProjectDetail extends Component {
                   {new Date(project.deadline).toDateString()}
                 </label>
                 <label htmlFor="" className="fund-item-value">
-                  <NumberInvestor pid={project.id} />
+                  <ProjectInfo project={project} />
                 </label>
               </div>
               </div>

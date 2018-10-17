@@ -13,6 +13,9 @@ export default function(state = {}, action){
         case ACTIONS.SYNCED_INFO: {
             return { ...state, syncedInfo: action.payload }
         }
+        case ACTIONS.SM_PROJECT: {
+            return { ...state, smProject: action.payload }
+        }
         default:
             return state
     }

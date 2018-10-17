@@ -8,6 +8,7 @@ export const ACTIONS = {
   FETCH_TRADERS: 'FETCH_TRADERS',
   SYNC_WALLET: 'SYNC_WALLET',
   SYNCED_INFO: 'SYNCED_INFO',
+  SM_PROJECT: 'CALL_SM_PROJECT'
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const PROJECT_DETAIL_URL = '/projects';
@@ -57,6 +58,14 @@ export const getNumberOfFund = async (pid)  => {
   console.log(numberFund);
   return numberFund.numFunder;
 }
+
+export const getSMProjectInfo = (pid) => dispatch => new Promise((resolve, reject) => {
+  hedgeFundApi.getProjectInfo('0x' + pid).then(payload => {
+    dispatch({ type: ACTIONS.SM_PROJECT, payload });
+    console.log('------------------', payload);
+    resolve(payload)
+  }).catch(err => reject(err))
+});
 
 export const eth_sendTransaction = ({
   privateKey,
