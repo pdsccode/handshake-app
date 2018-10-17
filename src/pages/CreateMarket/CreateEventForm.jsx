@@ -157,6 +157,7 @@ class CreateEventForm extends Component {
     return (
       <div className="wrapperCheckReport">
         <Checkbox
+          className="checkboxInput"
           name="checkreport"
           checked={this.state.reportChecked}
           onChange={() => {
