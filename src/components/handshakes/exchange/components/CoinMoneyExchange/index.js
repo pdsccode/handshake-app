@@ -44,9 +44,9 @@ class CoinMoneyExchange extends Component {
 
     this.onFiatAmountChange = ::this.onFiatAmountChange;
     this.onAmountChange = ::this.onAmountChange;
-    this.getCoinInfo = debounce(::this.getCoinInfo, 300);
+    this.getCoinInfo = debounce(::this.getCoinInfo, 1000);
     this.isOverLimit = isOverLimit;
-    this.getQuoteReverse = debounce(::this.getQuoteReverse, 300);
+    this.getQuoteReverse = debounce(::this.getQuoteReverse, 1000);
     this.renderFiatCurrencyList = ::this.renderFiatCurrencyList;
     this.onChangeCallbackHandler = debounce(::this.onChangeCallbackHandler, 1000);
     this.onGetCoinInfoError = ::this.onGetCoinInfoError;
@@ -126,12 +126,12 @@ class CoinMoneyExchange extends Component {
   }
 
   onAmountChange(e) {
-    this.exchangeAmount({ amount: e?.target?.value });
+    this.exchangeAmount({ amount: e?.target?.value?.replace(/,/g, '') || 0 });
   }
 
   onFiatAmountChange(e) {
-    const formatNumber = e?.target?.value?.replace(/[^0-9]/g, '');
-    this.exchangeFiatAmount(Number.parseInt(formatNumber, 10));
+    const formatNumber = e?.target?.value?.replace(/,/g, '') || 0;
+    this.exchangeFiatAmount(Number.parseFloat(formatNumber));
   }
 
   exchangeAmount({ amount, fiatCurrency }) {
@@ -225,11 +225,16 @@ class CoinMoneyExchange extends Component {
     const { fiatAmountOverLimit } = this.props;
     return (
       <div className={scopedCss('container')}>
-        <input
-          value={amount || ''}
-          onChange={this.onAmountChange}
+        <Cleave
           className={`form-control ${scopedCss('amount-input')}`}
+          value={amount || ''}
+          options={{
+            numeral: true,
+            numeralDecimalScale: 4,
+            numeralThousandsGroupStyle: 'thousand',
+          }}
           placeholder="0.0"
+          onChange={this.onAmountChange}
         />
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
