@@ -269,6 +269,7 @@ class Transfer extends React.Component {
 
     this.setState({wallets: listWalletCoin, walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
+      this.getFeeLevel(walletDefault);
     });
   }
 
@@ -464,21 +465,25 @@ selectWallet = async (walletSelected) => {
     this.updateAddressAmountValue(null, this.state.inputSendAmountValue);
   }
   // show fee?
-  if (walletSelected.name == 'ETH'){    
-    this.getFeeLevel();
-  }
+  this.getFeeLevel(walletSelected);
+  
 }
 
-getFeeLevel=()=>{
-  let listFee = [{title: "Low", description: "0.000063 ETH ~ 30 min", value: "3"},{title: "Normal", description: "0.000084 ETH ~ 5 min", value: "4"},{title: "Priority", description: "0.00042 ETH ~ 2 min", value: "20"},{title: "Urgent", description: "0.00063 ETH ~ 1 min", value: "30"}];
+async getFeeLevel(walletSelected){
+  let listFee = await walletSelected.getLevelFee();
+  let listFeeObject = false;
+  console.log(listFee);
+  if(listFee){
     let labels = {};
     let min = 0;
     let max = listFee.length-1;
     for (var i = 0; i < listFee.length; i ++){
       labels[i.toString()] = listFee[i].title;
     }
-    let listFeeObject = {'listFee': listFee, 'labels': labels, 'min': min, "max": max};
-    this.setState({listFeeObject: listFeeObject, volume: 1});
+    listFeeObject = {'listFee': listFee, 'labels': labels, 'min': min, "max": max};    
+  }
+  this.setState({listFeeObject: listFeeObject, volume: 1});
+    
 }
 
 handleOnChange = (value) => {
@@ -495,9 +500,7 @@ render() {
   const { walletNotFound, walletSelected, wallets } = this.state;
 
   let amount = this.state.inputSendAmountValue;
-  try {amount= parseFloat(amount).toFixed(8)}catch (e){}
-
-  console.log(this.state.listFeeObject);
+  try {amount= parseFloat(amount).toFixed(8)}catch (e){}  
 
   return (
     <div>        
