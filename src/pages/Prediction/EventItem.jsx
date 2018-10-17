@@ -17,13 +17,14 @@ import { socialSharedMsg } from './constants';
 
 function renderEventSource({ event }) {
   const { source } = event;
-  const { name, url_icon: url } = source;
+  const { name, url_icon: urlSource, url } = source;
+  const sourceName = name || url;
   return (
     <div className="SourceLogo">
       <div className="LogoImage">
-        <Image src={url} alt="sourceLogo" width="23" />
+        <Image src={urlSource} alt="sourceLogo" width="23" />
       </div>
-      <div className="SourceTitle">{name}</div>
+      <div className="SourceTitle">{sourceName}</div>
     </div>
   );
 }
