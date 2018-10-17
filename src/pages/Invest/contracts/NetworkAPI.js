@@ -29,6 +29,10 @@ class NetworkAPI {
         var web3js = new Web3js(new Web3js.providers.HttpProvider(network))
         return await web3js.eth.getGasPrice()
     }
+
+    getEthPrice(gasPrice) {
+        return Web3js.utils.fromWei(gasPrice + '', 'ether');
+    }
 }
 
 module.exports = NetworkAPI

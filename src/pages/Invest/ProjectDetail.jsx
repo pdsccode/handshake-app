@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_project_detail, getNumberOfFund, getSMProjectInfo } from '@/reducers/invest/action';
+import { fetch_project_detail, getNumberOfFund, getSMProjectInfo, getFundAmount } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -87,10 +87,10 @@ class FormInvestBlock extends Component {
       alert('Project ID doesnt existed');
       return;
     }
-    console.log('project id is', this.props.pid);
-    const wallets = MasterWallet.getWalletDataLocalString();
-    console.log(wallets);
-    const { balance, privateKey } = wallets.find(({ name, network}) => name === 'ETH' && network === 'https://rinkeby.infura.io/') || {};
+    const wallets = MasterWallet.getWalletDefault();
+    console.log('wallet default ', wallets);
+    // const { balance, privateKey } = wallets.find(({ name, network}) => name === 'ETH' && network === 'https://rinkeby.infura.io/') || {};
+    const { balance, privateKey } = wallets.ETH || {};
     const investAmount = Number(this.state.investAmount);
     const totalBalance = Number(balance);
     if (totalBalance <= investAmount) {
@@ -175,17 +175,46 @@ const NumberInvestor = wrapBoundary(NumberInvestorComp);
 class ProjectInfoComp extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getSMProjectInfo(props.project.id).catch(err => console.log('err', err))
+    this.props.getSMProjectInfo(props.project.id).catch(err => console.log('err', err));
+    this.props.getFundAmount(props.project.id).catch(err => console.log('err', err));
   }
   render() {
-    if (!this.props.smProject) return (<div><img src={LoadingGif} style={{ width: '50px', height: '50px' }} /></div>);
-    return <div>{this.props.smProject.numFunder}</div>
+    // if (!this.props.smProject) return (<div><img src={LoadingGif} style={{ width: '50px', height: '50px' }} /></div>);
+    // return <div>{this.props.smProject.numFunder}</div>
+    const { project, smProject } = this.props;
+    const progressPrev = (Number(project.fundingAmount || 0)/Number(project.target|| 1) * 100).toFixed(2);
+    const progress = smProject ? (Number(smProject.fundingAmount || 0)/Number(smProject.target|| 1) * 100).toFixed(2) : progressPrev;
+    const numFunder = smProject ? smProject.numFunder : (<img src={LoadingGif} style={{ width: '50px', height: '50px' }} />);
+    const fundAmount = smProject ? smProject.fundAmount : '';
+    return (
+      <div className="fund-item float-right">
+        <label htmlFor="" className="fund-item-value">{project.displayLifeTime}</label>
+        <label htmlFor="" className="fund-item-value">
+          {project.target} {project.currency}
+        </label>
+        <label htmlFor="" className="fund-item-value">
+          {project.lifeTime} {'days'}
+        </label>
+        <label htmlFor="" className="fund-item-value">
+          {progress} % 
+        </label>
+        <label htmlFor="" className="fund-item-value">
+          {new Date(project.deadline).toDateString()}
+        </label>
+        <label htmlFor="" className="fund-item-value">
+          {numFunder}
+        </label>
+        <label htmlFor="" className="fund-item-value">
+          {fundAmount}
+        </label>
+      </div>
+    )
   }
 }
 const projectMapState = (state) => ({
   smProject: state.invest && state.invest.smProject ? state.invest.smProject : null
 })
-const ProjectInfo = connect(projectMapState, { getSMProjectInfo })(ProjectInfoComp)
+const ProjectInfo = connect(projectMapState, { getSMProjectInfo, getFundAmount })(ProjectInfoComp)
 
 class ProjectDetail extends Component {
   constructor(props) {
@@ -206,6 +235,7 @@ class ProjectDetail extends Component {
   }
   renderProjects() {
     const { project } = this.props;
+    const progressPercentage = (Number(project.fundingAmount || 0)/Number(project.target|| 1) * 100).toFixed(2);
     console.log(project);
       return (
         <div key={project.id} style={{ marginTop: '1em' }} >
@@ -214,8 +244,8 @@ class ProjectDetail extends Component {
               {project.name}
             </h5>
             <div className="progressBlock">
-              <span className="progressCount">{project.progressPercentage}%</span>
-              <ProgressBar now={project.progressPercentage} className="progressbar" />
+              <span className="progressCount">{progressPercentage}%</span>
+              <ProgressBar now={Number(progressPercentage)} className="progressbar" />
 
               <div className="userInfoBlock clearfix userInfoBlockProjectDetails">
                 <div className="userItem">
@@ -248,27 +278,9 @@ class ProjectDetail extends Component {
                 <label htmlFor="" className="fund-label">Deadline</label>
                 {/* <label htmlFor="" className="fund-label">Target Earning</label> */}
                 <label htmlFor="" className="fund-label">Number of investor</label>
+                <label htmlFor="" className="fund-label">Your fund</label>
               </div>
-
-
-                <div className="fund-item float-right">
-                <label htmlFor="" className="fund-item-value">{project.displayLifeTime}</label>
-                <label htmlFor="" className="fund-item-value">
-                  {project.target} {project.currency}
-                </label>
-                <label htmlFor="" className="fund-item-value">
-                  {project.lifeTime} {'days'}
-                </label>
-                <label htmlFor="" className="fund-item-value">
-                  {Number(project.fundingAmount)/Number(project.target) * 100} %
-                </label>
-                <label htmlFor="" className="fund-item-value">
-                  {new Date(project.deadline).toDateString()}
-                </label>
-                <label htmlFor="" className="fund-item-value">
-                  <ProjectInfo project={project} />
-                </label>
-              </div>
+              <ProjectInfo project={project} />
               </div>
             </div>
           </div>

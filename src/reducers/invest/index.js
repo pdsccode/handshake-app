@@ -16,6 +16,9 @@ export default function(state = {}, action){
         case ACTIONS.SM_PROJECT: {
             return { ...state, smProject: action.payload }
         }
+        case ACTIONS.SM_PROJECT_FUND_AMOUNT: {
+            return { ...state, smProject: { ...state.smProject, fundAmount: action.payload }}
+        }
         default:
             return state
     }

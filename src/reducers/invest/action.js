@@ -8,7 +8,8 @@ export const ACTIONS = {
   FETCH_TRADERS: 'FETCH_TRADERS',
   SYNC_WALLET: 'SYNC_WALLET',
   SYNCED_INFO: 'SYNCED_INFO',
-  SM_PROJECT: 'CALL_SM_PROJECT'
+  SM_PROJECT: 'CALL_SM_PROJECT',
+  SM_PROJECT_FUND_AMOUNT: 'SM_PROJECT_FUND_AMOUNT'
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const PROJECT_DETAIL_URL = '/projects';
@@ -62,7 +63,15 @@ export const getNumberOfFund = async (pid)  => {
 export const getSMProjectInfo = (pid) => dispatch => new Promise((resolve, reject) => {
   hedgeFundApi.getProjectInfo('0x' + pid).then(payload => {
     dispatch({ type: ACTIONS.SM_PROJECT, payload });
-    console.log('------------------', payload);
+    resolve(payload)
+  }).catch(err => reject(err))
+});
+
+export const getFundAmount = (pid) => dispatch => new Promise((resolve, reject) => {
+  const { address } = MasterWallet.getWalletDefault().ETH;
+  hedgeFundApi.getFundAmount('0x' + pid, address).then(data => {
+    const payload = hedgeFundApi.getEthPrice(data);
+    dispatch({ type: ACTIONS.SM_PROJECT_FUND_AMOUNT, payload });
     resolve(payload)
   }).catch(err => reject(err))
 });

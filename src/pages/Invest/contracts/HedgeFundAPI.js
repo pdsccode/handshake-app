@@ -236,10 +236,10 @@ class HedgeFundAPI extends NetworkAPI {
     return this._call('getProjectInfo', hexEncode(pid))
   }
 
-  getFundAmount (pid = '') {
-    return this._call('getFundAmount', hexEncode(pid))
+  getFundAmount (pid = '', address = '') {
+    return this._call('getFundAmount', hexEncode(pid), address)
   }
-
+  
   getWithdrawAmount (pid = '') {
     return this._call('getWithdrawAmount', hexEncode(pid))
   }
