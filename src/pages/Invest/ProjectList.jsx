@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_projects, exampleProjects } from '@/reducers/invest/action';
+import { fetch_projects, exampleProjects, toHexColor, getImageUrl } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
 import StarRatings from 'react-star-ratings';
 import { wrapBoundary } from '../../components/ErrorBoundary';
 import './ProjectList.scss';
+var date_diff_indays = function(dt1, dt2) {
+  // var dt1 = new Date(date1);
+  // var dt2 = new Date(date2);
+  return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+}
 
 const ProjectItem = wrapBoundary(({ handleOnClick, ...project }) => {
   const progressPercentage = Math.floor(project.fundingAmount / project.target * 100);
@@ -38,17 +43,20 @@ const ProjectItem = wrapBoundary(({ handleOnClick, ...project }) => {
             <label htmlFor="" className="fund-label">
               Inv. Period
             </label>
-            <label htmlFor="" className="fund-item-value">{displayLifeTime}</label>
+            <label htmlFor="" className="fund-item-value">{project.lifeTime} days</label>
           </div>
         </div>
         <hr />
         <div className="userInfoBlock clearfix">
           <div className="userItem">
-            <img
-              src="https://randomuser.me/api/portraits/men/9.jpg"
+            {project.User.avatar && <img
+              src={getImageUrl(project.User.avatar)}
               alt=""
               className="userImage"
-            />
+            />}
+            {!project.User.avatar && <div className="avatar_non" style={{ backgroundColor: toHexColor(project.User.firstName)}}>
+                {`${project.User.firstName[0].toUpperCase() + project.User.lastName[0].toUpperCase()}`}
+            </div>}
             <span className="userName">{displayName}</span>
             <div className="star-ratings">
               <StarRatings
@@ -65,7 +73,7 @@ const ProjectItem = wrapBoundary(({ handleOnClick, ...project }) => {
             </div>
           </div>
           <div className="duration-left">
-          3 days left
+            {date_diff_indays(new Date(), new Date(project.deadline))} DAYS LEFT 
           </div>
         </div>
       </div>

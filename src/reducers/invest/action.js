@@ -15,6 +15,16 @@ const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const PROJECT_DETAIL_URL = '/projects';
 const LIST_TRADER_URL = '/users/list-trader';
 const LINK_WALLET_URL = '/link-to-wallet';
+const IMAGE_PREFIX = 'http://35.198.235.226:9000/api/file-storages/avatar/download';
+export const toHexColor = (str) => {
+	var hex = '';
+	for(var i=0;i<str.length;i++) {
+		hex += ''+str.charCodeAt(i).toString(16);
+	}
+	return `#${hex.substring(0, 6)}`;
+};
+
+export const getImageUrl = avatar => `${IMAGE_PREFIX}/${avatar}`
 
 export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
   axiosInstance.get(LIST_PROJECT_URL)
@@ -29,9 +39,10 @@ export const fetch_projects = () => dispatch => new Promise((resolve, reject) =>
 })
 
 export const fetch_project_detail = (id) => dispatch => new Promise((resolve, reject) => {
-  axiosInstance.get(`${PROJECT_DETAIL_URL}/${id}`)
+  axiosInstance.get(`${PROJECT_DETAIL_URL}/${id}?filter={"include": "User"}`)
   .then(({ status, data: payload }) => {
     if (status === 200) {
+      console.log('==============project detail',payload);
       dispatch({ type: ACTIONS.FETCH_PROJECT_DETAIL, payload })
       resolve(payload)
     }

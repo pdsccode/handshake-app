@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_project_detail, getNumberOfFund, getSMProjectInfo, getFundAmount } from '@/reducers/invest/action';
+import { fetch_project_detail, getNumberOfFund, getSMProjectInfo, getFundAmount, getImageUrl, toHexColor } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -175,19 +175,18 @@ const NumberInvestor = wrapBoundary(NumberInvestorComp);
 class ProjectInfoComp extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getSMProjectInfo(props.project.id).catch(err => console.log('err', err));
-    this.props.getFundAmount(props.project.id).catch(err => console.log('err', err));
+    this.props.getSMProjectInfo(props.project.id).then(r=> {
+      this.props.getFundAmount(props.project.id).catch(err => console.log('err', err));
+    }).catch(err => console.log('err', err));
   }
   render() {
-    // if (!this.props.smProject) return (<div><img src={LoadingGif} style={{ width: '50px', height: '50px' }} /></div>);
-    // return <div>{this.props.smProject.numFunder}</div>
     const { project, smProject } = this.props;
     const progressPrev = (Number(project.fundingAmount || 0)/Number(project.target|| 1) * 100).toFixed(2);
     const progress = smProject ? (Number(smProject.fundingAmount || 0)/Number(smProject.target|| 1) * 100).toFixed(2) : progressPrev;
     const numFunder = smProject ? smProject.numFunder : (<img src={LoadingGif} style={{ width: '50px', height: '50px' }} />);
     const fundAmount = smProject ? smProject.fundAmount : '';
     return (
-      <div className="fund-item float-right">
+      <div className="fund-item float-right" style={{ marginTop: '-10px' }}>
         <label htmlFor="" className="fund-item-value">{project.displayLifeTime}</label>
         <label htmlFor="" className="fund-item-value">
           {project.target} {project.currency}
@@ -205,7 +204,7 @@ class ProjectInfoComp extends React.Component {
           {numFunder}
         </label>
         <label htmlFor="" className="fund-item-value">
-          {fundAmount}
+          {fundAmount} ETH
         </label>
       </div>
     )
@@ -229,8 +228,7 @@ class ProjectDetail extends Component {
   getProjectDetail = () => {
     this.props.fetch_project_detail(this.props.match.params.projectID).then(r => this.setState({ loading: false })).catch(err => console.log(err));
   }
-  componentWillMount = () => {
-    console.log('component will mount');
+  componentDidMount = () => {
     this.getProjectDetail();
   }
   renderProjects() {
@@ -249,11 +247,14 @@ class ProjectDetail extends Component {
 
               <div className="userInfoBlock clearfix userInfoBlockProjectDetails">
                 <div className="userItem">
-                <img
-                  src="https://randomuser.me/api/portraits/men/9.jpg"
+                {project.User.avatar && <img
+                  src={getImageUrl(project.User.avatar)}
                   alt=""
                   className="userImage"
-                />
+                />}
+                {!project.User.avatar && <div className="avatar_non" style={{ backgroundColor: toHexColor(project.User.firstName)}}>
+                    {`${project.User.firstName[0].toUpperCase() + project.User.lastName[0].toUpperCase()}`}
+                </div>}
                 <span className="userName">{project.displayName}</span>
                 <div className="star-ratings">
                   <StarRatings
