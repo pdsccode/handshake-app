@@ -63,7 +63,8 @@ class Transfer extends React.Component {
       inputSendMoneyValue: 0,
       legacyMode: false,
       walletNotFound: '',
-      volume: 0
+      volume: 0,
+      listFeeObject: false
     }
   }
 
@@ -462,6 +463,22 @@ selectWallet = async (walletSelected) => {
     await this.setRate(walletSelected.name);
     this.updateAddressAmountValue(null, this.state.inputSendAmountValue);
   }
+  // show fee?
+  if (walletSelected.name == 'ETH'){    
+    this.getFeeLevel();
+  }
+}
+
+getFeeLevel=()=>{
+  let listFee = [{title: "Low", description: "0.000063 ETH ~ 30 min", value: "3"},{title: "Normal", description: "0.000084 ETH ~ 5 min", value: "4"},{title: "Priority", description: "0.00042 ETH ~ 2 min", value: "20"},{title: "Urgent", description: "0.00063 ETH ~ 1 min", value: "30"}];
+    let labels = {};
+    let min = 0;
+    let max = listFee.length-1;
+    for (var i = 0; i < listFee.length; i ++){
+      labels[i.toString()] = listFee[i].title;
+    }
+    let listFeeObject = {'listFee': listFee, 'labels': labels, 'min': min, "max": max};
+    this.setState({listFeeObject: listFeeObject, volume: 1});
 }
 
 handleOnChange = (value) => {
@@ -479,6 +496,8 @@ render() {
 
   let amount = this.state.inputSendAmountValue;
   try {amount= parseFloat(amount).toFixed(8)}catch (e){}
+
+  console.log(this.state.listFeeObject);
 
   return (
     <div>        
@@ -558,17 +577,21 @@ render() {
               </div>
             }
 
-            <p className="labelText">{messages.wallet.action.transfer.label.feel_level}</p>
-            <div className="fee-level-box">
-              <Slider
-                min={0}
-                max={3}
-                tooltip={false}
-                labels={{0: "Low", 3: 'Urgent', 2: 'Priority', 1: 'Normal', }}
-                value={this.state.volume}                
-                onChange={this.handleOnChange}
-              />
+            {this.state.listFeeObject && 
+            <div>
+              <p className="labelText">{messages.wallet.action.transfer.label.feel_level} ({this.state.listFeeObject.listFee[this.state.volume].description})</p>
+              <div className="fee-level-box">
+                <Slider
+                  min={this.state.listFeeObject.min}
+                  max={this.state.listFeeObject.max}
+                  tooltip={false}
+                  labels={this.state.listFeeObject.labels}
+                  value={this.state.volume}                
+                  onChange={this.handleOnChange}
+                />
+              </div>
             </div>
+            }
 
             <div>
               <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
