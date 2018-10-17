@@ -5,12 +5,18 @@ import WalletSelector from '../../../components/WalletSelector';
 import './styles.scss';
 
 const walletSelectorField = ({ input, meta }) => {
-  const { onChange } = input;
-  const error = meta?.error;
+  const { onChange, onBlur, onFocus } = input;
+  const { error, touched } = meta;
+  const shouldShowError = !!(touched && error);
   return (
     <div className="wallet-selector-field">
-      <WalletSelector onChange={wallet => { onChange(wallet); }} />
-      { error && <span className="err-msg">{error}</span>}
+      <WalletSelector
+        onFocus={onFocus}
+        onBlur={onBlur}
+        markRequired={shouldShowError}
+        onChange={onChange}
+      />
+      { shouldShowError && <span className="err-msg">{error}</span>}
     </div>
   );
 };

@@ -16,15 +16,19 @@
       >button {
         width: 100px;
         border: solid 1px;
-        background: transparent;
         margin: 0px 5px;
         border-radius: 3px;
+        color: white;
+        padding: 5px 10px;
       }
       .confirm-btn-cancel {
-        color: orange;
+        background: transparent;
+        border: 1px solid #7a7a7a;
+        color: #333;
+        margin-left: rem-calc(10px);
       }
       .confirm-btn-ok {
-        color: blue;
+        background: #2456FB;
       }
     }
   }
