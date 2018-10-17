@@ -48,7 +48,7 @@ class CoinMoneyExchange extends Component {
     this.isOverLimit = isOverLimit;
     this.getQuoteReverse = debounce(::this.getQuoteReverse, 1000);
     this.renderFiatCurrencyList = ::this.renderFiatCurrencyList;
-    this.onChangeCallbackHandler = debounce(::this.onChangeCallbackHandler, 1000);
+    this.onChangeCallbackHandler = debounce(::this.onChangeCallbackHandler, 100);
     this.onGetCoinInfoError = ::this.onGetCoinInfoError;
     this.ongetQuoteReverseError = ::this.ongetQuoteReverseError;
     this.exchangeFiatAmount = ::this.exchangeFiatAmount;
@@ -222,9 +222,9 @@ class CoinMoneyExchange extends Component {
   render() {
     console.log('=== STATE', this.state);
     const { amount, fiatAmount, fiatCurrency } = this.state;
-    const { fiatAmountOverLimit } = this.props;
+    const { fiatAmountOverLimit, onFocus, onBlur, markRequired } = this.props;
     return (
-      <div className={scopedCss('container')}>
+      <div className={`${scopedCss('container')} ${markRequired ? 'error' : ''}`} onFocus={() => onFocus()} onBlur={() => onBlur()}>
         <Cleave
           className={`form-control ${scopedCss('amount-input')}`}
           value={amount || ''}
@@ -276,6 +276,9 @@ CoinMoneyExchange.propTypes = {
   onChange: PropTypes.func,
   showAlert: PropTypes.func.isRequired,
   fiatAmountOverLimit: PropTypes.bool.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  markRequired: PropTypes.bool.isRequired,
 };
 
 const mapState = (state) => {

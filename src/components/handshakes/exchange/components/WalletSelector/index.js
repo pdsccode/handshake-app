@@ -54,6 +54,8 @@ class WalletSelector extends Component {
     this.onUserWalletSelected = :: this.onUserWalletSelected;
     this.componentCallbackHandler = debounce(::this.componentCallbackHandler, 300);
     this.showUserWallet = :: this.showUserWallet;
+    this.onBlur = :: this.onBlur;
+    this.onFocus = :: this.onFocus;
   }
 
   componentDidMount() {
@@ -231,17 +233,28 @@ class WalletSelector extends Component {
     );
   }
 
+  onBlur() {
+    this.showUserWallet(false);
+    this.props.onBlur();
+  }
+
+  onFocus() {
+    this.showUserWallet(true);
+    this.props.onFocus();
+  }
+
   render() {
     const { currency, walletAddressError, walletAddress } = this.state;
+    const { markRequired } = this.props;
     return (
       <div className={scopedCss('input-with-trailing')}>
-        <div className={`input-group ${scopedCss('wallet-input-group')}`}>
+        <div className={`input-group ${scopedCss('wallet-input-group')} ${markRequired || walletAddressError ? 'error' : ''}`}>
           <input
             value={walletAddress}
-            className={`form-control ${scopedCss('wallet-input')} ${walletAddressError ? 'error' : ''}`}
+            className={`form-control ${scopedCss('wallet-input')}`}
             onChange={(e) => { this.updateWalletAddress(e.target.value); }}
-            onFocus={() => this.showUserWallet(true)}
-            onBlur={() => this.showUserWallet(false)}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
           />
           <UncontrolledButtonDropdown>
             <DropdownToggle className={scopedCss('wallet-selector')} color="light" block disabled={this.shouldLockCurrencySelector()}>
@@ -262,12 +275,16 @@ class WalletSelector extends Component {
 
 WalletSelector.defaultProps = {
   onChange: () => null,
+  markRequired: false,
 };
 
 WalletSelector.propTypes = {
   intl: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   showScanQRCode: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  markRequired: PropTypes.bool,
 };
 
 

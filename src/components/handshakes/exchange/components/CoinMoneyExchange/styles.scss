@@ -13,6 +13,10 @@
     text-align: left;
     letter-spacing: 0;
   }
+  &.error {
+    border-color: #F75454;
+  }
+  
   .coin-money-exchange-amount-input {
     width: 100px;
     height: 100%;

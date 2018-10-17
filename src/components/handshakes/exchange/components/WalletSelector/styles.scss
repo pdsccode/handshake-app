@@ -18,15 +18,15 @@ $blur_color: #868DAD;
     background: #FFFFFF;
     border: 1.5px solid #E1E9F0;
     border-radius: 4px 4px 4px 4px;
+    &.error {
+      border-color: #F75454;
+    }
     .wallet-selector-wallet-input {
       border: none;
       border-radius: 5px 0px 0px 5px;
       font-size: 16px;
       line-height: 22px;
       height: 100%;
-      &.error {
-        border: 1.5px solid red;
-      }
     }
     .btn-group > .wallet-selector-wallet-selector {
       border-top-right-radius: unset;
