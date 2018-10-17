@@ -299,7 +299,7 @@ class Wallet extends React.Component {
 
   async getListBalace(listWallet) {
     const pros = [];
-    console.log('WALLET ABC', listWallet);
+
     listWallet.forEach((wallet) => {
       pros.push(new Promise((resolve, reject) => {
         wallet.getBalance().then((balance) => {
