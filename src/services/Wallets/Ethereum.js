@@ -110,6 +110,37 @@ export class Ethereum extends Wallet {
     })
   }
 
+  getFeeLevel = async () => {
+    return new Promise((resolve, reject) => {
+    let result = [];
+    axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+      .then(({ data }) => {// 10 gwei units - so divide by 10 to get in gwei
+
+        if(data.safeLow){
+          result.push({title: 'Low', description: '' , value: (data.safeLow / 10).toString()});
+        }
+
+        if(data.average){
+          result.push({title: 'Normal', description: '' , value: (data.average / 10).toString()});
+        }
+
+        if(data.fast){
+          result.push({title: 'Fast', description: '' , value: (data.fast / 10).toString()});
+        }
+
+        if(data.fastest){
+          result.push({title: 'Fastest', description: '' , value: (data.fastest / 10).toString()});
+        }
+
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log('getFeeLevel:', error);
+        resolve(result);
+      });
+    })
+  }
+
 
   async getFee() {
     await getGasPrice();
@@ -138,7 +169,7 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-  async transfer(toAddress, amountToSend, data="", gasLimit=210000, gasPrice) {
+  async transfer(toAddress, amountToSend, data="", gasLimit=21000, gasPrice) {
     const web3 = this.getWeb3();
     if (!web3.utils.isAddress(toAddress)) {
       return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
@@ -167,11 +198,12 @@ export class Ethereum extends Wallet {
       console.log('transfer estimatedGas->', String(estimatedGas));
       console.log('transfer limitedGas->', String(limitedGas));
       console.log('transfer chainid->', chainId);
-      //console.log('transfer payloadData', payloadData);
 
-      const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(limitedGas * gasPrice)));
-      if(totalAmountFee > balance) {
-        console.log(totalAmountFee, balance, Number(web3.utils.fromWei(String(limitedGas * gasPrice))));
+      const totalEstimatedGas = limitedGas * gasPrice;
+      const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(totalEstimatedGas)));
+
+      console.log(totalAmountFee, balance, totalEstimatedGas, amountToSend);
+      if(totalAmountFee > Number(balance)) {
         return { status: 0, message: 'messages.ethereum.error.insufficient_gas' };
       }
 
@@ -217,7 +249,6 @@ export class Ethereum extends Wallet {
         console.log("error", error);
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       });
-
     } catch (error) {
       console.log("error", error);
       return { status: 0, message: 'messages.ethereum.error.insufficient' };
