@@ -83,6 +83,8 @@ const FormBuyCrypto = createForm({
 });
 const selectorFormSpecificAmount = formValueSelector(nameBuyCryptoForm);
 
+const scopedCss = (className) => `buy-crypto-coin-${className}`;
+
 class BuyCryptoCoin extends React.Component {
   constructor(props) {
     super(props);
@@ -492,7 +494,7 @@ class BuyCryptoCoin extends React.Component {
           className="form-control input-field cod-field"
           placeholder={messages.create.cod_form.time}
           name="noteAndTime"
-          component={fieldTextArea}
+          component={fieldInput}
           validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
         />
       </div>
@@ -578,11 +580,11 @@ class BuyCryptoCoin extends React.Component {
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
-        <div className="choose-coin">
+        <div className={scopedCss('container')}>
           {
             showState.indexOf(idVerified) > 0 && <IdVerifyBtn dispatch={this.props.dispatch} idVerified={idVerified} />
           }
-          <div className="specific-amount">
+          <div className={scopedCss('specific-amount')}>
             <FormBuyCrypto onSubmit={this.onSubmit} validate={this.validateForm}>
               <div className="label-1">
                 <span>{messages.buy_coin.label.header.buy_crypto}</span>
@@ -622,6 +624,8 @@ class BuyCryptoCoin extends React.Component {
                 <ConfirmButton
                   disabled={!isValidToSubmit}
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
+                  confirmText={<FormattedMessage id="buy_coin_confirm_popup.confirm_text" />}
+                  cancelText={<FormattedMessage id="buy_coin_confirm_popup.cancel_text" />}
                   buttonClassName="buy-btn"
                   containerClassName="buy-btn-container"
                   message={

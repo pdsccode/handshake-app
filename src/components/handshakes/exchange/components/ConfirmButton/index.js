@@ -47,8 +47,8 @@ class ConfirmButton extends PureComponent {
           <div className="confirm-btn-content">
             <span className="confirm-btn-desc">{message || messages.create.atm.confirm_button.desc}</span>
             <div className="confirm-btn-container">
-              <button onClick={this.onCancel} className="confirm-btn-cancel">{cancelText || messages.create.atm.confirm_button.cancel}</button>
               <button onClick={this.onConfirm} className="confirm-btn-ok">{confirmText || messages.create.atm.confirm_button.confirm}</button>
+              <button onClick={this.onCancel} className="confirm-btn-cancel">{cancelText || messages.create.atm.confirm_button.cancel}</button>
             </div>
           </div>
         </ModalDialog>

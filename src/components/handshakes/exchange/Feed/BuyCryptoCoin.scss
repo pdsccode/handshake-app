@@ -1,4 +1,4 @@
-.choose-coin {
+.buy-crypto-coin-container {
   padding-bottom: 60px;
   background-color: #F2F2F2;
   min-height: 100vh;
@@ -97,7 +97,7 @@
     text-align: center;
     width: 100%;
   }
-  .specific-amount {
+  .buy-crypto-coin-specific-amount {
     padding: 50px 10px;
     background: white;
   }
@@ -196,24 +196,19 @@
   }
 
   .choose-coin-payment-method-container {
-    transition: max-height 300ms, opacity 200ms, height 300ms;
-    transition-timing-function: ease-in-out;
+    transition: opacity 300ms;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    max-height: 0px;
-    height: 0px;
+    height: 230px;
     margin: 20px 0px;
     background: #F5F8FC;
     border-radius: 4px 4px 4px 4px;
+    opacity: 0;
     &.cod {
-      max-height: 270px;
       opacity: 1;
-      height: 270px;
     }
     &.bank {
-      height: 190px;
-      max-height: 300px;
       opacity: 1;
     }
   }
@@ -229,9 +224,6 @@
       background: #FFFFFF;
       border: 1.5px solid #E1E9F0;
       border-radius: 4px 4px 4px 4px;
-      &[name=noteAndTime] {
-        height: 100px;
-      }
     }
   }
 
