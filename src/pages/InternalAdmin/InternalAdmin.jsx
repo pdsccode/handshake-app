@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import debounce from '@/utils/debounce';
 import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/action';
 import './InternalAdmin.scss';
@@ -57,11 +57,14 @@ const DEFAULT_TYPE = Object.values(STATUS)[0].id;
 class InternalAdmin extends Component {
   constructor() {
     super();
+
+    this.token = this.getAdminHash() || '';
     this.state = {
       type: DEFAULT_TYPE,
       isFinished: false,
       page: null,
       type_order: '',
+      login: this.token.length > 0,
     };
 
     this.send = :: this.send;
@@ -77,12 +80,22 @@ class InternalAdmin extends Component {
     //   window.location.pathname = '/';
     //   return null;
     // }
-    this.setState({ type_order: this.props?.match?.params?.type }, () => {
-      this.loadOrderList();
-    });
 
-    this.setupInitifyLoad();
+    if (this.state.login) {
+      this.setState({ type_order: this.props?.match?.params?.type }, () => {
+        this.loadOrderList();
+      });
+
+      this.setupInitifyLoad();
+    } else {
+      this.props.history.push(`${URL.ADMIN_ID_VERIFICATION}`);
+    }
+
     return null;
+  }
+
+  getAdminHash() {
+    return sessionStorage.getItem('admin_hash');
   }
 
   componentWillUnmount() {
