@@ -39,10 +39,10 @@ class ConfirmButton extends PureComponent {
   }
 
   render() {
-    const { message, confirmText, cancelText, containerClassName, buttonClassName, label, intl: { messages } } = this.props;
+    const { disabled, message, confirmText, cancelText, containerClassName, buttonClassName, label, intl: { messages } } = this.props;
     return (
       <div className={`confirm-btn-container ${containerClassName}`}>
-        <button className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
+        <button disabled={disabled} className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
         <ModalDialog onRef={modal => { this.modal = modal; }}>
           <div className="confirm-btn-content">
             <span className="confirm-btn-desc">{message || messages.create.atm.confirm_button.desc}</span>
@@ -65,6 +65,7 @@ ConfirmButton.defaultProps = {
   message: null,
   confirmText: null,
   cancelText: null,
+  disabled: false,
 };
 
 ConfirmButton.propTypes = {
@@ -86,6 +87,7 @@ ConfirmButton.propTypes = {
     PropTypes.string,
     PropTypes.node,
   ]),
+  disabled: PropTypes.bool,
 };
 
 export default injectIntl(ConfirmButton);

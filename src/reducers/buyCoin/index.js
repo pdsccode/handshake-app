@@ -3,35 +3,52 @@
 import BuyCryptoCoinModel from '@/models/BuyCryptoCoin';
 import { BUY_COIN_ACTIONS } from './action';
 
+export const isOverLimit = (data = {}) => {
+  const amountInUsd = Number.parseFloat(data.amount);
+  const limit = Number.parseFloat(data.limit);
+  if (Number.isNaN(amountInUsd + limit)) {
+    throw new TypeError('Amount & limit must be a number');
+  }
+  return amountInUsd > limit;
+};
+
 const initialState = {
   coinInfo: {},
   basePrice: {},
   bankInfo: {},
   quoteReverse: {},
+  fiatAmountOverLimit: false,
 };
 
 const buyCoinReducter = (state = initialState, action) => {
   switch (action.type) {
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_COIN_INFO}_SUCCESS`:
-      if (action.isGetBasePrice) {
+      if (action?.payload?.data) {
+        const coinInfo = BuyCryptoCoinModel.parseCoinInfo(action?.payload?.data);
+        const fiatAmountOverLimit = isOverLimit({ amount: coinInfo.fiatAmount, limit: coinInfo.limit });
+        if (action.isGetBasePrice) {
+          return {
+            ...state,
+            basePrice: {
+              ...state.basePrice,
+              [action.currencyId]: {
+                amount: action.amount,
+                currencyId: action.currencyId,
+                fiatCurrencyId: action.fiatCurrencyId,
+                fiatLocalAmount: coinInfo.fiatLocalAmount,
+                fiatAmountInUsd: coinInfo.fiatAmount,
+              },
+            },
+          };
+        }
+
         return {
           ...state,
-          basePrice: {
-            ...state.basePrice,
-            [action.currencyId]: {
-              amount: action.amount,
-              currencyId: action.currencyId,
-              fiatCurrencyId: action.fiatCurrencyId,
-              fiatLocalAmount: action.payload?.data?.fiat_local_amount,
-              fiatAmountInUsd: action.payload?.data?.fiat_amount,
-            },
-          },
+          coinInfo,
+          fiatAmountOverLimit,
         };
       }
-      return {
-        ...state,
-        coinInfo: { ...BuyCryptoCoinModel.parseCoinInfo(action?.payload?.data) },
-      };
+      break;
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_BANK_INFO}_SUCCESS`:
       return {
         ...state,
@@ -46,13 +63,20 @@ const buyCoinReducter = (state = initialState, action) => {
         order: { ...BuyCryptoCoinModel.parseOrder(action?.payload?.data) },
       };
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_QUOTE_REVERSE}_SUCCESS`:
-      return {
-        ...state,
-        quoteReverse: { ...BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data) },
-      };
+      if (action?.payload?.data) {
+        const quoteReverse = BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data);
+        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatAmount, limit: quoteReverse.limit });
+        return {
+          ...state,
+          quoteReverse,
+          fiatAmountOverLimit,
+        };
+      }
+      break;
     default:
       return state;
   }
+  return null;
 };
 export default buyCoinReducter;
 

@@ -2,14 +2,15 @@
 
 import React from 'react';
 import WalletSelector from '../../../components/WalletSelector';
+import './styles.scss';
 
 const walletSelectorField = ({ input, meta }) => {
   const { onChange } = input;
   const error = meta?.error;
   return (
-    <div style={{ width: '100%' }}>
+    <div className="wallet-selector-field">
       <WalletSelector onChange={wallet => { onChange(wallet); }} />
-      { error && <span className="text-danger">{error}</span>}
+      { error && <span className="err-msg">{error}</span>}
     </div>
   );
 };

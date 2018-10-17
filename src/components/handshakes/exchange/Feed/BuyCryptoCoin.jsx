@@ -32,15 +32,17 @@ import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmBu
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
+import { Link } from 'react-router-dom';
+import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
 import coinMoneyExchangeField from './reduxFormFields/coinMoneyExchangeField';
+import fieldCheckBoxList from './reduxFormFields/paymentMethodCheckbox';
 import coinMoneyExchangeValidator from './reduxFormFields/coinMoneyExchangeField/validator';
 import walletSelectorValidator from './reduxFormFields/walletSelector/validator';
+
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
-import { Link } from 'react-router-dom';
-import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -55,24 +57,9 @@ const listPackages = [
   { name: 'pro', fiatAmount: 2000, amount: 0, show: true },
 ];
 
-const defaultFiatCurrency = {
-  id: FIAT_CURRENCY.USD,
-  text: <span><img alt="" src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD]}</span>,
-};
-
 const defaultCurrency = {
   id: CRYPTO_CURRENCY.BTC,
   text: <span><img alt="" src={iconBitcoin} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span>,
-};
-
-const getFiatCurrency = (currency) => {
-  if (FIAT_CURRENCY[currency]) {
-    return {
-      id: FIAT_CURRENCY[currency],
-      text: <span><img alt="" src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY[currency]]}</span>,
-    };
-  }
-  return defaultFiatCurrency;
 };
 
 export const PAYMENT_METHODS = {
@@ -96,33 +83,6 @@ const FormBuyCrypto = createForm({
 });
 const selectorFormSpecificAmount = formValueSelector(nameBuyCryptoForm);
 
-export const fieldCheckBoxList = ({ input, name, titles, items, disabled = false }) => {
-  const { onChange, value } = input;
-  return (
-    <div className="rf-type-atm-container d-table w-100" onChange={({ target }) => onChange(target.value)}>
-      {Object.entries(items).map(([key, itemValue]) => {
-        console.log('key, item_value ', key, itemValue);
-        const label = titles[itemValue];
-        console.log('titels', titles, label);
-        return (
-          <label key={key} className="radio-inline rf-type-atm-radio-container d-table-cell w-50">
-            <input
-              value={itemValue}
-              type="radio"
-              name={name}
-              checked={value === itemValue}
-              onChange={() => null}
-              disabled={disabled}
-            />
-            <span className={`checkmark ${disabled && value !== itemValue && 'disabled'}`} />
-            <span className={`${disabled && value !== itemValue && 'disabled'}`}>{label}</span>
-          </label>
-        );
-      })}
-    </div>
-  );
-};
-
 class BuyCryptoCoin extends React.Component {
   constructor(props) {
     super(props);
@@ -133,6 +93,7 @@ class BuyCryptoCoin extends React.Component {
       forcePaymentMethod: null,
       modalContent: null,
       modalTitle: null,
+      isValidToSubmit: false,
       walletAddress: null,
     };
 
@@ -143,6 +104,10 @@ class BuyCryptoCoin extends React.Component {
     this.getBasePrice = :: this.getBasePrice;
     this.getBankDataByCountry = :: this.getBankDataByCountry;
     this.renderBankInfo = :: this.renderBankInfo;
+  }
+
+  componentDidCatch(e) {
+    console.warn(e);
   }
 
   componentDidMount() {
@@ -191,9 +156,10 @@ class BuyCryptoCoin extends React.Component {
 
     if (timeShow > 0) {
       this.props.showAlert({
-        message: <div className="text-center">
-          {idVerificationStatusText}
-        </div>,
+        message: (
+          <div className="text-center">
+            {idVerificationStatusText}
+          </div>),
         timeOut: timeShow,
         type: 'danger',
         callBack: () => {
@@ -203,7 +169,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { coinInfo, paymentMethod, country, authProfile, wallet } = nextProps;
+    const { country, authProfile, wallet, fiatAmountOverLimit } = nextProps;
 
     // update phone number from props
     if (authProfile?.phone !== this.props.authProfile?.phone) {
@@ -215,9 +181,8 @@ class BuyCryptoCoin extends React.Component {
       this.setState({ currency: wallet?.currency });
     }
 
-    if (coinInfo.fiatLocalAmount !== this.props.coinInfo.fiatLocalAmount || paymentMethod !== this.props.paymentMethod) {
-      // if fiatAmount over limit => force use USD and bank transfer
-      if (this.isOverLimit(coinInfo.fiatAmount, coinInfo.limit)) {
+    if (fiatAmountOverLimit !== this.props.fiatAmountOverLimit) {
+      if (fiatAmountOverLimit) {
         this.setState({ forcePaymentMethod: PAYMENT_METHODS.BANK_TRANSFER }, () => {
           this.updatePaymentMethod(this.state.forcePaymentMethod);
         });
@@ -486,41 +451,51 @@ class BuyCryptoCoin extends React.Component {
     this.makeOrder(data);
   }
 
+  validateForm = (values) => {
+    const { coinMoneyExchange, paymentMethod, wallet, address, noteAndTime, phone } = values;
+    const { amount, fiatAmount, fiatCurrency } = coinMoneyExchange || {};
+    const { currency, walletAddress, hasError } = wallet || {};
+
+    if (paymentMethod && amount && fiatAmount && fiatCurrency && currency && walletAddress && !hasError) {
+      if (paymentMethod === PAYMENT_METHODS.COD && (!address || !noteAndTime || !phone)) {
+        this.setState({ isValidToSubmit: false });
+        return;
+      }
+      this.setState({ isValidToSubmit: true });
+    } else {
+      this.setState({ isValidToSubmit: false });
+    }
+  }
+
   renderCoD = () => {
     const { intl: { messages }, paymentMethod } = this.props;
     return (
-      <React.Fragment>
-        <div className="input-group mt-4">
-          <Field
-            type="text"
-            className="form-control input-field"
-            name="address"
-            placeholder={messages.create.cod_form.your_address}
-            component={fieldInput}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-        <div className="input-group mt-2">
-          <Field
-            type="text"
-            className="form-control input-field"
-            name="phone"
-            placeholder={messages.create.cod_form.your_phone}
-            component={fieldInput}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-        <div className="input-group mt-2">
-          <Field
-            type="text"
-            className="form-control input-field"
-            placeholder={messages.create.cod_form.time}
-            name="noteAndTime"
-            component={fieldTextArea}
-            validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
-          />
-        </div>
-      </React.Fragment>
+      <div className="cod-form-container">
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          name="address"
+          placeholder={messages.create.cod_form.your_address}
+          component={fieldInput}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          name="phone"
+          placeholder={messages.create.cod_form.your_phone}
+          component={fieldInput}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+        <Field
+          type="text"
+          className="form-control input-field cod-field"
+          placeholder={messages.create.cod_form.time}
+          name="noteAndTime"
+          component={fieldTextArea}
+          validate={paymentMethod === PAYMENT_METHODS.COD ? [required] : null}
+        />
+      </div>
     );
   }
 
@@ -533,6 +508,9 @@ class BuyCryptoCoin extends React.Component {
     return (
       <React.Fragment>
         <ul className="bank-info-container">
+          <li>
+            <div><span>TRANSFER DETAIL</span></div>
+          </li>
           {bankData && Object.entries(bankData).map(([key, value]) => {
             return (
               <li key={key}>
@@ -557,40 +535,27 @@ class BuyCryptoCoin extends React.Component {
   }
 
   renderPackages = () => {
-    const { messages } = this.props.intl;
     const { currency } = this.state;
     return (
-      <div className="by-package">
-        <div className="my-3 p-label-choose">{messages.buy_coin.label.common_packages}</div>
-        <div className="mb-5">
-          {
-            listPackages && listPackages.map((item, index) => {
-              const {
-                name, fiatAmount, show,
-              } = item;
+      <div className="package-container">
+        {
+          listPackages && listPackages.map((item) => {
+            const {
+              name, fiatAmount, show,
+            } = item;
 
-              return show && (
-                <div key={name}>
-                  <div className="d-table w-100">
-                    <div className="d-table-cell align-middle" style={{ width: '80px' }}>
-                      <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
-                    </div>
-                    <div className="d-table-cell align-middle pl-3">
-                      <div className="p-price">
-                        {fiatAmount} {FIAT_CURRENCY.USD}
-                      </div>
-                      <div className="p-amount">{this.getAmountFromFiatAmount(fiatAmount, currency) || '---'} {currency}</div>
-                    </div>
-                    <div className="d-table-cell align-middle text-right">
-                      <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
-                    </div>
-                  </div>
-                  { index < listPackages.length - 1 && <hr /> }
+            return show && (
+              <div key={name} className={`package-item ${name}`}>
+                <span className="name"><FormattedMessage id={`cc.label.${name}`} /></span>
+                <div className="price-amount-group">
+                  <span className="fiat-amount">{formatMoney(fiatAmount)}</span>
+                  <span className="amount">{this.getAmountFromFiatAmount(fiatAmount, currency) || '---'} {currency}</span>
                 </div>
-              );
-            })
-          }
-        </div>
+                <button className="btn package-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
+              </div>
+            );
+          })
+        }
       </div>
     );
   }
@@ -604,7 +569,7 @@ class BuyCryptoCoin extends React.Component {
     const { authProfile: { idVerified } } = this.props;
     const { messages } = this.props.intl;
     const { coinMoneyExchange, paymentMethod } = this.props;
-    const { currency, forcePaymentMethod } = this.state;
+    const { currency, forcePaymentMethod, isValidToSubmit } = this.state;
 
     const showState = [-1, 0, 2];
 
@@ -618,9 +583,11 @@ class BuyCryptoCoin extends React.Component {
             showState.indexOf(idVerified) > 0 && <IdVerifyBtn dispatch={this.props.dispatch} idVerified={idVerified} />
           }
           <div className="specific-amount">
-            <FormBuyCrypto onSubmit={this.onSubmit} validate={this.handleValidateSpecificAmount}>
-              <div className="label-1">{messages.buy_coin.label.header}</div>
-              <div className="label-2">{messages.buy_coin.label.description}</div>
+            <FormBuyCrypto onSubmit={this.onSubmit} validate={this.validateForm}>
+              <div className="label-1">
+                <span>{messages.buy_coin.label.header.buy_crypto}</span>
+                <span>{messages.buy_coin.label.header.with_ninja_coin}</span>
+              </div>
               <div className="input-group mt-4">
                 <Field
                   name="wallet"
@@ -653,6 +620,7 @@ class BuyCryptoCoin extends React.Component {
               {this.renderPaymentMethodInfo()}
               <div className="input-group mt-2">
                 <ConfirmButton
+                  disabled={!isValidToSubmit}
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
                   buttonClassName="buy-btn"
                   containerClassName="buy-btn-container"
@@ -684,15 +652,13 @@ const mapStateToProps = (state) => ({
   currencyByLocal: state.app.ipInfo.currency || 'VND',
   country: state.app.ipInfo.country || 'VN',
   authProfile: state.auth.profile,
-  amount: selectorFormSpecificAmount(state, 'amount'),
   phone: selectorFormSpecificAmount(state, 'phone'),
-  currency: selectorFormSpecificAmount(state, 'currency'),
-  fiatCurrency: selectorFormSpecificAmount(state, 'fiatCurrency'),
   paymentMethod: selectorFormSpecificAmount(state, 'paymentMethod'),
   address: selectorFormSpecificAmount(state, 'address'),
   noteAndTime: selectorFormSpecificAmount(state, 'noteAndTime'),
   wallet: selectorFormSpecificAmount(state, 'wallet'),
   coinMoneyExchange: selectorFormSpecificAmount(state, 'coinMoneyExchange'),
+  fiatAmountOverLimit: state.buyCoin?.fiatAmountOverLimit,
   coinInfo: state.buyCoin?.coinInfo || {},
   basePrice: state.buyCoin?.basePrice || {},
   bankInfo: state.buyCoin?.bankInfo,
@@ -712,7 +678,6 @@ const mapDispatchToProps = (dispatch) => ({
 BuyCryptoCoin.defaultProps = {
   amount: 0,
   paymentMethod: PAYMENT_METHODS.BANK_TRANSFER,
-  fiatCurrency: defaultFiatCurrency,
   bankInfo: {},
   address: '',
   noteAndTime: '',
@@ -720,6 +685,8 @@ BuyCryptoCoin.defaultProps = {
   phone: '',
   wallet: {},
   coinMoneyExchange: {},
+  coinInfo: {},
+  basePrice: {},
 };
 
 BuyCryptoCoin.propTypes = {
@@ -727,15 +694,15 @@ BuyCryptoCoin.propTypes = {
   history: PropTypes.object.isRequired,
   country: PropTypes.string.isRequired,
   authProfile: PropTypes.object.isRequired,
-  coinMoneyExchange: PropTypes.object.isRequired,
+  coinMoneyExchange: PropTypes.object,
   paymentMethod: PropTypes.string,
   amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
   currencyByLocal: PropTypes.string.isRequired,
   rfChange: PropTypes.func.isRequired,
   order: PropTypes.object,
-  coinInfo: PropTypes.object.isRequired,
-  basePrice: PropTypes.object.isRequired,
+  coinInfo: PropTypes.object,
+  basePrice: PropTypes.object,
   bankInfo: PropTypes.object,
   buyCryptoGetBankInfo: PropTypes.func.isRequired,
   address: PropTypes.string,
@@ -743,9 +710,11 @@ BuyCryptoCoin.propTypes = {
   buyCryptoOrder: PropTypes.func.isRequired,
   buyCryptoSaveRecipt: PropTypes.func.isRequired,
   showAlert: PropTypes.func.isRequired,
-  hideAlert: PropTypes.func,
+  hideAlert: PropTypes.func.isRequired,
   phone: PropTypes.string,
   wallet: PropTypes.object,
+  fiatAmountOverLimit: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));

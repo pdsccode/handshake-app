@@ -7,7 +7,7 @@ $blur_color: #868DAD;
     position: absolute;
     z-index: 10;
     top: 15px;
-    right: 90px;
+    right: 100px;
     color: $blur_color;
   }
   input {
@@ -15,15 +15,17 @@ $blur_color: #868DAD;
   }
   .wallet-selector-wallet-input-group {
     height: 54px;
+    background: #FFFFFF;
+    border: 1.5px solid #E1E9F0;
+    border-radius: 4px 4px 4px 4px;
     .wallet-selector-wallet-input {
       border: none;
       border-radius: 5px 0px 0px 5px;
       font-size: 16px;
       line-height: 22px;
-      height: 54px;
+      height: 100%;
       &.error {
-        border: solid 1.3px red;
-        box-shadow: 0px 0px 15px red;
+        border: 1.5px solid red;
       }
     }
     .btn-group > .wallet-selector-wallet-selector {
@@ -31,6 +33,13 @@ $blur_color: #868DAD;
       border-bottom-right-radius: unset;
       border-radius: 0px 5px 5px 0px;
       border: none;
+      border-left: 1px solid #E1E9F0;
+      color: #748599;
+      font-size: 18px;
+      font-weight: normal;
+      text-align: left;
+      letter-spacing: 0;
+      background: none;
     }
   }
   .wallet-selector-list-user-wallet {
@@ -61,6 +70,10 @@ $blur_color: #868DAD;
     }
   }
   .error-msg {
-    color: #dc3545 !important;
+    color: #F75454;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
   }
 }

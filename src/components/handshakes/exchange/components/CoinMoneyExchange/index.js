@@ -10,15 +10,14 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import Cleave from 'cleave.js/react';
 import { showAlert } from '@/reducers/app/action';
 import { PAYMENT_METHODS } from '@/components/handshakes/exchange/Feed/BuyCryptoCoin';
+import { isOverLimit } from '@/reducers/buyCoin/index';
 import './styles.scss';
 
-const isOverLimit = (data = {}) => {
-  const amountInUsd = Number.parseFloat(data.amount);
-  const limit = Number.parseFloat(data.limit);
-  if (Number.isNaN(amountInUsd + limit)) {
-    throw new TypeError('Amount & limit must be a number');
+const formatMoney = (money = 0, currency = FIAT_CURRENCY.USD) => {
+  if (currency === FIAT_CURRENCY.VND) {
+    return Math.round(money);
   }
-  return amountInUsd > limit;
+  return Number.parseFloat(money).toFixed(2);
 };
 
 const EXCHANGE_TYPE = {
@@ -74,30 +73,34 @@ class CoinMoneyExchange extends Component {
       } else if (!isCurrencyChanged) {
         // apply new exchange data to state
         if (coinInfo.fiatAmount && coinInfo.limit && isOverLimit({ amount: coinInfo.fiatAmount, limit: coinInfo.limit })) {
-          newState.fiatAmount = Math.round(coinInfo.fiatAmount);
+          newState.fiatAmount = formatMoney(coinInfo.fiatAmount, coinInfo.fiatCurrency);
           newState.fiatCurrency = coinInfo.fiatCurrency;
           if (paymentMethod === PAYMENT_METHODS.COD) {
-            coinInfo.fiatAmountCod && (newState.fiatAmount = Math.round(coinInfo.fiatAmountCod));
+            coinInfo.fiatAmountCod && (newState.fiatAmount = formatMoney(coinInfo.fiatAmountCod, coinInfo.fiatCurrency));
           }
         } else {
-          newState.fiatAmount = Math.round(coinInfo.fiatLocalAmount);
+          newState.fiatAmount = formatMoney(coinInfo.fiatLocalAmount, coinInfo.fiatLocalCurrency);
           newState.fiatCurrency = coinInfo.fiatLocalCurrency;
           if (paymentMethod === PAYMENT_METHODS.COD) {
-            coinInfo.fiatLocalAmountCod && (newState.fiatAmount = Math.round(coinInfo.fiatLocalAmountCod));
+            coinInfo.fiatLocalAmountCod && (newState.fiatAmount = formatMoney(coinInfo.fiatLocalAmountCod, coinInfo.fiatLocalCurrency));
           }
         }
-        newState.fiatAmountInUsd = Math.round(coinInfo.fiatAmount);
+        newState.fiatAmountInUsd = formatMoney(coinInfo.fiatAmount, FIAT_CURRENCY.USD);
       }
     } else if (exchangeType === EXCHANGE_TYPE.MONEY_TO_AMOUNT) {
-      newState.fiatAmount = Math.round(fiatAmount);
+      newState.fiatAmount = fiatAmount;
       newState.amount = quoteReverse.amount;
-      newState.fiatAmountInUsd = Math.round(quoteReverse.fiatAmount);
+      newState.fiatAmountInUsd = formatMoney(quoteReverse.fiatAmount, FIAT_CURRENCY.USD);
 
       if (isPaymentMethodChanged) {
         newState.amount = null;
       }
     }
     return newState;
+  }
+
+  componentDidCatch(e) {
+    console.warn(e);
   }
 
   shouldComponentUpdate() {
@@ -133,7 +136,7 @@ class CoinMoneyExchange extends Component {
 
   exchangeAmount({ amount, fiatCurrency }) {
     this.setState({
-      amount: amount || this.state.amount,
+      amount,
       exchangeType: EXCHANGE_TYPE.AMOUNT_TO_MONEY,
     }, this.getCoinInfo.call(this, { fiatCurrency }));
   }
@@ -161,7 +164,7 @@ class CoinMoneyExchange extends Component {
   }
 
   onGetCoinInfoError(e) {
-    this.setState({ amount: 0 }, this.exchangeAmount.call(this, this.state.amount));
+    this.setState({ amount: 0 }, this.exchangeAmount.call(this, { amount: this.state.amount }));
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
@@ -182,16 +185,19 @@ class CoinMoneyExchange extends Component {
     const { fiatAmount, fiatCurrency, currency } = this.state;
     const { paymentMethod } = this.props;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency;
-    this.props.buyCryptoQuoteReverse({
-      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
-      errorFn: this.ongetQuoteReverseError,
-    });
+    const _fiatAmount = Number.parseFloat(data.fiatAmount ? data.fiatAmount : fiatAmount) || 0;
+    if (_fiatAmount >= 0 && _fiatCurrency && currency && paymentMethod) {
+      this.props.buyCryptoQuoteReverse({
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
+        errorFn: this.ongetQuoteReverseError,
+      });
+    }
   }
 
   getCoinInfo(data = {}) {
     const { amount, currency, fiatCurrency } = this.state;
     const { currencyByLocal } = this.props;
-    const parsedAmount = Number.parseFloat(amount);
+    const parsedAmount = Number.parseFloat(amount) || 0;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency || currencyByLocal;
     if (parsedAmount >= 0 && currency && currencyByLocal) {
       this.props.buyCryptoGetCoinInfo({
@@ -202,7 +208,7 @@ class CoinMoneyExchange extends Component {
   }
 
   onFiatCurrencyChange(fiatCurrency) {
-    this.setState({ fiatCurrency }, () => this.exchangeAmount({ fiatCurrency }));
+    this.setState({ fiatCurrency }, () => this.exchangeAmount({ amount: this.state.amount, fiatCurrency }));
   }
 
   renderFiatCurrencyList() {
@@ -216,26 +222,27 @@ class CoinMoneyExchange extends Component {
   render() {
     console.log('=== STATE', this.state);
     const { amount, fiatAmount, fiatCurrency } = this.state;
-    const { coinInfo } = this.props;
-    const overLimit = coinInfo.fiatAmount && coinInfo.limit && isOverLimit({ amount: coinInfo.fiatAmount || 0, limit: coinInfo.limit || 0 });
+    const { fiatAmountOverLimit } = this.props;
     return (
       <div className={scopedCss('container')}>
         <input
-          value={amount}
+          value={amount || ''}
           onChange={this.onAmountChange}
           className={`form-control ${scopedCss('amount-input')}`}
+          placeholder="0.0"
         />
         <Cleave
           className={`form-control ${scopedCss('fiat-amount-input')}`}
-          value={fiatAmount}
+          value={fiatAmount || ''}
           options={{
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
           }}
+          placeholder="0.0"
           onChange={this.onFiatAmountChange}
         />
         <UncontrolledButtonDropdown className={scopedCss('fiat-amount-selector-container')}>
-          <DropdownToggle className={scopedCss('fiat-amount-selector-btn')} color="light" block disabled={overLimit}>
+          <DropdownToggle className={scopedCss('fiat-amount-selector-btn')} color="light" block disabled={fiatAmountOverLimit}>
             {fiatCurrency}
           </DropdownToggle>
           <DropdownMenu>
@@ -257,12 +264,13 @@ CoinMoneyExchange.propTypes = {
   buyCryptoGetCoinInfo: PropTypes.func.isRequired,
   buyCryptoQuoteReverse: PropTypes.func.isRequired,
   currencyByLocal: PropTypes.string,
-  currency: PropTypes.string.isRequired, // required later
+  currency: PropTypes.string.isRequired,
   coinInfo: PropTypes.object.isRequired,
   quoteReverse: PropTypes.object.isRequired,
-  paymentMethod: PropTypes.string, // required later
+  paymentMethod: PropTypes.string,
   onChange: PropTypes.func,
   showAlert: PropTypes.func.isRequired,
+  fiatAmountOverLimit: PropTypes.bool.isRequired,
 };
 
 const mapState = (state) => {
@@ -270,6 +278,7 @@ const mapState = (state) => {
     currencyByLocal: state.app.ipInfo.currency,
     coinInfo: state.buyCoin?.coinInfo || {},
     quoteReverse: state.buyCoin?.quoteReverse || {},
+    fiatAmountOverLimit: state.buyCoin?.fiatAmountOverLimit,
   };
 };
 
