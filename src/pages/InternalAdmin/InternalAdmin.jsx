@@ -8,6 +8,9 @@ import { API_URL } from '@/constants';
 import debounce from '@/utils/debounce';
 import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/action';
 import './InternalAdmin.scss';
+import { FormattedDate } from 'react-intl';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 
 const STATUS = {
   pending: {
@@ -84,6 +87,19 @@ class InternalAdmin extends Component {
 
   componentWillUnmount() {
     window.onscroll = backupScroll;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.orderList && JSON.stringify(nextProps.orderList) !== JSON.stringify(this.props.orderList)) {
+      // this.resetTable();
+    }
+  }
+
+  resetTable = () => {
+    console.log('this.refs.table',this.refs.table);
+    if (this.refs.table) {
+      this.refs.table?.refresh();
+    }
   }
 
   autoLoadMore() {
@@ -171,6 +187,8 @@ class InternalAdmin extends Component {
     this.props.sendCashOrder({
       PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}`,
       METHOD: 'POST',
+      successFn: (res) => {
+      },
     });
   }
 
@@ -243,14 +261,103 @@ class InternalAdmin extends Component {
 
   render() {
     const { orderList } = this.props;
-    const { isFinished } = this.state;
+    const { isFinished, type_order } = this.state;
+    const typeShowInfo = 'cod';
+
+    console.log('render', orderList);
+
+    const columns = [{
+      dataField: 'id',
+      text: 'ID',
+      hidden: true,
+    }, {
+      dataField: 'created_at',
+      text: 'Created Date',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return (<FormattedDate
+          value={new Date(cell)}
+          year="numeric"
+          month="long"
+          day="2-digit"
+          hour="2-digit"
+          minute="2-digit"
+        />);
+      },
+    }, {
+      dataField: 'address',
+      text: 'Wallet Address',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.ellipsisText(cell);
+      },
+    }, {
+      dataField: 'user_info.address',
+      text: 'Address',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'user_info.phone',
+      text: 'Phone',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'user_info.noteAndTime',
+      text: 'Note',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'amount',
+      text: 'Amount',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getAmount(row)?.full;
+      },
+    }, {
+      dataField: 'coin',
+      text: 'Coin',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getCoin(row);
+      },
+    }, {
+      dataField: 'ref_code',
+      text: 'Code',
+      filter: textFilter(),
+    }, {
+      dataField: 'status',
+      text: 'Status',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getStatus(row);
+      },
+    }, {
+      dataField: 'action',
+      text: 'Action',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        const order = orderList[rowIndex];
+        console.log('action order', row, order);
+        return this.renderActionBtn(row);
+      },
+    },
+    ];
+
     return (
-      <div>
+      <BootstrapTable
+        ref="table"
+        keyField="id"
+        data={orderList}
+        columns={columns}
+        filter={filterFactory()}
+        bordered={false}
+        noDataIndication="No record"
+        striped
+        hover
+        condensed
+      />
+
+      /* <div>
         <table>
           <thead>
             <tr>
+              <th>Created Date</th>
               <th>Wallet Address</th>
-              <th>Phone</th>
+              <th>Name</th>
+              {type_order === typeShowInfo && <th>Address</th>}
+              {type_order === typeShowInfo && <th>Phone</th>}
+              {type_order === typeShowInfo && <th>Note</th>}
               <th>Amount</th>
               <th>Coin</th>
               <th>Code</th>
@@ -267,8 +374,19 @@ class InternalAdmin extends Component {
             {
               orderList.map(order => (
                 <tr key={order.id}>
+                  <td><FormattedDate
+                    value={new Date(order.created_at)}
+                    year="numeric"
+                    month="long"
+                    day="2-digit"
+                    hour="2-digit"
+                    minute="2-digit"
+                  /></td>
                   <td>{this.ellipsisText(order.address)}</td>
-                  <td>{order?.user_info?.phone || '---'}</td>
+                  <td>{order?.user_info?.name || '---'}</td>
+                  {type_order === typeShowInfo && <td>{order?.user_info?.address || '---'}</td>}
+                  {type_order === typeShowInfo && <td>{order?.user_info?.phone || '---'}</td>}
+                  {type_order === typeShowInfo && <td>{order?.user_info?.noteAndTime || '---'}</td>}
                   <td>{this.getAmount(order)?.full}</td>
                   <td>{this.getCoin(order)}</td>
                   <td>{order.ref_code}</td>
@@ -283,7 +401,7 @@ class InternalAdmin extends Component {
               </tr>}
           </tbody>
         </table>
-      </div>
+      </div> */
     );
   }
 }
