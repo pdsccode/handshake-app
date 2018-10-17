@@ -237,8 +237,8 @@ export default {
   'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
-  'ex.earlyBird.label.1': 'WELCOME TO OUR <br/> EARLY BIRD PROGRAM!',
-  'ex.earlyBird.label.2': 'Create your ATM with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
+  'ex.earlyBird.label.1': `WELCOME TO OUR <br/> EARLY BIRD PROGRAM!`,
+  'ex.earlyBird.label.2': `Create your ATM with <br /><span class="intro-amount">{freeETH} ETH</span> free now!`,
   'ex.earlyBird.btn': 'Open ATM',
 
   // 'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
@@ -272,7 +272,7 @@ export default {
   'ex.landing.intro.label.1': 'We are available on mobile only',
   'ex.landing.intro.label.2': 'Switch to your phone now to start making money with us!',
 
-  'ex.landing.description.label.1': 'Set up an ATM <br/>& make some money',
+  'ex.landing.description.label.1': `Set up an ATM <br/>& make some money`,
   'ex.landing.description.label.2': `Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="${URL.ABOUT_NINJA_CASH}" class="btn-read-more">Read more</a> about us here`,
 
   'ex.landing.features.label.1': 'Your market. Your rates',
@@ -284,7 +284,7 @@ export default {
   'ex.landing.tryTelegram.btn': 'Join Telegram',
 
   'ex.about.label.about': 'About',
-  'ex.about.description': 'Ninja Cash is a peer to peer decentralized cryptocurrency exchange - where you remain anonymous. We got rid of extensive KYC practices, and then we put it on the blockchain. We welcome into our dojo anyone interested in disruption, games of stealth, and decentralized tech.<br/><br/>Ninjas create blockchain powered solutions that are both practical and playful, and apply them to industries plagued by rampant fraud, greedy middlemen and pointless bureaucracy.<br/><br/>Our team of ninjas is based in California, United States.',
+  'ex.about.description': `Ninja Cash is a peer to peer decentralized cryptocurrency exchange - where you remain anonymous. We got rid of extensive KYC practices, and then we put it on the blockchain. We welcome into our dojo anyone interested in disruption, games of stealth, and decentralized tech.<br/><br/>Ninjas create blockchain powered solutions that are both practical and playful, and apply them to industries plagued by rampant fraud, greedy middlemen and pointless bureaucracy.<br/><br/>Our team of ninjas is based in California, United States.`,
   'ex.about.label.connectWith': 'Connect with the team',
   'ex.about.label.website': 'Website',
   'ex.about.label.telegram': 'Telegram',
@@ -698,7 +698,7 @@ export default {
     },
     {
       question: 'Who do I contact if I have a problem or a question?',
-      answer: <span>You can chat to us on Telegram <a href="https://t.me/ninja_org" className="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" className="landing-link" target="_top">support@ninja.org</a></span>,
+      answer: `<span>You can chat to us on Telegram <a href="https://t.me/ninja_org" className="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" className="landing-link" target="_top">support@ninja.org</a></span>`,
     },
   ],
   'landing_page.cash-for-business.faq': [
@@ -724,7 +724,7 @@ export default {
     },
     {
       question: 'Who can I contact if I need help?',
-      answer: <span>You can contact us on through Telegram <a href="https://t.me/ninja_org" className="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" className="landing-link" target="_top">support@ninja.org</a></span>,
+      answer: `<span>You can contact us on through Telegram <a href="https://t.me/ninja_org" className="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" className="landing-link" target="_top">support@ninja.org</a></span>`,
     },
   ],
 
@@ -1070,7 +1070,7 @@ export default {
         yourPapalName: 'Your Paypal email',
         amount: 'Amount (USD)',
         buttonTitle: 'Withdraw to your PayPal',
-        description: <span>It will take within a day for us <br /> to transfer money into your account.</span>,
+        description: `<span>It will take within a day for us <br /> to transfer money into your account.</span>`,
         askToWithdraw: 'Do you want to withdraw?',
         validate: {
           amountMustLargerThan0: 'Amount must larger than 0',
@@ -1272,7 +1272,7 @@ export default {
           confirm_url: 'Confirm URL',
           shop_name: 'Shop/App name',
           note: 'Note',
-          crypto_currency: 'Crypto Currencies'
+          crypto_currency: 'Crypto Currencies',
         },
         placeholder: {
           to_address: 'Wallet address...',
@@ -1375,8 +1375,8 @@ export default {
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
       export_private_key: {
-        title: "Export at your risk!",
-        desc: "Anyone with your Private Key will have FULL access to your wallet!!!"
+        title: 'Export at your risk!',
+        desc: 'Anyone with your Private Key will have FULL access to your wallet!!!',
       },
       setting: {
         title: 'Settings',
