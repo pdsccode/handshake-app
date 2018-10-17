@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 const coinMoneyExchange = (values = {}) => {
   const { amount, fiatAmount } = values;
-  if (amount && fiatAmount) {
+  if (amount || fiatAmount) {
     return null;
   }
   return <FormattedMessage id="error.required" />;

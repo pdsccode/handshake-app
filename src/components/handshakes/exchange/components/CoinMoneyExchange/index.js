@@ -40,6 +40,7 @@ class CoinMoneyExchange extends Component {
       amount: 0,
       fiatAmount: 0,
       fiatAmountInUsd: 0,
+      isExchanging: false,
     };
 
     this.onFiatAmountChange = ::this.onFiatAmountChange;
@@ -53,6 +54,7 @@ class CoinMoneyExchange extends Component {
     this.ongetQuoteReverseError = ::this.ongetQuoteReverseError;
     this.exchangeFiatAmount = ::this.exchangeFiatAmount;
     this.exchangeAmount = ::this.exchangeAmount;
+    this.showLoading = :: this.showLoading;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -125,11 +127,17 @@ class CoinMoneyExchange extends Component {
     this.onChangeCallbackHandler();
   }
 
+  showLoading(isShow = true) {
+    this.setState({ isExchanging: isShow });
+  }
+
   onAmountChange(e) {
+    this.showLoading();
     this.exchangeAmount({ amount: e?.target?.value?.replace(/,/g, '') || 0 });
   }
 
   onFiatAmountChange(e) {
+    this.showLoading();
     const formatNumber = e?.target?.value?.replace(/,/g, '') || 0;
     this.exchangeFiatAmount(Number.parseFloat(formatNumber));
   }
@@ -164,6 +172,7 @@ class CoinMoneyExchange extends Component {
   }
 
   onGetCoinInfoError(e) {
+    this.showLoading(false);
     this.setState({ amount: 0 }, this.exchangeAmount.call(this, { amount: this.state.amount }));
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
@@ -173,6 +182,7 @@ class CoinMoneyExchange extends Component {
   }
 
   ongetQuoteReverseError(e) {
+    this.showLoading(false);
     this.setState({ fiatAmount: 0 }, this.exchangeFiatAmount.call(this, this.state.fiatAmount));
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
@@ -187,9 +197,11 @@ class CoinMoneyExchange extends Component {
     const _fiatCurrency = data.fiatCurrency || fiatCurrency;
     const _fiatAmount = Number.parseFloat(data.fiatAmount ? data.fiatAmount : fiatAmount) || 0;
     if (_fiatAmount >= 0 && _fiatCurrency && currency && paymentMethod) {
+      this.showLoading();
       this.props.buyCryptoQuoteReverse({
         PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
         errorFn: this.ongetQuoteReverseError,
+        successFn: () => { this.showLoading(false); },
       });
     }
   }
@@ -200,9 +212,11 @@ class CoinMoneyExchange extends Component {
     const parsedAmount = Number.parseFloat(amount) || 0;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency || currencyByLocal;
     if (parsedAmount >= 0 && currency && currencyByLocal) {
+      this.showLoading();
       this.props.buyCryptoGetCoinInfo({
         PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}`,
         errorFn: this.onGetCoinInfoError,
+        successFn: () => { this.showLoading(false); },
       });
     }
   }
@@ -221,7 +235,7 @@ class CoinMoneyExchange extends Component {
 
   render() {
     console.log('=== STATE', this.state);
-    const { amount, fiatAmount, fiatCurrency } = this.state;
+    const { amount, fiatAmount, fiatCurrency, isExchanging } = this.state;
     const { fiatAmountOverLimit, onFocus, onBlur, markRequired } = this.props;
     return (
       <div className={`${scopedCss('container')} ${markRequired ? 'error' : ''}`} onFocus={() => onFocus()} onBlur={() => onBlur()}>
@@ -254,6 +268,7 @@ class CoinMoneyExchange extends Component {
             {this.renderFiatCurrencyList()}
           </DropdownMenu>
         </UncontrolledButtonDropdown>
+        <hr className={isExchanging ? 'loading-bar' : ''} />
       </div>
     );
   }
