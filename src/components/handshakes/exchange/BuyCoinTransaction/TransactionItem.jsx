@@ -170,10 +170,11 @@ class TransactionItem extends React.Component {
             </div>
             {
               status === COIN_ORDER_STATUS.PENDING && (
-                <div className="d-table w-100" style={{ textAlign: 'center' }}>
+                <div className="d-table w-100" style={{ textAlign: 'right' }}>
                   <ConfirmButton
                     onConfirm={this.onCancelOrder}
                     label={messages.create.atm.transactions.cancel_order}
+                    buttonClassName="cancel-btn"
                   />
                 </div>
               )
