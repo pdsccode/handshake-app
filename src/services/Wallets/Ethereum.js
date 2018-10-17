@@ -6,9 +6,9 @@ import {MasterWallet} from "./MasterWallet";
 import Tx from 'ethereumjs-tx';
 import { getEstimateGas } from "@/components/handshakes/betting/utils";
 import { getGasPrice } from "@/utils/gasPrice";
+import { set, getJSON } from 'js-cookie';
 
 const Web3 = require('web3');
-const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
@@ -16,6 +16,8 @@ const moment = require('moment');
 const BN = Web3.utils.BN;
 
 var MobileDetect = require('mobile-detect');
+const defaultGasLimit = 21000;
+const cookieLevelFees = 'eth_level_fees';
 
 export class Ethereum extends Wallet {
   static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
@@ -74,21 +76,101 @@ export class Ethereum extends Wallet {
     }
   }
 
+  getGasPrice = async (speed=1) => {
+    return new Promise((resolve, reject) => {
+    axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+      .then(({ data }) => {// 10 gwei units - so divide by 10 to get in gwei
+        let result = 41;
+        if(speed == 0){
+          result = (data.safeLow / 10).toString();
+        }
+        else if(speed == 2){
+          result = (data.fast / 10).toString();
+        }
+        else if(speed == 3){
+          result= (data.fastest / 10).toString();
+        }
+        else{
+          result = (data.average / 10).toString();
+        }
+
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log('Failed to get data from ethGasStation: ', error);
+        resolve(41);
+        // axios
+        //   .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`)
+        //   .then(({ data }) => {
+        //     const gasPrice = Number(data.result).toString();
+        //     resolve(Web3.utils.fromWei(gasPrice, 'gwei'));
+        //   })
+        //   .catch((error) => {
+        //     resolve(41);
+        //   });
+      });
+    })
+  }
+
+  getLevelFee = async () => {
+    return new Promise((resolve, reject) => {
+      let result = getJSON(cookieLevelFees);
+      if(result && result.length){
+        resolve(result);
+      }
+      else{
+        result = [];
+        const web3 = this.getWeb3();
+        let calcGasTimeFee = (data, title, min) => {
+          try{
+            let gasPrice = Number(data / 10);
+            let estimatedGas = defaultGasLimit * (new BN(gasPrice * 1000000000));
+            let ethEstimateGas = Number(web3.utils.fromWei(estimatedGas.toString()));
+
+            return {title: title, description: `${ethEstimateGas} ETH ~ ${min} min`, value: gasPrice.toString()};
+          }
+          catch(e){
+            console.error(e);
+          }
+
+          return {title: title, description: '', value: 0};
+        }
+
+        axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+        .then(({ data }) => {// 10 gwei units - so divide by 10 to get in gwei
+
+          if(data.safeLow){
+            result.push(calcGasTimeFee(data.safeLow, 'Low', 30));
+          }
+
+          if(data.average){
+            result.push(calcGasTimeFee(data.average, 'Normal', 5));
+          }
+
+          if(data.fast){
+            result.push(calcGasTimeFee(data.fast, 'Priority', 2));
+          }
+
+          if(data.fastest){
+            result.push(calcGasTimeFee(data.fastest, 'Urgent', 1));
+          }
+
+          let now = new Date();
+          now.setTime(now.getTime() + (60 * 1000));
+          set(cookieLevelFees, JSON.stringify(result), {expires: now});
+          resolve(result);
+        })
+        .catch((error) => {
+          console.log('getLevelFee:', error);
+          resolve(false);
+        });
+      }
+    })
+  }
+
   async getFee() {
     await getGasPrice();
     return await getEstimateGas();
-
-    // const web3 = this.getWeb3();
-    // const gasPrice = new BN(await web3.eth.getGasPrice());
-    // //const estimateGas = new BN(balance).div(gasPrice);
-    // const limitedGas = 210000;
-    // //const estimatedGas = await BN.min(estimateGas, limitedGas);
-    //
-    // console.log('transfer gasPrice->', parseInt(gasPrice));
-    // //console.log('transfer estimatedGas->', String(estimatedGas));
-    // console.log('transfer limitedGas->', String(limitedGas));
-
-    // return Web3.utils.fromWei(estimatedGas);
   }
 
 
@@ -101,7 +183,7 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-  async transfer(toAddress, amountToSend, data="", gasLimit=210000) {
+  async transfer(toAddress, amountToSend, data="", gasLimit=defaultGasLimit, gasPrice=0) {
     const web3 = this.getWeb3();
     if (!web3.utils.isAddress(toAddress)) {
       return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
@@ -110,14 +192,16 @@ export class Ethereum extends Wallet {
     try {
 
       let balance = await web3.eth.getBalance(this.address);
-      balance = await Web3.utils.fromWei(balance.toString());
+      balance = await web3.utils.fromWei(balance.toString());
 
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
-      //await getGasPrice();
-      const gasPrice = new BN(await web3.eth.getGasPrice());
-      //const gasPrice = window.gasPrice;
+
+      if(!gasPrice){
+        gasPrice = await this.getGasPrice(3);
+      }
+      gasPrice = new BN(gasPrice * 1000000000);// converts the gwei price to wei;
 
       const estimateGas = new BN(balance).div(gasPrice);
       const limitedGas = gasLimit;
@@ -128,11 +212,12 @@ export class Ethereum extends Wallet {
       console.log('transfer estimatedGas->', String(estimatedGas));
       console.log('transfer limitedGas->', String(limitedGas));
       console.log('transfer chainid->', chainId);
-      //console.log('transfer payloadData', payloadData);
 
-      const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(limitedGas * gasPrice)));
-      if(totalAmountFee > balance) {
-        console.log(totalAmountFee, balance, Number(web3.utils.fromWei(String(limitedGas * gasPrice))));
+      const totalEstimatedGas = limitedGas * gasPrice;
+      const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(totalEstimatedGas)));
+
+      console.log('totalAmountFee=', totalAmountFee, ' | balance=', balance, ' | gasLimit=', gasLimit,' | totalEstimatedGas=', totalEstimatedGas, Number(web3.utils.fromWei(String(totalEstimatedGas))), ' | amountToSend=', amountToSend);
+      if(totalAmountFee > Number(balance)) {
         return { status: 0, message: 'messages.ethereum.error.insufficient_gas' };
       }
 
@@ -178,7 +263,6 @@ export class Ethereum extends Wallet {
         console.log("error", error);
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       });
-
     } catch (error) {
       console.log("error", error);
       return { status: 0, message: 'messages.ethereum.error.insufficient' };
@@ -199,7 +283,6 @@ export class Ethereum extends Wallet {
       });
     return nonce;
   };
-
 
   // Transction history....
   getAPIUrlAddress(tab) {
