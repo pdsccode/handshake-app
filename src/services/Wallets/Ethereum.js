@@ -184,13 +184,13 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-async transfer(toAddress, amountToSend, option) {
-    
-    let data = option.data || "";
-    let fee = option.fee || 0
-    let gasLimit = option.gasLimit || defaultGasLimit;
-    
-    console.log('data:', data, 'gasLimit:', gasLimit, 'fee:', fee);    
+async transfer(toAddress, amountToSend, opt) {
+
+    let data = opt.data || "";
+    let fee = opt.fee || 0
+    let gasLimit = opt.gasLimit || defaultGasLimit;
+
+    console.log('data:', data, 'gasLimit:', gasLimit, 'fee:', fee);
 
     const web3 = this.getWeb3();
     if (!web3.utils.isAddress(toAddress)) {
@@ -205,7 +205,7 @@ async transfer(toAddress, amountToSend, option) {
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
-       
+
       if(!fee){
         fee = await this.getGasPrice(3);
       }
