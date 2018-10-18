@@ -544,7 +544,6 @@ class BuyCryptoCoin extends React.Component {
   }
 
   renderPackages = () => {
-    const { currency } = this.state;
     const { packages } = this.props;
     return (
       <div className="package-container">
@@ -562,7 +561,25 @@ class BuyCryptoCoin extends React.Component {
                   <span className="fiat-amount">{formatMoney(fiatAmount)}</span>
                   <span className="amount">{packageData?.amount || '---'} {packageData?.currency}</span>
                 </div>
-                <button className="btn package-buy-now" onClick={() => this.handleBuyPackage(packageData)}><FormattedMessage id="cc.btn.buyNow" /></button>
+                <ConfirmButton
+                  label={<FormattedMessage id="cc.btn.buyNow" />}
+                  confirmText={<FormattedMessage id="buy_coin_confirm_popup.confirm_text" />}
+                  cancelText={<FormattedMessage id="buy_coin_confirm_popup.cancel_text" />}
+                  buttonClassName="btn package-buy-now"
+                  containerClassName="buy-btn-container"
+                  message={
+                    <FormattedMessage
+                      id="buy_coin_confirm_popup.msg"
+                      values={{
+                        amount: packageData?.amount,
+                        currency: packageData?.currency,
+                        fiatAmount: formatMoney(fiatAmount),
+                        fiatCurrency: item.fiatCurrency,
+                      }}
+                    />
+                  }
+                  onConfirm={() => this.handleBuyPackage(packageData)}
+                />
               </div>
             );
           })
