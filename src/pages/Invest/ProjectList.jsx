@@ -93,7 +93,7 @@ class ProjectList extends Component {
 
   renderProjects() {
     return (
-      this.props.projects.concat(exampleProjects).map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
+      this.props.projects.map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
     )
   }
 
