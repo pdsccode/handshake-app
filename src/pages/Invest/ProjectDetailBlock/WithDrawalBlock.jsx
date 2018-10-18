@@ -59,7 +59,6 @@ class WithDrawalBlock extends Component {
       console.log('txhash', hash);
       this.onFinishedTrx(hash);
     }).on('receipt', (receipt) => {
-      console.log('receipt', receipt);
       this.onChangeStatusTrx(receipt.transactionHash);
     }).on('error', err => console.log('err', err));
   }

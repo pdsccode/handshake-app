@@ -39,7 +39,6 @@ class ProjectDetail extends Component {
   renderProjects() {
     const { project } = this.props;
     const progressPercentage = (Number(project.fundingAmount || 0)/Number(project.target|| 1) * 100).toFixed(2);
-    console.log(project);
       return (
         <div key={project.id} style={{ marginTop: '1em' }} >
           <div className="projectItem">

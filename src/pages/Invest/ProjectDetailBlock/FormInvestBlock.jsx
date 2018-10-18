@@ -86,8 +86,6 @@ export default class FormInvestBlock extends Component {
         return;
       }
       const wallets = MasterWallet.getWalletDefault();
-      console.log('wallet default ', wallets);
-      // const { balance, privateKey } = wallets.find(({ name, network}) => name === 'ETH' && network === 'https://rinkeby.infura.io/') || {};
       const { balance, privateKey } = wallets.ETH || {};
       const investAmount = Number(this.state.investAmount);
       const totalBalance = Number(balance);
@@ -95,12 +93,8 @@ export default class FormInvestBlock extends Component {
         alert(`You dont have enough eth. Please invest amount less than ${balance}`);
         return;
       }
-      // const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
-      console.log(investAmount)
       const { run, estimateGas } = await this.hedgeFundApi.fundProject(privateKey, '' + investAmount, '0x' + this.props.pid) || {};
-      // console.log('estimateGas', await estimateGas());
       const estimateGasValue = await estimateGas();
-      console.log(estimateGasValue);
       this.setState({ estimateGasValue });
       this.runTrx = run;
     }
@@ -110,7 +104,6 @@ export default class FormInvestBlock extends Component {
         console.log('txhash', hash);
         this.onFinishedTrx(hash);
       }).on('receipt', (receipt) => {
-        console.log('receipt', receipt);
         this.onChangeStatusTrx(receipt.transactionHash);
       }).on('error', err => console.log('err', err));
     }
