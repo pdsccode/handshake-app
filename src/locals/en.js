@@ -969,7 +969,7 @@ export default {
       text: {
         verified: 'Verified',
         username: {
-          label: 'Name',
+          label: 'Nick Name',
           desc1: 'What do they call you?',
           button: {
             submit: 'Save',
