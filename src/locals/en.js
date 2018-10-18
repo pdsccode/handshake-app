@@ -1736,7 +1736,7 @@ export default {
     bank_id: 'BANK ID',
     reference_code: 'REFERENCE CODE',
     important: 'IMPORTANT: ',
-    notice_desc: 'You must send the exact amount & reference code as instructed and upload the payment proof below so we can proceed sending coins to your customer.',
+    notice_desc: 'You must send the exact amount & reference code as instructed and upload the payment proof below so we can proceed sending coins to you.',
     upload_btn: 'Upload your bank receipt',
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
@@ -1754,6 +1754,7 @@ export default {
       payment_methods: {
         bank: 'Bank Transfer',
         cod: 'COD',
+        cod_info: 'Cash on delivery, only available for transactions under 500 USD/day',
       },
       verify: {
         notYet: {
@@ -1771,8 +1772,10 @@ export default {
       },
       success: 'Succesful!',
     },
+    buy_package_without_wallet_address_notice: 'Sorry Ninja, something went wrong. Please choose your wallet first.',
   },
   bank_info: {
+    transfer_detail_text: ' PLEASE MAKE PAYMENT TO THIS DETAILS',
     account_name: 'Account name',
     account_number: 'Account number',
     bank_id: 'Bank ID',

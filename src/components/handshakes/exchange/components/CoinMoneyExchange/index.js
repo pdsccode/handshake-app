@@ -160,9 +160,9 @@ class CoinMoneyExchange extends Component {
     const { onChange, coinInfo } = this.props;
     const _data = {
       amount: Number.parseFloat(this.state.amount) || 0,
-      fiatAmount: Math.round(this.state.fiatAmount),
+      fiatAmount: Number.parseFloat(this.state.fiatAmount),
       fiatCurrency: this.state.fiatCurrency,
-      fiatAmountInUsd: Math.round(this.state.fiatAmountInUsd),
+      fiatAmountInUsd: Number.parseFloat(this.state.fiatAmountInUsd),
       isOverLimit: isOverLimit({ amount: this.state.fiatAmountInUsd || 0, limit: coinInfo?.limit || 0 }),
       ...data,
     };

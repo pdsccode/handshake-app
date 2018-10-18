@@ -13,23 +13,26 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { injectIntl } from 'react-intl';
 import iconCopy from '@/assets/images/icon/icon-copy-white.svg';
 import iconUpload from '@/assets/images/icon/icon-upload-white.svg';
-import ClockCount from './components/ClockCount';
-import ExtraInfo from './components/ExtraInfo';
-import './styles.scss';
 import { formatMoneyByLocale } from '@/services/offer-util';
+import ExtraInfo from '@/components/handshakes/exchange/components/ExtraInfo';
+import ClockCount from './components/ClockCount';
+import './styles.scss';
+
 
 const DATA_TEMPLATE = {
   'CUSTOMER AMOUNT': {
     intlKey: 'customer_amount',
     text: null,
     className: 'money',
+    copyable: true,
   },
   'YOUR AMOUNT': {
     intlKey: 'amount',
     text: null,
     className: 'money',
+    copyable: true,
   },
-  'ACCOUNT NAME': { intlKey: 'account_name', text: null },
+  'ACCOUNT NAME': { intlKey: 'account_name', text: null, copyable: true },
   'ACCOUNT NUMBER': { intlKey: 'account_number', text: null, copyable: true },
   'BANK NAME': { intlKey: 'bank_name', text: null, copyable: true },
   'BANK ID': { intlKey: 'bank_id', text: null, copyable: true },
@@ -236,20 +239,15 @@ class AtmCashTransferInfo extends PureComponent {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <div className="item">
-          <div className="row-item payment-detail">
-            <div>
-              <span className="title">{atm_cash_transfer_info.payment_detail}</span>
-            </div>
-            <div>
-              <span className="text">
-                {!expired && atm_cash_transfer_info.order_will_expire_in}
-                <ClockCount
-                  startAt={createdAt}
-                  expiredText="Expired"
-                  onExpired={this.onExpired}
-                />
-              </span>
-            </div>
+          <div className="payment-detail">
+            <span className="text">
+              {!expired && atm_cash_transfer_info.order_will_expire_in}
+              <ClockCount
+                startAt={createdAt}
+                expiredText="Expired"
+                onExpired={this.onExpired}
+              />
+            </span>
           </div>
         </div>
         <div className="item info-group">

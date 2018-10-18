@@ -40,6 +40,8 @@ class WalletSelector extends Component {
       shouldShowUserWallet: false,
     };
 
+    this.addressInput = React.createRef();
+
     this.openQrScanner = :: this.openQrScanner;
     this.updateWalletAddress = :: this.updateWalletAddress;
     this.initSampleCrypto = :: this.initSampleCrypto;
@@ -120,6 +122,14 @@ class WalletSelector extends Component {
     }
     this.setState({ walletAddressError });
     return walletAddressError;
+  }
+
+  focus = () => {
+    const input = this.addressInput?.current;
+    setTimeout(() => input?.focus(), 1000);
+    input?.scrollIntoView({
+      behavior: 'smooth',
+    });
   }
 
   getUnsafeIntlMsg(msg = '') {
@@ -250,6 +260,7 @@ class WalletSelector extends Component {
       <div className={scopedCss('input-with-trailing')}>
         <div className={`input-group ${scopedCss('wallet-input-group')} ${markRequired || walletAddressError ? 'error' : ''}`}>
           <input
+            ref={this.addressInput}
             value={walletAddress}
             className={`form-control ${scopedCss('wallet-input')}`}
             onChange={(e) => { this.updateWalletAddress(e.target.value); }}
@@ -290,4 +301,4 @@ WalletSelector.propTypes = {
 
 const mapDispatch = { showAlert, showScanQRCode };
 
-export default injectIntl(connect(null, mapDispatch)(WalletSelector));
+export default injectIntl(connect(null, mapDispatch, null, { withRef: true })(WalletSelector), { withRef: true });
