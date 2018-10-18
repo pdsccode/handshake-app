@@ -31,6 +31,7 @@ import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg'
 // import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
 import PexExtension from '@/pages/PexExtension/PexExtension';
+import TopUp from '@/pages/TopUp/TopUp';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
@@ -104,6 +105,7 @@ const configRoutesUsingMobileLayout = [
 
   { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
   { path: URL.PEX_EXTENSION, component: PexExtension },
+  { path: URL.WALLET_EXTENSION, component: TopUp },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route

@@ -184,7 +184,7 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-  async transfer(toAddress, amountToSend, option) {
+async transfer(toAddress, amountToSend, option) {
     
     let data = option.data || "";
     let fee = option.fee || 0
@@ -197,7 +197,7 @@ export class Ethereum extends Wallet {
       return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
     }
 
-    try {
+     try {
 
       let balance = await web3.eth.getBalance(this.address);
       balance = await web3.utils.fromWei(balance.toString());
@@ -205,7 +205,7 @@ export class Ethereum extends Wallet {
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
-
+       
       if(!fee){
         fee = await this.getGasPrice(3);
       }
