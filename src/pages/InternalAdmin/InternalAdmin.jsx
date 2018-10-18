@@ -337,7 +337,7 @@ class InternalAdmin extends Component {
         return this.getStatus(row);
       },
     }, {
-      dataField: 'status',
+      dataField: 'action',
       text: 'Action',
       formatter: (cell, row, rowIndex, formatExtraData) => {
         const order = orderList[rowIndex];
