@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_project_detail, getNumberOfFund, getSMProjectInfo, getFundAmount, getImageUrl, toHexColor } from '@/reducers/invest/action';
+import { fetch_project_detail, getNumberOfFund, getSMProjectInfo, getFundAmount, getImageUrl, toHexColor, withdrawFund } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -16,10 +16,12 @@ import HedgeFundAPI from './contracts/HedgeFundAPI';
 import { MasterWallet } from '../../services/Wallets/MasterWallet';
 import LoadingGif from './loading.svg';
 import { wrapBoundary } from '../../components/ErrorBoundary';
+import WithDrawalSVG from './withdraw.svg';
 // Refer to FeedCreditCard.jsx
 const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
 const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
 const transformString = str => str.substring(0, 7) + '...'+ str.substring(str.length-5, str.length);
+import WithDrawalBlock from './ProjectDetailBlock/WithDrawalBlock';
 export const CRYPTO_ICONS = {
   ETH: iconEthereum,
   BTC: iconBitcoin,
@@ -203,9 +205,11 @@ class ProjectInfoComp extends React.Component {
         <label htmlFor="" className="fund-item-value">
           {numFunder}
         </label>
-        <label htmlFor="" className="fund-item-value">
+        <label htmlFor="" className="fund-item-value space_between">
           {fundAmount} ETH
+           <img onClick={()=> this.refs['withdrawalBlock'].onSubmitWithDrawal()} src={WithDrawalSVG} style={{ width: '20px', height: '20px' }}/>
         </label>
+        <WithDrawalBlock pid={project.id} ref={'withdrawalBlock'} />
       </div>
     )
   }

@@ -79,7 +79,7 @@
   margin-top:13px;
 }
 .invest-button-form-block{
-  background-color: #fafbff;
+  // background-color: #fafbff;
   padding:28px 20px;
 }
 .inputGroupInvestButton{
@@ -163,4 +163,20 @@
       padding: 10px;
     }
   }
+}
+
+.space_between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.avatar_non {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

@@ -189,6 +189,7 @@ class HedgeFundAPI extends NetworkAPI {
   }
 
   withdrawFund (privateKey = null, pid) {
+    console.log('hedgeFund=>withdrawFund', privateKey, pid);
     return this._createTx(privateKey, 0, 'withdrawFund', hexEncode(pid))
   }
 

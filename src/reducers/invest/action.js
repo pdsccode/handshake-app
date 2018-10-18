@@ -87,6 +87,15 @@ export const getFundAmount = (pid) => dispatch => new Promise((resolve, reject) 
   }).catch(err => reject(err))
 });
 
+// withdrawFund
+
+export const withdrawFund = (pid) => dispatch => new Promise((resolve, reject) => {
+  const { privateKey } = MasterWallet.getWalletDefault().ETH;
+  hedgeFundApi.withdrawFund(privateKey, '0x' + pid).then(data => {
+    resolve(data)
+  }).catch(err => reject(err))
+});
+
 export const eth_sendTransaction = ({
   privateKey,
   
