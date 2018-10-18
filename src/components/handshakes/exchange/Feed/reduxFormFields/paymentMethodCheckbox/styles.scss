@@ -1,7 +1,9 @@
 .payment-method-field-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 10px 0px;
+  width: 100%;
+
   span {
     color: #092136;
     font-size: 16px;
@@ -9,7 +11,17 @@
     text-align: left;
     letter-spacing: 0;
   }
-
+  .payment-method-item {
+    width: 50%;
+    display: flex;
+    .payment-method-extra-info-cod {
+      margin-left: 10px;
+      div.extra-info-data {
+        right: -60px;
+        background-color: grey;
+      }
+    }
+  }
   .payment-method-field-radio-container {
     display: block;
     position: relative;

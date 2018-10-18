@@ -13,10 +13,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { injectIntl } from 'react-intl';
 import iconCopy from '@/assets/images/icon/icon-copy-white.svg';
 import iconUpload from '@/assets/images/icon/icon-upload-white.svg';
-import ClockCount from './components/ClockCount';
-import ExtraInfo from './components/ExtraInfo';
-import './styles.scss';
 import { formatMoneyByLocale } from '@/services/offer-util';
+import ExtraInfo from '@/components/handshakes/exchange/components/ExtraInfo';
+import ClockCount from './components/ClockCount';
+import './styles.scss';
+
 
 const DATA_TEMPLATE = {
   'CUSTOMER AMOUNT': {

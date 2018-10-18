@@ -617,6 +617,9 @@ class BuyCryptoCoin extends React.Component {
                   name="paymentMethod"
                   items={PAYMENT_METHODS}
                   disabled={forcePaymentMethod}
+                  extraInfo={{
+                    [PAYMENT_METHODS.COD]: messages.buy_coin.label.payment_methods.cod_info,
+                  }}
                 />
               </div>
               {this.renderPaymentMethodInfo()}
