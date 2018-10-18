@@ -14,6 +14,8 @@ import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransfe
 import Modal from '@/components/core/controls/Modal/Modal';
 import { getTransactionNinjaCoin } from '@/reducers/exchange/action';
 import { buyCryptoGetBankInfo, buyCryptoSaveRecipt } from '@/reducers/buyCoin/action';
+import Rate from "@/components/core/controls/Rate/Rate";
+import Review from "@/components/core/controls/Review/Review";
 
 const nameFormTransaction = 'formTransaction';
 const FormTransaction = createForm({
@@ -124,6 +126,43 @@ class Transaction extends React.Component {
     return Number.parseFloat(amount) > Number.parseFloat(coinInfo?.limit);
   }
 
+  showReview = (transaction = {}) => {
+    const { messages } = this.props.intl;
+    this.setState({
+      modalTitle: messages.atm_cash_transfer_info.title,
+      modalContent: (
+        <Review onSubmit={this.handleSubmitRating} />
+      ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  // Review offer when receive notification after shop complete
+  handleOnClickRating = (numStars) => {
+    this.setState({ numStars });
+  }
+
+  handleSubmitRating = (values) => {
+    console.log('handleSubmitRating',values);
+    const { review } = values;
+    this.props.reviewBuyCoin({
+      PATH_URL: `${API_URL.INTERNAL.REVIEW_COIN_ORDER}`,
+      METHOD: 'POST',
+      qs: { review: review.trim() },
+      successFn: this.handleReviewOfferSuccess,
+      errorFn: this.handleReviewOfferFailed,
+    });
+  }
+
+  handleReviewOfferSuccess = (responseData) => {
+    console.log('handleReviewOfferSuccess', responseData);
+    const data = responseData.data;
+  }
+
+  handleReviewOfferFailed = (e) => {
+  }
+
   renderTransactionList = () => {
     const { buyCoinTransaction, intl: { messages } } = this.props;
 
@@ -141,7 +180,7 @@ class Transaction extends React.Component {
           buyCoinTransaction && buyCoinTransaction.map(transaction => {
             const { id } = transaction;
             return (
-              <TransactionItem key={id} {...transaction} onShowTransferInfo={this.openNewTransaction} />
+              <TransactionItem key={id} {...transaction} onShowTransferInfo={this.openNewTransaction} onShowReview={this.showReview} />
             );
           })
         }
@@ -175,6 +214,7 @@ const mapDispatch = dispatch => ({
   getTransactionNinjaCoin: bindActionCreators(getTransactionNinjaCoin, dispatch),
   buyCryptoGetBankInfo: bindActionCreators(buyCryptoGetBankInfo, dispatch),
   buyCryptoSaveRecipt: bindActionCreators(buyCryptoSaveRecipt, dispatch),
+  reviewBuyCoin: bindActionCreators(reviewBuyCoin, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Transaction));

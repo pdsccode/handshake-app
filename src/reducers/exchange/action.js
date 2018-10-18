@@ -82,6 +82,7 @@ export const EXCHANGE_ACTIONS = {
 
   GET_TRANSACTION_NINJA_COIN: 'GET_TRANSACTION_NINJA_COIN',
   CANCEL_TRANSACTION_NINJA_COIN: 'CANCEL_TRANSACTION_NINJA_COIN',
+  REVIEW_BUY_COIN: 'REVIEW_BUY_COIN',
 };
 
 export const cancelAtmCashTransfer = createAPI(EXCHANGE_ACTIONS.CANCEL_ATM_CASH_TRANSFER);
@@ -173,6 +174,7 @@ export const getTransactionCashStore = createAPI(EXCHANGE_ACTIONS.GET_TRANSACTIO
 // Ninja - Coin
 export const getTransactionNinjaCoin = createAPI(EXCHANGE_ACTIONS.GET_TRANSACTION_NINJA_COIN);
 export const cancelNinjaCoinTransaction = createAPI(EXCHANGE_ACTIONS.CANCEL_TRANSACTION_NINJA_COIN);
+export const reviewBuyCoin = createAPI(EXCHANGE_ACTIONS.REVIEW_BUY_COIN);
 
 export const fireBaseCreditsDataChange = data => ({
   type: EXCHANGE_ACTIONS.FIREBASE_CREDITS_DATA_CHANGE,

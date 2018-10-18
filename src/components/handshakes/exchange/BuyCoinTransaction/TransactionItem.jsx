@@ -179,6 +179,15 @@ class TransactionItem extends React.Component {
                 </div>
               )
             }
+            {
+              status === COIN_ORDER_STATUS.SUCCESS && (
+                <div className="d-table w-100" style={{ textAlign: 'right' }}>
+                  <button onClick={() => this.props.onShowReview(this.state.transaction)} className="btn cancel-btn">
+                    {messages.create.atm.transactions.review_order}
+                  </button>
+                </div>
+              )
+            }
           </div>
 
         </div>

@@ -1185,6 +1185,7 @@ export default {
         messageTransfer: 'You haven\'t transferred yet.',
         transferNow: ' View detail',
         cancel_order: 'Cancel',
+        review_order: 'Review',
       },
     },
   },
