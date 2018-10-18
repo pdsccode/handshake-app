@@ -128,7 +128,7 @@ export class Ethereum extends Wallet {
             let ethEstimateGas = Number(web3.utils.fromWei(estimatedGas.toString()));
             ethEstimateGas = this.formatNumber(ethEstimateGas, 8);
 
-            return {title: title, description: `${ethEstimateGas} ETH ~ ${min} min`, value: gasPrice.toString()};
+            return {title: title, description: `${ethEstimateGas} ETH ~ ${min} min${min > 1 ? 's' : ''}`, value: gasPrice.toString()};
           }
           catch(e){
             console.error(e);
