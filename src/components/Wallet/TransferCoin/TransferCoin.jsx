@@ -584,7 +584,7 @@ render() {
 
             {this.state.listFeeObject && 
             <div>
-              <p className="labelText">{messages.wallet.action.transfer.label.feel_level} ({this.state.listFeeObject.listFee[this.state.volume].description})</p>
+              <p className="labelText">{messages.wallet.action.transfer.label.feel_level} {this.state.listFeeObject.listFee[this.state.volume].description}</p>
               <div className="fee-level-box">
                 <Slider
                   min={this.state.listFeeObject.min}
