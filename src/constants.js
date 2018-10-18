@@ -569,6 +569,7 @@ export const URL = {
   HANDSHAKE_CHAT_DETAIL: '/whisper/:userId',
   HANDSHAKE_CHAT_ROOM_DETAIL: '/whisper/room/:roomId',
 
+  WALLET_EXTENSION: '/wallet-extension',
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
 
