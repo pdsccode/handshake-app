@@ -16,6 +16,7 @@ import iconUpload from '@/assets/images/icon/icon-upload-white.svg';
 import ClockCount from './components/ClockCount';
 import ExtraInfo from './components/ExtraInfo';
 import './styles.scss';
+import { formatMoneyByLocale } from '@/services/offer-util';
 
 const DATA_TEMPLATE = {
   'CUSTOMER AMOUNT': {
@@ -66,9 +67,9 @@ class AtmCashTransferInfo extends PureComponent {
   static getDerivedStateFromProps({ receipt }, prevState) {
     const newData = { ...prevState?.data };
     const { amount, fiatCurrency, referenceCode, customerAmount } = receipt;
-    amount && fiatCurrency && (newData['YOUR AMOUNT'].text = `${Number.parseFloat(amount).toFixed(2)} ${fiatCurrency}`);
+    amount && fiatCurrency && (newData['YOUR AMOUNT'].text = `${formatMoneyByLocale(amount, fiatCurrency, 2)} ${fiatCurrency}`);
     if (customerAmount) {
-      fiatCurrency && (newData['CUSTOMER AMOUNT'].text = `${Number.parseFloat(customerAmount).toFixed(2)} ${fiatCurrency}`);
+      fiatCurrency && (newData['CUSTOMER AMOUNT'].text = `${formatMoneyByLocale(customerAmount, fiatCurrency, 2)} ${fiatCurrency}`);
       newData['YOUR AMOUNT'].extraInfo = {
         intlKey: 'amount_info',
       };
