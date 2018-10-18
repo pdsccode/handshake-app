@@ -1759,15 +1759,15 @@ export default {
       },
       verify: {
         notYet: {
-          title: 'You are not verified yet! Verify now to start trading with good price',
+          title: 'You are not verified yet! Verify now to start trading with good price.',
           action: 'Verify now',
         },
         rejected: {
-          title: 'Your verification is rejected. Please try again',
+          title: 'Your verification is rejected. Please try again.',
           action: 'Verify now',
         },
         processing: {
-          title: 'We are verifying your account. Please kindly wait',
+          title: 'We are verifying your account. Please kindly wait.',
           action: 'Please wait',
         },
       },

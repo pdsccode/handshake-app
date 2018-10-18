@@ -276,18 +276,22 @@
 
   #PexCreateBtn {
     padding: 7px 0 14px 0;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 2;
     color: white;
-
-    background-image: linear-gradient(-90deg, rgba(77,218,255,0.95) 5%, #21C4FF 54%, #47D4ED 100%);
+    letter-spacing: 0;
+    background: #F75454;
 
     .Idea {
       padding-top: 7px;
+      .verify-link {
+        color: white;
+        font-weight: bold;
+      }
     }
 
     .IconIdea {
