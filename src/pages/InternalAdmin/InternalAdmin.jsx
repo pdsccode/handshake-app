@@ -11,6 +11,7 @@ import './InternalAdmin.scss';
 import { FormattedDate } from 'react-intl';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import Helper from "@/services/helper";
 
 const STATUS = {
   pending: {
@@ -64,6 +65,7 @@ class InternalAdmin extends Component {
       isFinished: false,
       page: null,
       type_order: '',
+      ref_code: '',
       login: this.token.length > 0,
     };
 
@@ -82,7 +84,9 @@ class InternalAdmin extends Component {
     // }
 
     if (this.state.login) {
-      this.setState({ type_order: this.props?.match?.params?.type }, () => {
+      const { type  } = this.props?.match?.params;
+      const { ref_code } = Helper.getQueryStrings(window.location.search);
+      this.setState({ type_order: type, ref_code }, () => {
         this.loadOrderList();
       });
 
@@ -181,6 +185,10 @@ class InternalAdmin extends Component {
 
     if (this.state.type_order) {
       qs.type = this.state.type_order;
+    }
+
+    if (this.state.ref_code) {
+      qs.ref_code = this.state.ref_code;
     }
 
     this.props.loadCashOrderList({

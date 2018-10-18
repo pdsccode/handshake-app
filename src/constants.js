@@ -646,7 +646,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
-  INTERNAL_ADMIN_URL: '/admin/buy-coin/:type',
+  INTERNAL_ADMIN_URL: '/admin/coin/:type',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
 };
