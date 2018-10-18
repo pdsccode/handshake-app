@@ -339,6 +339,7 @@ class InternalAdmin extends Component {
     }, {
       dataField: 'action',
       text: 'Action',
+      isDummyField: true,
       formatter: (cell, row, rowIndex, formatExtraData) => {
         const order = orderList[rowIndex];
         console.log('action order', row, order);
