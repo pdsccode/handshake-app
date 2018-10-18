@@ -42,7 +42,6 @@ export const fetch_project_detail = (id) => dispatch => new Promise((resolve, re
   axiosInstance.get(`${PROJECT_DETAIL_URL}/${id}?filter={"include": "User"}`)
   .then(({ status, data: payload }) => {
     if (status === 200) {
-      console.log('==============project detail',payload);
       dispatch({ type: ACTIONS.FETCH_PROJECT_DETAIL, payload })
       resolve(payload)
     }
