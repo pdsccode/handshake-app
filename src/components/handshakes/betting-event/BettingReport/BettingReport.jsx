@@ -332,12 +332,12 @@ class BettingReport extends React.Component {
           {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{item.name}<br />
             {/* side: 1 (support), 2 (against), 3 (draw) */}
             <div className="result">
-              <FormGroup check>
+              {/*<FormGroup check>
                 <Label check>
                   <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.DRAW); }} required value="0" />{' '}
                 Draw
                 </Label>
-              </FormGroup>
+              </FormGroup>*/}
               <FormGroup check>
                 <Label check>
                   <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.SUPPORT_WIN); }} value="1" />{' '}
