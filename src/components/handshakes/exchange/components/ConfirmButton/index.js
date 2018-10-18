@@ -15,8 +15,13 @@ class ConfirmButton extends PureComponent {
   }
 
   onClick(e) {
+    const { disabled } = this.props;
     e.preventDefault();
-    this.modal.open();
+    !disabled && this.modal.open();
+    const { onFirstClick } = this.props;
+    if (typeof onFirstClick === 'function') {
+      onFirstClick();
+    }
   }
 
   onConfirm() {
@@ -39,10 +44,10 @@ class ConfirmButton extends PureComponent {
   }
 
   render() {
-    const { disabled, message, confirmText, cancelText, containerClassName, buttonClassName, label, intl: { messages } } = this.props;
+    const { disabled, message, confirmText, cancelText, onFirstClick, containerClassName, buttonClassName, label, intl: { messages } } = this.props;
     return (
       <div className={`confirm-btn-container ${containerClassName}`}>
-        <button disabled={disabled} className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
+        <button disabled={disabled && !onFirstClick} className={`btn btn-warning confirm-btn ${buttonClassName}`} onClick={this.onClick}>{label}</button>
         <ModalDialog onRef={modal => { this.modal = modal; }}>
           <div className="confirm-btn-content">
             <span className="confirm-btn-desc">{message || messages.create.atm.confirm_button.desc}</span>
@@ -60,6 +65,7 @@ class ConfirmButton extends PureComponent {
 ConfirmButton.defaultProps = {
   onCancel: () => {},
   onConfirm: () => {},
+  onFirstClick: () => {},
   containerClassName: '',
   buttonClassName: '',
   message: null,
@@ -72,6 +78,7 @@ ConfirmButton.propTypes = {
   label: PropTypes.string.isRequired,
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
+  onFirstClick: PropTypes.func,
   intl: PropTypes.object.isRequired,
   buttonClassName: PropTypes.string,
   containerClassName: PropTypes.string,

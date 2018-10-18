@@ -4,7 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { change, Field, formValueSelector } from 'redux-form';
+import { change, Field, formValueSelector, touch } from 'redux-form';
 import { connect } from 'react-redux';
 import {
   API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, HANDSHAKE_ID,
@@ -101,6 +101,7 @@ class BuyCryptoCoin extends React.Component {
     };
 
     this.modalRef = null;
+    this.walletRef = React.createRef();
 
     this.getCoinInfoNoBounce = ::this.getCoinInfoNoBounce;
     this.getCoinInfo = debounce(::this.getCoinInfoNoBounce, 1000);
@@ -562,6 +563,7 @@ class BuyCryptoCoin extends React.Component {
                   <span className="amount">{packageData?.amount || '---'} {packageData?.currency}</span>
                 </div>
                 <ConfirmButton
+                  disabled={!this.state.walletAddress}
                   label={<FormattedMessage id="cc.btn.buyNow" />}
                   confirmText={<FormattedMessage id="buy_coin_confirm_popup.confirm_text" />}
                   cancelText={<FormattedMessage id="buy_coin_confirm_popup.cancel_text" />}
@@ -579,6 +581,9 @@ class BuyCryptoCoin extends React.Component {
                     />
                   }
                   onConfirm={() => this.handleBuyPackage(packageData)}
+                  onFirstClick={() => {
+                    !this.state.walletAddress && this.walletRef?.current?.getRenderedComponent()?.focus();
+                  }}
                 />
               </div>
             );
@@ -618,6 +623,8 @@ class BuyCryptoCoin extends React.Component {
               </div>
               <div className="input-group mt-4">
                 <Field
+                  withRef
+                  ref={this.walletRef}
                   name="wallet"
                   className="form-control form-control-lg border-0 rounded-right form-control-cc"
                   type="text"
@@ -700,6 +707,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   rfChange: bindActionCreators(change, dispatch),
+  rfTouch: bindActionCreators(touch, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   hideAlert: bindActionCreators(hideAlert, dispatch),
   buyCryptoOrder: bindActionCreators(buyCryptoOrder, dispatch),
