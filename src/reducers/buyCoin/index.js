@@ -17,6 +17,7 @@ const initialState = {
   basePrice: {},
   bankInfo: {},
   quoteReverse: {},
+  packages: {},
   fiatAmountOverLimit: false,
 };
 
@@ -70,6 +71,19 @@ const buyCoinReducter = (state = initialState, action) => {
           ...state,
           quoteReverse,
           fiatAmountOverLimit,
+        };
+      }
+      break;
+    case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_PACKAGE}_SUCCESS`:
+      if (action?.payload?.data) {
+        const quoteReverse = BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data);
+        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatAmount, limit: quoteReverse.limit });
+        return {
+          ...state,
+          packages: {
+            ...state.packages,
+            [quoteReverse.fiatAmount]: { ...quoteReverse, fiatAmountOverLimit },
+          },
         };
       }
       break;
