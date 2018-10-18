@@ -65,7 +65,7 @@ class ConfirmButton extends PureComponent {
 ConfirmButton.defaultProps = {
   onCancel: () => {},
   onConfirm: () => {},
-  onFirstClick: () => {},
+  onFirstClick: null,
   containerClassName: '',
   buttonClassName: '',
   message: null,
@@ -75,13 +75,16 @@ ConfirmButton.defaultProps = {
 };
 
 ConfirmButton.propTypes = {
-  label: PropTypes.string.isRequired,
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
   onFirstClick: PropTypes.func,
   intl: PropTypes.object.isRequired,
   buttonClassName: PropTypes.string,
   containerClassName: PropTypes.string,
+  label: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]).isRequired,
   message: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node,

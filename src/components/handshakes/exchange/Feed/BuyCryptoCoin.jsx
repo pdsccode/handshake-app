@@ -32,7 +32,7 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
-import { formatMoney } from '@/services/offer-util';
+import { formatMoney, formatMoneyByLocale } from '@/services/offer-util';
 import { Link } from 'react-router-dom';
 import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
@@ -317,7 +317,7 @@ class BuyCryptoCoin extends React.Component {
       type: info.paymentMethod || paymentMethod,
       amount: String(info.amount || coinMoneyExchange.amount),
       currency: info.currencyId || currency,
-      fiat_amount: String(fiatAmount),
+      fiat_amount: String(info.fiatAmountInUsd || coinMoneyExchange.fiatAmountInUsd),
       fiat_currency: FIAT_CURRENCY.USD,
       fiat_local_amount: String(fiatAmount),
       fiat_local_currency: info.fiatCurrencyId || coinMoneyExchange.fiatCurrency,
@@ -452,7 +452,7 @@ class BuyCryptoCoin extends React.Component {
       paymentMethod: item.type,
       amount: item.amount,
       currencyId: item.currency,
-      fiatAmount: String(item.fiatAmount),
+      fiatAmountInUsd: String(item.fiatAmount),
       fiatCurrencyId: item.fiatCurrency,
       fiatLocalAmount: String(item.fiatAmount),
       fiatLocalCurrencyId: FIAT_CURRENCY.USD,
@@ -474,6 +474,22 @@ class BuyCryptoCoin extends React.Component {
       this.setState({ isValidToSubmit: true });
     } else {
       this.setState({ isValidToSubmit: false });
+    }
+  }
+
+  noticeBuyPackageWithoutWalletAddress = () => {
+    const { intl: { messages } } = this.props;
+    const { walletAddress } = this.state;
+    if (!walletAddress) {
+      this.props.showAlert({
+        message: (
+          <div className="text-center">
+            {messages.buy_coin.buy_package_without_wallet_address_notice}
+          </div>),
+        timeOut: 3000,
+        type: 'danger',
+      });
+      this.walletRef?.current?.getRenderedComponent()?.focus();
     }
   }
 
@@ -519,7 +535,7 @@ class BuyCryptoCoin extends React.Component {
       <React.Fragment>
         <ul className="bank-info-container">
           <li>
-            <div><span>TRANSFER DETAIL</span></div>
+            <div className="title"><span>{messages.bank_info.transfer_detail_text}</span></div>
           </li>
           {bankData && Object.entries(bankData).map(([key, value]) => {
             return (
@@ -581,9 +597,7 @@ class BuyCryptoCoin extends React.Component {
                     />
                   }
                   onConfirm={() => this.handleBuyPackage(packageData)}
-                  onFirstClick={() => {
-                    !this.state.walletAddress && this.walletRef?.current?.getRenderedComponent()?.focus();
-                  }}
+                  onFirstClick={this.noticeBuyPackageWithoutWalletAddress}
                 />
               </div>
             );
@@ -670,7 +684,7 @@ class BuyCryptoCoin extends React.Component {
                       values={{
                         amount: coinMoneyExchange.amount,
                         currency,
-                        fiatAmount: formatMoney(coinMoneyExchange.fiatAmount),
+                        fiatAmount: coinMoneyExchange.fiatCurrency === FIAT_CURRENCY.VND ? formatMoney(coinMoneyExchange.fiatAmount) : coinMoneyExchange.fiatAmount,
                         fiatCurrency: coinMoneyExchange.fiatCurrency,
                       }}
                     />
