@@ -1800,4 +1800,11 @@ export default {
   'buy_coin_confirm_popup.msg': 'Buy {amount} {currency} with {fiatAmount} {fiatCurrency}?',
   'buy_coin_confirm_popup.confirm_text': 'Confirm',
   'buy_coin_confirm_popup.cancel_text': 'Cancel',
+  review: {
+    title: 'Review',
+    label: {
+      description: 'How do you feel?',
+      submitButtonTitle: 'Submit',
+    },
+  },
 };

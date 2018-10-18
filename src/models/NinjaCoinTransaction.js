@@ -17,6 +17,7 @@ class NinjaCoinTransaction {
       userInfo: data.user_info || {},
       type: data.type || '',
       receiptUrl: data.receipt_url || '',
+      reviewed: data.reviewed || false,
     };
   }
 }

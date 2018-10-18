@@ -12,10 +12,9 @@ import { API_URL, HANDSHAKE_ID } from '@/constants';
 import TransactionItem from './TransactionItem';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
-import { getTransactionNinjaCoin } from '@/reducers/exchange/action';
+import { getTransactionNinjaCoin, reviewBuyCoin } from '@/reducers/exchange/action';
 import { buyCryptoGetBankInfo, buyCryptoSaveRecipt } from '@/reducers/buyCoin/action';
-import Rate from "@/components/core/controls/Rate/Rate";
-import Review from "@/components/core/controls/Review/Review";
+import Review from '@/components/core/controls/Review/Review';
 
 const nameFormTransaction = 'formTransaction';
 const FormTransaction = createForm({
@@ -127,40 +126,40 @@ class Transaction extends React.Component {
   }
 
   showReview = (transaction = {}) => {
-    const { messages } = this.props.intl;
-    this.setState({
-      modalTitle: messages.atm_cash_transfer_info.title,
-      modalContent: (
-        <Review onSubmit={this.handleSubmitRating} />
-      ),
-    }, () => {
-      this.modalRef.open();
+    this.setState({ selectedTransaction: transaction }, () => {
+      const { messages } = this.props.intl;
+      this.setState({
+        modalTitle: messages.review.title,
+        modalContent: (
+          <Review onSubmit={this.handleSubmitRating} />
+        ),
+      }, () => {
+        this.modalRef.open();
+      });
     });
   }
 
   // Review offer when receive notification after shop complete
-  handleOnClickRating = (numStars) => {
-    this.setState({ numStars });
-  }
-
   handleSubmitRating = (values) => {
-    console.log('handleSubmitRating',values);
     const { review } = values;
+    const { selectedTransaction } = this.state;
     this.props.reviewBuyCoin({
       PATH_URL: `${API_URL.INTERNAL.REVIEW_COIN_ORDER}`,
       METHOD: 'POST',
-      qs: { review: review.trim() },
+      data: { review: review.trim(), order: selectedTransaction.id },
       successFn: this.handleReviewOfferSuccess,
       errorFn: this.handleReviewOfferFailed,
     });
   }
 
   handleReviewOfferSuccess = (responseData) => {
-    console.log('handleReviewOfferSuccess', responseData);
     const data = responseData.data;
+    this.modalRef.close();
+    this.getTransactionNinjaCoin();
   }
 
   handleReviewOfferFailed = (e) => {
+    this.modalRef.close();
   }
 
   renderTransactionList = () => {

@@ -95,7 +95,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address, type, refCode } = this.state.transaction;
+    const { amount, currency, fiatLocalAmount, fiatLocalCurrency, status, address, type, refCode, reviewed } = this.state.transaction;
 
     return (
       <div className="transaction">
@@ -180,7 +180,7 @@ class TransactionItem extends React.Component {
               )
             }
             {
-              status === COIN_ORDER_STATUS.SUCCESS && (
+              status === COIN_ORDER_STATUS.SUCCESS && !reviewed && (
                 <div className="d-table w-100" style={{ textAlign: 'right' }}>
                   <button onClick={() => this.props.onShowReview(this.state.transaction)} className="btn cancel-btn">
                     {messages.create.atm.transactions.review_order}
