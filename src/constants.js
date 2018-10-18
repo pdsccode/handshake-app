@@ -636,8 +636,7 @@ export const URL = {
 
   CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
-  BUY_COIN_URL: '/buy-coin',
-  BUY_COIN_TRANSACTION_URL: '/buy-coin-transaction',
+  BUY_COIN_URL: '/coin',
 
   ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 
