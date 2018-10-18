@@ -40,9 +40,9 @@ class Rate extends React.PureComponent {
     const { className, onSubmit } = this.props;
     const { messages } = this.props.intl;
     return (
-      <ReviewCrypto onSubmit={onSubmit}>
+      <ReviewCrypto onSubmit={onSubmit} className="review">
         <p className="title">{messages.review.label.description}</p>
-        <div className="d-flex mt-2 mr-2">
+        <div className="w-100 mt-2 mr-2">
 
           <Field
             name="review"
@@ -53,7 +53,7 @@ class Rate extends React.PureComponent {
             validate={[required]}
           />
         </div>
-        <Button block >{messages.review.label.submitButtonTitle}</Button>
+        <Button className="mt-5 w-100" >{messages.review.label.submitButtonTitle}</Button>
       </ReviewCrypto>
     );
   }
