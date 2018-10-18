@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
 // import MultiLanguage from '@/components/core/controls/MultiLanguage';
 import meIcon from '@/assets/images/navigation/ic_ninja_logo.svg.raw';
-import walletIcon from '@/assets/images/navigation/ic_wallet_white.svg.raw';
+import Ether from '@/assets/images/navigation/ic_ether.svg';
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
-// import predictionIcon from '@/assets/images/categories/chip.svg';
 
 class HeaderBar extends React.Component {
   static propTypes = {
@@ -37,13 +36,14 @@ class HeaderBar extends React.Component {
   };
 
   wallet = (walletProps) => {
-    if (!walletProps) return this.topUp();
-    const { balance, name } = walletProps;
-    if (!balance) return this.topUp();
+    if (!walletProps || !parseFloat(walletProps.balance)) return this.topUp();
+    const { balance } = walletProps;
     return (
       <Link to={URL.WALLET_EXTENSION} className="wallet">
         <span className="balance">{Number((parseFloat(balance)).toFixed(6))}</span>
-        <span className="name">{name}</span>
+        <span className="name">
+          <img src={Ether} alt="ETH" />
+        </span>
       </Link>
     );
   };
@@ -86,7 +86,7 @@ class HeaderBar extends React.Component {
         {this.me()}
         {this.caption(titleBar)}
         {/* <MultiLanguage /> */}
-        {this.wallet(walletProps)}
+        {(pathname !== URL.WALLET_EXTENSION) && this.wallet(walletProps)}
         {/* { (pathname === URL.HANDSHAKE_WALLET) && BuyCrypto()} */}
       </div>
     );
