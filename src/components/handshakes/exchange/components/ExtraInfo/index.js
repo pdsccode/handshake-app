@@ -16,9 +16,9 @@ class ExtraInfo extends Component {
 
   render() {
     const { show } = this.state;
-    const { info } = this.props;
+    const { info, className } = this.props;
     return (
-      <div className="extra-info-container">
+      <div className={`extra-info-container ${className}`}>
         <div className="extra-info-icon" onClick={this.toggle}>?</div>
         <div className={`extra-info-data ${show && 'show'}`}>{info}</div>
       </div>
@@ -26,8 +26,13 @@ class ExtraInfo extends Component {
   }
 }
 
+ExtraInfo.defaultProps = {
+  className: '',
+};
+
 ExtraInfo.propTypes = {
   info: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default ExtraInfo;
