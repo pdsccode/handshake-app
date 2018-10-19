@@ -454,14 +454,9 @@ class BuyCryptoCoin extends React.Component {
       id: order.id,
     };
 
-    // if fiatAmount over limit => use global bank, else local bank
-    // if (this.isOverLimit(receipt.amount)) {
-    //   bankData = this.getBankDataByCountry(); // global bank
-    // } else {
-      bankData = this.getBankDataByCountry(country);
-      receipt.amount = order.fiatLocalAmount;
-      receipt.fiatCurrency = order.fiatLocalCurrency;
-    // }
+    bankData = this.getBankDataByCountry(country);
+    receipt.amount = order.fiatLocalAmount;
+    receipt.fiatCurrency = order.fiatLocalCurrency;
     this.setState({
       modalContent: (
         <AtmCashTransferInfo
@@ -570,9 +565,8 @@ class BuyCryptoCoin extends React.Component {
   }
 
   renderBankInfo() {
-    const { coinMoneyExchange, country, intl: { messages } } = this.props;
-    const overLimit = coinMoneyExchange?.isOverLimit;
-    const bankData = overLimit ? this.getBankDataByCountry() : this.getBankDataByCountry(country);
+    const { country, intl: { messages } } = this.props;
+    const bankData = this.getBankDataByCountry(country);
 
     if (!bankData) return null;
     return (
