@@ -6,7 +6,7 @@ import { injectIntl } from 'react-intl';
 // services
 import createForm from '@/components/core/form/createForm';
 import { setHeaderTitle, showAlert } from '@/reducers/app/action';
-import { verifyPhone, submitPhone, verifyEmail, checkUsernameExist, authUpdate, submitEmail, verifyID } from '@/reducers/auth/action';
+import { verifyPhone, submitPhone, verifyEmail, checkUsernameExist, authUpdate, submitEmail, verifyID, getIdVerification } from '@/reducers/auth/action';
 import COUNTRIES from '@/data/country-dial-codes';
 // components
 import { Grid, Row, Col, ProgressBar } from 'react-bootstrap';
@@ -19,7 +19,7 @@ import { fieldCleave, fieldInput } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import local from '@/services/localStore';
-import { APP } from '@/constants';
+import { APP, API_URL } from '@/constants';
 // style
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
@@ -43,6 +43,7 @@ class Profile extends React.Component {
     verifyPhone: PropTypes.func.isRequired,
     verifyEmail: PropTypes.func.isRequired,
     verifyID: PropTypes.func.isRequired,
+    getIdVerification: PropTypes.func.isRequired,
     submitEmail: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     app: PropTypes.object.isRequired,
@@ -85,6 +86,11 @@ class Profile extends React.Component {
     this.filterCountries = :: this.filterCountries;
     this.onTextFieldChange = :: this.onTextFieldChange;
     this.addUsername = :: this.addUsername;
+
+    this.idVerificationDocumentTypes = ['Passport', 'Driver License', 'Government ID Card'];
+    if (this.state.idVerificationLevel === 1) {
+      this.getIDVerification();
+    }
 
     this.UsernameForm = createForm({
       propsReduxForm: {
@@ -234,7 +240,7 @@ class Profile extends React.Component {
       idVerficationUploadingProgress: 1,
     });
     this.props.verifyID({
-      PATH_URL: 'user/id_verification',
+      PATH_URL: API_URL.USER.ID_VERIFICATION,
       data,
       METHOD: 'POST',
       onUploadProgress: (progressEvent) => {
@@ -443,6 +449,22 @@ class Profile extends React.Component {
         type: 'danger',
       });
     }
+  }
+
+  getIDVerification() {
+    this.props.getIdVerification({
+      PATH_URL: API_URL.ID_VERIFICATION.GET_DOCUMENT,
+      successFn: (res) => {
+        if (res.status === 1 && res.data) {
+          const { data } = res;
+          this.setState({
+            idVerificationDocumentType: data.id_type,
+            idVerificationIDNumber: data.id_number,
+            idVerifcationUserFullName: data.name,
+          });
+        }
+      },
+    });
   }
 
   addUsername(values) {
@@ -743,80 +765,86 @@ class Profile extends React.Component {
                   </div>
                 ) : (
                     <IDVerificationForm onSubmit={this.onSubmitIDVerification}>
-                      {this.state.idVerificationLevel === 0 ? (
-                        <div>
-                          <div>
-                            <Row>
-                              <div className="col-12">
-                                <p className="text label">
-                                  {messages.me.profile.text.id_verification.desc2}
-                                </p>
-                                <Field
-                                  name="full_name"
-                                  type="text"
-                                  className="form-control-custom form-control-custom-ex w-100"
-                                  component={fieldInput}
-                                  value={this.state.idVerifcationUserFullName}
-                                  validate={[required]}
-                                  onChange={(evt, value, unknown, name) => { this.setState({ idVerifcationUserFullName: value }); }}
-                                />
-                                <p />
-                              </div>
-                            </Row>
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className="text label">
+                              {messages.me.profile.text.id_verification.desc2}
+                            </p>
+                            {this.state.idVerificationLevel > 0 ? (<h6>{this.state.idVerifcationUserFullName}</h6>) : (
+                              <Field
+                                name="full_name"
+                                type="text"
+                                className="form-control-custom form-control-custom-ex w-100"
+                                component={fieldInput}
+                                value={this.state.idVerifcationUserFullName}
+                                validate={[required]}
+                                onChange={(evt, value, unknown, name) => { this.setState({ idVerifcationUserFullName: value }); }}
+                              />
+                            )}
+                            <p />
                           </div>
-                          <div>
-                            <Row>
-                              <div className="col-12">
-                                <p className="text label">
-                                  {messages.me.profile.text.id_verification.desc4}
-                                </p>
-                                <Dropdown
-                                  name="document_type"
-                                  className="w-100"
-                                  defaultId={this.state.idVerificationDocumentType.toString()}
-                                  afterSetDefault={(item) => {
-                                    if (item.id !== this.state.idVerificationDocumentType) {
-                                      this.setState({ idVerificationDocumentType: item.id });
-                                    }
-                                  }}
-                                  source={[
-                                    {
-                                      id: 0,
-                                      value: 'Passport',
-                                    },
-                                    {
-                                      id: 2,
-                                      value: 'Goverment ID Card',
-                                    },
-                                  ]}
-                                  onItemSelected={(item) => {
+                        </Row>
+                      </div>
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className="text label">
+                              {messages.me.profile.text.id_verification.desc4}
+                            </p>
+                            {this.state.idVerificationLevel > 0 ? (<h6>{this.idVerificationDocumentTypes[this.state.idVerificationDocumentType]}</h6>) : (
+                              <Dropdown
+                                name="document_type"
+                                className="w-100"
+                                defaultId={this.state.idVerificationDocumentType.toString()}
+                                afterSetDefault={(item) => {
+                                  if (item.id !== this.state.idVerificationDocumentType) {
                                     this.setState({ idVerificationDocumentType: item.id });
                                   }
-                                  }
-                                />
-                                <p />
-                              </div>
-                            </Row>
+                                }}
+                                source={[
+                                  {
+                                    id: 0,
+                                    value: this.idVerificationDocumentTypes[0],
+                                  },
+                                  {
+                                    id: 2,
+                                    value: this.idVerificationDocumentTypes[2],
+                                  },
+                                ]}
+                                onItemSelected={(item) => {
+                                  this.setState({ idVerificationDocumentType: item.id });
+                                }
+                                }
+                              />
+                            )}
+                            <p />
                           </div>
-                          <div>
-                            <Row>
-                              <div className="col-12">
-                                <p className=" text label">
-                                  {messages.me.profile.text.id_verification.desc3}
-                                </p>
-                                <Field
-                                  name="id_number"
-                                  type="text"
-                                  className="form-control-custom form-control-custom-ex w-100"
-                                  component={fieldInput}
-                                  value={this.state.idVerificationIDNumber}
-                                  validate={[required]}
-                                  onChange={(evt, value, unknown, name) => { this.setState({ idVerificationIDNumber: value }); }}
-                                />
-                                <p />
-                              </div>
-                            </Row>
+                        </Row>
+                      </div>
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className=" text label">
+                              {messages.me.profile.text.id_verification.desc3}
+                            </p>
+                            {this.state.idVerificationLevel > 0 ? (<h6>{this.state.idVerificationIDNumber}</h6>) : (
+                              <Field
+                                name="id_number"
+                                type="text"
+                                className="form-control-custom form-control-custom-ex w-100"
+                                component={fieldInput}
+                                value={this.state.idVerificationIDNumber}
+                                validate={[required]}
+                                onChange={(evt, value, unknown, name) => { this.setState({ idVerificationIDNumber: value }); }}
+                              />
+                            )}
+                            <p />
                           </div>
+                        </Row>
+                      </div>
+                      {this.state.idVerificationLevel === 0 ? (
+                        <div>
                           <div>
                             <Row>
                               <div className="col-12">
@@ -947,6 +975,7 @@ const mapDispatch = ({
   checkUsernameExist,
   authUpdate,
   submitEmail,
+  getIdVerification,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Profile));

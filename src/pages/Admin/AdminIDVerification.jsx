@@ -69,7 +69,7 @@ class AdminIDVerification extends React.Component {
     }
     this.token = this.token || this.getAdminHash() || '';
     this.props.loadIDVerificationDocuments({
-      PATH_URL: `${API_URL.ID_VERIFICATION.GET_DOCUMENTS}`,
+      PATH_URL: `${API_URL.ID_VERIFICATION.LIST_DOCUMENTS}`,
       headers: { AdminHash: this.token },
       successFn: (response) => {
         if (response.status === 1) {
