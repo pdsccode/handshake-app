@@ -250,12 +250,15 @@ class Me extends React.Component {
   }
 
   scrollListener = async () => {
-    $zopim(() => {
-      $zopim.livechat.button.hide();
-      $zopim.livechat.button.setOffsetVerticalMobile(70);
-      $zopim.livechat.button.setOffsetHorizontalMobile(10);
-      $zopim.livechat.button.show();
-    });
+    console.log('scrollListener',);
+    if (!this.isShow) {
+      $zopim(() => {
+        $zopim.livechat.button.hide();
+        $zopim.livechat.button.setOffsetVerticalMobile(70);
+        $zopim.livechat.button.setOffsetHorizontalMobile(10);
+        $zopim.livechat.button.show();
+      });
+    }
   }
 
   attachScrollListener() {
@@ -296,6 +299,14 @@ class Me extends React.Component {
     this.getOfferStore();
     // this.getDashboardInfo();
     setTimeout(() => {
+      $zopim.livechat.window.onShow(() => {
+        this.isShow = true;
+        console.log('onShow', this.isShow);
+      });
+      $zopim.livechat.window.onHide(() => {
+        this.isShow = false;
+        console.log('onHide', this.isShow);
+      });
       this.scrollListener();
     }, 6000);
     this.attachScrollListener();
