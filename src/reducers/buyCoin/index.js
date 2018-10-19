@@ -19,6 +19,7 @@ const initialState = {
   quoteReverse: {},
   packages: {},
   fiatAmountOverLimit: false,
+  fiatLimit: 0,
 };
 
 const buyCoinReducter = (state = initialState, action) => {
@@ -26,7 +27,7 @@ const buyCoinReducter = (state = initialState, action) => {
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_COIN_INFO}_SUCCESS`:
       if (action?.payload?.data) {
         const coinInfo = BuyCryptoCoinModel.parseCoinInfo(action?.payload?.data);
-        const fiatAmountOverLimit = isOverLimit({ amount: coinInfo.fiatAmount, limit: coinInfo.limit });
+        const fiatAmountOverLimit = isOverLimit({ amount: coinInfo.fiatLocalAmount, limit: coinInfo.limit });
         if (action.isGetBasePrice) {
           return {
             ...state,
@@ -47,6 +48,7 @@ const buyCoinReducter = (state = initialState, action) => {
           ...state,
           coinInfo,
           fiatAmountOverLimit,
+          fiatLimit: coinInfo.limit,
         };
       }
       break;
@@ -66,11 +68,12 @@ const buyCoinReducter = (state = initialState, action) => {
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_QUOTE_REVERSE}_SUCCESS`:
       if (action?.payload?.data) {
         const quoteReverse = BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data);
-        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatAmount, limit: quoteReverse.limit });
+        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatLocalAmount, limit: quoteReverse.limit });
         return {
           ...state,
           quoteReverse,
           fiatAmountOverLimit,
+          fiatLimit: quoteReverse.limit,
         };
       }
       break;
@@ -78,7 +81,7 @@ const buyCoinReducter = (state = initialState, action) => {
       if (action?.payload?.data) {
         const name = action?.name;
         const quoteReverse = BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data);
-        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatAmount, limit: quoteReverse.limit });
+        const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatLocalAmount, limit: quoteReverse.limit });
         const show = {
           fiatAmount: quoteReverse.fiatLocalAmount || quoteReverse.fiatAmount,
           fiatCurrency: quoteReverse.fiatLocalCurrency || quoteReverse.fiatCurrency,

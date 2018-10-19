@@ -171,7 +171,7 @@ class CoinMoneyExchange extends Component {
       fiatAmount: Number.parseFloat(this.state.fiatAmount),
       fiatCurrency: this.state.fiatCurrency,
       fiatAmountInUsd: Number.parseFloat(this.state.fiatAmountInUsd),
-      isOverLimit: isOverLimit({ amount: this.state.fiatAmountInUsd || 0, limit: coinInfo?.limit || 0 }),
+      isOverLimit: isOverLimit({ amount: this.state.fiatAmount || 0, limit: coinInfo?.limit || 0 }),
       ...data,
     };
     if (typeof onChange === 'function') {

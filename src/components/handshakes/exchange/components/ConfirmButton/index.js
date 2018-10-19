@@ -15,12 +15,19 @@ class ConfirmButton extends PureComponent {
   }
 
   onClick(e) {
-    const { disabled } = this.props;
+    const { disabled, validate, onFirstClick } = this.props;
     e.preventDefault();
-    !disabled && this.modal.open();
-    const { onFirstClick } = this.props;
     if (typeof onFirstClick === 'function') {
       onFirstClick();
+    }
+    if (!disabled) {
+      if (typeof validate === 'function') {
+        if (validate()) {
+          this.modal.open();
+        }
+      } else {
+        this.modal.open();
+      }
     }
   }
 
@@ -65,6 +72,7 @@ class ConfirmButton extends PureComponent {
 ConfirmButton.defaultProps = {
   onCancel: () => {},
   onConfirm: () => {},
+  validate: null,
   onFirstClick: null,
   containerClassName: '',
   buttonClassName: '',
@@ -77,6 +85,7 @@ ConfirmButton.defaultProps = {
 ConfirmButton.propTypes = {
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
+  validate: PropTypes.func,
   onFirstClick: PropTypes.func,
   intl: PropTypes.object.isRequired,
   buttonClassName: PropTypes.string,

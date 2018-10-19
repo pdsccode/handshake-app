@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl, FormattedTime } from 'react-intl';
 import { change, Field, formValueSelector, touch } from 'redux-form';
 import { connect } from 'react-redux';
 import {
@@ -33,6 +33,8 @@ import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmBu
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
+import { Link } from 'react-router-dom';
+import { push } from 'connected-react-router';
 import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
@@ -51,8 +53,6 @@ export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.BTC]: iconBitcoin,
   BCH: iconBitcoinCash,
 };
-
-export const GLOBAL_BANK = 'XX';
 
 const listPackages = {
   [COUNTRY_LIST.VN]: [
@@ -97,8 +97,6 @@ const selectorFormSpecificAmount = formValueSelector(nameBuyCryptoForm);
 
 const scopedCss = (className) => `buy-crypto-coin-${className}`;
 
-const FIAT_AMOUNT_LIMIT = 500;
-
 class BuyCryptoCoin extends React.Component {
   constructor(props) {
     super(props);
@@ -135,7 +133,6 @@ class BuyCryptoCoin extends React.Component {
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
-    this.getBankInfoFromCountry(); // global bank by default
     this.getBankInfoFromCountry(country);
 
     // get package data
@@ -203,7 +200,7 @@ class BuyCryptoCoin extends React.Component {
     this.getBankInfoFromCountry(country);
   }
 
-  getBankInfoFromCountry = (country = GLOBAL_BANK) => {
+  getBankInfoFromCountry = (country) => {
     this.props.buyCryptoGetBankInfo({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_BANK_INFO}/${country}`,
     });
@@ -293,7 +290,7 @@ class BuyCryptoCoin extends React.Component {
 
   makeOrder = (info = {}) => {
     const { country } = this.props;
-    const { coinInfo, paymentMethod, address, noteAndTime, phone, coinMoneyExchange } = this.props;
+    const { coinInfo, paymentMethod, address, noteAndTime, phone, coinMoneyExchange, idVerificationLevel } = this.props;
     const { walletAddress, currency } = this.state;
     const fiatAmount = info.fiatAmount || coinMoneyExchange.fiatAmount;
     const data = {
@@ -305,6 +302,7 @@ class BuyCryptoCoin extends React.Component {
       fiat_local_amount: String(fiatAmount),
       fiat_local_currency: info.fiatCurrencyId || coinMoneyExchange.fiatCurrency,
       address: info.address || walletAddress,
+      level: String(idVerificationLevel),
     };
 
     if (!this.isOverLimit(fiatAmount)) {
@@ -315,12 +313,7 @@ class BuyCryptoCoin extends React.Component {
     if (data.type === PAYMENT_METHODS.COD) {
       data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);
     } else {
-      const globalBank = GLOBAL_BANK;
-      if (this.isOverLimit(fiatAmount)) {
-        data.center = globalBank; // global bank
-      } else {
-        data.center = country || globalBank;
-      }
+      data.center = country;
     }
 
     if (paymentMethod === PAYMENT_METHODS.COD) {
@@ -373,35 +366,52 @@ class BuyCryptoCoin extends React.Component {
   }
 
   checkUserVerified = () => {
-    const { messages } = this.props.intl;
-    const { authProfile: { idVerified } } = this.props;
+    const { authProfile: { idVerified }, intl: { messages }, idVerificationLevel, fiatAmountOverLimit, fiatLimit, coinMoneyExchange } = this.props;
     let result = false;
-    const verifiedStatus = 1; //1: id verify, 2: selfie verify
-    const fiatAmount = 501;
+    const verifiedStatus = idVerificationLevel; // 1: id verify, 2: selfie verify
     let message = '';
     switch (idVerified) {
-      case 0: {//Not yet
+      case 0: { // Not yet
         message = messages.buy_coin.label.verify.notYet.title;
         break;
       }
-      case -1: {//Rejected
+      case -1: { // Rejected
         message = messages.buy_coin.label.verify.rejected.title;
         break;
       }
-      case 1: {//Verified
-        // result = true;
-        if (verifiedStatus && fiatAmount > FIAT_AMOUNT_LIMIT) {
-          message = messages.buy_coin.label.verify.verified.need_selfie_verifiy;
+      case 1: { // Verified
+        if (verifiedStatus === 1 && fiatAmountOverLimit) {
+          message = (
+            <div id="PexCreateBtn" >
+              <div className="Idea">
+                <FormattedMessage
+                  id="buy_coin.verify.need_selfie_verifiy"
+                  values={{
+                    fiatAmount: fiatLimit,
+                    fiatCurrency: coinMoneyExchange.fiatCurrency,
+                  }}
+                />
+                &nbsp;
+                <Link
+                  className="verify-link"
+                  to={{ pathname: URL.HANDSHAKE_ME_PROFILE }}
+                >
+                  <FormattedMessage id="buy_coin.verify.need_selfie_verifiy_action" />
+                </Link>
+              </div>
+            </div>
+          );
         } else {
           result = true;
         }
         break;
       }
-      case 2: {//Process
+      case 2: { // Process
         message = messages.buy_coin.label.verify.processing.title;
         break;
       }
       default: {
+        break;
       }
     }
 
@@ -470,7 +480,7 @@ class BuyCryptoCoin extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.NINJA_COIN}`);
   }
 
-  getBankDataByCountry(country = GLOBAL_BANK) {
+  getBankDataByCountry(country) {
     const { bankInfo } = this.props;
     if (country in bankInfo) {
       return bankInfo[country];
@@ -703,6 +713,7 @@ class BuyCryptoCoin extends React.Component {
               {this.renderPaymentMethodInfo()}
               <div className="input-group mt-2">
                 <ConfirmButton
+                  validate={this.checkUserVerified}
                   disabled={!isValidToSubmit}
                   label={`${messages.create.cod_form.buy_btn} ${coinMoneyExchange?.amount || '---'} ${CRYPTO_CURRENCY_NAME[currency] || ''}`}
                   confirmText={<FormattedMessage id="buy_coin_confirm_popup.confirm_text" />}
@@ -749,6 +760,7 @@ const mapStateToProps = (state) => ({
   order: state.buyCoin?.order || {},
   packages: state.buyCoin?.packages || {},
   idVerificationLevel: state.auth.profile.idVerificationLevel || 0,
+  fiatLimit: state.buyCoin?.fiatLimit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -805,6 +817,7 @@ BuyCryptoCoin.propTypes = {
   dispatch: PropTypes.func.isRequired,
   buyCryptoGetPackage: PropTypes.func.isRequired,
   idVerificationLevel: PropTypes.number.isRequired,
+  fiatLimit: PropTypes.number.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));
