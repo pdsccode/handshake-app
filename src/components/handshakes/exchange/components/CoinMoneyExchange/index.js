@@ -12,6 +12,8 @@ import { showAlert } from '@/reducers/app/action';
 import { PAYMENT_METHODS } from '@/components/handshakes/exchange/Feed/BuyCryptoCoin';
 import { isOverLimit } from '@/reducers/buyCoin/index';
 import './styles.scss';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 const formatMoney = (money = 0, currency = FIAT_CURRENCY.USD) => {
   if (currency === FIAT_CURRENCY.VND) {
@@ -198,6 +200,10 @@ class CoinMoneyExchange extends Component {
     const _fiatAmount = Number.parseFloat(data.fiatAmount ? data.fiatAmount : fiatAmount) || 0;
     if (_fiatAmount >= 0 && _fiatCurrency && currency && paymentMethod) {
       this.showLoading();
+      gtag.event({
+        category: taggingConfig.coin.category,
+        action: taggingConfig.coin.action.getReverseCoinInfo,
+      });
       this.props.buyCryptoQuoteReverse({
         PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
         errorFn: this.ongetQuoteReverseError,
@@ -213,6 +219,10 @@ class CoinMoneyExchange extends Component {
     const _fiatCurrency = data.fiatCurrency || fiatCurrency || currencyByLocal;
     if (parsedAmount >= 0 && currency && currencyByLocal) {
       this.showLoading();
+      gtag.event({
+        category: taggingConfig.coin.category,
+        action: taggingConfig.coin.action.getCoinInfo,
+      });
       this.props.buyCryptoGetCoinInfo({
         PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}`,
         errorFn: this.onGetCoinInfoError,

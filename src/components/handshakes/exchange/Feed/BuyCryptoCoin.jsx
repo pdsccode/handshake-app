@@ -44,6 +44,8 @@ import walletSelectorValidator from './reduxFormFields/walletSelector/validator'
 
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -172,6 +174,10 @@ class BuyCryptoCoin extends React.Component {
   getPackage(packageData = {}) {
     const { fiatAmount, fiatCurrency } = packageData;
     const { currency } = this.state;
+    gtag.event({
+      category: taggingConfig.coin.category,
+      action: taggingConfig.coin.action.getReverseCoinInfo,
+    });
     this.props.buyCryptoGetPackage({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${fiatCurrency}&type=${PAYMENT_METHODS.BANK_TRANSFER}`,
     });
@@ -256,6 +262,10 @@ class BuyCryptoCoin extends React.Component {
     const _currencyId = currencyId || wallet.currency;
     const parsedAmount = Number.parseFloat(amount || this.props.amount) || null;
     if (parsedAmount && _currencyId && fiatCurrencyId) {
+      gtag.event({
+        category: taggingConfig.coin.category,
+        action: taggingConfig.coin.action.getCoinInfo,
+      });
       this.props.buyCryptoGetCoinInfo({
         PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice ? '&check=1' : ''}`,
         more: isGetBasePrice && { isGetBasePrice, amount: parsedAmount, currencyId: _currencyId, fiatCurrencyId },
