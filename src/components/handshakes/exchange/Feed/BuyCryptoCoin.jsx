@@ -116,7 +116,7 @@ class BuyCryptoCoin extends React.Component {
 
     this.getCoinInfoNoBounce = ::this.getCoinInfoNoBounce;
     this.getCoinInfo = debounce(::this.getCoinInfoNoBounce, 1000);
-    this.getBasePrice = :: this.getBasePrice;
+    // this.getBasePrice = :: this.getBasePrice;
     this.getBankDataByCountry = :: this.getBankDataByCountry;
     this.renderBankInfo = :: this.renderBankInfo;
     this.getPackage = :: this.getPackage;
@@ -128,7 +128,7 @@ class BuyCryptoCoin extends React.Component {
 
   componentDidMount() {
     const { country } = this.props;
-    this.getBasePrice(this.props.wallet?.currency);
+    // this.getBasePrice(this.props.wallet?.currency);
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
@@ -156,7 +156,7 @@ class BuyCryptoCoin extends React.Component {
     }
 
     if (wallet?.currency !== this.props.wallet?.currency) {
-      this.getBasePrice(wallet?.currency);
+      // this.getBasePrice(wallet?.currency);
       this.setState({ currency: wallet?.currency }, this.getPackageData);
     }
 
@@ -256,15 +256,15 @@ class BuyCryptoCoin extends React.Component {
     });
   }
 
-  getBasePrice(currentIdFromInput, amountFromInput) {
-    const { wallet } = this.props;
-    const _currencyId = currentIdFromInput || wallet.currency;
-    this.getCoinInfoNoBounce({
-      isGetBasePrice: true,
-      currencyId: _currencyId,
-      amount: amountFromInput || 1,
-    });
-  }
+  // getBasePrice(currentIdFromInput, amountFromInput) {
+  //   const { wallet } = this.props;
+  //   const _currencyId = currentIdFromInput || wallet.currency;
+  //   this.getCoinInfoNoBounce({
+  //     isGetBasePrice: true,
+  //     currencyId: _currencyId,
+  //     amount: amountFromInput || 1,
+  //   });
+  // }
 
   getCoinInfoNoBounce(data = {}) {
     const { amount, currencyId, isGetBasePrice } = data;
