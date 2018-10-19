@@ -365,8 +365,11 @@ class BuyCryptoCoin extends React.Component {
     this.makeOrder();
   }
 
-  checkUserVerified = () => {
+  checkUserVerified = (info = {}) => {
     const { authProfile: { idVerified }, intl: { messages }, idVerificationLevel, fiatAmountOverLimit, fiatLimit, coinMoneyExchange } = this.props;
+    const _fiatAmountOverLimit = info.fiatAmountOverLimit || fiatAmountOverLimit;
+    const _fiatLimit = info.fiatLimit || fiatLimit;
+    const _fiatCurrency = info.fiatCurrency || coinMoneyExchange.fiatCurrency;
     let result = false;
     const verifiedStatus = idVerificationLevel; // 1: id verify, 2: selfie verify
     let message = '';
@@ -380,15 +383,15 @@ class BuyCryptoCoin extends React.Component {
         break;
       }
       case 1: { // Verified
-        if (verifiedStatus === 1 && fiatAmountOverLimit) {
+        if (verifiedStatus === 1 && _fiatAmountOverLimit) {
           message = (
             <div id="PexCreateBtn" >
               <div className="Idea">
                 <FormattedMessage
                   id="buy_coin.verify.need_selfie_verifiy"
                   values={{
-                    fiatAmount: fiatLimit,
-                    fiatCurrency: coinMoneyExchange.fiatCurrency,
+                    fiatAmount: _fiatLimit,
+                    fiatCurrency: _fiatCurrency,
                   }}
                 />
                 &nbsp;
@@ -620,6 +623,13 @@ class BuyCryptoCoin extends React.Component {
                   <span className="amount">{packageData?.amount || '---'} {packageData?.currency}</span>
                 </div>
                 <ConfirmButton
+                  validate={
+                    () => this.checkUserVerified({
+                      fiatAmountOverLimit: packageData.fiatAmountOverLimit,
+                      fiatLimit: packageData.limit,
+                      fiatCurrency: packageData.fiatLocalCurrency,
+                    })
+                  }
                   disabled={!this.state.walletAddress}
                   label={<FormattedMessage id="cc.btn.buyNow" />}
                   confirmText={<FormattedMessage id="buy_coin_confirm_popup.confirm_text" />}
