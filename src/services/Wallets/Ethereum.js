@@ -17,7 +17,7 @@ const BN = Web3.utils.BN;
 
 var MobileDetect = require('mobile-detect');
 const defaultGasLimit = 21000;
-const cookieLevelFees = 'eth_level_fees';
+const COOKIE_LEVEL_FEES = 'eth_level_fees';
 
 export class Ethereum extends Wallet {
   static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
@@ -114,7 +114,7 @@ export class Ethereum extends Wallet {
 
   getLevelFee = async () => {
     return new Promise((resolve, reject) => {
-      let result = getJSON(cookieLevelFees);
+      let result = getJSON(COOKIE_LEVEL_FEES);
       if(result && result.length){
         resolve(result);
       }
@@ -158,7 +158,7 @@ export class Ethereum extends Wallet {
 
           let now = new Date();
           now.setTime(now.getTime() + (60 * 1000));
-          set(cookieLevelFees, JSON.stringify(result), {expires: now});
+          set(COOKIE_LEVEL_FEES, JSON.stringify(result), {expires: now});
           resolve(result);
         })
         .catch((error) => {
@@ -190,7 +190,10 @@ async transfer(toAddress, amountToSend, opt) {
     let fee = opt.fee || 0
     let gasLimit = opt.gasLimit || defaultGasLimit;
 
-    console.log('data:', data, 'gasLimit:', gasLimit, 'fee:', fee);
+    console.log('toAddress:', toAddress,
+    '\n data:', data,
+    '\n gasLimit:', gasLimit,
+    '\n fee:', fee);
 
     const web3 = this.getWeb3();
     if (!web3.utils.isAddress(toAddress)) {
@@ -216,10 +219,10 @@ async transfer(toAddress, amountToSend, opt) {
       const estimatedGas = await BN.min(estimateGas, limitedGas);
       const chainId = await web3.eth.net.getId();
 
-      console.log('transfer gasPrice->', parseInt(gasPrice));
-      console.log('transfer estimatedGas->', String(estimatedGas));
-      console.log('transfer limitedGas->', String(limitedGas));
-      console.log('transfer chainid->', chainId);
+      console.log('transfer gasPrice:', parseInt(gasPrice),
+      '\n estimatedGas:', String(estimatedGas),
+      '\n limitedGas:', String(limitedGas),
+      '\n chainid:', chainId);
 
       const totalEstimatedGas = limitedGas * gasPrice;
       const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(totalEstimatedGas)));
@@ -243,9 +246,6 @@ async transfer(toAddress, amountToSend, opt) {
         };
         console.log('rawTx->', rawTx);
         const tx = new Tx(rawTx);
-        // if (amountToSend) {
-        //   tx.value = ;
-        // }
         console.log('tx.value->', tx.value);
         tx.sign(Buffer.from(this.privateKey, 'hex'));
         console.log('tx.sign->...', tx);
@@ -381,7 +381,7 @@ async transfer(toAddress, amountToSend, opt) {
   }
 
   formatNumber(value, decimal=6){
-    let result = 0, count = 0;
+    let result = value, count = 0;
     try {
       if(!isNaN(value)) result = Number(value);
 
@@ -392,7 +392,7 @@ async transfer(toAddress, amountToSend, opt) {
         result = Number(value).toFixed(decimal);
     }
     catch(e) {
-      result = 0;
+      result = value;
     }
 
     return result;
