@@ -116,7 +116,7 @@ class BuyCryptoCoin extends React.Component {
 
     this.getCoinInfoNoBounce = ::this.getCoinInfoNoBounce;
     this.getCoinInfo = debounce(::this.getCoinInfoNoBounce, 1000);
-    this.getBasePrice = :: this.getBasePrice;
+    // this.getBasePrice = :: this.getBasePrice;
     this.getBankDataByCountry = :: this.getBankDataByCountry;
     this.renderBankInfo = :: this.renderBankInfo;
     this.getPackage = :: this.getPackage;
@@ -128,7 +128,7 @@ class BuyCryptoCoin extends React.Component {
 
   componentDidMount() {
     const { country } = this.props;
-    this.getBasePrice(this.props.wallet?.currency);
+    // this.getBasePrice(this.props.wallet?.currency);
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
@@ -156,7 +156,7 @@ class BuyCryptoCoin extends React.Component {
     }
 
     if (wallet?.currency !== this.props.wallet?.currency) {
-      this.getBasePrice(wallet?.currency);
+      // this.getBasePrice(wallet?.currency);
       this.setState({ currency: wallet?.currency }, this.getPackageData);
     }
 
@@ -249,7 +249,6 @@ class BuyCryptoCoin extends React.Component {
   }
 
   onGetCoinInfoError = (e) => {
-    this.updateAmount(0);
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
@@ -257,15 +256,15 @@ class BuyCryptoCoin extends React.Component {
     });
   }
 
-  getBasePrice(currentIdFromInput, amountFromInput) {
-    const { wallet } = this.props;
-    const _currencyId = currentIdFromInput || wallet.currency;
-    this.getCoinInfoNoBounce({
-      isGetBasePrice: true,
-      currencyId: _currencyId,
-      amount: amountFromInput || 1,
-    });
-  }
+  // getBasePrice(currentIdFromInput, amountFromInput) {
+  //   const { wallet } = this.props;
+  //   const _currencyId = currentIdFromInput || wallet.currency;
+  //   this.getCoinInfoNoBounce({
+  //     isGetBasePrice: true,
+  //     currencyId: _currencyId,
+  //     amount: amountFromInput || 1,
+  //   });
+  // }
 
   getCoinInfoNoBounce(data = {}) {
     const { amount, currencyId, isGetBasePrice } = data;
@@ -289,7 +288,7 @@ class BuyCryptoCoin extends React.Component {
 
   makeOrder = (info = {}) => {
     const { country } = this.props;
-    const { coinInfo, paymentMethod, address, noteAndTime, phone, coinMoneyExchange, idVerificationLevel } = this.props;
+    const { paymentMethod, address, noteAndTime, phone, coinMoneyExchange, idVerificationLevel } = this.props;
     const { walletAddress, currency } = this.state;
     const fiatAmount = info.fiatAmount || coinMoneyExchange.fiatAmount;
     const data = {
@@ -304,18 +303,9 @@ class BuyCryptoCoin extends React.Component {
       level: String(idVerificationLevel),
     };
 
-    if (!this.isOverLimit(fiatAmount)) {
-      data.fiat_local_amount = String(info.fiatLocalAmount || coinInfo.fiatLocalAmount);
-      data.fiat_local_currency = info.fiatLocalCurrencyId || coinInfo.fiatLocalCurrency;
-    }
-
-    if (data.type === PAYMENT_METHODS.COD) {
-      data.fiat_local_amount = String(info.fiatLocalAmountCod || coinInfo.fiatLocalAmountCod);
-    } else {
+    if (data.type === PAYMENT_METHODS.BANK_TRANSFER) {
       data.center = country;
-    }
-
-    if (paymentMethod === PAYMENT_METHODS.COD) {
+    } else {
       data.user_info = info.userInfo || {
         address,
         noteAndTime,
@@ -323,7 +313,6 @@ class BuyCryptoCoin extends React.Component {
       };
     }
 
-    console.log('Order payload', data);
     this.props.buyCryptoOrder({
       PATH_URL: API_URL.EXCHANGE.BUY_CRYPTO_ORDER,
       METHOD: 'POST',
