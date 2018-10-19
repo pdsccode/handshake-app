@@ -1771,7 +1771,7 @@ export default {
           action: 'Please wait',
         },
         verified: {
-          need_selfie_verifiy: 'you are buying more than 500 usd. Please verify your account to increase the limit',
+          need_selfie_verifiy: 'You are buying more than 500 usd. Please verify your account to increase the limit',
         },
       },
       success: 'Succesful!',
@@ -1807,6 +1807,8 @@ export default {
   'buy_coin_confirm_popup.msg': 'Buy {amount} {currency} with {fiatAmount} {fiatCurrency}?',
   'buy_coin_confirm_popup.confirm_text': 'Confirm',
   'buy_coin_confirm_popup.cancel_text': 'Cancel',
+  'buy_coin.verify.need_selfie_verifiy': 'You are buying more than {fiatAmount} {fiatCurrency}. Please verify your account to increase the limit',
+  'buy_coin.verify.need_selfie_verifiy_action': 'Verify now',
   review: {
     title: 'Review',
     label: {
