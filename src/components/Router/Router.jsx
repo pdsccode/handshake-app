@@ -81,8 +81,8 @@ const configRoutesUsingMobileLayout = [
   { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
 
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  // { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
-  // { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
+  { path: URL.HANDSHAKE_CASH, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} /> },
+  { path: URL.HANDSHAKE_ATM, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} /> },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_PAYMENT_TRANSFER, component: RouterPaymentTransfer },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
@@ -125,8 +125,8 @@ let routesUsingDesktopLayout = null;
 if (BrowserDetect.isDesktop) {
   const configRoutesUsingDesktopLayout = [
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
-    { path: URL.PRODUCT_CASH_URL, render: () => <Redirect to={{ pathname: URL.INDEX }} />, exact: true },
-    { path: URL.PRODUCT_ATM_URL, render: () => <Redirect to={{ pathname: URL.INDEX }} /> },
+    { path: URL.PRODUCT_CASH_URL, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} />, exact: true },
+    { path: URL.PRODUCT_ATM_URL, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} /> },
     // { path: URL.BUY_BY_CC_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
