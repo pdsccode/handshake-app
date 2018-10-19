@@ -1799,7 +1799,7 @@ export default {
       rejected: 'Rejected',
     },
   },
-  'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/buy-coin">create one now!</a></strong>`,
+  'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/coin">create one now!</a></strong>`,
   wallet_selector: {
     your_wallet: 'Your wallets',
     wallet_dont_match_error: 'The address and type of crypto don’t match. Please check',
