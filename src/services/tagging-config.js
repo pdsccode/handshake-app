@@ -40,6 +40,13 @@ const taggingConfig = {
       depositSuccess: 'deposit_success',
     },
   },
+  coin: {
+    category: 'Coin',
+    action: {
+      getCoinInfo: 'get_coin_info',
+      getReverseCoinInfo: 'get_reverse_coin_info',
+    },
+  },
 };
 
 export default taggingConfig;

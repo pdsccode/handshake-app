@@ -3,6 +3,9 @@
 import BuyCryptoCoinModel from '@/models/BuyCryptoCoin';
 import { BUY_COIN_ACTIONS } from './action';
 
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
+
 export const isOverLimit = (data = {}) => {
   const amountInUsd = Number.parseFloat(data.amount);
   const limit = Number.parseFloat(data.limit);
@@ -24,6 +27,10 @@ const initialState = {
 const buyCoinReducter = (state = initialState, action) => {
   switch (action.type) {
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_GET_COIN_INFO}_SUCCESS`:
+      gtag.event({
+        category: taggingConfig.coin.category,
+        action: taggingConfig.coin.action.getCoinInfo,
+      });
       if (action?.payload?.data) {
         const coinInfo = BuyCryptoCoinModel.parseCoinInfo(action?.payload?.data);
         const fiatAmountOverLimit = isOverLimit({ amount: coinInfo.fiatAmount, limit: coinInfo.limit });
@@ -64,6 +71,10 @@ const buyCoinReducter = (state = initialState, action) => {
         order: { ...BuyCryptoCoinModel.parseOrder(action?.payload?.data) },
       };
     case `${BUY_COIN_ACTIONS.BUY_CRYPTO_QUOTE_REVERSE}_SUCCESS`:
+      gtag.event({
+        category: taggingConfig.coin.category,
+        action: taggingConfig.coin.action.getReverseCoinInfo,
+      });
       if (action?.payload?.data) {
         const quoteReverse = BuyCryptoCoinModel.parseQuoteReverse(action?.payload?.data);
         const fiatAmountOverLimit = isOverLimit({ amount: quoteReverse.fiatAmount, limit: quoteReverse.limit });
