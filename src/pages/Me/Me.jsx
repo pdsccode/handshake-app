@@ -5,23 +5,18 @@ import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
-import {
-  API_URL,
-  APP,
-  EXCHANGE_FEED_TYPE,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
-  HANDSHAKE_ID,
-  HANDSHAKE_ID_DEFAULT,
-  URL,
-} from '@/constants';
-import { injectIntl } from 'react-intl';
+import { API_URL, APP, HANDSHAKE_ID, HANDSHAKE_ID_DEFAULT, URL } from '@/constants';
+import { FormattedMessage, injectIntl } from 'react-intl';
 // components
 import { Link } from 'react-router-dom';
 import { Col, Grid, Row } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
 import {
-  fireBaseCreditsDataChange, getDashboardInfo, getListOfferPrice, getOfferStores,
-  reviewOffer
+  fireBaseCreditsDataChange,
+  getDashboardInfo,
+  getListOfferPrice,
+  getOfferStores,
+  reviewOffer,
 } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
@@ -29,10 +24,8 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Image from '@/components/core/presentation/Image';
-import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
-import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
@@ -47,15 +40,12 @@ import { change, Field } from 'redux-form';
 import Modal from '@/components/core/controls/Modal/Modal';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
-import { FormattedMessage } from 'react-intl';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
-import ManageAssets from "./Tabs/ManageAssets";
-import Transaction from "./Tabs/Transaction";
-import cx from "classnames";
+import ManageAssets from './Tabs/ManageAssets';
+import Transaction from './Tabs/Transaction';
 
 import NoDataImage from '@/assets/images/pages/Prediction/nodata.svg';
 
@@ -245,7 +235,7 @@ class Me extends React.Component {
         Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.NINJA_COIN);
         return { handshakeIdActive: HANDSHAKE_ID.NINJA_COIN, firstTime: false };
       }
-     }
+    }
 
     return null;
   }
@@ -257,6 +247,27 @@ class Me extends React.Component {
       qs.type = handshakeIdActive;
     }
     nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
+  }
+
+  scrollListener = async () => {
+    $zopim(() => {
+      $zopim.livechat.button.hide();
+      $zopim.livechat.button.setOffsetVerticalMobile(70);
+      $zopim.livechat.button.setOffsetHorizontalMobile(10);
+      $zopim.livechat.button.show();
+    });
+  }
+
+  attachScrollListener() {
+    window.addEventListener('scroll', this.scrollListener);
+    window.addEventListener('resize', this.scrollListener);
+    this.scrollListener();
+  }
+
+  detachScrollListener() {
+    $zopim.livechat.button.hide();
+    window.removeEventListener('scroll', this.scrollListener);
+    window.removeEventListener('resize', this.scrollListener);
   }
 
   componentDidMount() {
@@ -284,6 +295,10 @@ class Me extends React.Component {
     this.loadMyHandshakeList();
     this.getOfferStore();
     // this.getDashboardInfo();
+    setTimeout(() => {
+      this.scrollListener();
+    }, 6000);
+    this.attachScrollListener();
   }
 
   componentWillUnmount() {
@@ -293,6 +308,7 @@ class Me extends React.Component {
       handshakeIdActive: handshakeDefault,
       firstTime: true,
     });
+    this.detachScrollListener();
   }
 
   setLoading = (loadingState) => {
