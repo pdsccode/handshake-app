@@ -56,16 +56,16 @@ export const GLOBAL_BANK = 'XX';
 
 const listPackages = {
   [COUNTRY_LIST.VN]: [
-    { name: 'basic', fiatAmount: 20000000, amount: 0, fiatCurrency: FIAT_CURRENCY.VND, show: true },
-    { name: 'pro', fiatAmount: 60000000, amount: 0, fiatCurrency: FIAT_CURRENCY.VND, show: true },
+    { name: 'basic', fiatAmount: 20000000, fiatCurrency: FIAT_CURRENCY.VND, show: true },
+    { name: 'pro', fiatAmount: 60000000, fiatCurrency: FIAT_CURRENCY.VND, show: true },
   ],
   [COUNTRY_LIST.HK]: [
-    { name: 'basic', fiatAmount: 5000, amount: 0, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
-    { name: 'pro', fiatAmount: 10000, amount: 0, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
+    { name: 'basic', fiatAmount: 5000, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
+    { name: 'pro', fiatAmount: 10000, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
   ],
   default: [
-    { name: 'basic', fiatAmount: 1000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
-    { name: 'pro', fiatAmount: 2000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
+    { name: 'basic', fiatAmount: 600, fiatCurrency: FIAT_CURRENCY.USD, show: true },
+    { name: 'pro', fiatAmount: 1000, fiatCurrency: FIAT_CURRENCY.USD, show: true },
   ],
 };
 
