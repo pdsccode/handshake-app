@@ -8,7 +8,7 @@ import { change, Field, formValueSelector, touch } from 'redux-form';
 import { connect } from 'react-redux';
 import {
   API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, FIAT_CURRENCY, FIAT_CURRENCY_NAME, HANDSHAKE_ID,
-  URL,
+  URL, COUNTRY_LIST,
 } from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { fieldInput } from '@/components/core/form/customField';
@@ -54,10 +54,20 @@ export const CRYPTO_ICONS = {
 
 export const GLOBAL_BANK = 'XX';
 
-const listPackages = [
-  { name: 'basic', fiatAmount: 1000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
-  { name: 'pro', fiatAmount: 2000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
-];
+const listPackages = {
+  [COUNTRY_LIST.VN]: [
+    { name: 'basic', fiatAmount: 20000000, amount: 0, fiatCurrency: FIAT_CURRENCY.VND, show: true },
+    { name: 'pro', fiatAmount: 60000000, amount: 0, fiatCurrency: FIAT_CURRENCY.VND, show: true },
+  ],
+  [COUNTRY_LIST.HK]: [
+    { name: 'basic', fiatAmount: 5000, amount: 0, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
+    { name: 'pro', fiatAmount: 10000, amount: 0, fiatCurrency: FIAT_CURRENCY.HKD, show: true },
+  ],
+  default: [
+    { name: 'basic', fiatAmount: 1000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
+    { name: 'pro', fiatAmount: 2000, amount: 0, fiatCurrency: FIAT_CURRENCY.USD, show: true },
+  ],
+};
 
 const defaultCurrency = {
   id: CRYPTO_CURRENCY.BTC,
@@ -101,6 +111,7 @@ class BuyCryptoCoin extends React.Component {
       modalTitle: null,
       isValidToSubmit: false,
       walletAddress: null,
+      packages: [],
     };
 
     this.modalRef = null;
@@ -134,7 +145,10 @@ class BuyCryptoCoin extends React.Component {
   }
 
   getPackageData = () => {
-    listPackages.forEach(this.getPackage);
+    const { country } = this.props;
+    const packages = COUNTRY_LIST[country] in listPackages ? listPackages[COUNTRY_LIST[country]] : listPackages.default;
+    this.setState({ packages });
+    packages.forEach(item => item.show && this.getPackage(item));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -171,7 +185,7 @@ class BuyCryptoCoin extends React.Component {
   }
 
   getPackage(packageData = {}) {
-    const { fiatAmount, fiatCurrency } = packageData;
+    const { fiatAmount, fiatCurrency, name } = packageData;
     const { currency } = this.state;
     gtag.event({
       category: taggingConfig.coin.category,
@@ -179,6 +193,7 @@ class BuyCryptoCoin extends React.Component {
     });
     this.props.buyCryptoGetPackage({
       PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${fiatCurrency}&type=${PAYMENT_METHODS.BANK_TRANSFER}`,
+      more: { name },
     });
   }
 
@@ -578,17 +593,17 @@ class BuyCryptoCoin extends React.Component {
     return (
       <div className="package-container">
         {
-          listPackages && listPackages.map((item) => {
+          this.state.packages?.map((item) => {
             const {
-              name, fiatAmount, show,
+              name, show,
             } = item;
-            const packageData = packages[fiatAmount];
+            const packageData = packages[name];
 
             return show && packageData && (
               <div key={name} className={`package-item ${name}`}>
                 <span className="name"><FormattedMessage id={`cc.label.${name}`} /></span>
                 <div className="price-amount-group">
-                  <span className="fiat-amount">{formatMoney(fiatAmount)}</span>
+                  <span className="fiat-amount">{formatMoney(packageData.show?.fiatAmount)} {packageData.show?.fiatCurrency}</span>
                   <span className="amount">{packageData?.amount || '---'} {packageData?.currency}</span>
                 </div>
                 <ConfirmButton
@@ -604,8 +619,8 @@ class BuyCryptoCoin extends React.Component {
                       values={{
                         amount: packageData?.amount,
                         currency: packageData?.currency,
-                        fiatAmount: formatMoney(fiatAmount),
-                        fiatCurrency: item.fiatCurrency,
+                        fiatAmount: formatMoney(packageData.show.fiatAmount),
+                        fiatCurrency: packageData.show.fiatCurrency,
                       }}
                     />
                   }
