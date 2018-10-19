@@ -35,6 +35,11 @@ export class Bitcoin extends Wallet {
     return url;
   }
 
+  getAPIUrlAddress() {
+    let url = `https://${bitcore.Networks.defaultNetwork == bitcore.Networks.livenet ? '' : 'test-'}insight.bitpay.com/address/${this.address}`;
+    return url;
+  }
+
   createAddressPrivatekey() {
     this.setDefaultNetwork();
 
@@ -68,11 +73,6 @@ export class Bitcoin extends Wallet {
         return await satoshi.toBitcoin(response.data);
     }
     return false;
-  }
-
-  getAPIUrlAddress() {
-    let url = bitcore.Networks.defaultNetwork == bitcore.Networks.livenet ? "https://bitpay.com/api/txs/?address="+this.address : "https://test-insight.bitpay.com/address/"+this.address;
-    return url;
   }
 
   checkAddressValid(toAddress) {
