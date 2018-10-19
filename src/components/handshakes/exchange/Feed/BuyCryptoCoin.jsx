@@ -86,6 +86,8 @@ const selectorFormSpecificAmount = formValueSelector(nameBuyCryptoForm);
 
 const scopedCss = (className) => `buy-crypto-coin-${className}`;
 
+const FIAT_AMOUNT_LIMIT = 500;
+
 class BuyCryptoCoin extends React.Component {
   constructor(props) {
     super(props);
@@ -132,52 +134,6 @@ class BuyCryptoCoin extends React.Component {
 
   getPackageData = () => {
     listPackages.forEach(this.getPackage);
-  }
-
-  checkUserVerified = () => {
-    const { messages } = this.props.intl;
-    const { authProfile: { idVerified } } = this.props;
-
-    let timeShow = 0;
-    let idVerificationStatusText = 'Rejected';
-
-    switch (idVerified) {
-      case 0: {
-        idVerificationStatusText = <span>{messages.buy_coin.label.verify.notYet.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.notYet.action}</Link></span>;
-        timeShow = 24 * 60 * 60 * 1000;
-        break;
-      }
-      case -1: {
-        idVerificationStatusText = <span>{messages.buy_coin.label.verify.rejected.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.rejected.action}</Link></span>;
-        timeShow = 24 * 60 * 60 * 1000;
-        break;
-      }
-      case 1: {
-        idVerificationStatusText = 'Verified';
-        break;
-      }
-      case 2: {
-        idVerificationStatusText = <span>{messages.buy_coin.label.verify.processing.title} <Link to={URL.HANDSHAKE_ME_PROFILE}>{messages.buy_coin.label.verify.processing.action}</Link></span>;
-        timeShow = 24 * 60 * 60 * 1000;
-        break;
-      }
-      default: {
-        idVerificationStatusText = 'Default';
-      }
-    }
-
-    if (timeShow > 0) {
-      this.props.showAlert({
-        message: (
-          <div className="text-center">
-            {idVerificationStatusText}
-          </div>),
-        timeOut: timeShow,
-        type: 'danger',
-        callBack: () => {
-        },
-      });
-    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -387,6 +343,55 @@ class BuyCryptoCoin extends React.Component {
 
   onSubmit = () => {
     this.makeOrder();
+  }
+
+  checkUserVerified = () => {
+    const { messages } = this.props.intl;
+    const { authProfile: { idVerified } } = this.props;
+    let result = false;
+    const verifiedStatus = 1; //1: id verify, 2: selfie verify
+    const fiatAmount = 501;
+    let message = '';
+    switch (idVerified) {
+      case 0: {//Not yet
+        message = messages.buy_coin.label.verify.notYet.title;
+        break;
+      }
+      case -1: {//Rejected
+        message = messages.buy_coin.label.verify.rejected.title;
+        break;
+      }
+      case 1: {//Verified
+        // result = true;
+        if (verifiedStatus && fiatAmount > FIAT_AMOUNT_LIMIT) {
+          message = messages.buy_coin.label.verify.verified.need_selfie_verifiy;
+        } else {
+          result = true;
+        }
+        break;
+      }
+      case 2: {//Process
+        message = messages.buy_coin.label.verify.processing.title;
+        break;
+      }
+      default: {
+      }
+    }
+
+    if (!result) {
+      this.props.showAlert({
+        message: (
+          <div className="text-center">
+            {message}
+          </div>),
+        timeOut: 5000,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+    }
+
+    return result;
   }
 
   renderOrderInfo = () => {

@@ -1770,6 +1770,9 @@ export default {
           title: 'We are verifying your account. Please kindly wait.',
           action: 'Please wait',
         },
+        verified: {
+          need_selfie_verifiy: 'you are buying more than 500 usd. Please verify your account to increase the limit',
+        },
       },
       success: 'Succesful!',
     },
