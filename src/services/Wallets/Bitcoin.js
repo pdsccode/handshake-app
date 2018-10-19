@@ -348,8 +348,8 @@ export class Bitcoin extends Wallet {
 
         let calcTimeFee = (item) => {
           try{
-            let value = (item.feePerKb / 100000000);console.log(item.feePerKb, value);
-            //value = this.formatNumber(value, 8);
+            let value = (item.feePerKb / 100000000);
+            value = this.formatNumber(value, 8);
 
             let min = item.nbBlocks * 10;
             let title = item.level.charAt(0).toUpperCase() + item.level.slice(1);;
@@ -371,7 +371,7 @@ export class Bitcoin extends Wallet {
 
 
         axios.get(`https://bws.bitpay.com/bws/api/v2/feelevels/?coin=btc&network=${bitcore.Networks.defaultNetwork == bitcore.Networks.livenet ? 'livenet' : 'testnet'}`)
-        .then(({ data }) => {console.log(data);
+        .then(({ data }) => {
           let isDup = false, lastValue = 0, removeLevel = 'superEconomy';
           for(let item of data){
             if(lastValue == item.feePerKb){

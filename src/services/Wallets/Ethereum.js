@@ -227,7 +227,12 @@ async transfer(toAddress, amountToSend, opt) {
       const totalEstimatedGas = limitedGas * gasPrice;
       const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(totalEstimatedGas)));
 
-      console.log('totalAmountFee=', totalAmountFee, ' | balance=', balance, ' | gasLimit=', gasLimit,' | totalEstimatedGas=', totalEstimatedGas, Number(web3.utils.fromWei(String(totalEstimatedGas))), ' | amountToSend=', amountToSend);
+      console.log('totalAmountFee:', totalAmountFee,
+      '\n balance=', balance,
+      '\n gasLimit=', gasLimit,
+      '\n totalEstimatedGas=', totalEstimatedGas, Number(web3.utils.fromWei(String(totalEstimatedGas))),
+      '\n amountToSend=', amountToSend);
+
       if(totalAmountFee > Number(balance)) {
         return { status: 0, message: 'messages.ethereum.error.insufficient_gas' };
       }
