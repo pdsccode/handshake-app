@@ -191,8 +191,10 @@ class BuyCryptoCoin extends React.Component {
       category: taggingConfig.coin.category,
       action: taggingConfig.coin.action.getReverseCoinInfo,
     });
+    const { idVerificationLevel } = this.props;
+    const level = idVerificationLevel === 0 ? 1 : idVerificationLevel;
     this.props.buyCryptoGetPackage({
-      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${fiatCurrency}&type=${PAYMENT_METHODS.BANK_TRANSFER}`,
+      PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${fiatAmount}&currency=${currency}&fiat_currency=${fiatCurrency}&type=${PAYMENT_METHODS.BANK_TRANSFER}&level=${level}`,
       more: { name },
     });
   }
@@ -271,7 +273,8 @@ class BuyCryptoCoin extends React.Component {
 
   getCoinInfoNoBounce(data = {}) {
     const { amount, currencyId, isGetBasePrice } = data;
-    const { wallet, currencyByLocal } = this.props;
+    const { wallet, currencyByLocal, idVerificationLevel } = this.props;
+    const level = idVerificationLevel === 0 ? 1 : idVerificationLevel;
     const fiatCurrencyId = isGetBasePrice ? FIAT_CURRENCY.USD : currencyByLocal;
     const _currencyId = currencyId || wallet.currency;
     const parsedAmount = Number.parseFloat(amount || this.props.amount) || null;
@@ -281,7 +284,7 @@ class BuyCryptoCoin extends React.Component {
         action: taggingConfig.coin.action.getCoinInfo,
       });
       this.props.buyCryptoGetCoinInfo({
-        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice ? '&check=1' : ''}`,
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${_currencyId}&fiat_currency=${fiatCurrencyId}${isGetBasePrice ? '&check=1' : ''}&level=${level}`,
         more: isGetBasePrice && { isGetBasePrice, amount: parsedAmount, currencyId: _currencyId, fiatCurrencyId },
         errorFn: this.onGetCoinInfoError,
       });
@@ -745,6 +748,7 @@ const mapStateToProps = (state) => ({
   bankInfo: state.buyCoin?.bankInfo,
   order: state.buyCoin?.order || {},
   packages: state.buyCoin?.packages || {},
+  idVerificationLevel: state.auth.profile.idVerificationLevel || 0,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -800,6 +804,7 @@ BuyCryptoCoin.propTypes = {
   fiatAmountOverLimit: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
   buyCryptoGetPackage: PropTypes.func.isRequired,
+  idVerificationLevel: PropTypes.number.isRequired,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BuyCryptoCoin));

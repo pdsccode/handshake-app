@@ -201,7 +201,8 @@ class CoinMoneyExchange extends Component {
 
   getQuoteReverse(data = {}) {
     const { fiatAmount, fiatCurrency, currency } = this.state;
-    const { paymentMethod } = this.props;
+    const { paymentMethod, idVerificationLevel } = this.props;
+    const level = idVerificationLevel === 0 ? 1 : idVerificationLevel;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency;
     const _fiatAmount = Number.parseFloat(data.fiatAmount ? data.fiatAmount : fiatAmount) || 0;
     if (_fiatAmount >= 0 && _fiatCurrency && currency && paymentMethod) {
@@ -211,7 +212,7 @@ class CoinMoneyExchange extends Component {
         action: taggingConfig.coin.action.getReverseCoinInfo,
       });
       this.props.buyCryptoQuoteReverse({
-        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}`,
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_QUOTE_REVERSE}?fiat_amount=${_fiatAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&type=${paymentMethod}&level=${level}`,
         errorFn: this.ongetQuoteReverseError,
         successFn: () => { this.showLoading(false); },
       });
@@ -220,7 +221,8 @@ class CoinMoneyExchange extends Component {
 
   getCoinInfo(data = {}) {
     const { amount, currency, fiatCurrency } = this.state;
-    const { currencyByLocal } = this.props;
+    const { currencyByLocal, idVerificationLevel } = this.props;
+    const level = idVerificationLevel === 0 ? 1 : idVerificationLevel;
     const parsedAmount = Number.parseFloat(amount) || 0;
     const _fiatCurrency = data.fiatCurrency || fiatCurrency || currencyByLocal;
     if (parsedAmount >= 0 && currency && currencyByLocal) {
@@ -230,7 +232,7 @@ class CoinMoneyExchange extends Component {
         action: taggingConfig.coin.action.getCoinInfo,
       });
       this.props.buyCryptoGetCoinInfo({
-        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}`,
+        PATH_URL: `${API_URL.EXCHANGE.BUY_CRYPTO_GET_COIN_INFO}?amount=${parsedAmount}&currency=${currency}&fiat_currency=${_fiatCurrency}&level=${level}`,
         errorFn: this.onGetCoinInfoError,
         successFn: () => { this.showLoading(false); },
       });
@@ -311,14 +313,16 @@ CoinMoneyExchange.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
   markRequired: PropTypes.bool.isRequired,
+  idVerificationLevel: PropTypes.number.isRequired,
 };
 
 const mapState = (state) => {
   return {
     country: state.app.ipInfo.country || 'VN',
-    currencyByLocal: state.app.ipInfo.currency,
+    currencyByLocal: state.app.ipInfo.currency || FIAT_CURRENCY.VND,
     coinInfo: state.buyCoin?.coinInfo || {},
     quoteReverse: state.buyCoin?.quoteReverse || {},
+    idVerificationLevel: state.auth.profile.idVerificationLevel || 0,
   };
 };
 
