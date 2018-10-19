@@ -75,7 +75,7 @@ class AdminIDVerification extends React.Component {
     }
     this.token = this.token || this.getAdminHash() || '';
     this.props.loadIDVerificationDocuments({
-      PATH_URL: `${API_URL.ID_VERIFICATION.GET_DOCUMENTS}`,
+      PATH_URL: `${API_URL.ID_VERIFICATION.LIST_DOCUMENTS}`,
       headers: { AdminHash: this.token },
       successFn: (response) => {
         if (response.status === 1) {
@@ -170,6 +170,7 @@ class AdminIDVerification extends React.Component {
                 <th>Full Name</th>
                 <th>Document Number</th>
                 <th>Document Type</th>
+                <th>Upgrading Level</th>
                 <th>Front Image</th>
                 <th>Back Image</th>
                 <th>Selfie Image</th>
@@ -191,9 +192,10 @@ class AdminIDVerification extends React.Component {
                     <td>{item.name}</td>
                     <td>{item.id_number}</td>
                     <td>{DOCUMENT_TYPES[item.id_type]}</td>
-                    <td><a href={frontImage} target="_blank" rel="noopener noreferrer">{item.front_image ? (<Image src={frontImage} />) : ''}</a></td>
-                    <td><a href={backImage} target="_blank" rel="noopener noreferrer">{item.back_image ? (<Image src={backImage} />) : ''}</a></td>
-                    <td><a href={selfieImage} target="_blank" rel="noopener noreferrer">{item.selfie_image ? (<Image src={selfieImage} />) : ''}</a></td>
+                    <td>{item.level + 1}</td>
+                    <td><a href={frontImage} target="_blank" rel="noopener noreferrer">{item.front_image ? (<Image src={frontImage} width="200" />) : ''}</a></td>
+                    <td><a href={backImage} target="_blank" rel="noopener noreferrer">{item.back_image ? (<Image src={backImage} width="200" />) : ''}</a></td>
+                    <td><a href={selfieImage} target="_blank" rel="noopener noreferrer">{item.selfie_image ? (<Image src={selfieImage} width="200" />) : ''}</a></td>
                     <td>{uploadDate}</td>
                     <td>
                       <div style={this.state.actions[item.id] ? { display: 'none' } : {}}>

@@ -296,6 +296,7 @@ export const API_URL = {
   USER: {
     PROFILE: 'user/profile',
     CHECK_EXIST_EMAIL: 'user/check-email-exist',
+    ID_VERIFICATION: 'user/id_verification',
   },
   INTERNAL: {
     GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
@@ -305,8 +306,9 @@ export const API_URL = {
     REVIEW_COIN_ORDER: 'exchange/coin/review', // `GET /cash/order?status=processing|tranferring|success`
   },
   ID_VERIFICATION: {
-    GET_DOCUMENTS: 'id_verification/list',
+    LIST_DOCUMENTS: 'id_verification/list',
     UPDATE_STATUS: 'id_verification/update',
+    GET_DOCUMENT: 'id_verification/get',
   },
 };
 
