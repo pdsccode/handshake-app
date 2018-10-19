@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, FormattedTime } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { change, Field, formValueSelector, touch } from 'redux-form';
 import { connect } from 'react-redux';
 import {
@@ -34,7 +34,8 @@ import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransfe
 import Modal from '@/components/core/controls/Modal/Modal';
 import { formatMoney } from '@/services/offer-util';
 import { Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
@@ -45,8 +46,6 @@ import walletSelectorValidator from './reduxFormFields/walletSelector/validator'
 
 import '../styles.scss';
 import './BuyCryptoCoin.scss';
-import * as gtag from '@/services/ga-utils';
-import taggingConfig from '@/services/tagging-config';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
