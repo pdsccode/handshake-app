@@ -256,6 +256,7 @@ class CoinMoneyExchange extends Component {
             numeral: true,
             numeralDecimalScale: 4,
             numeralThousandsGroupStyle: 'thousand',
+            numeralIntegerScale: 9,
           }}
           placeholder="0.0"
           onChange={this.onAmountChange}
@@ -266,6 +267,7 @@ class CoinMoneyExchange extends Component {
           options={{
             numeral: true,
             numeralThousandsGroupStyle: 'thousand',
+            numeralIntegerScale: 9,
           }}
           placeholder="0.0"
           onChange={this.onFiatAmountChange}
