@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import QRCode from 'qrcode.react';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { Wallet } from '@/services/Wallets/Wallet';
 import CopyIcon from '@/assets/images/icon/icon-copy.svg';
@@ -66,6 +67,10 @@ class TopUp extends React.Component {
           <span className="HelpIcon" title="Copy to clipboard" onClick={this.copyToClipboard(address)}>
             <img src={CopyIcon} alt="Copy to clipboard" />
           </span>
+        </div>
+        <span className="Separate">Or</span>
+        <div className="QRCodeAddress">
+          <QRCode value={address} />
         </div>
       </div>
     );
