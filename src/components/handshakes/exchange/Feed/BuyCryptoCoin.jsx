@@ -249,7 +249,6 @@ class BuyCryptoCoin extends React.Component {
   }
 
   onGetCoinInfoError = (e) => {
-    this.updateAmount(0);
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
