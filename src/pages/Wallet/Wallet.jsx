@@ -715,7 +715,7 @@ class Wallet extends React.Component {
           exportPrivateContent: (
               <div className="export-private-key">
                 <div className="ex-title">{messages.wallet.action.export_private_key.title}</div>
-                <QRCode size={230} value={this.state.walletSelected.privateKey} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.copy.success);}} />
+                <QRCode size={230} value={this.state.walletSelected.privateKey} onClick={() => { Clipboard.copy(this.state.walletSelected.privateKey); this.showToast(messages.wallet.action.copy.success);}} />
                 <div className="ex-desc">{messages.wallet.action.export_private_key.desc} </div>
                 <Button onClick={()=> {Clipboard.copy(this.state.walletSelected.privateKey); this.showToast(messages.wallet.action.copy.success);}}>Copy</Button>
               </div>
@@ -821,7 +821,6 @@ class Wallet extends React.Component {
 
   closeTransfer = () => {
     this.setState({ modalTransferCoin: '' });
-    console.log("closeTransfer");
   }
 
   closeBuyCoin = () => {
