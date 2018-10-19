@@ -10,8 +10,8 @@ class ExtraInfo extends Component {
     this.toggle = :: this.toggle;
   }
 
-  toggle() {
-    this.setState(({ show }) => ({ show: !show }));
+  toggle(show) {
+    this.setState({ show: show === undefined ? !this.state.show : show });
   }
 
   render() {
@@ -19,7 +19,7 @@ class ExtraInfo extends Component {
     const { info, className } = this.props;
     return (
       <div className={`extra-info-container ${className}`}>
-        <div className="extra-info-icon" onClick={this.toggle}>?</div>
+        <button className="extra-info-icon" onClick={() => this.toggle()} onBlur={() => this.toggle(false)}>?</button>
         <div className={`extra-info-data ${show && 'show'}`}>{info}</div>
       </div>
     );

@@ -1755,7 +1755,7 @@ export default {
       payment_methods: {
         bank: 'Bank Transfer',
         cod: 'COD',
-        cod_info: 'Cash on delivery, only available for transactions under 500 USD/day',
+        cod_info: 'Cash on delivery.',
       },
       verify: {
         notYet: {
