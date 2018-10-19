@@ -11,9 +11,9 @@ import Cleave from 'cleave.js/react';
 import { showAlert } from '@/reducers/app/action';
 import { PAYMENT_METHODS } from '@/components/handshakes/exchange/Feed/BuyCryptoCoin';
 import { isOverLimit } from '@/reducers/buyCoin/index';
-import './styles.scss';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
+import './styles.scss';
 
 const formatMoney = (money = 0, currency = FIAT_CURRENCY.USD) => {
   if (currency === FIAT_CURRENCY.VND) {
