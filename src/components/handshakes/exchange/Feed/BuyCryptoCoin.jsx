@@ -616,7 +616,7 @@ class BuyCryptoCoin extends React.Component {
               <div key={name} className={`package-item ${name}`}>
                 <span className="name"><FormattedMessage id={`cc.label.${name}`} /></span>
                 <div className="price-amount-group">
-                  <span className="fiat-amount">{formatMoney(packageData.show?.fiatAmount)} {packageData.show?.fiatCurrency}</span>
+                  <span className={`fiat-amount ${packageData.show?.fiatCurrency === FIAT_CURRENCY.USD ? 'usd' : ''}`}>{formatMoney(packageData.show?.fiatAmount)} {packageData.show?.fiatCurrency}</span>
                   <span className="amount">{packageData?.amount || '---'} {packageData?.currency}</span>
                 </div>
                 <ConfirmButton
