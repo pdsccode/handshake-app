@@ -99,7 +99,7 @@
     width: 100%;
   }
   .buy-crypto-coin-specific-amount {
-    padding: 50px 10px;
+    padding: 25px 10px;
     background: white;
   }
   .label-1 {
@@ -197,17 +197,18 @@
   }
 
   .choose-coin-payment-method-container {
-    transition: opacity 300ms;
+    transition: opacity 250ms, max-height 300ms;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 230px;
-    margin: 20px 0px;
+    max-height: 0px;
+    margin: 0px;
     background: #F5F8FC;
     border-radius: 4px 4px 4px 4px;
     opacity: 0;
     &.cod {
       opacity: 1;
+      max-height: 300px;
     }
     &.bank {
       opacity: 1;
@@ -221,6 +222,7 @@
     flex-direction: column;
     justify-content: space-between;
     .cod-field {
+      margin: 5px 0px;
       height: 54px;
       background: #FFFFFF;
       border: 1.5px solid #E1E9F0;

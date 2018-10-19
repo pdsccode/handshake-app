@@ -32,8 +32,7 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ConfirmButton from '@/components/handshakes/exchange/components/ConfirmButton';
 import AtmCashTransferInfo from '@/components/handshakes/exchange/AtmCashTransferInfo';
 import Modal from '@/components/core/controls/Modal/Modal';
-import { formatMoney, formatMoneyByLocale } from '@/services/offer-util';
-import { Link } from 'react-router-dom';
+import { formatMoney } from '@/services/offer-util';
 import IdVerifyBtn from '@/components/handshakes/exchange/Feed/components/IdVerifyBtn';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import walletSelectorField from './reduxFormFields/walletSelector';
@@ -568,9 +567,8 @@ class BuyCryptoCoin extends React.Component {
   renderPaymentMethodInfo() {
     const { paymentMethod } = this.props;
     return (
-      <div className={`choose-coin-payment-method-container ${paymentMethod === PAYMENT_METHODS.COD ? 'cod' : 'bank'}`}>
-        {paymentMethod === PAYMENT_METHODS.COD && this.renderCoD()}
-        {paymentMethod === PAYMENT_METHODS.BANK_TRANSFER && this.renderBankInfo()}
+      <div className={`choose-coin-payment-method-container ${paymentMethod === PAYMENT_METHODS.COD ? 'cod' : ''}`}>
+        {this.renderCoD()}
       </div>
     );
   }
