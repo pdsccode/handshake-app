@@ -83,13 +83,13 @@ class Transaction extends React.Component {
 
           const bankData = bankInfo;
           // if fiatAmount over limit => use global bank, else local bank
-          if (this.isOverLimit(receipt.amount)) {
+          // if (this.isOverLimit(receipt.amount)) {
             // bankData = bankInfo.XX; // global bank
-          } else {
+          // } else {
             // bankData = bankInfo[country] || bankInfo.XX;
             receipt.amount = transaction.fiatLocalAmount;
             receipt.fiatCurrency = transaction.fiatLocalCurrency;
-          }
+          // }
           this.setState({
             modalTitle: messages.atm_cash_transfer_info.title,
             modalContent: (

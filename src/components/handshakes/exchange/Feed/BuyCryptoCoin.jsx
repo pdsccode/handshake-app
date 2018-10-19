@@ -455,13 +455,13 @@ class BuyCryptoCoin extends React.Component {
     };
 
     // if fiatAmount over limit => use global bank, else local bank
-    if (this.isOverLimit(receipt.amount)) {
-      bankData = this.getBankDataByCountry(); // global bank
-    } else {
+    // if (this.isOverLimit(receipt.amount)) {
+    //   bankData = this.getBankDataByCountry(); // global bank
+    // } else {
       bankData = this.getBankDataByCountry(country);
       receipt.amount = order.fiatLocalAmount;
       receipt.fiatCurrency = order.fiatLocalCurrency;
-    }
+    // }
     this.setState({
       modalContent: (
         <AtmCashTransferInfo
