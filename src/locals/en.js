@@ -19,6 +19,7 @@ export default {
       bet: 'Bet',
       credit: 'CC',
       shop: 'Shop',
+      ninjaCoin: 'Coin',
     },
   },
   buy: 'Buy',
@@ -232,7 +233,7 @@ export default {
   'ex.error.323': 'Exceeding global credit limit. Please try again tomorrow.',
   'ex.error.324': 'Credit exists',
   'ex.error.325': 'Credit price changed',
-  'ex.error.326': 'Busy day for our CC - we don’t have enough coin for your request! Please try with smaller amount.',
+  'ex.error.326': 'We don’t have enough coin for your request! Please try with smaller amount.',
   'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
@@ -941,6 +942,8 @@ export default {
               email: 'A valid email would work better.',
             },
             idVerification: {
+              invalidFullName: 'Please enter your full name',
+              invalidIDNumber: 'Please enter valid document ID number',
               invalidDocument: 'Please choose a document type',
               invalidFrontImage: 'Please upload front page of your document',
               invalidBackImage: 'Please upload back page of your document',
@@ -966,7 +969,7 @@ export default {
       text: {
         verified: 'Verified',
         username: {
-          label: 'Name',
+          label: 'Nick Name',
           desc1: 'What do they call you?',
           button: {
             submit: 'Save',
@@ -997,15 +1000,17 @@ export default {
         id_verification: {
           label: 'ID Verification',
           desc1: 'Your account must be verified to comply with relevant anti-money laundering (AML) and counter-terrorism financing (CTF) laws and regulations',
-          desc2: '● All documents provided must be in Roman/Latin alphabet or a certified English translation is required.',
-          desc3: '● All files uploaded must be in png, jpg or jpeg.',
-          desc4: '● All fields in the following verification form are mandatory (NA for Non Applicable can be used).',
-          desc5: '● To avoid possible delays, please check the correctness before submitting documents, please double check you do not send the same document twice and possibly forget one.',
-          desc6: 'Select document type',
-          desc7: 'Document front page upload',
-          desc8: 'Document back page upload',
-          desc9: 'Selfie with document upload',
+          desc2: 'Name',
+          desc3: 'Valid Document Number',
+          desc4: 'Document type',
+          desc5: 'Identity Card Front Side',
+          desc6: 'Please make sure that the photo is complete and clearly visible, in JPG or PNG format. Id card must be in the valid period.',
+          desc7: 'Identity Card Back Side',
+          desc8: 'Identity Card Front Side With Ninja Background',
+          desc9: 'Please make sure that the photo is complete and clearly visible, in JPG format And make sure the text in the paper exactly is  ‘Ninja.org MMDDYY’',
+          uploading: 'Uploading',
           button: {
+            upload: 'Upload file',
             submit: 'Submit',
           },
         },
@@ -1106,6 +1111,13 @@ export default {
     },
   },
   create: {
+    cod_form: {
+      cod: 'Cash on Delivery',
+      buy_btn: 'Buy',
+      your_address: 'Meet up address',
+      your_phone: 'Phone number',
+      time: 'Time to delivery & Note',
+    },
     cash: {
       credit: {
         title: 'Buy coins',
@@ -1139,6 +1151,11 @@ export default {
         updatedAtmSuccess: 'Success!',
         no_history: 'You do not have any order yet.',
       },
+      confirm_button: {
+        desc: 'Are you sure?',
+        confirm: 'Sure',
+        cancel: 'Cancel',
+      },
       button: {
         create: 'Create my ATM',
         update: 'Update my ATM',
@@ -1154,16 +1171,21 @@ export default {
       },
       transactions: {
         amount: 'Amount',
-        needToTransfer: 'Need to transfer',
+        needToTransfer: 'Cost',
         status: 'Status',
         to_wallet: 'To Wallet',
         statusValues: {
           processing: 'Pending',
           success: 'Success',
           transferring: 'Sending coins...',
+          cancelled: 'Canceled',
+          fiat_transfering: 'Sending money...',
+          transfer_failed: 'Failed',
         },
         messageTransfer: 'You haven\'t transferred yet.',
-        transferNow: 'View detail',
+        transferNow: ' View detail',
+        cancel_order: 'Cancel',
+        review_order: 'Review',
       },
     },
   },
@@ -1715,11 +1737,83 @@ export default {
     bank_id: 'BANK ID',
     reference_code: 'REFERENCE CODE',
     important: 'IMPORTANT: ',
-    notice_desc: 'You must send the exact amount & reference code as instructed and upload the payment proof below so we can proceed sending coins to your customer.',
+    notice_desc: 'You must send the exact amount & reference code as instructed and upload the payment proof below so we can proceed sending coins to you.',
     upload_btn: 'Upload your bank receipt',
     done_btn: 'Done',
     copied: 'Copied to clipboard!',
     title: 'Payment detail',
     amount_info: 'Profit = Customer Amount - Your Amount',
+  },
+  buy_coin: {
+    label: {
+      header: {
+        buy_crypto: 'Buy crypto',
+        with_ninja_coin: ' with Ninja Coin',
+      },
+      description: 'Ninja has some of the best prices around',
+      common_packages: 'Common packages:',
+      payment_methods: {
+        bank: 'Bank Transfer',
+        cod: 'COD',
+        cod_info: 'Cash on delivery, only available for transactions under 500 USD/day',
+      },
+      verify: {
+        notYet: {
+          title: 'You are not verified yet! Verify now to start trading with good price.',
+          action: 'Verify now',
+        },
+        rejected: {
+          title: 'Your verification is rejected. Please try again.',
+          action: 'Verify now',
+        },
+        processing: {
+          title: 'We are verifying your account. Please kindly wait.',
+          action: 'Please wait',
+        },
+        verified: {
+          need_selfie_verifiy: 'You are buying more than 500 usd. Please verify your account to increase the limit',
+        },
+      },
+      success: 'Succesful!',
+    },
+    buy_package_without_wallet_address_notice: 'Sorry Ninja, something went wrong. Please choose your wallet first.',
+  },
+  bank_info: {
+    transfer_detail_text: ' PLEASE MAKE PAYMENT TO THIS DETAILS',
+    account_name: 'Account name',
+    account_number: 'Account number',
+    bank_id: 'Bank ID',
+    bank_name: 'Bank name',
+  },
+  buy_coin_transaction: {
+    code: 'Code',
+    statusValues: {
+      pending: 'Created',
+      processing: 'Processing',
+      success: 'Success',
+      transferring: 'Transferring coin',
+      cancelled: 'Canceled',
+      fiat_transferring: 'Transferring money',
+      transfer_failed: 'Failed',
+      expired: 'Expired',
+      rejected: 'Rejected',
+    },
+  },
+  'buy_coin_transaction.text.no_history': `No order yet. Don't miss our good price and <strong><a href="https://ninja.org/buy-coin">create one now!</a></strong>`,
+  wallet_selector: {
+    your_wallet: 'Your wallets',
+    wallet_dont_match_error: 'The address and type of crypto don’t match. Please check',
+  },
+  'buy_coin_confirm_popup.msg': 'Buy {amount} {currency} with {fiatAmount} {fiatCurrency}?',
+  'buy_coin_confirm_popup.confirm_text': 'Confirm',
+  'buy_coin_confirm_popup.cancel_text': 'Cancel',
+  'buy_coin.verify.need_selfie_verifiy': 'You are buying more than {fiatAmount} {fiatCurrency}. Please verify your account to increase the limit',
+  'buy_coin.verify.need_selfie_verifiy_action': 'Verify now',
+  review: {
+    title: 'Review',
+    label: {
+      description: 'How do you feel?',
+      submitButtonTitle: 'Submit',
+    },
   },
 };

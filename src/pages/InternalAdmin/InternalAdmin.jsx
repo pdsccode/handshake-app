@@ -4,12 +4,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import debounce from '@/utils/debounce';
 import { loadCashOrderList, sendCashOrder } from '@/reducers/internalAdmin/action';
 import './InternalAdmin.scss';
+import { FormattedDate } from 'react-intl';
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import Helper from "@/services/helper";
 
 const STATUS = {
+  pending: {
+    id: 'pending',
+    name: 'Created',
+  },
+  processing: {
+    id: 'processing',
+    name: 'Processing',
+  },
   fiat_transferring: {
     id: 'fiat_transferring',
     name: 'Fiat transferring',
@@ -22,9 +34,21 @@ const STATUS = {
     id: 'success',
     name: 'Sent',
   },
+  cancelled: {
+    id: 'cancelled',
+    name: 'Canceled',
+  },
+  rejected: {
+    id: 'rejected',
+    name: 'Rejected',
+  },
   transfer_failed: {
     id: 'transfer_failed',
     name: 'Failed',
+  },
+  expired: {
+    id: 'expired',
+    name: 'Expired',
   },
 };
 
@@ -34,10 +58,15 @@ const DEFAULT_TYPE = Object.values(STATUS)[0].id;
 class InternalAdmin extends Component {
   constructor() {
     super();
+
+    this.token = this.getAdminHash() || '';
     this.state = {
       type: DEFAULT_TYPE,
       isFinished: false,
       page: null,
+      type_order: '',
+      ref_code: '',
+      login: this.token.length > 0,
     };
 
     this.send = :: this.send;
@@ -53,13 +82,41 @@ class InternalAdmin extends Component {
     //   window.location.pathname = '/';
     //   return null;
     // }
-    this.loadOrderList();
-    this.setupInitifyLoad();
+
+    if (this.state.login) {
+      const { type  } = this.props?.match?.params;
+      const { ref_code } = Helper.getQueryStrings(window.location.search);
+      this.setState({ type_order: type, ref_code }, () => {
+        this.loadOrderList();
+      });
+
+      this.setupInitifyLoad();
+    } else {
+      this.props.history.push(`${URL.ADMIN_ID_VERIFICATION}?redirect=${window.location.pathname}`);
+    }
+
     return null;
+  }
+
+  getAdminHash() {
+    return sessionStorage.getItem('admin_hash');
   }
 
   componentWillUnmount() {
     window.onscroll = backupScroll;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.orderList && JSON.stringify(nextProps.orderList) !== JSON.stringify(this.props.orderList)) {
+      // this.resetTable();
+    }
+  }
+
+  resetTable = () => {
+    console.log('this.refs.table',this.refs.table);
+    if (this.refs.table) {
+      this.refs.table?.refresh();
+    }
   }
 
   autoLoadMore() {
@@ -126,8 +183,16 @@ class InternalAdmin extends Component {
       qs.page = this.state.page;
     }
 
+    if (this.state.type_order) {
+      qs.type = this.state.type_order;
+    }
+
+    if (this.state.ref_code) {
+      qs.ref_code = this.state.ref_code;
+    }
+
     this.props.loadCashOrderList({
-      PATH_URL: API_URL.INTERNAL.GET_CASH_ORDER,
+      PATH_URL: API_URL.INTERNAL.GET_COIN_ORDER,
       qs,
       successFn: this.onSuccess,
     });
@@ -141,33 +206,180 @@ class InternalAdmin extends Component {
 
   send(order = {}) {
     this.props.sendCashOrder({
-      PATH_URL: `${API_URL.INTERNAL.GET_CASH_ORDER}/${order.ref_code}/${this.getAmount(order)?.amount}`,
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}`,
       METHOD: 'POST',
+      successFn: (res) => {
+      },
+    });
+  }
+
+  process(order = {}) {
+    this.props.sendCashOrder({
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/pick`,
+      METHOD: 'PUT',
+    });
+  }
+
+  reject(order = {}) {
+    this.props.sendCashOrder({
+      PATH_URL: `${API_URL.INTERNAL.GET_COIN_ORDER}/${order.id}/reject`,
+      METHOD: 'PUT',
     });
   }
 
   renderActionBtn(order = {}) {
-    if (order.status !== STATUS.fiat_transferring.id) {
-      return null;
+    let result = null;
+    switch (order.type) {
+      case 'bank': {
+        if (order.status === STATUS.fiat_transferring.id) {
+          result = (
+            <button onClick={() => this.send(order)} className="btn btn-primary">
+              Send
+            </button>
+          );
+        }
+        break;
+      }
+      case 'cod': {
+        if (order.status === STATUS.pending.id) {
+          result = (
+            <button onClick={() => this.process(order)} className="btn btn-primary">
+              Process
+            </button>
+          );
+        } else if (order.status === STATUS.processing.id) {
+          result = (
+            <div>
+              <button onClick={() => this.send(order)} className="btn btn-primary">
+                Send
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button onClick={() => this.reject(order)} className="btn btn-primary">
+                Reject
+              </button>
+            </div>
+          );
+        }
+
+        break;
+      }
+      default: {
+
+      }
     }
 
-    return (
-      <button onClick={() => this.send(order)} className="btn btn-primary">
-        Send
-      </button>
-    );
+    return result;
+  }
+
+  ellipsisText(text = '') {
+    let newText = '';
+    if (text.length >= 20) {
+      newText = `${text.substr(0, 4)}...${text.substr(-6)}`;
+    }
+
+    return newText;
   }
 
   render() {
     const { orderList } = this.props;
-    const { isFinished } = this.state;
+    const { isFinished, type_order } = this.state;
+    const typeShowInfo = 'cod';
+
+    console.log('render', orderList);
+
+    const columns = [{
+      dataField: 'id',
+      text: 'ID',
+      hidden: true,
+    }, {
+      dataField: 'created_at',
+      text: 'Created Date',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return (<FormattedDate
+          value={new Date(cell)}
+          year="numeric"
+          month="long"
+          day="2-digit"
+          hour="2-digit"
+          minute="2-digit"
+        />);
+      },
+    }, {
+      dataField: 'address',
+      text: 'Wallet Address',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.ellipsisText(cell);
+      },
+    }, {
+      dataField: 'user_info.address',
+      text: 'Address',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'user_info.phone',
+      text: 'Phone',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'user_info.noteAndTime',
+      text: 'Note',
+      hidden: type_order !== typeShowInfo,
+    }, {
+      dataField: 'amount',
+      text: 'Amount',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getAmount(row)?.full;
+      },
+    }, {
+      dataField: 'coin',
+      text: 'Coin',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getCoin(row);
+      },
+    }, {
+      dataField: 'ref_code',
+      text: 'Code',
+      filter: textFilter(),
+    }, {
+      dataField: 'status',
+      text: 'Status',
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        return this.getStatus(row);
+      },
+    }, {
+      dataField: 'action',
+      text: 'Action',
+      isDummyField: true,
+      formatter: (cell, row, rowIndex, formatExtraData) => {
+        const order = orderList[rowIndex];
+        console.log('action order', row, order);
+        return this.renderActionBtn(row);
+      },
+    },
+    ];
+
     return (
-      <div>
+      <BootstrapTable
+        ref="table"
+        keyField="id"
+        data={orderList}
+        columns={columns}
+        filter={filterFactory()}
+        bordered={false}
+        noDataIndication="No record"
+        striped
+        hover
+        condensed
+      />
+
+      /* <div>
         <table>
           <thead>
             <tr>
+              <th>Created Date</th>
+              <th>Wallet Address</th>
               <th>Name</th>
-              <th>Phone</th>
+              {type_order === typeShowInfo && <th>Address</th>}
+              {type_order === typeShowInfo && <th>Phone</th>}
+              {type_order === typeShowInfo && <th>Note</th>}
               <th>Amount</th>
               <th>Coin</th>
               <th>Code</th>
@@ -184,8 +396,19 @@ class InternalAdmin extends Component {
             {
               orderList.map(order => (
                 <tr key={order.id}>
+                  <td><FormattedDate
+                    value={new Date(order.created_at)}
+                    year="numeric"
+                    month="long"
+                    day="2-digit"
+                    hour="2-digit"
+                    minute="2-digit"
+                  /></td>
+                  <td>{this.ellipsisText(order.address)}</td>
                   <td>{order?.user_info?.name || '---'}</td>
-                  <td>{order?.user_info?.phone || '---'}</td>
+                  {type_order === typeShowInfo && <td>{order?.user_info?.address || '---'}</td>}
+                  {type_order === typeShowInfo && <td>{order?.user_info?.phone || '---'}</td>}
+                  {type_order === typeShowInfo && <td>{order?.user_info?.noteAndTime || '---'}</td>}
                   <td>{this.getAmount(order)?.full}</td>
                   <td>{this.getCoin(order)}</td>
                   <td>{order.ref_code}</td>
@@ -200,7 +423,7 @@ class InternalAdmin extends Component {
               </tr>}
           </tbody>
         </table>
-      </div>
+      </div> */
     );
   }
 }
