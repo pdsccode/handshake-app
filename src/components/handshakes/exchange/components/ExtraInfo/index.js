@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'reactstrap';
+import IconInfo from '@/assets/images/icon/question-circle.svg';
 import './styles.scss';
 
 class ExtraInfo extends Component {
@@ -8,6 +10,7 @@ class ExtraInfo extends Component {
     this.state = { show: false };
 
     this.toggle = :: this.toggle;
+    this.icon = React.createRef();
   }
 
   toggle(show) {
@@ -18,10 +21,17 @@ class ExtraInfo extends Component {
     const { show } = this.state;
     const { info, className } = this.props;
     return (
-      <div className={`extra-info-container ${className}`}>
-        <button className="extra-info-icon" onClick={() => this.toggle()} onBlur={() => this.toggle(false)}>?</button>
-        <div className={`extra-info-data ${show && 'show'}`}>{info}</div>
-      </div>
+      <span className={`extra-info-container ${className}`}>
+        <img src={IconInfo} alt="" width="12" className="extra-info-icon" ref={this.icon} />
+        <Tooltip
+          placement="bottom"
+          isOpen={show}
+          target={this.icon?.current || '.extra-info-icon'}
+          toggle={() => this.toggle()}
+        >
+          {info}
+        </Tooltip>
+      </span>
     );
   }
 }
