@@ -124,9 +124,10 @@ class Prediction extends React.Component {
     this.closeOrderPlace();
     if (!this.props.isExistEmail && isFree) {
       this.modalEmailPopupRef.open();
-    } else {
-      isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
     }
+    // else {
+    //   isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
+    // }
   }
 
   checkFreeAvailabe = (props) => {
@@ -458,8 +459,8 @@ class Prediction extends React.Component {
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
-        {this.renderLuckyReal()}
-        {this.renderLuckyFree()}
+        {/*{this.renderLuckyReal()}*/}
+        {/*{this.renderLuckyFree()}*/}
         {this.renderLuckyLanding()}
         {this.renderFreeBetLose()}
         {this.renderFreeBetWin()}

@@ -2319,6 +2319,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
+
 classnames@2.x, classnames@^2.2.0, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
@@ -4891,7 +4895,7 @@ handlebars@^4.0.11:
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
   version "0.0.1539156818"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/fb061f08c032f007ff1f2715b3367b90c19ec7fc"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/2f3384f8124001d27d1f52ac9bd7f0d5a6195011"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
@@ -8474,6 +8478,17 @@ react-autowhatever@^10.1.2:
     react-themeable "^1.1.0"
     section-iterator "^2.0.0"
 
+react-bootstrap-table-next@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table-next/-/react-bootstrap-table-next-1.3.0.tgz#4c5834f09815f8ef0a4c634a4753d624fa43dacf"
+  dependencies:
+    classnames "2.2.5"
+    underscore "1.9.1"
+
+react-bootstrap-table2-filter@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-table2-filter/-/react-bootstrap-table2-filter-1.0.1.tgz#62ddba7602bbc475340bbb16355e740582343ac1"
+
 react-bootstrap@^0.32.1:
   version "0.32.4"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-0.32.4.tgz#8efc4cbfc4807215d75b7639bee0d324c8d740d1"
@@ -10542,6 +10557,10 @@ uncontrollable@^5.0.0:
 underscore@1.8.3:
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
+
+underscore@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
