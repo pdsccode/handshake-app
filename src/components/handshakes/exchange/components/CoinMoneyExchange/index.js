@@ -279,7 +279,7 @@ class CoinMoneyExchange extends Component {
             numeralThousandsGroupStyle: 'thousand',
             numeralIntegerScale: 9,
           }}
-          placeholder="0.0"
+          placeholder="0"
           onChange={this.onFiatAmountChange}
         />
         <UncontrolledButtonDropdown className={scopedCss('fiat-amount-selector-container')}>
