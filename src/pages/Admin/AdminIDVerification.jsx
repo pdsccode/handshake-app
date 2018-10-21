@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { showAlert } from '@/reducers/app/action';
 import { loadIDVerificationDocuments, updateIDVerificationDocument } from '@/reducers/admin/action';
 import Image from '@/components/core/presentation/Image';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import Login from '@/components/handshakes/betting-event/Login';
 import moment from 'moment';
 import { Table, Button } from 'react-bootstrap';
 
 import './Admin.scss';
+import Helper from '@/services/helper';
 
 const IMAGE_BASE_URL = process.env.CDN_URL;
 const DOCUMENT_TYPES = [
@@ -53,9 +54,14 @@ class AdminIDVerification extends React.Component {
     this.setState({
       login: newLogin,
     }, () => {
-      setTimeout(() => {
-        this.fetchDocuments();
-      }, 500);
+      const { redirect } = Helper.getQueryStrings(window.location.search);
+      if (newLogin && redirect) {
+        this.props.history.push(`${redirect}`);
+      } else {
+        setTimeout(() => {
+          this.fetchDocuments();
+        }, 500);
+      }
     });
   }
 
