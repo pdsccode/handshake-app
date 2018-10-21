@@ -354,7 +354,7 @@ class Profile extends React.Component {
 
   onSubmitVerifyEmail() {
     const { messages } = this.props.intl;
-    const email = this.state.email || this.localEmail;
+    const email = (this.state.email || this.localEmail).toLowerCase();
     const { emailStart, code } = this.state;
     console.log('emailStart', emailStart);
     console.log('email', email);
