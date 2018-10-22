@@ -682,6 +682,14 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
+  onFirstClickBuy = () => {
+    console.log('onFirstClickBuy',);
+    gtag.event({
+      category: taggingConfig.coin.category,
+      action: taggingConfig.coin.action.click_buy,
+    });
+  }
+
   render() {
     console.log('STATE', this.state);
     const { authProfile: { idVerified } } = this.props;
@@ -761,6 +769,7 @@ class BuyCryptoCoin extends React.Component {
                       }}
                     />
                   }
+                  onFirstClick={this.onFirstClickBuy}
                 />
               </div>
             </FormBuyCrypto>
