@@ -400,6 +400,7 @@
   .ShareEventMessage {
     position: relative;
     padding-bottom: 80px;
+
     &:after {
       content: '';
       display: inline-block;
@@ -411,6 +412,7 @@
       left: 50%;
       margin-left: -50px;
     }
+
   }
 
   .ShareEventToBuddies {
