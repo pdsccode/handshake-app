@@ -143,6 +143,13 @@ class CreateEventForm extends Component {
     const oldData = value.slice(0, lastIndex);
     return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
   }
+  checkReportStatus = (reportChecked, disabled) => {
+    if (!disabled) {
+      this.setState({
+        reportChecked: !reportChecked,
+      });
+    }
+  }
 
   renderGroupTitle = (title) => {
     return (<div className="CreateEventFormGroupTitle">{title}</div>);
@@ -161,14 +168,15 @@ class CreateEventForm extends Component {
           name="checkreport"
           checked={this.state.reportChecked}
           onChange={() => {
-            if (!disabled) {
-              this.setState({
-                reportChecked: !this.state.reportChecked,
-              });
-            }
+            this.checkReportStatus(this.state.reportChecked, disabled);
           }}
         />
-        <div className="checkReportTitle">Ninja will report for me</div>
+        <div className="checkReportTitle"
+          onClick={() => {
+            this.checkReportStatus(this.state.reportChecked, disabled);
+          }}
+        >Ninja will report for me
+        </div>
       </div>
     );
   }
