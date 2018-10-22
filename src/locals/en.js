@@ -269,7 +269,7 @@ export default {
   'ex.landing.intro.label.2': 'Switch to your phone now to start making money with us!',
 
   'ex.landing.description.label.1': `Set up an ATM <br/>& make some money`,
-  'ex.landing.description.label.2': `Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="${URL.ABOUT_NINJA_CASH}" class="btn-read-more">Read more</a> about us here`,
+  'ex.landing.description.label.2': `Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="/about-ninja-cash" class="btn-read-more">Read more</a> about us here`,
 
   'ex.landing.features.label.1': 'Your market. Your rates',
   'ex.landing.features.label.2': 'Secured with blockchain technology',
