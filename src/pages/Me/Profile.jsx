@@ -29,7 +29,7 @@ import IDVerificationSelfieImageExample from '@/assets/images/id-verification/se
 
 // import { chatInstance } from '@/pages/Chat/Chat';
 import valid from '@/services/validate';
-
+import { ICON } from '@/styles/images';
 import './Profile.scss';
 
 class Profile extends React.Component {
@@ -148,6 +148,23 @@ class Profile extends React.Component {
     });
   }
 
+  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
+    this.props.showAlert({
+      message: <div className="textCenter">{icon}{msg}</div>,
+      timeOut,
+      type,
+      callBack: () => {},
+    });
+  }
+
+  showError(mst) {
+    this.showAlert(mst, 'danger', 3000);
+  }
+
+  showSuccess(mst) {
+    this.showAlert(mst, 'success', 4000, ICON.SuccessChecked());
+  }
+
   componentDidMount(){
     const { email } = this.state;
     if(email){
@@ -172,85 +189,49 @@ class Profile extends React.Component {
       idVerificationEmail,
     } = this.state;
     const { messages } = this.props.intl;
-    console.log('onSubmitIDVerification');
+
     if (idVerificationLevel === 0) {
       if (!idVerifcationUserFullName) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidFullName}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidFullName);
         return;
       }
 
       if (idVerificationDocumentType < 0) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidDocument}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidDocument);
         return;
       }
 
       if (!idVerificationIDNumber) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidIDNumber}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidIDNumber);
         return;
       }
 
       if (!idVerificationEmail) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidEmail}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidEmail);
         return;
       }
 
       if (valid.email(idVerificationEmail)) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.client.email}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.client.email);
         return;
       }
 
       if (!idVerificationFrontImage) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidFrontImage}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidFrontImage);
         return;
       }
 
       if (idVerificationDocumentType > 0 && !idVerificationBackImage) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidBackImage}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidBackImage);
         return;
       }
     } else if (idVerificationLevel === 1) {
       if (!idVerificationSelfieImage) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidSelfieImage}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidSelfieImage);
         return;
       }
     } else {
-      this.props.showAlert({
-        message: <div className="text-center">{messages.me.profile.verify.alert.success.idVerification}</div>,
-        timeOut: 3000,
-        type: 'success',
-      });
+      this.showError(messages.me.profile.verify.alert.success.idVerification);
       return;
     }
 
@@ -277,19 +258,17 @@ class Profile extends React.Component {
       },
       successFn: () => {
         this.setState({ idVerified: 2, idVerificationCollapse: false, idVerficationUploadingProgress: 0 });
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.success.idVerification}</div>,
-          timeOut: 3000,
-          type: 'success',
-        });
+        this.showSuccess(messages.me.profile.verify.alert.success.idVerification);
       },
-      errorFn: () => {
+      errorFn: (e) => {
+        console.log(e);
         this.setState({ idVerficationUploadingProgress: 0 });
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.cannot.idVerification}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        if(e && e.message){
+          this.showError(messages.me.profile.verify.alert.cannot.idVerification2 + ' ' + e.message);
+        }
+        else{
+          this.showError(messages.me.profile.verify.alert.cannot.idVerification);
+        }
       },
     });
   }
@@ -311,29 +290,17 @@ class Profile extends React.Component {
         METHOD: 'POST',
         successFn: () => {
           this.setState(() => ({ phoneStart: phone, isShowVerificationPhoneCode: true }));
-          this.props.showAlert({
-            message: <div className="text-center">{messages.me.profile.verify.alert.send.phone}</div>,
-            timeOut: 3000,
-            type: 'success',
-          });
+          this.showSuccess(messages.me.profile.verify.alert.send.phone);
           local.save(APP.PHONE_NEED_VERIFY, phone);
           local.save(APP.COUNTRY_PHONE_NEED_VERIFY, countryCode.dialCode.replace('+', ''));
         },
         errorFn: () => {
-          this.props.showAlert({
-            message: <div className="text-center">{messages.me.profile.verify.alert.notValid.server.phone}</div>,
-            timeOut: 3000,
-            type: 'danger',
-          });
+          this.showError(messages.me.profile.verify.alert.notValid.server.phone);
         },
       });
     } else {
       if (!sms) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.require.phone}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.require.phone);
         return;
       }
       this.props.submitPhone({
@@ -355,27 +322,15 @@ class Profile extends React.Component {
             METHOD: 'POST',
             successFn: () => {
               this.setState({ isShowVerificationPhoneCode: false });
-              this.props.showAlert({
-                message: <div className="text-center">{messages.me.profile.verify.alert.success.phone}</div>,
-                timeOut: 3000,
-                type: 'success',
-              });
+              this.showSuccess(messages.me.profile.verify.alert.success.phone);
             },
             errorFn: () => {
-              this.props.showAlert({
-                message: <div className="text-center">{messages.me.profile.verify.alert.require.phone}</div>,
-                timeOut: 3000,
-                type: 'danger',
-              });
+              this.showError(messages.me.profile.verify.alert.require.phone);
             },
           });
         },
         errorFn: () => {
-          this.props.showAlert({
-            message: <div className="text-center">{messages.me.profile.verify.alert.cannot.phone}</div>,
-            timeOut: 3000,
-            type: 'danger',
-          });
+          this.showError(messages.me.profile.verify.alert.cannot.phone);
         },
       });
     }
@@ -387,11 +342,7 @@ class Profile extends React.Component {
     const { emailStart, code } = this.state;
     if (email) {
       if (valid.email(email)) {
-        this.props.showAlert({
-          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.client.email}</div>,
-          timeOut: 3000,
-          type: 'danger',
-        });
+        this.showError(messages.me.profile.verify.alert.notValid.client.email);
         return;
       }
       if (emailStart !== email) {
@@ -401,30 +352,18 @@ class Profile extends React.Component {
           METHOD: 'POST',
           successFn: (data) => {
             if (data.status) {
-              this.props.showAlert({
-                message: <div className="text-center">{messages.me.profile.verify.alert.send.email}</div>,
-                timeOut: 3000,
-                type: 'success',
-              });
+              this.showSuccess(messages.me.profile.verify.alert.send.email);
               this.setState(() => ({ emailStart: email, isShowVerificationEmailCode: true }));
               local.save(APP.EMAIL_NEED_VERIFY, email);
             }
           },
           errorFn: () => {
-            this.props.showAlert({
-              message: <div className="text-center">{messages.me.profile.verify.alert.notValid.client.email}</div>,
-              timeOut: 3000,
-              type: 'danger',
-            });
+            this.showError(messages.me.profile.verify.alert.notValid.client.email);
           },
         });
       } else {
         if (!code) {
-          this.props.showAlert({
-            message: <div className="text-center">{messages.me.profile.verify.alert.require.email}</div>,
-            timeOut: 3000,
-            type: 'danger',
-          });
+          this.showError(messages.me.profile.verify.alert.require.email);
           return;
         }
         this.props.submitEmail({
@@ -445,36 +384,20 @@ class Profile extends React.Component {
               METHOD: 'POST',
               successFn: () => {
                 this.setState({ isShowVerificationEmailCode: false });
-                this.props.showAlert({
-                  message: <div className="text-center">{messages.me.profile.verify.alert.success.email}</div>,
-                  timeOut: 3000,
-                  type: 'success',
-                });
+                this.showSuccess(messages.me.profile.verify.alert.success.email);
               },
               errorFn: () => {
-                this.props.showAlert({
-                  message: <div className="text-center">{messages.me.profile.verify.alert.require.email}</div>,
-                  timeOut: 3000,
-                  type: 'danger',
-                });
+                this.showError(messages.me.profile.verify.alert.require.email);
               },
             });
           },
           errorFn: () => {
-            this.props.showAlert({
-              message: <div className="text-center">{messages.me.profile.verify.alert.cannot.email}</div>,
-              timeOut: 3000,
-              type: 'danger',
-            });
+            this.showError(messages.me.profile.verify.alert.cannot.email);
           },
         });
       }
     } else {
-      this.props.showAlert({
-        message: <div className="text-center">{messages.me.profile.verify.alert.notValid.client.email}</div>,
-        timeOut: 3000,
-        type: 'danger',
-      });
+      this.showError(messages.me.profile.verify.alert.notValid.client.email);
     }
   }
 
@@ -510,30 +433,16 @@ class Profile extends React.Component {
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               METHOD: 'POST',
               successFn: () => {
-                this.props.showAlert({
-                  message: <div className="text-center">{messages.me.profile.username.success}</div>,
-                  timeOut: 3000,
-                  type: 'success',
-                });
-                // chatInstance.updateUserName(values.username);
-
+                this.showSuccess(messages.me.profile.username.success);
               },
             });
           } else {
-            this.props.showAlert({
-              message: <div className="text-center">{messages.me.profile.username.exist}</div>,
-              timeOut: 3000,
-              type: 'danger',
-            });
+            this.showError(messages.me.profile.username.exist);
           }
         },
       });
     } else {
-      this.props.showAlert({
-        message: <div className="text-center">{messages.me.profile.username.required}</div>,
-        timeOut: 3000,
-        type: 'danger',
-      });
+      this.showError(messages.me.profile.username.required);
     }
   }
 

@@ -964,6 +964,7 @@ export default {
             phone: 'Can\'t verify your phone, please check your code',
             email: 'Can\'t verify your email, please check your code.',
             idVerification: 'Can\'t submit your documents, please try again',
+            idVerification2: 'Can\'t submit your documents.',
           },
         },
       },
