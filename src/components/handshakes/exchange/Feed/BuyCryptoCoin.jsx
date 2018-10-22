@@ -783,7 +783,8 @@ class BuyCryptoCoin extends React.Component {
                       }}
                     />
                   }
-                  onFirstClick={this.onFirstClickBuy}
+                  onConfirm={this.onFirstClickBuy}
+                  onCancel={this.onFirstClickBuy}
                 />
               </div>
             </FormBuyCrypto>
