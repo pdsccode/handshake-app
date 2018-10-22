@@ -267,7 +267,7 @@ class BetingShakeFree extends React.Component {
     if (tooltip.length === 0) return null;
     return (
       <span className="wrapperTooltipShakeFree">
-        <img src={IconInfo} alt="" id="TooltipPrivate" width="12" />
+        <img src={IconInfo} alt="" id="TooltipPrivate" width="14" />
         <Tooltip
           placement="right"
           isOpen={openTooltip}
