@@ -237,6 +237,12 @@ class InternalAdmin extends Component {
               Send
             </button>
           );
+        } else if (order.status === STATUS.transfer_failed.id) {
+          result = (
+            <button onClick={() => this.send(order)} className="btn btn-primary">
+              ReSend
+            </button>
+          );
         }
         break;
       }
@@ -256,6 +262,14 @@ class InternalAdmin extends Component {
               &nbsp;&nbsp;&nbsp;
               <button onClick={() => this.reject(order)} className="btn btn-primary">
                 Reject
+              </button>
+            </div>
+          );
+        } else if (order.status === STATUS.transfer_failed.id) {
+          result = (
+            <div>
+              <button onClick={() => this.send(order)} className="btn btn-primary">
+                ReSend
               </button>
             </div>
           );
