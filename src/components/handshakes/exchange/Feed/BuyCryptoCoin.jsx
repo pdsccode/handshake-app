@@ -127,12 +127,14 @@ class BuyCryptoCoin extends React.Component {
   }
 
   componentDidMount() {
-    const { country } = this.props;
+    const { country, intl: { messages } } = this.props;
     // this.getBasePrice(this.props.wallet?.currency);
     this.updatePhoneNumber(this.props.authProfile?.phone);
 
     // need to get bank info in user country, global bank also
     this.getBankInfoFromCountry(country);
+
+    this.updateTimeAndNote(messages.create.cod_form.default_time);
 
     // get package data
     this.getPackageData();
@@ -249,6 +251,10 @@ class BuyCryptoCoin extends React.Component {
 
   updatePhoneNumber = (phone) => {
     phone && this.props.rfChange(nameBuyCryptoForm, 'phone', phone);
+  }
+
+  updateTimeAndNote = (noteAndTime = '') => {
+    this.props.rfChange(nameBuyCryptoForm, 'noteAndTime', noteAndTime);
   }
 
   updatePaymentMethod = (method) => {
