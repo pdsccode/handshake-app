@@ -1,7 +1,3 @@
-import { URL } from '@/constants';
-import React from 'react';
-import { Link } from 'react-router-dom';
-
 export default {
   app: {
     name: 'Ninja',
@@ -743,7 +739,7 @@ export default {
     },
     {
       question: 'How do I start with Ninja?',
-      answer: (
+      answer: `
         <div>
           <div>– Get Ether:</div>
           <div>You can either buy ETH directly in PEX with your credit cards or from popular coin exchanges like Coinbase or Binance.</div>
@@ -758,7 +754,7 @@ export default {
           <br />
           <div>– Wait for the report: if you win, your winnings will be automatically transferred from the escrow smart contract to your account.</div>
         </div>
-      ),
+      `,
     },
     {
       question: 'Can I set my own preferred odds? How?',
@@ -806,7 +802,7 @@ export default {
     },
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
-      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/instructions</Link></span>,
+      answer: `<span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/instructions</Link></span>`,
     },
   ],
   'landing_page.wallet.faq': [
@@ -842,7 +838,7 @@ export default {
     },
     {
       question: 'How does it work?',
-      answer: <span>Anyone can contribute their images to the DAD.<br />All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>,
+      answer: `<span>Anyone can contribute their images to the DAD.<br />All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>`,
     },
     {
       question: 'Can anyone buy datasets from DAD?',
