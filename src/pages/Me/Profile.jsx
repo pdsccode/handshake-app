@@ -76,6 +76,7 @@ class Profile extends React.Component {
       idVerificationLevel: props.auth.profile.idVerificationLevel,
       idVerifcationUserFullName: '',
       idVerificationIDNumber: '',
+      idVerificationEmail: '',
     };
     // bind
     this.onSubmitVerifyPhone = :: this.onSubmitVerifyPhone;
@@ -147,6 +148,14 @@ class Profile extends React.Component {
     });
   }
 
+  componentDidMount(){
+    const { email } = this.state;
+    if(email){
+      this.setState({idVerificationEmail: email});
+    }
+
+  }
+
   onTextFieldChange(name, value) {
     this.setState(() => ({ [name]: value }));
   }
@@ -160,9 +169,10 @@ class Profile extends React.Component {
       idVerificationLevel,
       idVerifcationUserFullName,
       idVerificationIDNumber,
+      idVerificationEmail,
     } = this.state;
     const { messages } = this.props.intl;
-
+    console.log('onSubmitIDVerification');
     if (idVerificationLevel === 0) {
       if (!idVerifcationUserFullName) {
         this.props.showAlert({
@@ -185,6 +195,24 @@ class Profile extends React.Component {
       if (!idVerificationIDNumber) {
         this.props.showAlert({
           message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidIDNumber}</div>,
+          timeOut: 3000,
+          type: 'danger',
+        });
+        return;
+      }
+
+      if (!idVerificationEmail) {
+        this.props.showAlert({
+          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.idVerification.invalidEmail}</div>,
+          timeOut: 3000,
+          type: 'danger',
+        });
+        return;
+      }
+
+      if (valid.email(idVerificationEmail)) {
+        this.props.showAlert({
+          message: <div className="text-center">{messages.me.profile.verify.alert.notValid.client.email}</div>,
           timeOut: 3000,
           type: 'danger',
         });
@@ -233,6 +261,7 @@ class Profile extends React.Component {
       data.append('document_type', idVerificationDocumentType);
       data.append('front_image', idVerificationFrontImage);
       data.append('back_image', idVerificationBackImage);
+      data.append('email', idVerificationEmail);
     } else {
       data.append('selfie_image', idVerificationSelfieImage);
     }
@@ -356,8 +385,6 @@ class Profile extends React.Component {
     const { messages } = this.props.intl;
     const email = (this.state.email || this.localEmail).toLowerCase();
     const { emailStart, code } = this.state;
-    console.log('emailStart', emailStart);
-    console.log('email', email);
     if (email) {
       if (valid.email(email)) {
         this.props.showAlert({
@@ -843,6 +870,28 @@ class Profile extends React.Component {
                           </div>
                         </Row>
                       </div>
+                      {!this.state.email &&
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className=" text label">
+                              {messages.me.profile.text.email.label}
+                            </p>
+                              <Field
+                                name="email"
+                                type="text"
+                                className="form-control-custom form-control-custom-ex w-100"
+                                component={fieldInput}
+                                value={this.state.idVerificationEmail}
+                                validate={[required]}
+                                onChange={(evt, value, unknown, name) => { this.setState({ idVerificationEmail: value }); }}
+                              />
+                            <p />
+                          </div>
+                        </Row>
+                      </div>
+                      }
+
                       {this.state.idVerificationLevel === 0 ? (
                         <div>
                           <div>

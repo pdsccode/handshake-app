@@ -947,6 +947,7 @@ export default {
               invalidDocument: 'Please choose a document type',
               invalidFrontImage: 'Please upload front page of your document',
               invalidBackImage: 'Please upload back page of your document',
+              invalidEmail: 'Please upload email of your document',
               invalidSelfieImage: 'Please upload a selife photo with your document',
             },
           },
@@ -1008,6 +1009,7 @@ export default {
           desc7: 'Identity Card Back Side',
           desc8: 'Identity Card Front Side With Ninja Background',
           desc9: 'Please make sure that the photo is complete and clearly visible, in JPG format And make sure the text in the paper exactly is  ‘Ninja.org MMDDYY’',
+          desc10: 'Email',
           uploading: 'Uploading',
           button: {
             upload: 'Upload file',
