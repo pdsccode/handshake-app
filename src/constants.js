@@ -629,6 +629,7 @@ export const URL = {
   INVEST_PROJECT_INFO: '/invest/project/:projectID',
   INVEST_TRADER_INFO: '/invest/trader/:traderID',
   INVEST_URL: '/invest',
+  INVEST_INVESTING_LIST: '/invest/investing',
 
 
 };

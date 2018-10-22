@@ -11,6 +11,7 @@ const ProjectList = props => (<DynamicImport loading={Loading} load={() => impor
 const ProjectDetail = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Invest/ProjectDetail')}>{Component => <Component {...props} />}</DynamicImport>);
 const TraderList = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Invest/TraderList')}>{Component => <Component {...props} />}</DynamicImport>);
 const TraderDetail = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Invest/TraderDetail')}>{Component => <Component {...props} />}</DynamicImport>);
+const InvestingList = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Invest/InvestingList')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
@@ -23,6 +24,7 @@ const routerMap = [
   { path: URL.INVEST_PROJECT_INFO, component: ProjectDetail },
   { path: URL.INVEST_TRADER_LIST, component: TraderList },
   { path: URL.INVEST_TRADER_INFO, component: TraderDetail },
+  { path: URL.INVEST_INVESTING_LIST, component: InvestingList },
 ];
 
 class InvestRouter extends React.Component {

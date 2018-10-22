@@ -5,6 +5,7 @@ import './ProjectList.scss';
 import ProjectList from '@/pages/Invest/ProjectList';
 import LinkWallet from '@/pages/Invest/LinkWallet';
 import TraderList from '@/pages/Invest/TraderList';
+import InvestingList from '@/pages/Invest/InvestingList';
 import ExpandArrowSVG from './settings.svg';
 
 class InvestBlock extends Component {
@@ -29,6 +30,8 @@ class InvestBlock extends Component {
         return <TraderList {...this.props} />;
       case 'projects':
         return <ProjectList {...this.props} />;
+      case 'investing': 
+        return <InvestingList {...this.props} />
       case 'linkwallet':
         return <LinkWallet {...this.props} />;
       default:
@@ -100,6 +103,25 @@ class InvestBlock extends Component {
               }}
             >
               Projects
+            </h6>
+          </button>
+          <button
+            className={
+              this.state.activeTab === 'investing' ? 'active-tab btn-transparent' : 'inactive-tab btn-transparent'
+            }
+            onClick={() => {
+              this.setState({
+                activeTab: 'investing',
+              });
+              sessionStorage.setItem('activeTab', 'investing');
+            }}
+          >
+            <h6
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              My Funds
             </h6>
           </button>
           <button

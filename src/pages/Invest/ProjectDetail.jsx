@@ -59,7 +59,7 @@ class ProjectDetail extends Component {
                 {!project.User.avatar && <div className="avatar_non" style={{ backgroundColor: toHexColor(project.User.firstName)}}>
                     {`${project.User.firstName[0].toUpperCase() + project.User.lastName[0].toUpperCase()}`}
                 </div>}
-                <span className="userName">{project.displayName}</span>
+                <span className="userName">{project.User.firstName + project.User.lastName}</span>
                 <div className="star-ratings">
                   <StarRatings
                     className="stars"

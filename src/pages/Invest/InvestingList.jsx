@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_projects } from '@/reducers/invest/action';
+import { fetch_investing } from '@/reducers/invest/action';
 import _ from 'lodash';
 import ProjectItem from './ProjectList/ProjectItem';
 import './ProjectList/ProjectList.scss';
 
-class ProjectList extends Component {
+class InvestingList extends Component {
   constructor(props) {
     super(props);
-    this.props.fetch_projects();
+    this.props.fetch_investing();
   }
 
   navigateToProjectDetails=(project)=>{
@@ -34,6 +34,6 @@ const mapState = state => ({
   projects: state.invest && state.invest.projects ? state.invest.projects : []
 });
 
-const mapDispatch = { fetch_projects }
+const mapDispatch = { fetch_investing }
 
-export default connect(mapState, mapDispatch)(ProjectList);
+export default connect(mapState, mapDispatch)(InvestingList);

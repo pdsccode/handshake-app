@@ -12,6 +12,7 @@ export const ACTIONS = {
   SM_PROJECT_FUND_AMOUNT: 'SM_PROJECT_FUND_AMOUNT'
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
+const LIST_INVESTING_URL = '/fundings/list';
 const PROJECT_DETAIL_URL = '/projects';
 const LIST_TRADER_URL = '/users/list-trader';
 const LINK_WALLET_URL = '/link-to-wallet';
@@ -28,6 +29,19 @@ export const getImageUrl = avatar => `${IMAGE_PREFIX}/${avatar}`
 
 export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
   axiosInstance.get(LIST_PROJECT_URL)
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_PROJECTS, payload })
+      resolve(payload)
+    }
+    reject(`Response return status is not success ${status}`);
+  })
+  .catch(err => reject(err));
+})
+
+export const fetch_investing = () => dispatch => new Promise((resolve, reject) => {
+  const { address } = MasterWallet.getWalletDefault().ETH;
+  axiosInstance.get(`${LIST_INVESTING_URL}/${address}`)
   .then(({ status, data: payload }) => {
     if (status === 200) {
       dispatch({ type: ACTIONS.FETCH_PROJECTS, payload })
