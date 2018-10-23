@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetch_projects } from '@/reducers/invest/action';
 import _ from 'lodash';
-import ProjectItem from './ProjectList/ProjectItem';
+import ProjectItem, { date_diff_indays } from './ProjectList/ProjectItem';
 import './ProjectList/ProjectList.scss';
 
 class ProjectList extends Component {
@@ -17,7 +17,7 @@ class ProjectList extends Component {
 
   renderProjects() {
     return (
-      this.props.projects.map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
+      this.props.projects.filter(e => date_diff_indays(new Date(), new Date(e.deadline)) > 0).map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
     )
   }
 

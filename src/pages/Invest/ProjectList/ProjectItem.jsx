@@ -7,7 +7,7 @@ import Utils from '../Utils';
 import StarRatings from 'react-star-ratings';
 import { wrapBoundary } from '../../../components/ErrorBoundary';
 import './ProjectList.scss';
-var date_diff_indays = function(dt1, dt2) {
+export const date_diff_indays = function(dt1, dt2) {
   return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
 }
 
