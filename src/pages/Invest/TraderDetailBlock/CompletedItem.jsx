@@ -24,7 +24,7 @@ const CompletedItem = wrapBoundary(({ name, lifeTime, deadline, fundingAmount, r
                     {(Number(fundingAmount) - Number(releasedAmount) + Number(retractAmount)).toFixed(2)}
                     <span className="colorTrader-grey">{` ${currency}`}</span>
                 </label>
-                <label className="green">{((Number(releasedAmount) + Number(retractAmount))/Number(fundingAmount)).toFixed(2)} %</label>
+                <label className="green">{Number(fundingAmount) ?((Number(releasedAmount) + Number(retractAmount))/Number(fundingAmount)).toFixed(2) : 0} %</label>
             </div>
         </div>
     </div>
