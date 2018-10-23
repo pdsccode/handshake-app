@@ -11,7 +11,6 @@ class TraderDetail extends Component {
         this.state = {
             loading: true,
         }
-        console.log('=========trader detail', this.props.match.params.traderID);
     }
 
     getTraderDetail = () => {
