@@ -45,6 +45,9 @@ const taggingConfig = {
     action: {
       getCoinInfo: 'get_coin_info',
       getReverseCoinInfo: 'get_reverse_coin_info',
+      clickBuy: 'click_buy',
+      selectAddress: 'select_address',
+      scanQrCodeAddress: 'scan_qr_code_address',
     },
   },
 };
