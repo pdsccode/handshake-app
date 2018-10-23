@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { fetch_traders, exampleTraders } from '../../reducers/invest/action';
-import Web3 from './Web3'
+import { fetch_traders } from '../../reducers/invest/action';
 import ('./TraderList.scss');
 import StarRatings from 'react-star-ratings';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -73,7 +72,7 @@ class TraderList extends Component {
     
     render() {
         return (
-            this.props.traders.concat(exampleTraders).map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
+            this.props.traders.map((e, i) => (<TraderItemBoudary handleOnClick={this.navigateToDetail.bind(this, e)} key={i} {...e} />))
         )
     }
 }
