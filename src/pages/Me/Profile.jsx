@@ -261,7 +261,6 @@ class Profile extends React.Component {
         this.showSuccess(messages.me.profile.verify.alert.success.idVerification);
       },
       errorFn: (e) => {
-        console.log(e);
         this.setState({ idVerficationUploadingProgress: 0 });
         if(e && e.message){
           this.showError(messages.me.profile.verify.alert.cannot.idVerification2 + ' ' + e.message);
