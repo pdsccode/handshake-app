@@ -38,7 +38,7 @@ const TraderItem = ({ avatar, firstName, lastName, rating, average = 0, amount, 
                 numberOfStars={5}
                 name="rating"
                 />
-                <span className="rating-count">(26)</span>
+                {/* <span className="rating-count">(26)</span> */}
             </div>
             </div>
             <div className="traderItem-right">

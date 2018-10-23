@@ -71,7 +71,7 @@ const ProjectItem = wrapBoundary(({ handleOnClick, ...project }) => {
                 numberOfStars={5}
                 name="rating"
               />
-              <span className="rating-count">(26)</span>
+              {/* <span className="rating-count">(26)</span> */}
             </div>
           </div>
           <div className="duration-left">
