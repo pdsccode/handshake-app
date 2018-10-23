@@ -418,7 +418,7 @@ handleScan=(data) =>{
     let qrCodeResult = MasterWallet.getQRCodeDetail(data);
     if (qrCodeResult){
       let dataType = qrCodeResult['type'];
-      if (dataType == MasterWallet.QRCODE_TYPE.TRANSFER){
+      if (dataType == MasterWallet.QRCODE_TYPE.TRANSFER || dataType == MasterWallet.QRCODE_TYPE.CRYPTO_ADDRESS){
           this.setState({
             inputAddressAmountValue: qrCodeResult.data.address, inputSendAmountValue: qrCodeResult.data.amount
           });
