@@ -38,7 +38,6 @@ class CreateEventForm extends Component {
     formAction: PropTypes.func,
     dispatch: PropTypes.func,
     onSelect: PropTypes.func,
-    isValidEmailCode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,7 +52,6 @@ class CreateEventForm extends Component {
     initialValues: {},
     shareEvent: null,
     eventList: [],
-    isValidEmailCode: undefined,
   };
 
   constructor(props) {
@@ -366,7 +364,7 @@ class CreateEventForm extends Component {
     });
     const { isNew, shareEvent } = props;
     if (shareEvent) {
-      return (<ShareMarket shareEvent={shareEvent} isNew={isNew} />);
+      return (<ShareMarket shareEvent={shareEvent} isNew={isNew} dispatch={props.dispatch} />);
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
@@ -391,10 +389,7 @@ class CreateEventForm extends Component {
           {this.renderCheckReport(props)}
         </div>
         <div className="CreateEventFormBlock">
-          <EmailVerification
-            hasEmail={props.hasEmail}
-            isValidEmailCode={props.isValidEmailCode}
-          />
+          <EmailVerification />
           <button
             type="submit"
             className="btn btn-primary btn-block"
