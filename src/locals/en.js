@@ -1753,7 +1753,9 @@ export default {
         with_ninja_coin: ' with Ninja Coin',
       },
       description: 'Ninja has some of the best prices around',
-      common_packages: 'Common packages:',
+      common_packages: 'One-click Purchases',
+      basic_package_name: 'Starter',
+      pro_package_name: 'Master',
       payment_methods: {
         bank: 'Bank Transfer',
         cod: 'COD',
@@ -1761,7 +1763,7 @@ export default {
       },
       verify: {
         notYet: {
-          title: 'You are not verified yet It only take a few minutes!',
+          title: 'To start trading, please take a few minutes to verify your account.',
           action: 'Verify now',
         },
         rejected: {
@@ -1773,12 +1775,20 @@ export default {
           action: 'Please wait',
         },
         verified: {
-          need_selfie_verifiy: 'You are buying more than 500 usd. Please verify your account to increase the limit',
+          level_1: {
+            title: `You're ready to trade! Your max daily limit is now 500 USD. Want more?`,
+            action: 'Provide additional verification',
+          },
+          level_2: {
+            title: `You're fully verified. Your limit has now been increased to the max of 5000 USD!`,
+            action: '',
+          },
+          need_selfie_verifiy: 'You are buying more than 500 usd. Please provide additional verification to increase your limit',
         },
       },
       success: 'Succesful!',
     },
-    buy_package_without_wallet_address_notice: 'Sorry Ninja, something went wrong. Please choose your wallet first.',
+    buy_package_without_wallet_address_notice: 'Please choose your wallet first.',
   },
   bank_info: {
     transfer_detail_text: ' PLEASE MAKE PAYMENT TO THIS DETAILS',
@@ -1814,7 +1824,7 @@ export default {
   review: {
     title: 'Review',
     label: {
-      description: 'How do you feel?',
+      description: 'How is your experience with Ninja Coin?',
       submitButtonTitle: 'Submit',
     },
   },
