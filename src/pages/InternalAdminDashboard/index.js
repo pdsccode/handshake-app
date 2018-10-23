@@ -48,8 +48,8 @@ class InternalAdminDashboard extends Component {
   render() {
     return (
       <main>
-        <Header />
-        <Sidebar menus={menus} onMenuSelect={this.onMenuSelect} />
+        <Header title={menus[this.state.selectedMenuId]?.name} />
+        <Sidebar menus={menus} selectedMenuId={this.state.selectedMenuId} onMenuSelect={this.onMenuSelect} />
         <div className={scopeCss('container')}>
           {this.renderBody()}
         </div>

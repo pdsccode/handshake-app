@@ -9,7 +9,12 @@ export default class Sidebar extends Component {
     super();
     this.state = {
       selectedId: null,
+      show: false,
     };
+  }
+
+  componentWillMount() {
+    this.props.selectedMenuId && this.setState({ selectedId: this.props.selectedMenuId });
   }
   onMenuSelect = (idMenu) => {
     this.setState({ selectedId: idMenu });
@@ -17,6 +22,10 @@ export default class Sidebar extends Component {
     if (typeof onMenuSelect === 'function') {
       onMenuSelect(idMenu);
     }
+  }
+
+  toggle = (forceShow = !this.state.show) => {
+    this.setState({ show: forceShow });
   }
 
   renderMenu = () => {
@@ -28,11 +37,32 @@ export default class Sidebar extends Component {
       </div>
     ));
   }
+
+  renderExpanded = () => {
+    const { show } = this.state;
+    return (
+      <React.Fragment>
+        <div className={`${scopeCss('sidebar')} ${show ? 'expanded' : ''}`}>
+          <div className={scopeCss('header')}>Admin Dashboard</div>
+          <div className={scopeCss('body')}>{this.renderMenu()}</div>
+        </div>
+        <div className={show ? scopeCss('overlay') : ''} onClick={() => this.toggle(false)} />
+      </React.Fragment>
+    );
+  }
+
+  renderCollapse = () => {
+    return (
+      <div className={scopeCss('collapse-icon')} onClick={() => this.toggle(true)}>{`Open Menu >`}</div>
+    );
+  }
+
   render() {
+    const { show } = this.state;
     return (
       <div className={scopeCss('container')}>
-        <div className={scopeCss('header')}>Admin Dashboard</div>
-        <div className={scopeCss('body')}>{this.renderMenu()}</div>
+        {!show && this.renderCollapse()}
+        {this.renderExpanded()}
       </div>
     );
   }
@@ -40,9 +70,11 @@ export default class Sidebar extends Component {
 
 Sidebar.defaultProps = {
   onMenuSelect: null,
+  selectedMenuId: null,
 };
 
 Sidebar.propTypes = {
   menus: PropTypes.object.isRequired,
   onMenuSelect: PropTypes.func,
+  selectedMenuId: PropTypes.string,
 };
