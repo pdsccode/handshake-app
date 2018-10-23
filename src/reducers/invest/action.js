@@ -6,6 +6,7 @@ export const ACTIONS = {
   FETCH_PROJECTS: 'FETCH_PROJECTS',
   FETCH_PROJECT_DETAIL: 'FETCH_PROJECT_DETAIL',
   FETCH_TRADERS: 'FETCH_TRADERS',
+  FETCH_TRADER_DETAIL: 'FETCH_TRADER_DETAIL',
   SYNC_WALLET: 'SYNC_WALLET',
   SYNCED_INFO: 'SYNCED_INFO',
   SM_PROJECT: 'CALL_SM_PROJECT',
@@ -15,8 +16,10 @@ const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const LIST_INVESTING_URL = '/fundings/list';
 const PROJECT_DETAIL_URL = '/projects';
 const LIST_TRADER_URL = '/users/list-trader';
+const GET_TRADER_URL = '/users';
 const LINK_WALLET_URL = '/link-to-wallet';
 const IMAGE_PREFIX = 'http://35.198.235.226:9000/api/file-storages/avatar/download';
+const GET_TRADER_URL_ID = id => `${GET_TRADER_URL}/${id}?filter[include]=project`
 export const toHexColor = (str) => {
 	var hex = '';
 	for(var i=0;i<str.length;i++) {
@@ -24,8 +27,10 @@ export const toHexColor = (str) => {
 	}
 	return `#${hex.substring(0, 6)}`;
 };
-
 export const getImageUrl = avatar => `${IMAGE_PREFIX}/${avatar}`
+export const date_diff_indays = function(dt1, dt2) {
+  return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+}
 
 export const fetch_projects = () => dispatch => new Promise((resolve, reject) => {
   axiosInstance.get(LIST_PROJECT_URL)
@@ -69,6 +74,18 @@ export const fetch_traders = () => dispatch => new Promise((resolve, reject) => 
   .then(({ status, data: payload }) => {
     if (status === 200) {
       dispatch({ type: ACTIONS.FETCH_TRADERS, payload })
+      resolve(payload)
+    }
+    reject('');
+  })
+  .catch(err => reject(err));
+})
+
+export const fetch_trader_detail = (id) => dispatch => new Promise((resolve, reject) => {
+  axiosInstance.get(GET_TRADER_URL_ID(id))
+  .then(({ status, data: payload }) => {
+    if (status === 200) {
+      dispatch({ type: ACTIONS.FETCH_TRADER_DETAIL, payload })
       resolve(payload)
     }
     reject('');

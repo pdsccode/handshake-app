@@ -7,6 +7,8 @@ export default function(state = {}, action){
             return {...state, project: action.payload }
         case ACTIONS.FETCH_TRADERS: 
             return {...state, traders: action.payload }
+        case ACTIONS.FETCH_TRADER_DETAIL:
+            return {...state, trader: action.payload }
         case ACTIONS.SYNC_WALLET: {
             return {...state, syncWallet: action.payload }
         }

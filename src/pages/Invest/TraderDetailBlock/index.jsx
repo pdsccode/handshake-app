@@ -3,6 +3,7 @@ import React from 'react';
 import ProfileSumary from './ProfileSumary';
 import FundingItem from './FundingItem';
 import CompletedItem from './CompletedItem';
+import { date_diff_indays } from '@/reducers/invest/action';
 
 const TraderDetailBlock = (props) => (
     <div key={'addlater'} style={{ marginTop: '1em' }} >
@@ -12,7 +13,7 @@ const TraderDetailBlock = (props) => (
                 <label>CURRENTLY FUNDING</label>
             </div>
             <div className="funding-body">
-                {[60,80,20,10,30].map((e, i) => <FundingItem percentage={e} key={i} />)}
+                {props.project.filter(p => date_diff_indays(new Date(), new Date(p.deadline)) > 0).map((e, i) => <FundingItem index={i+1} {...e} key={i} />)}
             </div>
         </div>
         <div className="completed">

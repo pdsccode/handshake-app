@@ -6,22 +6,23 @@ import './TraderDetail.scss';
 const handleProgressBar = (values) => [
     { label: 'success', value: 80 },
     { label: 'info', value: 30 },
-    { label: 'danger', value: 0 }
+    { label: 'danger', value: 0 } 
 ].find(e => values >= e.value).label;
-
-const FundingItem = wrapBoundary(({ percentage }) => (
+const getProgressPercent = (p, total) => Number(((Number(p || 0)/ Number(Number(total) || 1))*100).toFixed(2));
+const getProgressBar = (p, total) => handleProgressBar(getProgressPercent(p, total));
+const FundingItem = wrapBoundary(({ index, name, fundingAmount, target }) => (
     <div className="funding-body-row">
         <div className="funding-body-row-left">
-            <label>1. TraderId</label>
-            <ProgressBar className="progress" bsStyle={handleProgressBar(percentage)} now={percentage} />
+            <label>{index}. {name.toUpperCase()}</label>
+            <ProgressBar className="progress" bsStyle={getProgressBar(fundingAmount, target)} now={getProgressPercent(fundingAmount, target)} />
             <label className="progress-title">
-                {'150,000'}
-                <span className="colorTrader-grey">{' of 150,000 ETH'}</span>
+                {fundingAmount}
+                <span className="colorTrader-grey">{` of ${target} ETH`}</span>
             </label>
         </div>
         <div className="funding-body-row-right">
             <label className="colorTrader-grey">{'5 days left'}</label>
-            <label className="colorTrader-green">{'55%'}</label>
+            <label className="colorTrader-green">{getProgressPercent(fundingAmount, target)}%</label>
         </div>
     </div>
 ));

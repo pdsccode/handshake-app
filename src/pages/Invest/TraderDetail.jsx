@@ -1,8 +1,26 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import InvestNavigation from './InvestNavigation';
 import TraderDetailBlock from './TraderDetailBlock';
+import { fetch_trader_detail } from '@/reducers/invest/action';
 
-export default class TraderDetail extends Component {
+class TraderDetail extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true,
+        }
+        console.log('=========trader detail', this.props.match.params.traderID);
+    }
+
+    getTraderDetail = () => {
+        this.props.fetch_trader_detail(this.props.match.params.traderID).then(r => this.setState({ loading: false })).catch(err => console.log(err));
+    }
+    componentDidMount = () => {
+        this.getTraderDetail();
+    }
+
     render(){
         const item = {
             rating: 1,
@@ -15,12 +33,18 @@ export default class TraderDetail extends Component {
             currentlyFundings: [],
             completedProjects: []
         };
-        
+        if (this.state.loading) return <div>Loading...</div>
         return (
             <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
                 <InvestNavigation header="Trader" history={this.props.history} />
-                <TraderDetailBlock {...item} />
+                <TraderDetailBlock {...this.props.trader} />
             </div>
         )
     }
 }
+
+const mapState = state => ({
+    trader: state.invest && state.invest.trader ? state.invest.trader : null
+})
+const mapDispatch = { fetch_trader_detail }
+export default connect(mapState, mapDispatch)(TraderDetail);
