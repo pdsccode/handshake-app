@@ -14,15 +14,13 @@ class PexCreateBtn extends React.PureComponent {
           {/*<img src={IconIdea} alt="" className="IconIdea" />*/}
           <span>Wanna start a new bet?</span>
         </div>
-        <button
-          // to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}
+        <div className="btnCreate"
           onClick={() => {
-            this.props.dispatch(push(URL.HANDSHAKE_PEX_CREATOR));
-            GA.clickCreateOwnEvent();
+          this.props.dispatch(push(URL.HANDSHAKE_PEX_CREATOR));
+          GA.clickCreateOwnEvent();
           }}
-        >
-          <div className="btnCreate">Create now</div>
-        </button>
+        >Create now
+        </div>
       </div>
     );
   }
