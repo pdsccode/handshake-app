@@ -278,6 +278,8 @@ class Wallet extends React.Component {
       this.splitWalletData(listWallet);
       await this.getListBalace(listWallet);
     }
+
+    $zopim.livechat.button.hide();
   }
 
   async getSetting(){
