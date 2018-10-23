@@ -2,9 +2,9 @@ import './TraderDetail.scss';
 import React from 'react';
 import { wrapBoundary } from '../../../components/ErrorBoundary';
 
-const CompletedItem = wrapBoundary(() => (
+const CompletedItem = wrapBoundary(({ name, lifeTime, deadline, fundingAmount, releasedAmount, retractAmount, currency }) => (
     <div className="completed-body-row">
-        <div className="completed-body-row-title">{'XProject'}</div>
+        <div className="completed-body-row-title">{name}</div>
         <div className="completed-body-row-body">
             <div className="completed-body-row-body-left">
                 <label>{'Duration'}</label>
@@ -14,17 +14,17 @@ const CompletedItem = wrapBoundary(() => (
                 <label>{''}</label>
             </div>
             <div className="completed-body-row-body-right">
-                <label>{'3 months'}</label>
-                <label>{'14 Sep 2018'}</label>
+                <label>{`${lifeTime} months`}</label>
+                <label>{new Date(deadline).toDateString()}</label>
                 <label>
-                    {'1,000,000'}
-                    <span className="colorTrader-grey">{' ETH'}</span>
+                    {fundingAmount}
+                    <span className="colorTrader-grey">{` ${currency}`}</span>
                 </label>
                 <label>
-                    {'1,200,000'}
-                    <span className="colorTrader-grey">{' ETH'}</span>
+                    {(Number(fundingAmount) - Number(releasedAmount) + Number(retractAmount)).toFixed(2)}
+                    <span className="colorTrader-grey">{` ${currency}`}</span>
                 </label>
-                <label className="green">{'+25%'}</label>
+                <label className="green">{((Number(releasedAmount) + Number(retractAmount))/Number(fundingAmount)).toFixed(2)} %</label>
             </div>
         </div>
     </div>

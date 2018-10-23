@@ -13,7 +13,7 @@ const TraderDetailBlock = (props) => (
                 <label>CURRENTLY FUNDING</label>
             </div>
             <div className="funding-body">
-                {props.project.filter(p => date_diff_indays(new Date(), new Date(p.deadline)) > 0).map((e, i) => <FundingItem index={i+1} {...e} key={i} />)}
+                {props.project.filter(p => date_diff_indays(new Date(), new Date(p.deadline)) > 0 && p.state !== 'WITHDRAW').map((e, i) => <FundingItem index={i+1} {...e} key={i} />)}
             </div>
         </div>
         <div className="completed">
@@ -21,7 +21,7 @@ const TraderDetailBlock = (props) => (
                 <label>{'COMPLETED PROJECTS'}</label>
             </div>
             <div className="completed-body">
-                {[1,2,3,4,5].map((e, i) => <CompletedItem key={i} />)}
+                {props.project.filter(p=> p.state === 'WITHDRAW').map((e, i) => <CompletedItem {...e} key={i} />)}
             </div>
         </div>
     </div>
