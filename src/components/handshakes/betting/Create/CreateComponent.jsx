@@ -260,7 +260,7 @@ class BettingCreate extends React.Component {
     if (tooltip.length === 0) return null;
     return (
       <span className="wrapperTooltip">
-        <img src={IconInfo} alt="" id="TooltipCreate" width="12" />
+        <img className="imageTooltip" src={IconInfo} alt="" id="TooltipCreate" width="14" />
         <Tooltip
           placement="right"
           isOpen={openTooltip}
