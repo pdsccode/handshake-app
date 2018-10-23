@@ -943,6 +943,7 @@ export default {
               invalidDocument: 'Please choose a document type',
               invalidFrontImage: 'Please upload front page of your document',
               invalidBackImage: 'Please upload back page of your document',
+              invalidEmail: 'Please upload email of your document',
               invalidSelfieImage: 'Please upload a selife photo with your document',
             },
           },
@@ -959,6 +960,7 @@ export default {
             phone: 'Can\'t verify your phone, please check your code',
             email: 'Can\'t verify your email, please check your code.',
             idVerification: 'Can\'t submit your documents, please try again',
+            idVerification2: 'Can\'t submit your documents.',
           },
         },
       },
@@ -1004,6 +1006,7 @@ export default {
           desc7: 'Identity Card Back Side',
           desc8: 'Identity Card Front Side With Ninja Background',
           desc9: 'Please make sure that the photo is complete and clearly visible, in JPG format And make sure the text in the paper exactly is  ‘Ninja.org MMDDYY’',
+          desc10: 'Email',
           uploading: 'Uploading',
           button: {
             upload: 'Upload file',

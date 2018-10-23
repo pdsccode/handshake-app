@@ -303,11 +303,13 @@ class Prediction extends React.Component {
             />
           );
         })}
-        {this.renderRelevantEventList(props)}
-        <Disclaimer />
+
       </div>
     );
   };
+  renderDislaimer = () => {
+    return (<Disclaimer />);
+  }
 
   renderRelevantEventList = (props) => {
     if (!props.isSharePage) return null;
@@ -458,8 +460,10 @@ class Prediction extends React.Component {
         <PexCreateBtn dispatch={props.dispatch} />
         {this.renderReport(props)}
         {this.renderEventList(props)}
-        {this.renderBetMode(props, state)}
+        {this.renderRelevantEventList(props)}
         {this.renderViewAllEvent(props, state)}
+        {this.renderDislaimer()}
+        {this.renderBetMode(props, state)}
         {/*{this.renderLuckyReal()}*/}
         {/*{this.renderLuckyFree()}*/}
         {this.renderLuckyLanding()}

@@ -282,7 +282,7 @@ class BetingShake extends React.Component {
     if (tooltip.length === 0) return null;
     return (
       <span className="wrapperTooltipShake">
-        <img src={IconInfo} alt="" id="TooltipShake" width="12" />
+        <img className="imageTooltip" src={IconInfo} alt="" id="TooltipShake" width="14" />
         <Tooltip
           placement="right"
           isOpen={openTooltip}
