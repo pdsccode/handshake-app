@@ -382,7 +382,7 @@ class Profile extends React.Component {
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               METHOD: 'POST',
               successFn: () => {
-                this.setState({ isShowVerificationEmailCode: false });
+                this.setState({ isShowVerificationEmailCode: false, idVerificationEmail: email });
                 this.showSuccess(messages.me.profile.verify.alert.success.email);
               },
               errorFn: () => {
