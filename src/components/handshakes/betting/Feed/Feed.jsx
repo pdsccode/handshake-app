@@ -646,14 +646,11 @@ class FeedBetting extends React.Component {
       actionTitle, isAction, itemInfo, isLoading, eventName, predictName, shakedItemList,
     } = this.state;
 
-    //const {extraData} = this.props;
-
     const { side, odds, role } = itemInfo;
 
     const colorBySide = side === 1 ? `support` : 'oppose';
     const displayValues = role === ROLE.INITER ? this.calculateDisplayValueMaker() : this.calculateDisplayValueShaker(shakedItemList);
     const { displayMatchedAmount, displayAmount, displayWinMatch, displayWinValue } = displayValues;
-    console.log(TAG, 'render', isLoading);
     return (
       <div>
         {/* Feed */}

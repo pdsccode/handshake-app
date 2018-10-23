@@ -17,6 +17,8 @@ import debounce from '@/utils/debounce';
 import { getCryptoFromAddress } from '@/components/handshakes/exchange/utils';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import './styles.scss';
+import taggingConfig from "@/services/tagging-config";
+import * as gtag from "@/services/ga-utils";
 
 const scopedCss = (className) => `wallet-selector-${className}`;
 
@@ -162,6 +164,11 @@ class WalletSelector extends Component {
     this.props.showScanQRCode({
       onFinish: (data) => {
         if (data) {
+          console.log('openQrScanner',);
+          gtag.event({
+            category: taggingConfig.coin.category,
+            action: taggingConfig.coin.action.scanQrCodeAddress,
+          });
           const [address/* , amount */] = data?.split(',');
           this.updateWalletAddress(address);
         }
@@ -221,6 +228,10 @@ class WalletSelector extends Component {
   }
 
   onUserWalletSelected(wallet) {
+    gtag.event({
+      category: taggingConfig.coin.category,
+      action: taggingConfig.coin.action.selectAddress,
+    });
     this.updateWalletAddress(wallet?.address, { detector: false });
     const currency = listCurrency.find(c => c.id === wallet.name);
     currency && this.updateCurrency(currency);

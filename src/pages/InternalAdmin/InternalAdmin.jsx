@@ -11,7 +11,8 @@ import './InternalAdmin.scss';
 import { FormattedDate } from 'react-intl';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
-import Helper from "@/services/helper";
+import Helper from '@/services/helper';
+import { formatMoneyByLocale } from '@/services/offer-util';
 
 const STATUS = {
   pending: {
@@ -84,7 +85,7 @@ class InternalAdmin extends Component {
     // }
 
     if (this.state.login) {
-      const { type  } = this.props?.match?.params;
+      const { type } = this.props?.match?.params;
       const { ref_code } = Helper.getQueryStrings(window.location.search);
       this.setState({ type_order: type, ref_code }, () => {
         this.loadOrderList();
@@ -113,7 +114,7 @@ class InternalAdmin extends Component {
   }
 
   resetTable = () => {
-    console.log('this.refs.table',this.refs.table);
+    console.log('this.refs.table', this.refs.table);
     if (this.refs.table) {
       this.refs.table?.refresh();
     }
@@ -130,10 +131,9 @@ class InternalAdmin extends Component {
   }
 
   getAmount(order = {}) {
-    const amount = Number.parseFloat(order.fiat_amount) - Number.parseFloat(order.store_fee) || 0;
     return {
-      full: `${Number.parseFloat(amount).toFixed(2)} ${order.fiat_currency}`,
-      amount,
+      full: `${formatMoneyByLocale(order.fiat_local_amount, order.fiat_local_currency, 2)} ${order.fiat_local_currency}`,
+      amount: order.fiat_local_amount,
     };
   }
 
@@ -237,6 +237,12 @@ class InternalAdmin extends Component {
               Send
             </button>
           );
+        } else if (order.status === STATUS.transfer_failed.id) {
+          result = (
+            <button onClick={() => this.send(order)} className="btn btn-primary">
+              ReSend
+            </button>
+          );
         }
         break;
       }
@@ -256,6 +262,14 @@ class InternalAdmin extends Component {
               &nbsp;&nbsp;&nbsp;
               <button onClick={() => this.reject(order)} className="btn btn-primary">
                 Reject
+              </button>
+            </div>
+          );
+        } else if (order.status === STATUS.transfer_failed.id) {
+          result = (
+            <div>
+              <button onClick={() => this.send(order)} className="btn btn-primary">
+                ReSend
               </button>
             </div>
           );

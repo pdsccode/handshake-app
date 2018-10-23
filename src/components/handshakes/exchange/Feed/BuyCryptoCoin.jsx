@@ -138,6 +138,48 @@ class BuyCryptoCoin extends React.Component {
     this.getPackageData();
 
     // this.checkUserVerified();
+    setTimeout(() => {
+      $zopim.livechat.window.onShow(() => {
+        this.isShow = true;
+        console.log('onShow', this.isShow);
+      });
+      $zopim.livechat.window.onHide(() => {
+        this.isShow = false;
+        console.log('onHide', this.isShow);
+      });
+      this.scrollListener();
+    }, 6000);
+    this.attachScrollListener();
+  }
+
+  componentWillUnmount() {
+    this.props.hideAlert();
+
+    this.detachScrollListener();
+  }
+
+  scrollListener = async () => {
+    console.log('scrollListener',);
+    if (!this.isShow) {
+      $zopim(() => {
+        $zopim.livechat.button.hide();
+        $zopim.livechat.button.setOffsetVerticalMobile(70);
+        $zopim.livechat.button.setOffsetHorizontalMobile(10);
+        $zopim.livechat.button.show();
+      });
+    }
+  }
+
+  attachScrollListener() {
+    window.addEventListener('scroll', this.scrollListener);
+    window.addEventListener('resize', this.scrollListener);
+    this.scrollListener();
+  }
+
+  detachScrollListener() {
+    $zopim.livechat.button.hide();
+    window.removeEventListener('scroll', this.scrollListener);
+    window.removeEventListener('resize', this.scrollListener);
   }
 
   getPackageData = () => {
@@ -640,8 +682,12 @@ class BuyCryptoCoin extends React.Component {
     );
   }
 
-  componentWillUnmount() {
-    this.props.hideAlert();
+  onFirstClickBuy = () => {
+    console.log('onFirstClickBuy',);
+    gtag.event({
+      category: taggingConfig.coin.category,
+      action: taggingConfig.coin.action.click_buy,
+    });
   }
 
   render() {
@@ -723,6 +769,7 @@ class BuyCryptoCoin extends React.Component {
                       }}
                     />
                   }
+                  onFirstClick={this.onFirstClickBuy}
                 />
               </div>
             </FormBuyCrypto>

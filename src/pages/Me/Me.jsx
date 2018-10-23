@@ -670,7 +670,7 @@ class Me extends React.Component {
                 (
                   <NoData>
                     <div className="NoDataContainer">
-                      <div className="NoDataTitle">Nothing here</div>
+                      {/*<div className="NoDataTitle">Nothing here</div>*/}
                       <img src={NoDataImage} alt="Nothing herer" />
                       <div className="ShortDescription">
                         Oops! <br />
