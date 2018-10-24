@@ -25,7 +25,6 @@ import WalletSelected from '@/components/Wallet/WalletSelected';
 import Slider from 'react-rangeslider'
 
 
-
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
@@ -274,6 +273,7 @@ class Transfer extends React.Component {
   }
 
   getBalanceWallets = async () => {
+    const { messages } = this.props.intl;
     let { wallets, walletSelected, walletDefault } = this.state;
     if(wallets && wallets.length){
       for(let i in wallets){
@@ -295,7 +295,7 @@ class Transfer extends React.Component {
       if(coinName){
         this.setState({walletNotFound:
           <div className="walletNotFound">
-            {coinName} wallet is not found to transfer
+            {coinName} {messages.wallet.action.transfer.error.wallet_not_found}
           </div>
         }, ()=> {
 
@@ -320,7 +320,7 @@ class Transfer extends React.Component {
       // check amount:
 
       if (parseFloat(this.state.walletSelected.balance) <= parseFloat(value['amountCoin']))
-        errors.amountCoin = `${messages.wallet.action.transfer.error}`
+        errors.amountCoin = `${messages.wallet.action.transfer.error.not_enough_coin}`
     }
     return errors
   }
@@ -474,7 +474,7 @@ selectWallet = async (walletSelected) => {
 async getFeeLevel(walletSelected){
   let listFee = await walletSelected.getLevelFee();
   let listFeeObject = false;
-  console.log(listFee);
+
   if(listFee){
     let labels = {};
     let min = 0;
@@ -496,11 +496,18 @@ handleOnChange = (value) => {
 
 calcMaxAmount = () => {
   const { walletSelected, listFeeObject, volume } = this.state;
+  const { messages } = this.props.intl;
 
   let result = 0;
 
   if(walletSelected && listFeeObject){
     result = walletSelected.balance - listFeeObject.listFee[volume].feePrice;
+    //result = walletSelected.formatNumber(result, 10);
+  }
+
+  if(result < 0) {
+    this.showError(messages.wallet.action.transfer.error.max_amount);
+    result = 0;
   }
 
   this.setState({inputSendAmountValue: result}, ()=>{
@@ -566,7 +573,7 @@ render() {
           <div className="row">
             <div className="col-6"><p className="labelText">{messages.wallet.action.transfer.label.amount}</p></div>
             { walletSelected && (walletSelected.name == 'ETH' || walletSelected.name == 'BTC') &&
-              <div className="col-6"><p className="maxAmount" onClick={() => this.calcMaxAmount()}>Max amount</p></div>
+              <div className="col-6"><p className="maxAmount" onClick={() => this.calcMaxAmount()}>{messages.wallet.action.transfer.label.max_amount}</p></div>
             }
           </div>
             <div className="div-amount">
