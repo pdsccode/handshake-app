@@ -22,7 +22,11 @@ export const CRYPTO_ICONS = {
   USDT: iconUsd,
 };
 import Loading from '@/components/Loading';
-
+const states = [
+  'READY',
+  'CLOSED',
+  'INITFUND'
+];
 class ProjectDetail extends Component {
   constructor(props) {
     super(props);
@@ -95,7 +99,7 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          {isNotExpired || project.state !== 'READY' && <FormInvestBlock pid={project.id} />}
+          {isNotExpired || states.indexOf(project.state) < 0 && <FormInvestBlock pid={project.id} />}
         </div>
     );
   }

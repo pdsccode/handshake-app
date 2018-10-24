@@ -17,7 +17,7 @@ class ProjectList extends Component {
 
   renderProjects() {
     return (
-      this.props.projects.filter(e => date_diff_indays(new Date(), new Date(e.deadline)) > 0).map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
+      this.props.projects.map((project, i) => <ProjectItem key={i} handleOnClick={this.navigateToProjectDetails.bind(this, project)} {...project} />)
     )
   }
 
