@@ -895,7 +895,7 @@ export default {
               Step 6: Click Buy<br/>
               Step 7: Make payment according to your buying method:<br/>
               <ul>
-                <li>If you choose Bank T000ransfer: make a bank transfer</li>
+                <li>If you choose Bank Transfer: make a bank transfer</li>
                 <li>If you choose COD: Enter your address, time and phone number. Wait for Ninja to come and pay with bank account/credit card/cash</li>
               </ul>
 `,
