@@ -2,31 +2,37 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
-
 // services
 import createForm from '@/components/core/form/createForm';
 import { setHeaderTitle, showAlert } from '@/reducers/app/action';
-import { verifyPhone, submitPhone, verifyEmail, checkUsernameExist, authUpdate, submitEmail, verifyID, getIdVerification } from '@/reducers/auth/action';
+import {
+  authUpdate,
+  checkUsernameExist,
+  getIdVerification,
+  submitEmail,
+  submitPhone,
+  verifyEmail,
+  verifyID,
+  verifyPhone,
+} from '@/reducers/auth/action';
 import COUNTRIES from '@/data/country-dial-codes';
 // components
-import { Grid, Row, Col, ProgressBar } from 'react-bootstrap';
+import { Col, Grid, ProgressBar, Row } from 'react-bootstrap';
 import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
 import Dropdown from '@/components/core/controls/Dropdown';
 import UploadZone from '@/components/core/controls/UploadZone';
 import { Field } from 'redux-form';
 import { fieldCleave, fieldInput } from '@/components/core/form/customField';
-import { required, email as validateEmail } from '@/components/core/form/validation';
+import { required } from '@/components/core/form/validation';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import local from '@/services/localStore';
-import { APP, API_URL } from '@/constants';
+import { API_URL, APP } from '@/constants';
 // style
-import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
 import IDVerificationFrontImageExample from '@/assets/images/id-verification/front-example.svg';
 import IDVerificationBackImageExample from '@/assets/images/id-verification/back-example.svg';
 import IDVerificationSelfieImageExample from '@/assets/images/id-verification/selfie-example.svg';
-
 // import { chatInstance } from '@/pages/Chat/Chat';
 import valid from '@/services/validate';
 import { ICON } from '@/styles/images';
@@ -166,12 +172,11 @@ class Profile extends React.Component {
     this.showAlert(mst, 'success', 4000, ICON.SuccessChecked());
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { email } = this.state;
-    if(email){
-      this.setState({idVerificationEmail: email});
+    if (email) {
+      this.setState({ idVerificationEmail: email });
     }
-
   }
 
   onTextFieldChange(name, value) {
@@ -263,10 +268,9 @@ class Profile extends React.Component {
       },
       errorFn: (e) => {
         this.setState({ idVerficationUploadingProgress: 0 });
-        if(e && e.message){
-          this.showError(messages.me.profile.verify.alert.cannot.idVerification2 + ' ' + e.message);
-        }
-        else{
+        if (e && e.message) {
+          this.showError(`${messages.me.profile.verify.alert.cannot.idVerification2} ${e.message}`);
+        } else {
           this.showError(messages.me.profile.verify.alert.cannot.idVerification);
         }
       },
@@ -470,7 +474,6 @@ class Profile extends React.Component {
     } = this.state;
     let idVerificationStatusBadgeClass = '';
     let idVerificationStatusText = '';
-    console.log('idVerified, idVerificationLevel: ',idVerified, idVerificationLevel);
     switch (idVerified) {
       case -1:
         idVerificationStatusBadgeClass = 'badge-danger';
@@ -487,7 +490,6 @@ class Profile extends React.Component {
             idVerificationStatusText = messages.me.profile.text.id_verification.status.finished;
           }
           default:
-
         }
         break;
       case 2:
@@ -505,7 +507,7 @@ class Profile extends React.Component {
             <span>{messages.me.profile.head_text}</span>
           </div>
         </Row>
-        {/*<Row>
+        {/* <Row>
           <Col md={12}>
             <div className="collapse-custom">
               <div
@@ -536,7 +538,7 @@ class Profile extends React.Component {
               </div>
             </div>
           </Col>
-        </Row>*/}
+        </Row> */}
         {/* <Row>
           <Col md={12}>
             <div className="collapse-custom">
@@ -627,7 +629,7 @@ class Profile extends React.Component {
                   <span className="badge badge-success">{this.props.auth.profile.email ? 'Verified' : ''}</span>
                 </div>
               </div>
-              <div className={`content`}>
+              <div className="content">
                 <p className="text">{messages.me.profile.text.email.desc2}</p>
                 <EmailForm onSubmit={this.onSubmitVerifyEmail}>
                   <div>
@@ -643,9 +645,12 @@ class Profile extends React.Component {
                           value={email}
                         />
                       </div>
-                      <div className="col-2" style={{
+                      <div
+                        className="col-2"
+                        style={{
                         paddingLeft: 0,
-                      }}>
+                      }}
+                      >
                         <Button
                           cssType="anonymous"
                           className="submit-btn"
@@ -694,19 +699,20 @@ class Profile extends React.Component {
                   <span>{messages.me.profile.text.id_verification.desc1}</span>
                   <strong>{idVerificationLevel === 0 ? (
                     messages.me.profile.text.id_verification.desc12
-                  ) : idVerificationLevel === 1 ? messages.me.profile.text.id_verification.desc13 : ''}</strong>
+                  ) : idVerificationLevel === 1 ? messages.me.profile.text.id_verification.desc13 : ''}
+                  </strong>
                 </p>
                 <div className="extend">
                   <span className={`badge ${idVerificationStatusBadgeClass} ${idVerificationLevel > 0 ? 'has-level' : ''}`}>{idVerificationStatusText}</span>
-                  {/*{idVerificationLevel > 0 ? (
+                  {/* {idVerificationLevel > 0 ? (
                     <span className="badge badge-success">Lv{idVerificationLevel}</span>
-                  ) : ''}*/}
-                  {/*{this.state.idVerified < 1 || (this.state.idVerified === 1 && this.state.idVerificationLevel < 2) ? (
+                  ) : ''} */}
+                  {/* {this.state.idVerified < 1 || (this.state.idVerified === 1 && this.state.idVerificationLevel < 2) ? (
                     <Image className={this.state.idVerificationCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
-                  ) : ''}*/}
+                  ) : ''} */}
                 </div>
               </div>
-              <div className={`content id-verification`}>
+              <div className="content id-verification">
                 {idVerficationUploadingProgress > 0 ? (
                   <div style={idVerficationUploadingProgress > 0 ? {} : { display: 'none' }}>
                     <Row>
@@ -718,46 +724,46 @@ class Profile extends React.Component {
                       </div>
                     </Row>
                   </div>
-                ) : ( idVerificationLevel < 2 &&
-                    <IDVerificationForm onSubmit={this.onSubmitIDVerification}>
-                      <div>
-                        <Row>
-                          <div className="col-12">
-                            <p className="text label">
-                              {messages.me.profile.text.id_verification.desc2}
-                            </p>
-                            {idVerificationLevel > 0 ? (<h6>{this.state.idVerifcationUserFullName}</h6>) : (
-                              <Field
-                                name="full_name"
-                                type="text"
-                                className="form-control-custom form-control-custom-ex w-100"
-                                component={fieldInput}
-                                value={this.state.idVerifcationUserFullName}
-                                validate={[required]}
-                                onChange={(evt, value, unknown, name) => { this.setState({ idVerifcationUserFullName: value }); }}
-                              />
+                ) : (idVerificationLevel < 2 &&
+                <IDVerificationForm onSubmit={this.onSubmitIDVerification}>
+                  <div>
+                    <Row>
+                      <div className="col-12">
+                        <p className="text label">
+                          {messages.me.profile.text.id_verification.desc2}
+                        </p>
+                        {idVerificationLevel > 0 ? (<h6>{this.state.idVerifcationUserFullName}</h6>) : (
+                          <Field
+                            name="full_name"
+                            type="text"
+                            className="form-control-custom form-control-custom-ex w-100"
+                            component={fieldInput}
+                            value={this.state.idVerifcationUserFullName}
+                            validate={[required]}
+                            onChange={(evt, value, unknown, name) => { this.setState({ idVerifcationUserFullName: value }); }}
+                          />
                             )}
-                            <p />
-                          </div>
-                        </Row>
+                        <p />
                       </div>
-                      <div>
-                        <Row>
-                          <div className="col-12">
-                            <p className="text label">
-                              {messages.me.profile.text.id_verification.desc4}
-                            </p>
-                            {idVerificationLevel > 0 ? (<h6>{this.idVerificationDocumentTypes[this.state.idVerificationDocumentType]}</h6>) : (
-                              <Dropdown
-                                name="document_type"
-                                className="w-100"
-                                defaultId={this.state.idVerificationDocumentType.toString()}
-                                afterSetDefault={(item) => {
+                    </Row>
+                  </div>
+                  <div>
+                    <Row>
+                      <div className="col-12">
+                        <p className="text label">
+                          {messages.me.profile.text.id_verification.desc4}
+                        </p>
+                        {idVerificationLevel > 0 ? (<h6>{this.idVerificationDocumentTypes[this.state.idVerificationDocumentType]}</h6>) : (
+                          <Dropdown
+                            name="document_type"
+                            className="w-100"
+                            defaultId={this.state.idVerificationDocumentType.toString()}
+                            afterSetDefault={(item) => {
                                   if (item.id !== this.state.idVerificationDocumentType) {
                                     this.setState({ idVerificationDocumentType: item.id });
                                   }
                                 }}
-                                source={[
+                            source={[
                                   {
                                     id: 0,
                                     value: this.idVerificationDocumentTypes[0],
@@ -767,38 +773,38 @@ class Profile extends React.Component {
                                     value: this.idVerificationDocumentTypes[2],
                                   },
                                 ]}
-                                onItemSelected={(item) => {
+                            onItemSelected={(item) => {
                                   this.setState({ idVerificationDocumentType: item.id });
                                 }
                                 }
-                              />
+                          />
                             )}
-                            <p />
-                          </div>
-                        </Row>
+                        <p />
                       </div>
-                      <div>
-                        <Row>
-                          <div className="col-12">
-                            <p className=" text label">
-                              {messages.me.profile.text.id_verification.desc3}
-                            </p>
-                            {idVerificationLevel > 0 ? (<h6>{this.state.idVerificationIDNumber}</h6>) : (
-                              <Field
-                                name="id_number"
-                                type="text"
-                                className="form-control-custom form-control-custom-ex w-100"
-                                component={fieldInput}
-                                value={this.state.idVerificationIDNumber}
-                                validate={[required]}
-                                onChange={(evt, value, unknown, name) => { this.setState({ idVerificationIDNumber: value }); }}
-                              />
+                    </Row>
+                  </div>
+                  <div>
+                    <Row>
+                      <div className="col-12">
+                        <p className=" text label">
+                          {messages.me.profile.text.id_verification.desc3}
+                        </p>
+                        {idVerificationLevel > 0 ? (<h6>{this.state.idVerificationIDNumber}</h6>) : (
+                          <Field
+                            name="id_number"
+                            type="text"
+                            className="form-control-custom form-control-custom-ex w-100"
+                            component={fieldInput}
+                            value={this.state.idVerificationIDNumber}
+                            validate={[required]}
+                            onChange={(evt, value, unknown, name) => { this.setState({ idVerificationIDNumber: value }); }}
+                          />
                             )}
-                            <p />
-                          </div>
-                        </Row>
+                        <p />
                       </div>
-                      {/*{!this.state.email &&
+                    </Row>
+                  </div>
+                  {/* {!this.state.email &&
                       <div>
                         <Row>
                           <div className="col-12">
@@ -818,115 +824,118 @@ class Profile extends React.Component {
                           </div>
                         </Row>
                       </div>
-                      }*/}
+                      } */}
 
-                      {idVerificationLevel === 0 ? (
-                        <div>
-                          <div>
-                            <Row>
-                              <div className="col-12">
-                                <p className="text label">
-                                  {messages.me.profile.text.id_verification.desc11}
-                                  <span>{messages.me.profile.text.id_verification.desc6}</span>
-                                </p>
-                              </div>
-                            </Row>
+                  {idVerificationLevel === 0 ? (
+                    <div>
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className="text label">
+                              {messages.me.profile.text.id_verification.desc11}
+                              <span>{messages.me.profile.text.id_verification.desc6}</span>
+                            </p>
                           </div>
-                          <div>
-                            <Row>
-                              <div className="col-12">
-                                <p className="text label">
-                                  {messages.me.profile.text.id_verification.desc5}
-                                </p>
-                                <UploadZone
-                                  name="front_image"
-                                  dropZoneRef={(node) => { this.imageFrontRef = node; }}
-                                  className="w-100 hide_upload_zone"
-                                  acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
-                                  multiple={false}
-                                  dropLabel={messages.me.profile.text.id_verification.desc5}
-                                  onDrop={(files) => {
+                        </Row>
+                      </div>
+                      <div>
+                        <Row>
+                          <div className="col-12">
+                            <p className="text label">
+                              {messages.me.profile.text.id_verification.desc5}
+                            </p>
+                            <UploadZone
+                              name="front_image"
+                              dropZoneRef={(node) => { this.imageFrontRef = node; }}
+                              className="w-100 hide_upload_zone"
+                              acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
+                              multiple={false}
+                              dropLabel={messages.me.profile.text.id_verification.desc5}
+                              onDrop={(files) => {
                                     this.setState({ idVerificationFrontImage: files[0] });
                                   }}
-                                />
-                                <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageFrontRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
-                                <Row>
-                                  <div className="col-12">
-                                    <p />
-                                    <Image src={this.state.idVerificationFrontImage ? this.state.idVerificationFrontImage.preview : IDVerificationFrontImageExample} />
-                                  </div>
-                                </Row>
-                              </div>
-                            </Row>
-                          </div>
-                            <div>
-                              <p />
-                              <Row>
-                                <div className="col-12">
-                                  <p className="text label">
-                                    {messages.me.profile.text.id_verification.desc7}
-                                  </p>
-                                  <UploadZone
-                                    name="back_image"
-                                    dropZoneRef={(node) => { this.imageBackRef = node; }}
-                                    className="w-100 hide_upload_zone"
-                                    acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
-                                    multiple={false}
-                                    dropLabel={messages.me.profile.text.id_verification.desc7}
-                                    onDrop={(files) => {
-                                      this.setState({ idVerificationBackImage: files[0] });
-                                    }}
-                                  />
-                                  <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageBackRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
-                                  <Row>
-                                    <div className="col-12">
-                                      <p />
-                                      <Image src={this.state.idVerificationBackImage ? this.state.idVerificationBackImage.preview : IDVerificationBackImageExample} />
-                                    </div>
-                                  </Row>
-                                </div>
-                              </Row>
-                            </div>
-                        </div>
-                      ) : (
-                          <div>
+                            />
+                            <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageFrontRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
                             <Row>
                               <div className="col-12">
-                                <p className="text label">
-                                  {messages.me.profile.text.id_verification.desc8}
-                                  <span>{messages.me.profile.text.id_verification.desc9}</span>
-                                </p>
-                                <UploadZone
-                                  name="selfie_image"
-                                  dropZoneRef={(node) => { this.imageSelfieRef = node; }}
-                                  className="w-100 hide_upload_zone"
-                                  acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
-                                  multiple={false}
-                                  dropLabel={messages.me.profile.text.id_verification.desc9}
-                                  onDrop={(files) => {
-                                    this.setState({ idVerificationSelfieImage: files[0] });
-                                  }}
-                                />
-                                <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageSelfieRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
-                                <Row>
-                                  <div className="col-12">
-                                    <p />
-                                    <Image src={this.state.idVerificationSelfieImage ? this.state.idVerificationSelfieImage.preview : IDVerificationSelfieImageExample} />
-                                  </div>
-                                </Row>
+                                <p />
+                                <Image src={this.state.idVerificationFrontImage ? this.state.idVerificationFrontImage.preview : IDVerificationFrontImageExample} />
                               </div>
                             </Row>
                           </div>
-                        )}
+                        </Row>
+                      </div>
+                      <div>
+                        <p />
+                        <Row>
+                          <div className="col-12">
+                            <p className="text label">
+                              {messages.me.profile.text.id_verification.desc7}
+                            </p>
+                            <UploadZone
+                              name="back_image"
+                              dropZoneRef={(node) => { this.imageBackRef = node; }}
+                              className="w-100 hide_upload_zone"
+                              acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
+                              multiple={false}
+                              dropLabel={messages.me.profile.text.id_verification.desc7}
+                              onDrop={(files) => {
+                                      this.setState({ idVerificationBackImage: files[0] });
+                                    }}
+                            />
+                            <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageBackRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
+                            <Row>
+                              <div className="col-12">
+                                <p />
+                                <Image src={this.state.idVerificationBackImage ? this.state.idVerificationBackImage.preview : IDVerificationBackImageExample} />
+                              </div>
+                            </Row>
+                          </div>
+                        </Row>
+                      </div>
+                    </div>
+                      ) : (
                         <div>
                           <Row>
                             <div className="col-12">
-                              <Button cssType="anonymous"
-                                      className="submit-btn">{messages.me.profile.text.id_verification.button.submit}</Button>
+                              <p className="text label">
+                                {messages.me.profile.text.id_verification.desc8}
+                                <span>{messages.me.profile.text.id_verification.desc9}</span>
+                              </p>
+                              <UploadZone
+                                name="selfie_image"
+                                dropZoneRef={(node) => { this.imageSelfieRef = node; }}
+                                className="w-100 hide_upload_zone"
+                                acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
+                                multiple={false}
+                                dropLabel={messages.me.profile.text.id_verification.desc9}
+                                onDrop={(files) => {
+                                    this.setState({ idVerificationSelfieImage: files[0] });
+                                  }}
+                              />
+                              <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageSelfieRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
+                              <Row>
+                                <div className="col-12">
+                                  <p />
+                                  <Image src={this.state.idVerificationSelfieImage ? this.state.idVerificationSelfieImage.preview : IDVerificationSelfieImageExample} />
+                                </div>
+                              </Row>
                             </div>
                           </Row>
                         </div>
-                    </IDVerificationForm>
+                        )}
+                  <div>
+                    <Row>
+                      <div className="col-12">
+                        <Button
+                          cssType="anonymous"
+                          className="submit-btn"
+                        >{messages.me.profile.text.id_verification.button.submit}
+                        </Button>
+                      </div>
+                    </Row>
+                  </div>
+                </IDVerificationForm>
                   )}
               </div>
             </div>
