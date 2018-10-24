@@ -129,19 +129,17 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         newOutcomeList,
       });
       if (!addOutcomeResult.error) {
-        const outcomeId = addOutcomeResult.data[0].id;
+        const matchId = addOutcomeResult.data[0].match_id;
         const eventName = addOutcomeResult.data[0].name;
-        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+        yield saveGenerateShareLinkToStore({ matchId, eventName });
       }
     } else {
       // Create new event
-      const { name, url, id } = values.reports;
-
-      const reportSource = {
-        source_id: id,
-        source: selectedSource ? undefined : {
-          name,
-          url,
+      const { reports } = values;
+      const reportSource = reports.id ? { source_id: reports.id } : {
+        source: {
+          name: reports.value,
+          url: reports.value,
         },
       };
 
@@ -153,8 +151,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         awayTeamCode: values.awayTeamCode || '',
         homeTeamFlag: values.homeTeamFlag || '',
         awayTeamFlag: values.awayTeamFlag || '',
-        name: values.eventName.value,
-        public: 1,
+        name: values.eventName.label,
+        public: values.private ? 0 : 1,
         date: values.closingTime,
         reportTime: values.reportingTime,
         disputeTime: values.disputeTime,
@@ -169,9 +167,9 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
       if (data && data.length) {
         const eventData = data[0];
 
-        const outcomeId = eventData.outcomes[0].id;
+        const matchId = eventData.id;
         const eventName = eventData.name;
-        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+        yield saveGenerateShareLinkToStore({ matchId, eventName });
       }
     }
   } catch (e) {
