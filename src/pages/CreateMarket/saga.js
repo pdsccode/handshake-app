@@ -134,7 +134,6 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
       }
     } else {
-<<<<<<< HEAD
       // Create new event
       const { name, url, id } = values.reports;
 
