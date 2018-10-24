@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, FieldArray, touch } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
-import IconInfo from '@/assets/images/icon/icons8-info_filled.svg';
+import IconInfo from '@/assets/images/icon/question-circle.svg';
 import moment from 'moment';
 import { Tooltip } from 'reactstrap';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
@@ -38,7 +38,6 @@ class CreateEventForm extends Component {
     formAction: PropTypes.func,
     dispatch: PropTypes.func,
     onSelect: PropTypes.func,
-    isValidEmailCode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,7 +52,6 @@ class CreateEventForm extends Component {
     initialValues: {},
     shareEvent: null,
     eventList: [],
-    isValidEmailCode: undefined,
   };
 
   constructor(props) {
@@ -366,7 +364,7 @@ class CreateEventForm extends Component {
     });
     const { isNew, shareEvent } = props;
     if (shareEvent) {
-      return (<ShareMarket shareEvent={shareEvent} isNew={isNew} />);
+      return (<ShareMarket shareEvent={shareEvent} isNew={isNew} dispatch={props.dispatch} />);
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
@@ -391,10 +389,7 @@ class CreateEventForm extends Component {
           {this.renderCheckReport(props)}
         </div>
         <div className="CreateEventFormBlock">
-          <EmailVerification
-            hasEmail={props.hasEmail}
-            isValidEmailCode={props.isValidEmailCode}
-          />
+          <EmailVerification />
           <button
             type="submit"
             className="btn btn-primary btn-block"

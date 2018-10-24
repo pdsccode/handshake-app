@@ -93,13 +93,13 @@ function* handleCreateNewEventSaga({ newEventData }) {
   }
 }
 
-function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
+function* handleGenerateShareLinkSaga({ matchId, ...payload }) {
   try {
     return yield call(apiPost, {
       PATH_URL: `${API_URL.CRYPTOSIGN.GENERATE_LINK}`,
       type: 'GENERATE_SHARE_LINK',
       data: {
-        outcome_id: outcomeId,
+        match_id: matchId,
       },
       ...payload,
     });
@@ -108,9 +108,8 @@ function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
   }
 }
 
-function* saveGenerateShareLinkToStore(data) {
-  const { outcomeId, eventName } = data;
-  const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
+function* saveGenerateShareLinkToStore({ matchId, eventName }) {
+  const generateLink = yield call(handleGenerateShareLinkSaga, { matchId });
   return yield put(shareEvent({
     url: `${window.location.origin}${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug}`,
     name: eventName,
@@ -135,6 +134,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
       }
     } else {
+<<<<<<< HEAD
       // Create new event
       const { name, url, id } = values.reports;
 
@@ -173,7 +173,6 @@ function* handleCreateEventSaga({ values, isNew, selectedSource, grantPermission
         const outcomeId = eventData.outcomes[0].id;
         const eventName = eventData.name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-
       }
     }
   } catch (e) {

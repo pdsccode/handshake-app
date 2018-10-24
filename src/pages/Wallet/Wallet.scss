@@ -645,6 +645,10 @@
     color:#8A8A8F;
     font-size: 14px;
     float: none;
+
+    .addr{
+      margin-left: 60px;
+    }
   }
 
   .time{
@@ -864,6 +868,25 @@
       color: $white;
     }
   }
+
+  .export-private-key{
+    margin: auto;
+    text-align: center;
+    padding: 20px;
+    @media (max-width: 320px) {
+      padding: 0px;
+    }
+    .ex-title, .ex-desc{
+      font-size: 18px;
+      color:#FF2D55;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+    button{
+      width: 100%
+    }
+  }
+
 }
 
 .wallet-new-button {
