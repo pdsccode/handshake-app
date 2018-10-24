@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetch_project_detail, getImageUrl, toHexColor } from '@/reducers/invest/action';
+import { fetch_project_detail, getImageUrl, toHexColor, date_diff_indays } from '@/reducers/invest/action';
 import { Grid, Row, Col, ProgressBar ,Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Utils from './Utils';
@@ -38,6 +38,7 @@ class ProjectDetail extends Component {
   }
   renderProjects() {
     const { project } = this.props;
+    const isNotExpired = date_diff_indays(new Date(), new Date(project.deadline)) > 0;
     const progressPercentage = (Number(project.fundingAmount || 0)/Number(project.target|| 1) * 100).toFixed(2);
       return (
         <div key={project.id} style={{ marginTop: '1em' }} >
@@ -51,15 +52,20 @@ class ProjectDetail extends Component {
 
               <div className="userInfoBlock clearfix userInfoBlockProjectDetails">
                 <div className="userItem">
-                {project.User.avatar && <img
+                
+                {project.User.avatar && <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}><img
                   src={getImageUrl(project.User.avatar)}
                   alt=""
                   className="userImage"
-                />}
-                {!project.User.avatar && <div className="avatar_non" style={{ backgroundColor: toHexColor(project.User.firstName)}}>
-                    {`${project.User.firstName[0].toUpperCase() + project.User.lastName[0].toUpperCase()}`}
-                </div>}
+                />
                 <span className="userName">{project.User.firstName + project.User.lastName}</span>
+                </div>}
+                {!project.User.avatar && <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <div className="avatar_non" style={{ backgroundColor: toHexColor(project.User.firstName)}}>
+                      {`${project.User.firstName[0].toUpperCase() + project.User.lastName[0].toUpperCase()}`}
+                    </div>
+                    <span className="userName">{project.User.firstName + project.User.lastName}</span>
+                </div>}
                 <div className="star-ratings">
                   <StarRatings
                     className="stars"
@@ -89,7 +95,7 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          <FormInvestBlock pid={project.id} />
+          {isNotExpired || project.state !== 'READY' && <FormInvestBlock pid={project.id} />}
         </div>
     );
   }
