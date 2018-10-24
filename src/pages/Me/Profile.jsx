@@ -619,21 +619,20 @@ class Profile extends React.Component {
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({ emailCollapse: !state.emailCollapse }))}>
+              <div className="head">
                 <p className="label">
                   {messages.me.profile.text.email.label}
                 </p>
                 <div className="extend">
                   <span className="badge badge-success">{this.props.auth.profile.email ? 'Verified' : ''}</span>
-                  <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
-              <div className={`content ${this.state.emailCollapse ? '' : 'd-none'}`}>
+              <div className={`content`}>
                 <p className="text">{messages.me.profile.text.email.desc2}</p>
                 <EmailForm onSubmit={this.onSubmitVerifyEmail}>
                   <div>
                     <Row>
-                      <div className="col-9">
+                      <div className="col-10">
                         <Field
                           name="email"
                           className="form-control-custom form-control-custom-ex w-100"
@@ -644,7 +643,9 @@ class Profile extends React.Component {
                           value={email}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-2" style={{
+                        paddingLeft: 0,
+                      }}>
                         <Button
                           cssType="anonymous"
                           className="submit-btn"
@@ -691,9 +692,9 @@ class Profile extends React.Component {
                 <p className="label">
                   {messages.me.profile.text.id_verification.label}
                   <span>{messages.me.profile.text.id_verification.desc1}</span>
-                  {idVerificationLevel === 0 ? (
+                  <strong>{idVerificationLevel === 0 ? (
                     messages.me.profile.text.id_verification.desc12
-                  ) : idVerificationLevel === 1 ? messages.me.profile.text.id_verification.desc13 : ''}
+                  ) : idVerificationLevel === 1 ? messages.me.profile.text.id_verification.desc13 : ''}</strong>
                 </p>
                 <div className="extend">
                   <span className={`badge ${idVerificationStatusBadgeClass} ${idVerificationLevel > 0 ? 'has-level' : ''}`}>{idVerificationStatusText}</span>

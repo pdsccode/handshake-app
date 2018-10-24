@@ -1123,7 +1123,7 @@ export default {
           desc3: 'Enter your email',
           desc4: 'Enter the secret code sent to your email.',
           button: {
-            send: 'Send',
+            send: 'OK',
             submit: 'Verify your email',
           },
         },
