@@ -651,6 +651,7 @@ export const URL = {
   INTERNAL_ADMIN_URL: '/admin/coin/:type',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
+  INTERNAL_ADMIN_DASHBOARD_URL: '/internal-admin-dashboard',
 };
 
 export const LANDING_PAGE_TYPE = {

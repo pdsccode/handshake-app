@@ -72,6 +72,7 @@ const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Ro
 const RouterInternalAdmin = createDynamicImport(() => import('@/components/Router/InternalAdmin'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
+const InternalAdminDashboard = createDynamicImport(() => import('@/pages/InternalAdminDashboard'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -144,7 +145,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.INTERNAL_ADMIN_URL, component: RouterInternalAdmin },
     { path: URL.ADMIN_ID_VERIFICATION, component: RouterAdminIDVerification },
     { path: URL.PEX_LUCKY_DRAW_MECHANIC_URL, component: LuckyDrawMechanic },
-
+    { path: URL.INTERNAL_ADMIN_DASHBOARD_URL, component: InternalAdminDashboard },
   ];
 
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
