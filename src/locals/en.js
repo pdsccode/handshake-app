@@ -1471,6 +1471,7 @@ export default {
           gas_limit: 'Gas Limit',
           data: 'Data',
           feel_level: 'Fee:',
+          max_amount: 'Max amount'
         },
         placeholder: {
           to_address: 'Wallet address...',
@@ -1479,7 +1480,12 @@ export default {
         text: {
           confirm_transfer: 'Are you sure you want to transfer out ',
         },
-        error: 'You don\'t have enough coin right now.',
+        error: {
+          not_enough_coin: 'You don\'t have enough coin right now.',
+          max_amount: 'Your balance isn\'t enough to transaction fee.',
+          wallet_not_found: ' wallet is not found to transfer.'
+
+        },
         button: {
           transfer: 'Transfer',
           confirm: 'Confirm',
