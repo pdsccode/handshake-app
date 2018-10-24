@@ -903,7 +903,8 @@ export default {
     {
       question: 'How to create account on Ninja?',
       answer: `Ninja Coin will create an account for you immediately the first time you visit us at <strong><a href="https://ninja.org/coin">https://ninja.org/coin</a></strong> instead of traditional login with email/username and password. However, you can only purchase after you’ve done the verification process
-<br/><br/><table class="landing-table">
+<br/><br/>
+<table class="landing-table">
          <thead>
             <tr>
               <th>Transaction Value</th>
@@ -936,12 +937,12 @@ export default {
     {
       question: 'What is the maximum amount can I purchase?',
       answer: `The maximum amount depends on user verification level and is up to <strong>$5000/day/user</strong> by now. We are working on expanding it in the near future
-<br/><br/><table class="landing-table">
+<br/><br/>
+<table class="landing-table">
          <thead>
             <tr>
               <th>Verification Level</th>
               <th>Maximum amount</th>
-              <th />
             </tr>
           </thead>
           <tbody>
@@ -966,7 +967,6 @@ export default {
             <tr>
               <th>Buying method</th>
               <th>Payment method</th>
-              <th />
             </tr>
           </thead>
           <tbody>
