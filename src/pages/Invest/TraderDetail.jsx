@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import InvestNavigation from './InvestNavigation';
 import TraderDetailBlock from './TraderDetailBlock';
 import { fetch_trader_detail } from '@/reducers/invest/action';
+import Loading from '@/components/Loading';
 
 class TraderDetail extends Component {
 
@@ -32,7 +33,7 @@ class TraderDetail extends Component {
             currentlyFundings: [],
             completedProjects: []
         };
-        if (this.state.loading) return <div>Loading...</div>
+        if (this.state.loading) return <Loading isLoading={this.state.loading} />
         return (
             <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
                 <InvestNavigation header="Trader" history={this.props.history} />

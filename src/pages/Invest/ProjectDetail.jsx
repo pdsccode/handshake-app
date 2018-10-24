@@ -21,7 +21,7 @@ export const CRYPTO_ICONS = {
   BTC: iconBitcoin,
   USDT: iconUsd,
 };
-
+import Loading from '@/components/Loading';
 
 class ProjectDetail extends Component {
   constructor(props) {
@@ -101,7 +101,7 @@ class ProjectDetail extends Component {
   }
 
   render() {
-    if (this.state.loading) return <div>loading...</div>
+    if (this.state.loading) return <Loading isLoading={this.state.loading}/>
     return (
       <div style={{ backgroundColor: '#fafbff', minHeight: '100vh' }}>
         <InvestNavigation header="Project" history={this.props.history} />
