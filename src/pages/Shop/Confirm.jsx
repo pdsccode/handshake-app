@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import $http from '@/services/api';
 import { getJSON } from 'js-cookie';
-import { CUSTOMER_ADDRESS_INFO } from '@/constants';
+import { CUSTOMER_ADDRESS_INFO, AUTONOMOUS_END_POINT } from '@/constants';
 // style
 import './Confirm.scss';
 
