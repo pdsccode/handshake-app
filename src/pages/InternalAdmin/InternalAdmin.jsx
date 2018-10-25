@@ -122,9 +122,12 @@ class InternalAdmin extends Component {
   componentDidMount() {
     if (this.state.login) {
       const type = this.props.type || this.props?.match?.params?.type;
+      const action = this.props.action;
+      const statusList = action === EXCHANGE_ACTION.BUY ? STATUS : SELL_STATUS;
+      const defaultType = Object.values(statusList)[0].id;
       const searchParams = Helper.getQueryStrings(window.location.search);
       const refCode = this.props.refCode || searchParams?.ref_code;
-      this.setState({ type_order: type, ref_code: refCode }, () => {
+      this.setState({ type_order: type, ref_code: refCode, action, statusList, type: defaultType }, () => {
         this.loadOrderList();
       });
 
