@@ -161,7 +161,6 @@ class BettingReport extends React.Component {
 
 
   disablePage() {
-    console.log('Disable Page');
     localStorage.setItem('disable', true);
     setTimeout(() => {
       localStorage.setItem('disable', false);
@@ -180,10 +179,7 @@ class BettingReport extends React.Component {
     if (!isAdmin) {
       const balance = await getBalance();
       const estimatedGas = await getEstimateGas();
-      console.log(TAG, 'estimate Gas:', estimatedGas);
       const totalGas = estimatedGas * outcomes.length;
-      console.log(TAG, 'Outcomes Length:', outcomes.length);
-      console.log(TAG, 'totalGas', totalGas);
 
       if (totalGas > balance) {
         message = MESSAGE.NOT_ENOUGH_GAS.replace('{{value}}', totalGas);
