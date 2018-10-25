@@ -219,7 +219,7 @@ class Profile extends React.Component {
 
       if (valid.email(idVerificationEmail)) {
         this.showError(messages.me.profile.verify.alert.notValid.client.email);
-        return;
+        // return;
       }
 
       if (!idVerificationFrontImage) {

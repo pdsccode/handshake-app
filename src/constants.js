@@ -303,6 +303,7 @@ export const API_URL = {
     COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
     GET_CASH_ORDER: 'exchange/cash/order', // `GET /cash/order?status=processing|tranferring|success`
     GET_COIN_ORDER: 'exchange/coin/order', // `GET /cash/order?status=processing|tranferring|success`
+    GET_SELLING_COIN_ORDER: 'exchange/selling-order', // `GET /cash/order?status=processing|tranferring|success`
     REVIEW_COIN_ORDER: 'exchange/coin/review', // `GET /cash/order?status=processing|tranferring|success`
   },
   ID_VERIFICATION: {
