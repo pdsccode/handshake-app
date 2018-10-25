@@ -48,13 +48,18 @@
       }
     }
     .landing-page-constant-logo {
-      @include breakpoint('md') {
-        float: left;
-      }
+      float: left;
     }
     .landing-page-constant-menu {
       @include breakpoint('md') {
         float: right;
+      }
+      @include breakpoint-max('md') {
+        margin-top: 60px;
+        display: none;
+        &.show {
+          display: block;
+        }
       }
       ul {
         list-style: none;
@@ -101,12 +106,23 @@
                 background-color: #484848;
                 opacity: 0.3;
               }
+              &.btn-constant {
+                padding: 0 20px;
+              }
             }
             &:last-of-type a:after {
               display: none;
             }
           }
         }
+      }
+    }
+    .landing-page-constant-hamburger {
+      float: right;
+      display: none;
+      cursor: pointer;
+      @include breakpoint-max('md') {
+        display: block;
       }
     }
   }
@@ -135,6 +151,9 @@
     }
     @include breakpoint-max('md') {
       padding-top: 50px;
+      &.block-1 {
+        padding-top: 80px;
+      }
     }
     &.block-1 {
       p.main {
@@ -147,9 +166,14 @@
         color: #fff;
       }
       @include breakpoint-max('md') {
+        text-align: center;
         padding-bottom: 50px;
+        .btn-constant {
+          margin-top: 15px;
+        }
         .img-container {
           max-width: 200px;
+          margin: 30px auto;
         }
       }
     }

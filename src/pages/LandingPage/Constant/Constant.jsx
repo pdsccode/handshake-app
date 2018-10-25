@@ -8,8 +8,10 @@ import { email, required } from '@/components/core/form/validation';
 import { fieldInput } from '@/components/core/form/customField';
 import { BASE_API } from '@/constants';
 import $http from '@/services/api';
+import cn from '@sindresorhus/class-names';
 
 import logoNinja from '@/assets/images/ninja/logo-ninja-constant.svg.raw';
+import humburgerIcon from '@/assets/images/icon/hamburger.svg.raw';
 import telegramIcon from '@/assets/images/icon/telegram.svg';
 import block1 from '@/assets/images/constant/block1.svg';
 import block2 from '@/assets/images/constant/block2.svg';
@@ -34,6 +36,7 @@ class ConstantLandingPage extends React.Component {
 
   state = {
     hasSubscribed: false,
+    showMenu: false,
   };
 
   componentDidMount() {
@@ -81,9 +84,14 @@ class ConstantLandingPage extends React.Component {
       });
   };
 
+  toggleShowMenu = () => {
+    const { showMenu } = this.state;
+    this.setState({ showMenu: !showMenu });
+  }
+
   render() {
     const { intl } = this.props;
-    const { hasSubscribed } = this.state;
+    const { hasSubscribed, showMenu } = this.state;
 
     return (
       <main className="landing-page-constant">
@@ -94,7 +102,14 @@ class ConstantLandingPage extends React.Component {
                 <div className="landing-page-constant-logo">
                   <Link to="/"><div dangerouslySetInnerHTML={{ __html: logoNinja }} /></Link>
                 </div>
-                <div className="landing-page-constant-menu">
+                <div onClick={this.toggleShowMenu} className="landing-page-constant-hamburger" dangerouslySetInnerHTML={{ __html: humburgerIcon }} />
+                <div className={
+                  cn(
+                    'landing-page-constant-menu',
+                    { show: showMenu },
+                  )
+                }
+                >
                   <ul>
                     <li>
                       <Link to="/product">Product</Link>
@@ -213,7 +228,7 @@ class ConstantLandingPage extends React.Component {
             </div>
           </div>
         </section>
-      </main>
+      </main >
     );
   }
 }
