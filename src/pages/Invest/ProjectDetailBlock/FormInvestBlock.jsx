@@ -15,8 +15,8 @@ import createForm from '@/components/core/form/createForm';
 // Refer to FeedCreditCard.jsx
 const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
 const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
-const transformString = str => str.substring(0, 7) + '...'+ str.substring(str.length-5, str.length);
-
+const transformString = str => str.substring(0, 2) + '..'+ str.substring(str.length-2, str.length);
+import TransactionStorage from '../../../reducers/invest/transactions';
 export const CRYPTO_ICONS = {
     ETH: iconEthereum,
     BTC: iconBitcoin,
@@ -62,6 +62,8 @@ export default class FormInvestBlock extends Component {
       }
       this.hedgeFundApi = new  HedgeFundAPI('latest', false);
       this.runTrx = null;
+      this.trxStorage = new TransactionStorage(props.pid);
+      this.updateTrxState = null;
     }
   
     onFinishedTrx = (hash) => this.setState({
@@ -73,10 +75,17 @@ export default class FormInvestBlock extends Component {
     })
   
     onChangeStatusTrx = (hash) => {
-      const txHashs = this.state.txHashs.map(e => e.hash === hash ? ({ hash: e.hash, status: 'Done' }) : e);
-      this.setState({ txHashs });
+      this.updateTrxState = setTimeout(() => {
+        const txHashs = this.state.txHashs.map(e => e.hash === hash ? ({ hash: e.hash, status: 'Done' }) : e);
+        this.setState({ txHashs });
+        console.log('update state status trx');
+      }, 10000);
     }
-  
+
+    componentWillUnmount = () => {
+      console.log('clear timeout');
+      clearTimeout(this.updateTrxState)
+    }
     onChangeAmount = (e) => this.setState({ investAmount: e.target.value })
   
     onSubmitInvest = async () => {
@@ -101,10 +110,15 @@ export default class FormInvestBlock extends Component {
     handleConfirmTransaction = () => {
       this.setState({ isUserConfirmed: true });
       this.runTrx().on('transactionHash', (hash) => {
+        this.trxStorage.addTransaction({ hash, status: 'PENDING', type: 'SEND', amount: this.state.investAmount });
+        console.log(this.trxStorage.getTransactions());
         console.log('txhash', hash);
         this.onFinishedTrx(hash);
       }).on('receipt', (receipt) => {
         this.onChangeStatusTrx(receipt.transactionHash);
+        const { transactionHash: hash } = receipt;
+        const status = 'DONE';
+        this.trxStorage.updateTransaction({ hash, status });
       }).on('error', err => console.log('err', err));
     }
     render() {
@@ -128,17 +142,21 @@ export default class FormInvestBlock extends Component {
               <button disabled={this.state.isUserConfirmed} style={{ display: 'block', width: '100%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleConfirmTransaction}>Confirm</button>
             </div>}
           </ModalBlock>}
-          {this.state.txHashs.length > 0 && <div className="trxHistory">
+          {this.trxStorage.getTransactions().length > 0 && <div className="trxHistory">
             <div className="trxHistory-row">
-              <div className="trxHistory-row-left fund-label">Trx</div>
-              <div className="trxHistory-row-right fund-label">Status</div>
+              <div className="trxHistory-row-left fund-label-row-header">Trx</div>
+              <div className="trxHistory-row-mid fund-label-row-header">Type</div>
+              <div className="trxHistory-row-mid fund-label-row-header">Amount</div>
+              <div className="trxHistory-row-right fund-label-row-header">Status</div>
             </div>
-            {this.state.txHashs.map((e, i) => (
+            {this.trxStorage.getTransactions().map((e, i) => (
               <div key={i} className="trxHistory-row">
                 <div className="trxHistory-row-left">
                   <a target='_blank' href={linkToEtherScan(e.hash)}>{transformString(e.hash)}</a>
                 </div>
-                <div className="trxHistory-row-right fund-label" style={{ color: e.status==='Pending' ? 'red' : 'green' }}>{e.status}</div>
+                <div className="trxHistory-row-mid fund-label-row">{e.type|| ''}</div>
+                <div className="trxHistory-row-mid fund-label-row">{e.amount || ''}</div>
+                <div className="trxHistory-row-right fund-label-row" style={{ color: e.status==='PENDING' ? 'red' : 'green' }}>{e.status}</div>
               </div>
             ))}
   

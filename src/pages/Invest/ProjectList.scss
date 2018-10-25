@@ -37,6 +37,21 @@
   font-weight: bold;
   color :#868DAD;
 }
+.fund-label-row-header {
+  font-weight: bold;
+  color: #ffffff;
+  background: #546FF7;
+  text-align: left;
+  font-size: 13px;
+  padding: 10px 5px !important;
+}
+.fund-label-row {
+  // font-weight: bold;
+  // color: #ffffff;
+  // background: #546FF7;
+  text-align: left;
+  font-size: 11px;
+}
 .fund-item{
   margin-right: 1em;
   display:inline-block;
@@ -153,14 +168,20 @@
     word-break: break-all;
     border-bottom: 1px solid grey;
     &-right {
-      width: 30%;
+      width: 25%;
       text-align: right;
-      padding: 10px;
+      padding: 5px;
+    }
+    &-mid {
+      width: 25%;
+      // text-align: center;
+      padding: 5px;
+      border-right: 1px solid grey;
     }
     &-left {
-      width: 70%;
+      width: 25%;
       border-right: 1px solid grey;
-      padding: 10px;
+      padding: 5px;
     }
   }
 }
@@ -179,4 +200,9 @@
   align-items: center;
   justify-content: center;
   display: flex;
+}
+
+.white {
+  color: 'white';
+  background-color: 'red'
 }

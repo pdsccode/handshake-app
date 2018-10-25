@@ -25,7 +25,7 @@ import Loading from '@/components/Loading';
 const states = [
   'READY',
   'CLOSED',
-  'INITFUND'
+  // 'INITFUND'
 ];
 class ProjectDetail extends Component {
   constructor(props) {
@@ -99,7 +99,7 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          {isNotExpired || states.indexOf(project.state) < 0 && <FormInvestBlock pid={project.id} />}
+          {isNotExpired && <FormInvestBlock pid={project.id} />}
         </div>
     );
   }

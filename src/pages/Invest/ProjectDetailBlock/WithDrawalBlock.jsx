@@ -5,6 +5,7 @@ import LoadingGif from '../loading.svg';
 const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
 const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
 const transformString = str => str.substring(0, 7) + '...'+ str.substring(str.length-5, str.length);
+import TransactionStorage from '../../../reducers/invest/transactions';
 
 const ModalBlock = (props) => (
   <div className='project-modal'>
@@ -25,6 +26,8 @@ class WithDrawalBlock extends Component {
       txHashs: [],
     }
     this.runTrx = null;
+    this.trxStorage = new TransactionStorage(props.pid);
+    this.updateTrxState = null;
   }
 
   onFinishedTrx = (hash) => this.setState({
@@ -57,8 +60,10 @@ class WithDrawalBlock extends Component {
     this.setState({ isUserConfirmed: true });
     this.runTrx().on('transactionHash', (hash) => {
       console.log('txhash', hash);
+      this.trxStorage.addTransaction({ hash, status: 'PENDING', type: 'WITHDRAW', amount: this.props.fundAmount });
       this.onFinishedTrx(hash);
     }).on('receipt', (receipt) => {
+      this.trxStorage.updateTransaction({ hash: receipt.transactionHash, status: 'DONE' });
       this.onChangeStatusTrx(receipt.transactionHash);
     }).on('error', err => console.log('err', err));
   }

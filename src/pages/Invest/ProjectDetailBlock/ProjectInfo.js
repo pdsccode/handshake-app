@@ -40,7 +40,7 @@ class ProjectInfo extends React.Component {
           {fundAmount} ETH
            <img onClick={()=> this.refs['withdrawalBlock'].onSubmitWithDrawal()} src={WithDrawalSVG} style={{ width: '20px', height: '20px' }}/>
         </label>
-        <WithDrawalBlock pid={project.id} ref={'withdrawalBlock'} />
+        <WithDrawalBlock pid={project.id} fundAmount={fundAmount} ref={'withdrawalBlock'} />
       </div>
     )
   }
