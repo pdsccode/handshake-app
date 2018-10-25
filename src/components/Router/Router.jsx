@@ -72,6 +72,7 @@ const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Ro
 const RouterInternalAdmin = createDynamicImport(() => import('@/components/Router/InternalAdmin'), Loading);
 const RouterCreateCashStore = createDynamicImport(() => import('@/components/handshakes/exchange/Create/CreateStoreATM'), Loading);
 const LandingBecomeAtm = createDynamicImport(() => import('@/pages/LandingPage/BecomeAtm'), Loading);
+const LandingConstant = createDynamicImport(() => import('@/pages/LandingPage/Constant/Constant'), Loading);
 const InternalAdminDashboard = createDynamicImport(() => import('@/pages/InternalAdminDashboard'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
@@ -108,6 +109,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CASH_STORE_URL, component: RouterCreateCashStore },
 
   { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
+  { path: '/constant', render: () => <LandingConstant /> },
   { path: URL.PEX_EXTENSION, component: PexExtension },
   { path: URL.WALLET_EXTENSION, component: TopUp },
 ];
@@ -195,14 +197,14 @@ class Router extends React.Component {
           BrowserDetect.isDesktop && <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
         }
 
-          <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
-          <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
-          <Route exact path={URL.RECRUITING} component={Recruiting} />
-          <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
-          <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
-          <Route path={URL.PEX_LUCKY_DRAW_MECHANIC_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<LuckyDrawMechanic />} />} />
-          <Route path={URL.BUY_COIN_FAQ_URL} render={() => <ProjectDetail type="product" name="coin" />} />
-          {routesUsingDesktopLayout}
+        <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
+        <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
+        <Route exact path={URL.RECRUITING} component={Recruiting} />
+        <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
+        <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
+        <Route path={URL.PEX_LUCKY_DRAW_MECHANIC_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<LuckyDrawMechanic />} />} />
+        <Route path={URL.BUY_COIN_FAQ_URL} render={() => <ProjectDetail type="product" name="coin" />} />
+        {routesUsingDesktopLayout}
 
         {/* Cash on mobile uses a completely different layout! */}
         {/* <Route path={URL.HANDSHAKE_CASH} component={Discover} /> */}
