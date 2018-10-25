@@ -1008,6 +1008,11 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.10.tgz#ab43b78da70dfd4d780becb3ae47213d6bd00762"
   integrity sha512-i90GhAH1k1C7EKZHhjsMUIw6vXb7WUsMdbGMrDvFOLRtMKyC/+hHcXfK440PdNnsZpMYsCeJFBpamML806AA4w==
 
+"@sindresorhus/class-names@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@sindresorhus/class-names/-/class-names-0.1.0.tgz#c0b0230ab5ba95f3c09e6609763d72b6445c07f8"
+  integrity sha512-o1qykjsazehS9/5iPdUn9ju+ep+K+dsuuQ+YPX2yillNm6lshN/6PlLpCeow1wdlTf38DdOpLHxHSmupSm1aSw==
+
 "@types/lodash@^4.14.85":
   version "4.14.116"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.116.tgz#5ccf215653e3e8c786a58390751033a9adca0eb9"
@@ -5662,8 +5667,8 @@ handlebars@^4.0.11:
     uglify-js "^3.1.4"
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
-  version "0.0.1540264882"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/806136a3223342bb5d3b5d6fef26897f4d2c9374"
+  version "0.0.1540462919"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/ba27ba279f157e553317350189b43e1e0dc90f63"
   dependencies:
     "@babel/core" "^7.1.2"
     "@babel/node" "^7.0.0"
