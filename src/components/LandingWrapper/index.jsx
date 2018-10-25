@@ -22,7 +22,7 @@ class Index extends React.PureComponent {
   }
   constructor(props) {
     super(props);
-    this.changeCountry = ::this.changeCountry;
+    this.changeCountry = :: this.changeCountry;
   }
 
   componentDidMount() {
@@ -44,7 +44,7 @@ class Index extends React.PureComponent {
       modal: { className, show, body, title, centered },
     } = this.props;
     console.log(this.props);
-    const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
+    const logo = <Link to="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></Link>;
     const navLinks = (
       <span>
         <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.product.url}>Product</Link></span>
