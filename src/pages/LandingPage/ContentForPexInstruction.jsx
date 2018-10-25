@@ -135,7 +135,7 @@ class ContentForPexInstruction extends React.Component {
       <div className="wrapperGuideStep">
         <div className="stepNumber">3</div>
         <div className="pexHeadline">Place a bet.</div>
-        <p className="content">Open <a href="https://ninja.org/pex">ninja.org/pex</a></p>
+        <p className="content">Open <a href="https://ninja.org/guru">ninja.org/guru</a></p>
         <p className="content">First, pick an <strong>event</strong> (i.e. Man. City— Newcastle), the <strong>outcome</strong> (Man. City wins) and the side (support or bet against the outcome).</p>
         <div className="wrapperGuideCenter wrapperImages">
           <div className="imageBlock">

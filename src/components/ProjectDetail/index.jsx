@@ -84,7 +84,7 @@ class Index extends React.PureComponent {
             <FormattedMessage id={`landing_page.${name}.disclaim`} />
           </div>
           <p className="pd-small-content">Need more information? Check out our <a href="#faq"
-          >FAQ</a> and <a href="http://ninja.org/pex/instructions">instructions</a> on how to play.</p>
+          >FAQ</a> and <a href="http://ninja.org/guru/instructions">instructions</a> on how to play.</p>
         </div>
       </div>
     );
