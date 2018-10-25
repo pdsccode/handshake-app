@@ -1075,7 +1075,7 @@ export default {
               invalidDocument: 'Please choose a document type',
               invalidFrontImage: 'Please upload front page of your document',
               invalidBackImage: 'Please upload back page of your document',
-              invalidEmail: 'Please fill in your email address',
+              invalidEmail: 'Your email address is missing! Are you sure you don’t want to receive transaction info?',
               invalidSelfieImage: 'Please upload a selife photo with your document',
             },
           },

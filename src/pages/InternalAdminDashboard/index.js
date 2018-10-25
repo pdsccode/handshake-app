@@ -6,6 +6,7 @@ import { STATUS } from '@/pages/Admin/AdminIDVerification';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import './styles.scss';
+import { EXCHANGE_ACTION } from '@/constants';
 
 const AdminIDVerification = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Admin/AdminIDVerification')}>{ ComponentLoaded => <ComponentLoaded {...props} />}</DynamicImport>);
 const InternalAdmin = props => (<DynamicImport loading={Loading} load={() => import('@/pages/InternalAdmin/InternalAdmin')}>{ ComponentLoaded => <ComponentLoaded {...props} />}</DynamicImport>);
@@ -32,6 +33,10 @@ const menus = {
   buyCoinCod: {
     name: 'Buy Coin - COD',
     components: <InternalAdmin type="cod" />,
+  },
+  sellCoinBank: {
+    name: 'Sell Coin - BANK',
+    components: <InternalAdmin type="bank" action={EXCHANGE_ACTION.SELL} />,
   },
 };
 
