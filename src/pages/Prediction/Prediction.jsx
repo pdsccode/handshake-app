@@ -452,7 +452,7 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    this.checkShowFreeBetPopup(props);
+    //this.checkShowFreeBetPopup(props);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
@@ -467,8 +467,8 @@ class Prediction extends React.Component {
         {/*{this.renderLuckyReal()}*/}
         {/*{this.renderLuckyFree()}*/}
         {this.renderLuckyLanding()}
-        {this.renderFreeBetLose()}
-        {this.renderFreeBetWin()}
+        {/*this.renderFreeBetLose()*/}
+        {/*this.renderFreeBetWin()*/}
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
