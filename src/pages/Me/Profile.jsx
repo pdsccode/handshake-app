@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 // services
 import createForm from '@/components/core/form/createForm';
 import { setHeaderTitle, showAlert } from '@/reducers/app/action';
@@ -29,7 +29,6 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import local from '@/services/localStore';
 import { API_URL, APP } from '@/constants';
 // style
-import CheckedSVG from '@/assets/images/icon/checked.svg';
 import IDVerificationFrontImageExample from '@/assets/images/id-verification/front-example.svg';
 import IDVerificationBackImageExample from '@/assets/images/id-verification/back-example.svg';
 import IDVerificationSelfieImageExample from '@/assets/images/id-verification/selfie-example.svg';
@@ -37,6 +36,7 @@ import IDVerificationSelfieImageExample from '@/assets/images/id-verification/se
 import valid from '@/services/validate';
 import { ICON } from '@/styles/images';
 import './Profile.scss';
+import Feed from '@/components/core/presentation/Feed/Feed';
 
 class Profile extends React.Component {
   static propTypes = {
@@ -84,6 +84,7 @@ class Profile extends React.Component {
       idVerificationIDNumber: '',
       idVerificationEmail: '',
       idVerificationCollapse: false,
+      modalContent: '',
     };
     // bind
     this.onSubmitVerifyPhone = :: this.onSubmitVerifyPhone;
@@ -212,22 +213,17 @@ class Profile extends React.Component {
         return;
       }
 
-      if (!idVerificationEmail) {
-        this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidEmail);
-        return;
-      }
-
-      if (valid.email(idVerificationEmail)) {
-        this.showError(messages.me.profile.verify.alert.notValid.client.email);
-        return;
-      }
+      // if (valid.email(idVerificationEmail)) {
+      //   this.showError(messages.me.profile.verify.alert.notValid.client.email);
+      //   return;
+      // }
 
       if (!idVerificationFrontImage) {
         this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidFrontImage);
         return;
       }
 
-      if (!idVerificationBackImage) {
+      if (idVerificationDocumentType > 0 && !idVerificationBackImage) {
         this.showError(messages.me.profile.verify.alert.notValid.idVerification.invalidBackImage);
         return;
       }
@@ -241,6 +237,40 @@ class Profile extends React.Component {
       return;
     }
 
+    if (!idVerificationEmail) {
+      this.setState({
+        modalContent:
+          (
+            <div className="py-2">
+              <Feed className="feed p-2" background="#259B24">
+                <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                  <div>{messages.me.profile.verify.alert.notValid.idVerification.invalidEmail}</div>
+                </div>
+              </Feed>
+              <Button className="mt-2" block onClick={() => this.continueIDVerification()}><FormattedMessage id="ex.btn.confirm" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelAction}><FormattedMessage id="btn.cancel" /></Button>
+            </div>
+          ),
+      }, () => {
+        this.modalRef.open();
+      });
+    } else {
+      this.continueIDVerification();
+    }
+  }
+
+  continueIDVerification = () => {
+    const {
+      idVerificationDocumentType,
+      idVerificationFrontImage,
+      idVerificationBackImage,
+      idVerificationSelfieImage,
+      idVerificationLevel,
+      idVerifcationUserFullName,
+      idVerificationIDNumber,
+      idVerificationEmail,
+    } = this.state;
+    const { messages } = this.props.intl;
     const data = new FormData();
     if (idVerificationLevel === 0) {
       data.append('full_name', idVerifcationUserFullName);
@@ -263,10 +293,12 @@ class Profile extends React.Component {
         this.setState({ idVerficationUploadingProgress: Math.round((progressEvent.loaded / progressEvent.total) * 100) });
       },
       successFn: () => {
+        this.modalRef.close();
         this.setState({ idVerified: 2, idVerficationUploadingProgress: 0 });
         this.showSuccess(messages.me.profile.verify.alert.success.idVerification);
       },
       errorFn: (e) => {
+        this.modalRef.close();
         this.setState({ idVerficationUploadingProgress: 0 });
         if (e && e.message) {
           this.showError(`${messages.me.profile.verify.alert.cannot.idVerification2} ${e.message}`);
@@ -275,6 +307,10 @@ class Profile extends React.Component {
         }
       },
     });
+  }
+
+  cancelAction = () => {
+    this.modalRef.close();
   }
 
   onSubmitVerifyPhone() {
@@ -470,7 +506,7 @@ class Profile extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const {
-      countryCode, countries, sms, email, code, idVerified, idVerficationUploadingProgress, idVerificationLevel,
+      countryCode, countries, sms, email, code, idVerified, idVerficationUploadingProgress, idVerificationLevel, modalContent,
     } = this.state;
     let idVerificationStatusBadgeClass = '';
     let idVerificationStatusText = '';
@@ -865,34 +901,36 @@ class Profile extends React.Component {
                           </div>
                         </Row>
                       </div>
-                      <div>
-                        <p />
-                        <Row>
-                          <div className="col-12">
-                            <p className="text label">
-                              {messages.me.profile.text.id_verification.desc7}
-                            </p>
-                            <UploadZone
-                              name="back_image"
-                              dropZoneRef={(node) => { this.imageBackRef = node; }}
-                              className="w-100 hide_upload_zone"
-                              acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
-                              multiple={false}
-                              dropLabel={messages.me.profile.text.id_verification.desc7}
-                              onDrop={(files) => {
+                      {this.state.idVerificationDocumentType !== 0 ? (
+                        <div>
+                          <p />
+                          <Row>
+                            <div className="col-12">
+                              <p className="text label">
+                                {messages.me.profile.text.id_verification.desc7}
+                              </p>
+                              <UploadZone
+                                name="back_image"
+                                dropZoneRef={(node) => { this.imageBackRef = node; }}
+                                className="w-100 hide_upload_zone"
+                                acceptMimeType={['image/jpeg', 'image/jpg', 'image/png']}
+                                multiple={false}
+                                dropLabel={messages.me.profile.text.id_verification.desc7}
+                                onDrop={(files) => {
                                       this.setState({ idVerificationBackImage: files[0] });
                                     }}
-                            />
-                            <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageBackRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
-                            <Row>
-                              <div className="col-12">
-                                <p />
-                                <Image src={this.state.idVerificationBackImage ? this.state.idVerificationBackImage.preview : IDVerificationBackImageExample} />
-                              </div>
-                            </Row>
-                          </div>
-                        </Row>
-                      </div>
+                              />
+                              <button type="button" className="btn btn-primary w-100" onClick={() => { this.imageBackRef.open(); }}>{messages.me.profile.text.id_verification.button.upload}</button>
+                              <Row>
+                                <div className="col-12">
+                                  <p />
+                                  <Image src={this.state.idVerificationBackImage ? this.state.idVerificationBackImage.preview : IDVerificationBackImageExample} />
+                                </div>
+                              </Row>
+                            </div>
+                          </Row>
+                        </div>
+                      ) : ''}
                     </div>
                       ) : (
                         <div>
@@ -941,12 +979,8 @@ class Profile extends React.Component {
             </div>
           </Col>
         </Row>
-        <ModalDialog onRef={(modal) => { this.modalVerifyRef = modal; return null; }}>
-          <div className="modal-verify">
-            <Image src={CheckedSVG} alt="checked" />
-            <p>Successed!</p>
-            <p>{this.state.successMessage ? this.state.successMessage : 'Your authentication is verified'}</p>
-          </div>
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }}>
+          {modalContent}
         </ModalDialog>
       </Grid >
     );
