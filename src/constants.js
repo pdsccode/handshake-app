@@ -563,6 +563,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  HANDSHAKE_GURU: '/guru',
   PEX_EXTENSION: '/pex-extension',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
   HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
@@ -619,7 +620,7 @@ export const URL = {
   PRODUCT_ATM_URL: '/atm',
   CASH_FOR_BUSINESS: '/cash-for-business',
   ATM_FOR_BUSINESS: '/atm-for-business',
-  PRODUCT_PREDICTION_URL: '/prediction',
+  PRODUCT_PREDICTION_URL: '/guru',
   PEX_INSTRUCTION_URL: '/pex/instructions',
   PEX_LUCKY_DRAW_MECHANIC_URL: '/pex/luckydraw',
   PRODUCT_WALLET_URL: '/wallet',

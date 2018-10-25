@@ -478,7 +478,7 @@ export default {
 
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Buy crypto with cash. Secure, anonymous, easy.',
-  'landing_page.products.prediction.title': 'Prediction',
+  'landing_page.products.prediction.title': 'Guru',
   'landing_page.products.prediction.subTitle': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.products.wallet.title': 'Wallet',
   'landing_page.products.wallet.subTitle': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
@@ -541,7 +541,7 @@ export default {
   'landing_page.cash-for-business.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
   'landing_page.cash-for-business.youtubeVideoId': 'bNRK6HMTmzA',
 
-  'landing_page.prediction.breadcrumb': 'Prediction',
+  'landing_page.prediction.breadcrumb': 'Guru',
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.prediction.subHeading': 'You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.',
   'landing_page.prediction.textEmail': `To play, please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser.`,

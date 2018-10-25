@@ -16,6 +16,7 @@ const routerMap = [
   { path: URL.HANDSHAKE_PREDICTION, component: Exchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: Exchange },
   { path: URL.HANDSHAKE_PEX, component: Exchange },
+  { path: URL.HANDSHAKE_GURU, component: Exchange },
 ];
 
 class ExchangeRouter extends React.Component {

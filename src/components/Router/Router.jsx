@@ -76,6 +76,7 @@ const InternalAdminDashboard = createDynamicImport(() => import('@/pages/Interna
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
+  { path: URL.HANDSHAKE_GURU, component: RouterPrediction },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.HANDSHAKE_PEX_UPDATER, component: CreateOwnMarket },
@@ -129,8 +130,9 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_CASH_URL, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} />, exact: true },
     { path: URL.PRODUCT_ATM_URL, render: () => <Redirect to={{ pathname: URL.BUY_COIN_URL }} /> },
     // { path: URL.BUY_BY_CC_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
-    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
+    { path: URL.HANDSHAKE_PREDICTION, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
+    { path: URL.HANDSHAKE_GURU, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} entireContentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<ContentForWallet />} /> },
     { path: URL.PEX_EXTENSION, render: () => <PexExtension reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX_CREATOR, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<PageMobileOnly />} /> },
