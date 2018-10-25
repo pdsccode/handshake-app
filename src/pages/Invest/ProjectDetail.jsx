@@ -16,6 +16,7 @@ const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
 const transformString = str => str.substring(0, 7) + '...'+ str.substring(str.length-5, str.length);
 import ProjectInfo from './ProjectDetailBlock/ProjectInfo';
 import FormInvestBlock from './ProjectDetailBlock/FormInvestBlock';
+import OrderHistory from './ProjectDetailBlock/OrderHistory';
 export const CRYPTO_ICONS = {
   ETH: iconEthereum,
   BTC: iconBitcoin,
@@ -39,6 +40,9 @@ class ProjectDetail extends Component {
   }
   componentDidMount = () => {
     this.getProjectDetail();
+  }
+  reloadHistory = () => {
+    this.refs['orderHistory'].fetchTrxs();
   }
   renderProjects() {
     const { project } = this.props;
@@ -99,7 +103,8 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          {isNotExpired && <FormInvestBlock pid={project.id} />}
+          {isNotExpired && <FormInvestBlock pid={project.id} onSuccess={this.reloadHistory}/>}
+          <OrderHistory pid={project.id} ref={'orderHistory'} />
         </div>
     );
   }

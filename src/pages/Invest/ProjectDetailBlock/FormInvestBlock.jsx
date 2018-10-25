@@ -79,7 +79,8 @@ export default class FormInvestBlock extends Component {
         const txHashs = this.state.txHashs.map(e => e.hash === hash ? ({ hash: e.hash, status: 'Done' }) : e);
         this.setState({ txHashs });
         console.log('update state status trx');
-      }, 10000);
+        this.props.onSuccess();
+      }, 3000);
     }
 
     componentWillUnmount = () => {
@@ -114,6 +115,7 @@ export default class FormInvestBlock extends Component {
         console.log(this.trxStorage.getTransactions());
         console.log('txhash', hash);
         this.onFinishedTrx(hash);
+        this.props.onSuccess();
       }).on('receipt', (receipt) => {
         this.onChangeStatusTrx(receipt.transactionHash);
         const { transactionHash: hash } = receipt;
@@ -142,7 +144,7 @@ export default class FormInvestBlock extends Component {
               <button disabled={this.state.isUserConfirmed} style={{ display: 'block', width: '100%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleConfirmTransaction}>Confirm</button>
             </div>}
           </ModalBlock>}
-          {this.trxStorage.getTransactions().length > 0 && <div className="trxHistory">
+          {/* {this.trxStorage.getTransactions().length > 0 && <div className="trxHistory">
             <div className="trxHistory-row">
               <div className="trxHistory-row-left fund-label-row-header">Trx</div>
               <div className="trxHistory-row-mid fund-label-row-header">Type</div>
@@ -160,7 +162,7 @@ export default class FormInvestBlock extends Component {
               </div>
             ))}
   
-          </div>}
+          </div>} */}
         </div>
       )
     }
