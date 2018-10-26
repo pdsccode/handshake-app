@@ -33,7 +33,7 @@ class ShareMarket extends React.Component {
     const type = props.isNew ? 'event' : 'outcome';
     const { url } = props.shareEvent;
     const toUrl = {
-      pathname: URL.HANDSHAKE_PEX,
+      pathname: URL.HANDSHAKE_GURU,
       search: url.substring(url.indexOf('?')),
     };
     return (
