@@ -380,7 +380,7 @@ export default {
           content: ' You can either buy ETH directly in GURU with your credit cards or from popular coin exchanges like Coinbase or Binance.',
         },
         {
-          title: 'Top up your GURU Wallet:',
+          title: 'Top up your Ninja Wallet:',
           content: 'You can either buy ETH directly in GURU with your credit cards or from popular coin exchanges like Coinbase or Binance.',
         },
         {
@@ -750,8 +750,8 @@ export default {
           <div>– Get Ether:</div>
           <div>You can either buy ETH directly in GURU with your credit cards or from popular coin exchanges like Coinbase or Binance.</div>
           <br />
-          <div>– Top up your GURU Wallet: </div>
-          <div>Transfer the ETH into the GURU Wallet. GURU Wallet is completely decentralized, the private key is held on your phone, only you can transfer and receive ETH.</div>
+          <div>– Top up your Ninja Wallet: </div>
+          <div>Transfer the ETH into the Ninja Wallet. Ninja Wallet is completely decentralized, the private key is held on your phone, only you can transfer and receive ETH.</div>
           <br />
           <div>– Place a bet: </div>
           <div>Pick the market you want to bet (i.e. Brazil - Spain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)</div>
@@ -1796,9 +1796,9 @@ export default {
   WHITE_PAPER_STEP_1_1: 'If you don’t have ETH yet, you have a choice of buying ETH directly in GURU with your credit card. You can also buy ETH from popular coin exchanges like Coinbase or Binance.',
   WHITE_PAPER_STEP_1_2: 'GURU will support other cryptocurrencies soon.',
   WHITE_PAPER_STEP_1_3: 'Easily buy ETH in-app.',
-  WHITE_PAPER_STEP_2: 'Step 2: Top up your GURU Wallet',
-  WHITE_PAPER_STEP_2_1: 'Transfer the ETH you just bought into the GURU Wallet, so that you can start placing bets with your ETH. The GURU Wallet is completely decentralized. The private key is held on your phone and only you can access it. Only you can transfer and receive ETH.',
-  WHITE_PAPER_STEP_2_2: 'The neatly organized GURU wallet.',
+  WHITE_PAPER_STEP_2: 'Step 2: Top up your Ninja Wallet',
+  WHITE_PAPER_STEP_2_1: 'Transfer the ETH you just bought into the Ninja Wallet, so that you can start placing bets with your ETH. The Ninja Wallet is completely decentralized. The private key is held on your phone and only you can access it. Only you can transfer and receive ETH.',
+  WHITE_PAPER_STEP_2_2: 'The neatly organized Ninja wallet.',
   WHITE_PAPER_STEP_3: 'Step 3: Place a bet',
   WHITE_PAPER_STEP_3_1: 'First, pick a prediction market that interests you (i.e. Brazil — Spain), the outcome (i.e. “Brazil wins”) and the side (i.e. support or bet against the outcome).',
   WHITE_PAPER_STEP_3_2: 'Then enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/2.25). The stake will be put into an escrow smart contract. The GURU Matching Engine will then find another order that bets against the odds you set.',

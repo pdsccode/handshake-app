@@ -61,7 +61,7 @@ class TopUp extends React.Component {
     return (
       <div className="TopUpCard HowToCard">
         <div className="Quest">How to top up?</div>
-        <div className="Describe">Send ETH to your ninja guru wallet address</div>
+        <div className="Describe">Send ETH to your ninja wallet address</div>
         <div className="WalletAddress">
           <span className="Address">{address}</span>
           <span className="HelpIcon" title="Copy to clipboard" onClick={this.copyToClipboard(address)}>
