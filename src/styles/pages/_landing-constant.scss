@@ -132,7 +132,7 @@
     color: #131313;
     font-size: 50px;
     font-weight: 500;
-    // line-height: 60px;
+    line-height: 60px;
     margin-bottom: 7vh;
     padding-top: 3vh;
     @include breakpoint-max('md') {
@@ -158,6 +158,9 @@
       }
     }
     &.block-1 {
+      .landing-page-constant-heading {
+        line-height: 24px;
+      }
       .slogan {
         font-size: 18px;
         margin-top: 14px;
