@@ -40,10 +40,19 @@
         }
         .title{
             margin-top: 10px;
-            font-size: 30px;
+            font-size: 30px;            
         }
         .code{
-            color: #009688
+            color: #009688;
+            font-size: 22px;
+            text-transform: uppercase;
+            width: 60%;
+            text-align: center;
+            overflow: hidden;
+            margin: auto;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 10px;
         }
     }    
     .buttonRedeem{        
@@ -98,8 +107,8 @@
         }
         .v-value{
             font-weight: 400;
-            font-size: 22px;
-            color: #bf4b51
+            font-size: 30px;
+            color: #e25e8b;
         }
     }
     .error{
@@ -151,7 +160,7 @@
             top: 16px;
         }
         .logo{
-            width: 20px;
+            width: 25px;
             margin-right: 10px;
             margin-left: -5px;
             margin-top: -2px;

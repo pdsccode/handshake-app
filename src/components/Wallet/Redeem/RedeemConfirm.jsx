@@ -29,6 +29,7 @@ import Helper from '@/services/helper';
 import { renderToString } from 'react-dom/server';
 import Button from '@/components/core/controls/Button';
 const moment = require('moment');
+import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
 
 function changeIconConfirmButton(icon){
   try{
@@ -48,7 +49,7 @@ class RedeemConfirm extends React.Component {
     super(props);
 
     this.state = {      
-      redeemCode: this.props.data.promotion_code || '',
+      redeemCode: this.props.redeemCode || '',
       error: '',
       giftcardValue: this.props.data.amount || 0,
       cryptoValue: "",      
@@ -65,22 +66,46 @@ class RedeemConfirm extends React.Component {
     this.getWalletDefault();    
   }
 
+  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
+    this.props.showAlert({
+      message: <div className="textCenter">{icon}{msg}</div>,
+      timeOut,
+      type,
+      callBack: () => {},
+    });
+  }  
+  showError(mst) {
+    this.showAlert(mst, 'danger', 3000);
+  }
+  showLoading = () => {
+    this.props.showLoading({ message: '' });
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
   onRedeemConfirm=()=>{
-    if (this.walletSelected){      
+    if (this.state.walletSelected){      
+      this.showLoading();
       this.props.verifyRedeemCode({
         PATH_URL: "wallet/gift-card/redeem",
         data: {"code": this.state.redeemCode,"to_eth_address": this.state.walletSelected.address},
         METHOD: 'POST',
-        successFn: (res) => {        
+        successFn: (res) => { 
+          this.hideLoading();       
           if(res){
             this.modalRedeenSuccessRef.open();
           }        
         },
         errorFn: (e) =>{ 
-          if (e.message)       
-            this.setState({error: e.message});
-          else
-            console.log(e);
+          console.log(e);
+          this.hideLoading();       
+          if (e.data && e.data.data && e.data.data.message)       
+            this.showError(e.data.data.message);
+          else{
+            this.showError(e.message);            
+          }            
         }
       });
     }
@@ -208,7 +233,7 @@ class RedeemConfirm extends React.Component {
               <ol>
               <li type="1">Autonomous is not liable in the case of loss, theft, damage or fraudulent use.</li>
               <li type="1">The Ninja code is single use and cannot be reloaded, resold or exchanged for cash.</li>
-              <li type="1">The Ninja code is pre-loaded with USD and can only be converted into Bitcoin, Ethereum or Bitcoin cash. No refunds or exchanges are accepted.</li>
+              <li type="1">The Ninja code is pre-loaded with ETH and can only be redeemed to ETH. No refunds or exchanges are accepted.</li>
               <li type="1">The cryptocurrency exchange rate is based on the market price at the time of conversion on the Ninja platform.</li>
               </ol>
             </div>           
@@ -248,10 +273,10 @@ class RedeemConfirm extends React.Component {
 
             <div className="term">
               {/* {term}  */}
-              By clicking REDEEM, you agree to Gift Card & Promotional code <span onClick={()=>{this.modalRedeenSuccessRef.open()}} className="term-link">Terms and Conditions </span> as applicable
+              By clicking REDEEM, you agree to Gift Card & Promotional code <span onClick={()=>{this.modalRedeenTermRef.open()}} className="term-link">Terms and Conditions </span> as applicable
             </div>
             <div className="buttonConfirmRedeem">              
-              <ConfirmButton onConfirmed={this.onRedeemConfirm} buttonText={messages.wallet.action.redeem.swipe_button_redeem}/>
+              <ConfirmButton onConfirmed={()=>{this.onRedeemConfirm()}} buttonText={messages.wallet.action.redeem.swipe_button_redeem}/>
             </div>
         </div>       
     );
@@ -265,6 +290,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({  
   verifyRedeemCode: bindActionCreators(verifyRedeemCode, dispatch),   
   getFiatCurrency: bindActionCreators(getFiatCurrency, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 RedeemConfirm.propTypes = {  

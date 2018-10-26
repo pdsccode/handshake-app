@@ -70,8 +70,7 @@ class Redeem extends React.Component {
           this.setState({error: messages.wallet.action.redeem.invalid_code});
         }      
       },
-      errorFn: (e) =>{    
-        this.openConfirm();     
+      errorFn: (e) =>{            
         if (e.message)       
           this.setState({error: e.message});
         else
@@ -81,7 +80,7 @@ class Redeem extends React.Component {
   }  
 
   openConfirm=()=>{
-    this.setState({contentRedeemConfirm: <RedeemConfirm onFinish={this.props.onFinish} data={this.state.data} />}, ()=>{
+    this.setState({contentRedeemConfirm: <RedeemConfirm onFinish={this.props.onFinish} redeemCode={this.state.redeemCode} data={this.state.data} />}, ()=>{
       this.modalRedeemConfirmRef.open();
     });
   }
