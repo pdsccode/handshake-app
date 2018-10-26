@@ -891,7 +891,7 @@ class Wallet extends React.Component {
 
   getETHFree=()=> {
     window.open('https://www.rinkeby.io/#faucet', '_blank');
-    // let data="ninja-redeem:NINJA101F8DC?value=234";
+    // let data="ninja-redeem:NINJA-1C1QN0r5SItfzGqp06graZPLZR2?value=234";
     // let result = MasterWallet.getQRCodeDetail(data);
     // this.props.showQRCodeContent({
     //   data: result
@@ -912,8 +912,9 @@ class Wallet extends React.Component {
         (
           <Redeem
             data={data}
-            onFinish={(result) => {
+            onFinish={(result) => {              
               this.modalRedeemRef.close();
+              this.setState({redeemContent: ''});                            
              }}
           />
         ),

@@ -185,7 +185,7 @@ export class Ethereum extends Wallet {
     return true;
   }
 
-async transfer(toAddress, amountToSend, opt) {
+async transfer(toAddress, amountToSend, opt={}) {
 
     let data = opt.data || "";
     let fee = opt.fee || 0

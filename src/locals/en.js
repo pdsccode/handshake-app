@@ -1448,13 +1448,14 @@ export default {
       redeem: {
         title: 'Redeem to coin',
         your_code: 'Reedem code',
-        giftcard: 'Gift card',
+        giftcard: 'Gift Amount',
         value: 'Value',
         agree_text: 'By clicking REDEEM, you agree to Gift Card & Promotional code {0} as applicable',
         button_redeem: 'Redeem now',
         button_check: 'Check redeem code',
         swipe_button_redeem: 'Swipe to redeem',
         find_code: 'How do find claim code?',
+        invalid_code: "Invalid redeem code"
       },
       remove: {
         title: 'Remove',
