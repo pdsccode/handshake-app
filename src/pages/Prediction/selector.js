@@ -24,7 +24,7 @@ export const countReportSelector = (state) => {
   const { countReport } = state.ui;
   return countReport || 0;
 };
-export const checkFreeBetSelector = (state) => {
+export const checkRedeemCodeSelector = (state) => {
   const { freeBet = {} } = state.ui;
   return freeBet;
 };
