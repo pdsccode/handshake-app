@@ -43,7 +43,6 @@ class Index extends React.PureComponent {
     const { name, children, type, btnToggleLeftMenu, fullWidthContent,
       modal: { className, show, body, title, centered },
     } = this.props;
-    console.log(this.props);
     const logo = <Link to="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></Link>;
     const navLinks = (
       <span>

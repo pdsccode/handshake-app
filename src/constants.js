@@ -605,6 +605,7 @@ export const URL = {
   COMMENTS_BY_SHAKE: '/comments',
   COMMENTS_BY_SHAKE_INDEX: '/comments',
 
+  LANDING_PAGE_CONSTANT: '/constant',
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
