@@ -108,6 +108,9 @@ class FormInvestBlock extends Component {
         this.props.getFundAmount(this.trxStorage.getPid());
       }).on('error', err => console.log('err', err));
     }
+
+    handleCancelTransaction = () => this.setState({ isSubmitted: false })
+
     render() {
       return (
         <div className="invest-button-form-block">
@@ -125,8 +128,10 @@ class FormInvestBlock extends Component {
                 <img src={LoadingGif} style={{ width: '50px', height: '50px' }} />
               </div>}
             {this.state.estimateGasValue && <div>
-              <div style={{ textAlign: 'center' }}>{`Gas Fee: ${this.state.estimateGasValue}`}</div>
-              <button disabled={this.state.isUserConfirmed} style={{ display: 'block', width: '100%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleConfirmTransaction}>Confirm</button>
+              <div style={{ textAlign: 'center' }}>{`Congrats! Please say “Yes” to invest with ${this.props.trader}`}</div>
+              <div style={{ textAlign: 'center' }}>{`ETH Fee: ${this.state.estimateGasValue}`}</div>
+              <button style={{ margin: '5%', display: 'inline-block', width: '40%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleCancelTransaction}>No</button>
+              <button style={{ margin: '5%', display: 'inline-block', width: '40%', backgroundColor: '#546FF7', color: '#fff', fontWeight: 500, padding: '10px' }} onClick={this.handleConfirmTransaction} disabled={this.state.isUserConfirmed}>Yes</button>
             </div>}
           </ModalBlock>}
         </div>

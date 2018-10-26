@@ -326,7 +326,7 @@ export const fetchTransactions = pid => dispatch => {
 export const addTransaction = (pid, trx) => dispatch => {
   const trxStorage = new TransactionStorage(pid);
   trxStorage.addTransaction(trx);
-  const payload = trxStorage.getTransactions().reverse();
+  const payload = trxStorage.getTransactions().sort(() => -1);
   dispatch({ type: ACTIONS.FETCH_TRANSACTIONS, payload });
 }
 

@@ -101,7 +101,7 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          {isNotExpired && project.state === 'INITFUND' && <FormInvestBlock pid={project.id} />}
+          {isNotExpired && project.state === 'INITFUND' && <FormInvestBlock pid={project.id} trader={project.User.firstName + project.User.lastName} />}
           <OrderHistory pid={project.id} />
         </div>
     );
