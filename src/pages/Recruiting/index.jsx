@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
+import { isEmpty } from 'lodash';
 
 import { URL } from '@/constants';
 import LandingWrapper from '@/components/LandingWrapper';
@@ -25,12 +26,27 @@ class Recruiting extends React.Component {
     const values = queryString.parse(this.props.location.search);
 
     this.state = {
-      selectedCategoryId: idAllCategories,
+      selectedCategoryId: values.categoryId || idAllCategories,
       categories: [],
       jobs: [],
       showFilters: false,
       searchKey: values.project || '',
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const values = queryString.parse(nextProps.location.search);
+    const result = {};
+    if (values.categoryId && values.categoryId !== prevState.selectedCategoryId) {
+      result.selectedCategoryId = values.categoryId;
+    }
+    if (values.project && values.project !== prevState.searchKey) {
+      result.searchKey = values.project;
+    }
+    if (isEmpty(result)) {
+      return null;
+    }
+    return result;
   }
 
 
@@ -52,6 +68,15 @@ class Recruiting extends React.Component {
       qs += `&category_id=${id}`;
     }
     qs += `&project=${projectName}`;
+
+    const search = {};
+    if (projectName) search.project = projectName;
+    if (id && id !== 0) search.categoryId = id;
+
+    this.props.history.push({
+      pathname: '/recruiting',
+      search: `?${queryString.stringify(search)}`,
+    });
 
     axios
       .get(`https://www.autonomous.ai/api-v2/job-api/jobs${qs}`)
