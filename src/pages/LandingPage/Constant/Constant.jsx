@@ -121,7 +121,7 @@ class ConstantLandingPage extends React.Component {
                       <Link to="/">Team</Link>
                     </li> */}
                     <li>
-                      <Link to="/recruiting" className="btn-constant">Join the Constant team</Link>
+                      <Link to="/recruiting?project=Constant" className="btn-constant">Join the Constant team</Link>
                     </li>
                   </ul>
                 </div>
@@ -135,7 +135,7 @@ class ConstantLandingPage extends React.Component {
               <div className="col-12 col-lg-5 project-detail">
                 <div className="landing-page-constant-heading">Constant</div>
                 <p className="main">We&apos;re looking for creative, exceptional people to help build the new currency of the internet.</p>
-                <p style={{ margin: '38px 0 60px' }}><Link to="/recruiting" className="btn-constant">Join the Constant team</Link></p>
+                <p style={{ margin: '38px 0 60px' }}><Link to="/recruiting?project=Constant" className="btn-constant">Join the Constant team</Link></p>
                 <p style={{ fontWeight: 'bold' }}>Receive curated development and community updates.</p>
                 {
                   !hasSubscribed
