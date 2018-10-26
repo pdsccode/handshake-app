@@ -544,7 +544,7 @@ export default {
   'landing_page.prediction.breadcrumb': 'Guru',
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.prediction.subHeading': 'You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.',
-  'landing_page.prediction.textEmail': `To play, please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser.`,
+  'landing_page.prediction.textEmail': `To play, please open <a href="https://ninja.org/guru">ninja.org/guru</a> on your mobile browser.`,
   'landing_page.prediction.label.sendLinkToEmail': `For updates, direct from the dojo:`,
   'landing_page.prediction.btnSubmitEmail': 'Go',
   'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
@@ -1165,7 +1165,7 @@ export default {
       noDataMessage: 'Start a mission.',
       filterBy: 'Filter by:',
       cash: {
-        predition: 'Prediction',
+        predition: 'Guru',
         cash: 'Cash',
         stationExplain: 'An ATM is where you can buy or sell cryptocurrency.',
         stationCreateSuggest: 'Got crypto? Create ATM to turn it into money making machine NOW!',

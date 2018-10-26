@@ -145,7 +145,7 @@ class ContentForPrediction extends React.Component {
             <p className="pexContent">You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.</p>
             {/*this.renderEmail()*/}
             {/*hasSubscribed && this.renderThanksSubcribe()*/}
-            <p className="pexContent btnMobileOpen">To play, please open <u>ninja.org/prediction</u> on your mobile browser.</p>
+            <p className="pexContent btnMobileOpen">To play, please open <u>ninja.org/guru</u> on your mobile browser.</p>
             <p><a href="https://t.me/ninja_org"><u>Join the dojo on Telegram</u></a></p>
           </div>
           <div className="column">
@@ -180,7 +180,7 @@ class ContentForPrediction extends React.Component {
             <div className="wrapperSmallBlock">
               <img src={icPlaySolution} alt="icPlaySolution" width="40" />
               <div className="pexSmallTitle">The solution</div>
-              <div className="pexContent">Prediction allows you to directly bet against each other without going through a bookmaker. It’s all managed by blockchain technology and secured with smart contracts.</div>
+              <div className="pexContent">Guru allows you to directly bet against each other without going through a bookmaker. It’s all managed by blockchain technology and secured with smart contracts.</div>
             </div>
             <Link to={URL.PEX_INSTRUCTION_URL}>
               <button className="pexButton">Instructions on how to play</button>
@@ -200,7 +200,7 @@ class ContentForPrediction extends React.Component {
           <div className="column">
             <div className="wrappeContent">
               <div className="pexHeadLine">Chrome Extension</div>
-              <div className="pexContent">Use Ninja Prediction on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
+              <div className="pexContent">Use Ninja Guru on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
               <div className="pexContent">With just a click, you can create bets from (almost) anything you read & see online.</div>
             </div>
             {/*<button className="pexButton"
@@ -245,7 +245,7 @@ class ContentForPrediction extends React.Component {
           <div className="column">
             <div className="wrapperSmallBlock">
               <div className="pexHeadLine">Make your market</div>
-              <div className="pexContent">Prediction allows anyone to create a prediction market about any future event — be it in sports, politics, science, or literally any other aspect of modern life. You, as the market creator, can set the market fee, the market closing time, the reporter of the outcome, and the reporting deadline.</div>
+              <div className="pexContent">Guru allows anyone to create a prediction market about any future event — be it in sports, politics, science, or literally any other aspect of modern life. You, as the market creator, can set the market fee, the market closing time, the reporter of the outcome, and the reporting deadline.</div>
               <div className="pexContent">Create your own market, please open {' '}
               <Link to={URL.HANDSHAKE_PEX_CREATOR}>
               https://ninja.org/create-pex

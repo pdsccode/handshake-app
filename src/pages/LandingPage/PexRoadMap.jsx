@@ -61,7 +61,7 @@ const roadmaps = [
             into a{' '}
             <i>
               <strong>Prediction Exchange</strong>
-            </i>. Predictions are logged between individual parties on the
+            </i>. Guru are logged between individual parties on the
             blockchain decentralizing the traditional betting systerm.
           </span>
         )
@@ -112,7 +112,7 @@ const roadmaps = [
     items: [
       {
         title: 'FULL NETWORK LAUNCH',
-        content: <span>Launch Prediction across all markets.</span>
+        content: <span>Launch Guru across all markets.</span>
       }
     ]
   },

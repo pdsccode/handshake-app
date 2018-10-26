@@ -30,10 +30,10 @@ class ContentForPexInstruction extends React.Component {
       <div className="wrapperPexIntroducer">
         <Image src={AvatarIcon} alt="AvatarIcon" />
         <p>Hello!</p>
-        <p>Cian here from the Prediction team. We’ve built the world a shiny new prediction exchange.</p>
+        <p>Cian here from the Guru team. We’ve built the world a shiny new prediction exchange.</p>
         <p>If you’re thinking, <i>‘That’s great and all. But, how does it work and where do I start?’</i></p>
         <p>You’ve landed in the right place.</p>
-        <p>In this piece, we’ll cover everything to help you get started with <strong>Prediction</strong>.</p>
+        <p>In this piece, we’ll cover everything to help you get started with <strong>Guru</strong>.</p>
       </div>
     );
   }
@@ -41,7 +41,7 @@ class ContentForPexInstruction extends React.Component {
     return (
       <div className="wrapperPexTopContent">
         <div className="pexHeadline">How does the Prediction Exchange work?</div>
-        <p><strong>Prediction</strong> is a electronic prediction system that allows any two anonymous parties from anywhere in the world to bet directly against each other without the need for a trusted third party.</p>
+        <p><strong>Guru</strong> is a electronic prediction system that allows any two anonymous parties from anywhere in the world to bet directly against each other without the need for a trusted third party.</p>
         <p>It’s been designed so anyone, anywhere can easily place bets and create their own markets.</p>
         <p><strong>ICE.</strong></p>
         <p><strong>BROKEN.</strong></p>
@@ -55,7 +55,7 @@ class ContentForPexInstruction extends React.Component {
         <div className="stepNumber">1</div>
         <div className="pexHeadline">Backup Your Wallet</div>
         <p className="content"><strong>First the Important stuff!</strong></p>
-        <p className="content">The entire <strong>Prediction</strong> platform is decentralized (which is awesome) but, that also means that you’re the one responsible for your wallet. Unfortunately, we can’t do anything for you, if something happens. It’s always better to be safe than sorry, so please backup your wallet.</p>
+        <p className="content">The entire <strong>Guru</strong> platform is decentralized (which is awesome) but, that also means that you’re the one responsible for your wallet. Unfortunately, we can’t do anything for you, if something happens. It’s always better to be safe than sorry, so please backup your wallet.</p>
         <p className="content">On your mobile device, open <a href="https://ninja.org/wallet">ninja.org/wallet</a></p>
         <div className="wrapperGuideCenter">
           <div className="imageBlock">
@@ -179,7 +179,7 @@ class ContentForPexInstruction extends React.Component {
           <p>And that’s it!</p>
           <p><strong>Happy forecasting Ninjas!</strong></p>
           <div className="line" />
-          <p>Check out <a target="__blank" className="landing-link" href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile</p>
+          <p>Check out <a target="__blank" className="landing-link" href="https://ninja.org/guru">ninja.org/guru</a> on your mobile</p>
           <p>Connect with us on telegram: <a target="__blank" className="landing-link" href="https://t.me/ninja_org">http://t.me/ninja_org</a></p>
         </div>
       </div>

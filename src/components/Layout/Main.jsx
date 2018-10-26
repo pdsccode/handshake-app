@@ -44,7 +44,7 @@ class MainLayout extends React.Component {
     const { isDesktop } = BrowserDetect;
     const headerBarProps = {
       className: 'HeaderBarContainer',
-      titleBar: 'Prediction',
+      titleBar: 'Guru',
     };
     if (isDesktop) return null;
     return (
