@@ -132,7 +132,7 @@ class Prediction extends React.Component {
   }
 
   checkRedeemAvailabe = (props) => {
-    const { isRedeemAvailable = {} } = props;
+    const { isRedeemAvailable = 0 } = props;
     return isRedeemAvailable;
   }
 
@@ -164,33 +164,6 @@ class Prediction extends React.Component {
     }, 2 * 1000);
   }
 
-  checkShowFreeBetPopup = (props) => {
-    const isFreeAvailable = this.checkRedeemAvailabe(props);
-    const { freeBet } = props;
-    const { free_bet_available: freeAvailable = 0 } = freeBet;
-
-    const key = `showedFreebet${freeAvailable}`;
-    const isShowed = localStorage.getItem(key);
-
-    if (isFreeAvailable && !isShowed) {
-      const { isOrderOpening, shouldShowFreePopup } = this.state;
-      const { is_win: isWin } = freeBet;
-      if (!isOrderOpening && shouldShowFreePopup) {
-        if (isWin !== null) {
-          if (!isWin && this.modalFreeBetLoseRef) {
-            this.modalFreeBetLoseRef.open();
-          } else if (isWin && this.modalFreeBetWinRef) {
-            this.modalFreeBetWinRef.open();
-          }
-          localStorage.setItem(key, true);
-
-          this.setState({
-            shouldShowFreePopup: false,
-          });
-        }
-      }
-    }
-  }
 
   handleClickEventItem = (itemProps, itemData) => {
     const { event } = itemProps;
@@ -327,7 +300,7 @@ class Prediction extends React.Component {
 
 
   renderBetMode = (props, state) => {
-    const isFreeAvailable = this.checkRedeemAvailabe(props);
+    const isRedeemAvailable = this.checkRedeemAvailabe(props);
     return (
       <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
@@ -336,7 +309,7 @@ class Prediction extends React.Component {
           openPopup={(click) => { this.openOrderPlace = click; }}
           onCancelClick={this.closeOrderPlace}
           handleBetFail={this.handleBetFail}
-          freeAvailable={isFreeAvailable}
+          freeAvailable={isRedeemAvailable}
           onSubmitClick={(isFree) => {
             this.didPlaceOrder(isFree);
           }}
@@ -446,7 +419,6 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    //this.checkShowFreeBetPopup(props);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
@@ -458,11 +430,7 @@ class Prediction extends React.Component {
         {this.renderViewAllEvent(props, state)}
         {!props.isLoading && this.renderDislaimer()}
         {this.renderBetMode(props, state)}
-        {/*{this.renderLuckyReal()}*/}
-        {/*{this.renderLuckyFree()}*/}
         {this.renderLuckyLanding()}
-        {/*this.renderFreeBetLose()*/}
-        {/*this.renderFreeBetWin()*/}
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
