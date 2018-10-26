@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { withdrawFund } from '@/reducers/invest/action';
+import { connect } from 'react-redux';
+import { withdrawFund, addTransaction, updateTransaction } from '@/reducers/invest/action';
 import '../ProjectList.scss';
 import LoadingGif from '../loading.svg';
-const etherScanTxUrl = 'https://rinkeby.etherscan.io/tx';
-const linkToEtherScan = (tx) => `${etherScanTxUrl}/${tx}`;
-const transformString = str => str.substring(0, 7) + '...'+ str.substring(str.length-5, str.length);
 import TransactionStorage from '../../../reducers/invest/transactions';
-
+import HedgeFundAPI from '../contracts/HedgeFundAPI';
 const ModalBlock = (props) => (
   <div className='project-modal'>
     <div className='project-modal-content'>
@@ -19,29 +17,20 @@ class WithDrawalBlock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      investAmount: 0,
       isUserConfirmed: false,
-      iSubmitted: false,
+      isSubmitted: false,
       estimateGasValue: null,
-      txHashs: [],
     }
     this.runTrx = null;
     this.trxStorage = new TransactionStorage(props.pid);
-    this.updateTrxState = null;
+    this.hedgeFundApi = new  HedgeFundAPI('latest', false);
   }
 
   onFinishedTrx = (hash) => this.setState({
     isSubmitted: false,
     estimateGasValue: null,
-    investAmount: 0,
     isUserConfirmed: false,
-    txHashs: [...this.state.txHashs, { hash, status: 'Pending' }]
   })
-
-  onChangeStatusTrx = (hash) => {
-    const txHashs = this.state.txHashs.map(e => e.hash === hash ? ({ hash: e.hash, status: 'Done' }) : e);
-    this.setState({ txHashs });
-  }
 
   onSubmitWithDrawal = async () => {
     this.setState({ isSubmitted: true });
@@ -50,21 +39,18 @@ class WithDrawalBlock extends Component {
       return;
     }
     const { run, estimateGas } = await withdrawFund(this.props.pid)() || {};
-    // console.log('estimateGas', await estimateGas());
-    const estimateGasValue = await estimateGas();
-    console.log(estimateGasValue);
+    const estimateGasValue = (await estimateGas() * await this.hedgeFundApi.getCurrentGasPrice() * 1e-18).toFixed(6) + ' ETH';
     this.setState({ estimateGasValue });
     this.runTrx = run;
   }
   handleConfirmTransaction = () => {
     this.setState({ isUserConfirmed: true });
     this.runTrx().on('transactionHash', (hash) => {
-      console.log('txhash', hash);
-      this.trxStorage.addTransaction({ hash, status: 'PENDING', type: 'WITHDRAW', amount: this.props.fundAmount });
+      this.props.addTransaction(this.props.pid, { hash, status: 'PENDING', type: 'WITHDRAW', amount: this.props.fundAmount });
       this.onFinishedTrx(hash);
     }).on('receipt', (receipt) => {
-      this.trxStorage.updateTransaction({ hash: receipt.transactionHash, status: 'DONE' });
-      this.onChangeStatusTrx(receipt.transactionHash);
+      console.log(receipt);
+      this.props.updateTransaction(this.trxStorage.getPid(), { hash: receipt.transactionHash, status: 'DONE' });
     }).on('error', err => console.log('err', err));
   }
   render() {
@@ -85,4 +71,5 @@ class WithDrawalBlock extends Component {
   }
 }
 
-export default WithDrawalBlock;
+
+export default connect(null, { addTransaction, updateTransaction }, null, { withRef: true })(WithDrawalBlock);

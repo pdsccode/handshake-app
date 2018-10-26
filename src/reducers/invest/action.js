@@ -10,7 +10,8 @@ export const ACTIONS = {
   SYNC_WALLET: 'SYNC_WALLET',
   SYNCED_INFO: 'SYNCED_INFO',
   SM_PROJECT: 'CALL_SM_PROJECT',
-  SM_PROJECT_FUND_AMOUNT: 'SM_PROJECT_FUND_AMOUNT'
+  SM_PROJECT_FUND_AMOUNT: 'SM_PROJECT_FUND_AMOUNT',
+  FETCH_TRANSACTIONS: 'FETCH_TRANSACTIONS'
 }
 const LIST_PROJECT_URL = '/projects/list?isFunding=true';
 const LIST_INVESTING_URL = '/fundings/list';
@@ -314,3 +315,24 @@ export const linkWallet = (password) => dispatch => new Promise((resolve, reject
 })
 
 export const resetLinkWallet = () => dispatch => dispatch({ type: ACTIONS.SYNCED_INFO, payload: false })
+
+import TransactionStorage from './transactions';
+export const fetchTransactions = pid => dispatch => {
+  const trxStorage = new TransactionStorage(pid);
+  const payload = trxStorage.getTransactions();
+  dispatch({ type: ACTIONS.FETCH_TRANSACTIONS, payload });
+}
+
+export const addTransaction = (pid, trx) => dispatch => {
+  const trxStorage = new TransactionStorage(pid);
+  trxStorage.addTransaction(trx);
+  const payload = trxStorage.getTransactions();
+  dispatch({ type: ACTIONS.FETCH_TRANSACTIONS, payload });
+}
+
+export const updateTransaction = (pid, trx) => dispatch => {
+  const trxStorage = new TransactionStorage(pid);
+  trxStorage.updateTransaction(trx);
+  const payload = trxStorage.getTransactions();
+  dispatch({ type: ACTIONS.FETCH_TRANSACTIONS, payload });
+}

@@ -41,9 +41,7 @@ class ProjectDetail extends Component {
   componentDidMount = () => {
     this.getProjectDetail();
   }
-  reloadHistory = () => {
-    this.refs['orderHistory'].fetchTrxs();
-  }
+  
   renderProjects() {
     const { project } = this.props;
     const isNotExpired = date_diff_indays(new Date(), new Date(project.deadline)) > 0;
@@ -103,8 +101,8 @@ class ProjectDetail extends Component {
               </div>
             </div>
           </div>
-          {isNotExpired && <FormInvestBlock pid={project.id} onSuccess={this.reloadHistory}/>}
-          <OrderHistory pid={project.id} ref={'orderHistory'} />
+          {isNotExpired && project.state === 'INITFUND' && <FormInvestBlock pid={project.id} />}
+          <OrderHistory pid={project.id} />
         </div>
     );
   }

@@ -38,7 +38,7 @@ class ProjectInfo extends React.Component {
         </label>
         <label htmlFor="" className="fund-item-value space_between">
           {fundAmount} ETH
-           <img onClick={()=> this.refs['withdrawalBlock'].onSubmitWithDrawal()} src={WithDrawalSVG} style={{ width: '20px', height: '20px' }}/>
+           <img onClick={()=> this.refs['withdrawalBlock'].getWrappedInstance().onSubmitWithDrawal()} src={WithDrawalSVG} style={{ width: '20px', height: '20px' }}/>
         </label>
         <WithDrawalBlock pid={project.id} fundAmount={fundAmount} ref={'withdrawalBlock'} />
       </div>

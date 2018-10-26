@@ -4,6 +4,8 @@ export default class TransactionStorage {
         this.pid = pid;
     }
 
+    getPid = () => this.pid;
+    
     getName = pid => {
         const pidExisted = pid || this.pid;
         if (!pidExisted) {
