@@ -133,13 +133,7 @@ class Prediction extends React.Component {
 
   checkFreeAvailabe = (props) => {
     const { freeBet = {} } = props;
-    const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
-    let isFreeAvailable = false;
-
-    if (canFreeBet && freeAvailable > 0) {
-      isFreeAvailable = true;
-    }
-    return isFreeAvailable;
+    return freeBet;
   }
 
   openOrderPlace = (selectedOutcome) => {

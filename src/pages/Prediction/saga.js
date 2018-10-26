@@ -103,7 +103,7 @@ export function* handleFreeBet() {
       PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE,
       type: 'CHECK_FREE_AVAILABLE',
     });
-    yield put(updateFreeBet(response.data));
+    yield put(updateFreeBet(response.status));
   } catch (e) {
     console.error('handleFreeBet', e);
   }

@@ -210,7 +210,7 @@ export const API_URL = {
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     LOAD_REPORTS: 'cryptosign/source',
     LOAD_CATEGORIES: 'cryptosign/category',
-    CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
+    CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_redeem_code',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     UNINIT_HANDSHAKE_FREE: 'cryptosign/handshake/uninit_free_bet',
     COLLECT: 'cryptosign/handshake/collect',
