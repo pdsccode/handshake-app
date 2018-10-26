@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addTransaction, updateTransaction } from '@/reducers/invest/action';
+import { addTransaction, updateTransaction, getFundAmount } from '@/reducers/invest/action';
 import { Button } from 'react-bootstrap';
 import _ from 'lodash';
 import '../ProjectList.scss';
@@ -105,6 +105,7 @@ class FormInvestBlock extends Component {
         const { transactionHash: hash } = receipt;
         const status = 'DONE';
         this.props.updateTransaction(this.trxStorage.getPid(), { hash, status });
+        this.props.getFundAmount(this.trxStorage.getPid());
       }).on('error', err => console.log('err', err));
     }
     render() {
@@ -133,4 +134,4 @@ class FormInvestBlock extends Component {
     }
   }
 
-  export default connect(null, { addTransaction, updateTransaction }, null, { withRef: true })(FormInvestBlock);
+  export default connect(null, { addTransaction, updateTransaction, getFundAmount }, null, { withRef: true })(FormInvestBlock);

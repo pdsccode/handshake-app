@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withdrawFund, addTransaction, updateTransaction } from '@/reducers/invest/action';
+import { withdrawFund, addTransaction, updateTransaction, getFundAmount } from '@/reducers/invest/action';
 import '../ProjectList.scss';
 import LoadingGif from '../loading.svg';
 import TransactionStorage from '../../../reducers/invest/transactions';
@@ -51,6 +51,7 @@ class WithDrawalBlock extends Component {
     }).on('receipt', (receipt) => {
       console.log(receipt);
       this.props.updateTransaction(this.trxStorage.getPid(), { hash: receipt.transactionHash, status: 'DONE' });
+      this.props.getFundAmount(this.trxStorage.getPid());
     }).on('error', err => console.log('err', err));
   }
   render() {
@@ -72,4 +73,4 @@ class WithDrawalBlock extends Component {
 }
 
 
-export default connect(null, { addTransaction, updateTransaction }, null, { withRef: true })(WithDrawalBlock);
+export default connect(null, { addTransaction, updateTransaction, getFundAmount }, null, { withRef: true })(WithDrawalBlock);
