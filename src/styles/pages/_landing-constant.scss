@@ -51,6 +51,7 @@
       float: left;
     }
     .landing-page-constant-menu {
+      user-select: none;
       @include breakpoint('md') {
         float: right;
       }
@@ -118,6 +119,7 @@
       }
     }
     .landing-page-constant-hamburger {
+      user-select: none;
       float: right;
       display: none;
       cursor: pointer;
@@ -129,7 +131,7 @@
   .landing-page-constant-heading {
     color: #131313;
     font-size: 50px;
-    font-weight: 300;
+    font-weight: 500;
     line-height: 60px;
     margin-bottom: 7vh;
     padding-top: 3vh;
