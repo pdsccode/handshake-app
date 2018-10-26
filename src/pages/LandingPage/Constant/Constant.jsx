@@ -13,11 +13,11 @@ import cn from '@sindresorhus/class-names';
 import logoNinja from '@/assets/images/ninja/logo-ninja-constant.svg.raw';
 import humburgerIcon from '@/assets/images/icon/hamburger.svg.raw';
 import telegramIcon from '@/assets/images/icon/telegram.svg';
-import block1 from '@/assets/images/constant/block1.svg';
-import block2 from '@/assets/images/constant/block2.svg';
-import block3 from '@/assets/images/constant/block3.svg';
-import block4 from '@/assets/images/constant/block4.svg';
-import block5 from '@/assets/images/constant/block5.svg';
+import block1 from '@/assets/images/constant/block1.png';
+import block2 from '@/assets/images/constant/block2.png';
+import block3 from '@/assets/images/constant/block3.png';
+import block4 from '@/assets/images/constant/block4.png';
+import block5 from '@/assets/images/constant/block5.png';
 
 import createForm from '@/components/core/form/createForm';
 
